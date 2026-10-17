@@ -1,0 +1,391 @@
+{%- liquid
+  assign s = section.settings
+  assign socials = 'instagram,tiktok,youtube,pinterest,facebook,x' | split: ','
+  assign has_social = false
+  for platform in socials
+    assign key = platform | append: '_url'
+    if s[key] != blank
+      assign has_social = true
+      break
+    endif
+  endfor
+-%}
+
+<footer class="sgs-footer" style="--sgs-footer-bg: {{ s.background_color | default: '#0E0E0E' }};">
+  <div class="sgs-footer__inner">
+    <div class="sgs-footer__top">
+      <div class="sgs-footer__brand">
+        <a class="sgs-footer__logo" href="{{ routes.root_url }}">
+          {%- if settings.logo_inverse != blank -%}
+            {{
+              settings.logo_inverse
+              | image_url: height: 120
+              | image_tag: height: 44, class: 'sgs-footer__logo-img', alt: shop.name
+            }}
+          {%- else -%}
+            {% render 'sgs-logo', variant: 'inverse', height: 44, height_mobile: 36, class: 'sgs-footer__logo-img', loading: 'lazy' %}
+          {%- endif -%}
+        </a>
+        {%- if s.tagline != blank -%}
+          <p class="sgs-footer__tagline">{{ s.tagline }}</p>
+        {%- endif -%}
+
+        {%- if has_social -%}
+          <ul class="sgs-footer__social" role="list">
+            {%- for platform in socials -%}
+              {%- assign key = platform | append: '_url' -%}
+              {%- if s[key] != blank -%}
+                <li>
+                  <a href="{{ s[key] }}" target="_blank" rel="noopener" aria-label="{{ shop.name | escape }} on {{ platform | capitalize }}">
+                    {%- case platform -%}
+                      {%- when 'instagram' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><rect x="2.5" y="2.5" width="15" height="15" rx="4"/><circle cx="10" cy="10" r="3.4"/><circle cx="14.4" cy="5.6" r="0.6" fill="currentColor" stroke="none"/></svg>
+                      {%- when 'tiktok' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M11.5 2.5v10.2a3.2 3.2 0 11-3.2-3.2"/><path d="M11.5 2.5c.4 2.4 1.9 3.8 4.5 4"/></svg>
+                      {%- when 'youtube' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4.5" width="16" height="11" rx="3"/><path d="M8.5 7.5v5l4.2-2.5z"/></svg>
+                      {%- when 'pinterest' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M9.2 7.2l-2 9.6M7.8 10.6c.6 1.6 4.8 1.4 4.8-2 0-2.6-4.6-2.8-5.6-.2"/></svg>
+                      {%- when 'facebook' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" aria-hidden="true"><path d="M11.5 17.5V10.5h2.3l.4-2.7h-2.7V6.2c0-.8.3-1.3 1.4-1.3h1.4V2.6c-.3 0-1.1-.1-2-.1-2 0-3.4 1.2-3.4 3.4v1.9H6.6v2.7h2.3v7"/></svg>
+                      {%- when 'x' -%}
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l13 13M16.5 3.5l-13 13"/></svg>
+                    {%- endcase -%}
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <nav class="sgs-footer__nav" aria-label="Footer">
+        {%- for i in (1..3) -%}
+          {%- assign menu_key = 'menu_' | append: i -%}
+          {%- assign heading_key = 'menu_' | append: i | append: '_heading' -%}
+          {%- assign menu = s[menu_key] -%}
+          {%- if menu != blank and menu.links.size > 0 -%}
+            <div class="sgs-footer__col">
+              <p class="sgs-footer__col-heading sgs-label">{{ s[heading_key] | default: menu.title | escape }}</p>
+              <ul class="sgs-footer__links" role="list">
+                {%- for link in menu.links -%}
+                  <li>
+                    <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+
+    <div class="sgs-footer__bottom">
+      <p class="sgs-footer__copyright">
+        &copy; {{ 'now' | date: '%Y' }} {{ s.copyright_name | default: shop.name | escape }}
+      </p>
+
+      {%- if s.show_policies and shop.policies.size > 0 -%}
+        <ul class="sgs-footer__policies" role="list">
+          {%- for policy in shop.policies -%}
+            <li><a href="{{ policy.url }}">{{ policy.title | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- if s.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+        <ul class="sgs-footer__payments" role="list" aria-label="Payment methods">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'sgs-footer__payment' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .sgs-footer {
+    --sgs-footer-fg: 245 243 239;
+
+    background: var(--sgs-footer-bg);
+    color: rgb(var(--sgs-footer-fg));
+  }
+
+  .sgs-footer__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-footer__top {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2vw, 32px);
+    row-gap: 56px;
+    padding-block: clamp(64px, 7vw, 112px);
+    border-top: 1px solid rgb(var(--sgs-footer-fg) / 0.12);
+  }
+
+  .sgs-footer__brand {
+    grid-column: 1 / span 5;
+  }
+
+  .sgs-footer__logo {
+    display: inline-block;
+  }
+
+  .sgs-footer__logo-img {
+    display: block;
+    width: auto;
+    height: var(--header-logo-image-height, 44px);
+  }
+
+  .sgs-footer__tagline {
+    max-width: 32ch;
+    margin: 28px 0 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(var(--sgs-footer-fg) / 0.6);
+  }
+
+  .sgs-footer__social {
+    display: flex;
+    gap: 8px;
+    margin: 32px 0 0 -10px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-footer__social a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    color: rgb(var(--sgs-footer-fg) / 0.7);
+    transition: color 0.3s ease;
+  }
+
+  .sgs-footer__social a:hover {
+    color: rgb(var(--sgs-footer-fg));
+  }
+
+  .sgs-footer__nav {
+    grid-column: 7 / span 6;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 24px;
+  }
+
+  .sgs-footer__col-heading {
+    margin: 0 0 24px;
+    color: rgb(var(--sgs-footer-fg) / 0.45);
+  }
+
+  .sgs-footer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-footer__links a,
+  .sgs-footer__policies a {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0 1px;
+    transition: background-size 0.5s cubic-bezier(0.16, 1, 0.3, 1), color 0.3s ease;
+  }
+
+  .sgs-footer__links a {
+    font-size: 15px;
+    color: rgb(var(--sgs-footer-fg) / 0.85);
+  }
+
+  .sgs-footer__links a:hover,
+  .sgs-footer__policies a:hover {
+    color: rgb(var(--sgs-footer-fg));
+    background-size: 100% 1px;
+  }
+
+  .sgs-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+    padding-block: 28px 36px;
+    border-top: 1px solid rgb(var(--sgs-footer-fg) / 0.12);
+    font-size: 12px;
+    color: rgb(var(--sgs-footer-fg) / 0.5);
+  }
+
+  .sgs-footer__copyright {
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .sgs-footer__policies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-footer__payments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-footer__payment {
+    display: block;
+    width: 34px;
+    height: 22px;
+    opacity: 0.85;
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-footer__brand,
+    .sgs-footer__nav {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-footer__nav {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sgs-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-footer__links a,
+    .sgs-footer__policies a {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear footer",
+  "tag": "div",
+  "class": "sgs-footer-section",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "paragraph",
+      "content": "Uses the inverse logo from Theme settings, or the bundled SixthGear logo."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Automotive art prints for the driven. Printed to order, shipped worldwide."
+    },
+    {
+      "type": "header",
+      "content": "Menus"
+    },
+    {
+      "type": "text",
+      "id": "menu_1_heading",
+      "label": "Column 1 heading",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Column 1 menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_heading",
+      "label": "Column 2 heading",
+      "default": "Collections"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Column 2 menu"
+    },
+    {
+      "type": "text",
+      "id": "menu_3_heading",
+      "label": "Column 3 heading",
+      "default": "Help"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_3",
+      "label": "Column 3 menu",
+      "default": "footer"
+    },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    { "type": "url", "id": "instagram_url", "label": "Instagram" },
+    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
+    { "type": "url", "id": "youtube_url", "label": "YouTube" },
+    { "type": "url", "id": "pinterest_url", "label": "Pinterest" },
+    { "type": "url", "id": "facebook_url", "label": "Facebook" },
+    { "type": "url", "id": "x_url", "label": "X" },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_name",
+      "label": "Copyright name",
+      "default": "SixthGear Studios"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policy links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0E0E0E"
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear footer"
+    }
+  ]
+}
+{% endschema %}

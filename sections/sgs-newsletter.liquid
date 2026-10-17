@@ -1,0 +1,396 @@
+{%- liquid
+  assign s = section.settings
+  assign form_id = 'SgsNewsletter-' | append: section.id
+
+  assign bg = s.background_color | default: '#0E0E0E'
+  assign bg_brightness = bg | color_brightness
+  if bg_brightness < 128
+    assign tone = 'dark'
+  else
+    assign tone = 'light'
+  endif
+-%}
+
+<section
+  class="sgs-news sgs-news--{{ tone }}"
+  style="
+    --sgs-news-bg: {{ bg }};
+    --sgs-news-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-news-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+  aria-labelledby="{{ form_id }}-heading"
+>
+  <div class="sgs-news__inner" data-sgs-reveal-group>
+    {%- if s.eyebrow != blank -%}
+      <p class="sgs-news__eyebrow sgs-label" data-sgs-reveal>{{ s.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <h2 id="{{ form_id }}-heading" class="sgs-news__heading" data-sgs-reveal>{{ s.heading }}</h2>
+
+    {%- if s.text != blank -%}
+      <p class="sgs-news__text" data-sgs-reveal>{{ s.text }}</p>
+    {%- endif -%}
+
+    <div class="sgs-news__form-wrap" data-sgs-reveal>
+      {%- form 'customer', id: form_id, class: 'sgs-news__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        {%- if form.posted_successfully? -%}
+          <div class="sgs-news__success" role="status">
+            <p class="sgs-news__success-title">{{ s.success_heading | escape }}</p>
+            {%- if s.discount_code != blank -%}
+              <p class="sgs-news__success-text">{{ s.success_text | escape }}</p>
+              <p class="sgs-news__code">
+                <span class="sgs-label">Your code</span>
+                <strong>{{ s.discount_code | escape }}</strong>
+              </p>
+            {%- endif -%}
+          </div>
+        {%- else -%}
+          <div class="sgs-news__field{% if form.errors %} sgs-news__field--error{% endif %}">
+            <label class="visually-hidden" for="{{ form_id }}-email">{{ 'blocks.contact_form.email' | t }}</label>
+            <input
+              id="{{ form_id }}-email"
+              class="sgs-news__input"
+              type="email"
+              name="contact[email]"
+              value="{{ form.email }}"
+              placeholder="{{ s.placeholder | escape }}"
+              autocomplete="email"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              {% if form.errors %}
+                aria-invalid="true"
+                aria-describedby="{{ form_id }}-error"
+              {% endif %}
+            >
+            <button class="sgs-news__submit" type="submit">
+              <span>{{ s.button_label | escape }}</span>
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+                <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p id="{{ form_id }}-error" class="sgs-news__error" role="alert">
+              {{- form.errors.translated_fields.email | capitalize }}
+              {{ form.errors.messages.email -}}
+            </p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- if s.fine_print != blank -%}
+        <p class="sgs-news__fine">{{ s.fine_print }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-news {
+    --sgs-news-fg: 14 14 14;
+
+    padding-block: var(--sgs-news-pad-top) var(--sgs-news-pad-bottom);
+    background: var(--sgs-news-bg);
+    color: rgb(var(--sgs-news-fg));
+  }
+
+  .sgs-news--dark {
+    --sgs-news-fg: 245 243 239;
+  }
+
+  .sgs-news__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: calc(760px + var(--page-margin) * 2);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+    text-align: center;
+  }
+
+  .sgs-news__eyebrow {
+    margin: 0 0 24px;
+    color: rgb(var(--sgs-news-fg) / 0.55);
+  }
+
+  .sgs-news__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.5rem, 1.6rem + 3.4vw, 5rem);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-news__heading em {
+    font-style: normal;
+    color: #e10600;
+  }
+
+  .sgs-news__text {
+    max-width: 44ch;
+    margin: 28px 0 0;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.6;
+    color: rgb(var(--sgs-news-fg) / 0.66);
+    text-wrap: pretty;
+  }
+
+  .sgs-news__form-wrap {
+    width: min(100%, 520px);
+    margin-top: 48px;
+  }
+
+  .sgs-news__form {
+    margin: 0;
+  }
+
+  .sgs-news__field {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid rgb(var(--sgs-news-fg) / 0.4);
+    transition: border-color 0.4s ease;
+  }
+
+  .sgs-news__field:focus-within {
+    border-color: rgb(var(--sgs-news-fg));
+  }
+
+  .sgs-news__field--error {
+    border-color: #ff4d3d;
+  }
+
+  .sgs-news__input {
+    flex: 1;
+    min-width: 0;
+    padding: 18px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: rgb(var(--sgs-news-fg));
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    outline: none;
+    box-shadow: none;
+  }
+
+  .sgs-news__input::placeholder {
+    color: rgb(var(--sgs-news-fg) / 0.45);
+    opacity: 1;
+  }
+
+  .sgs-news__input:-webkit-autofill {
+    -webkit-text-fill-color: rgb(var(--sgs-news-fg));
+    transition: background-color 9999s;
+  }
+
+  .sgs-news__submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 0 0 20px;
+    border: 0;
+    background: none;
+    color: rgb(var(--sgs-news-fg));
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .sgs-news__submit svg {
+    transition: translate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sgs-news__submit:hover svg,
+  .sgs-news__submit:focus-visible svg {
+    translate: 4px 0;
+  }
+
+  .sgs-news__error {
+    margin: 12px 0 0;
+    font-size: 13px;
+    color: #ff6b5e;
+    text-align: start;
+  }
+
+  .sgs-news--light .sgs-news__error {
+    color: #c00500;
+  }
+
+  .sgs-news__fine {
+    margin: 20px 0 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgb(var(--sgs-news-fg) / 0.45);
+  }
+
+  .sgs-news__fine a {
+    color: inherit;
+  }
+
+  .sgs-news__success {
+    padding: 24px 0;
+    border-block: 1px solid rgb(var(--sgs-news-fg) / 0.2);
+    outline: none;
+  }
+
+  .sgs-news__success-title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .sgs-news__success-text {
+    margin: 10px 0 0;
+    font-size: 14px;
+    color: rgb(var(--sgs-news-fg) / 0.66);
+  }
+
+  .sgs-news__code {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    margin: 20px 0 0;
+    padding: 12px 20px;
+    border: 1px dashed rgb(var(--sgs-news-fg) / 0.5);
+  }
+
+  .sgs-news__code .sgs-label {
+    color: rgb(var(--sgs-news-fg) / 0.55);
+  }
+
+  .sgs-news__code strong {
+    font-family: var(--font-heading--family);
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    user-select: all;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-news {
+      padding-block: calc(var(--sgs-news-pad-top) * 0.65) calc(var(--sgs-news-pad-bottom) * 0.65);
+    }
+
+    .sgs-news__form-wrap {
+      margin-top: 36px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear newsletter",
+  "tag": "div",
+  "class": "sgs-news-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Join the paddock"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "10% off your first print"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "New releases, limited drops and the stories behind the cars. Delivered occasionally, never cluttered."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Email placeholder",
+      "default": "Your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "fine_print",
+      "label": "Fine print",
+      "default": "By subscribing you agree to receive marketing emails. Unsubscribe at any time."
+    },
+    {
+      "type": "header",
+      "content": "After signing up"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Thank-you heading",
+      "default": "Welcome to the paddock"
+    },
+    {
+      "type": "text",
+      "id": "discount_code",
+      "label": "Discount code",
+      "info": "Create this code in Shopify admin > Discounts first. It's shown straight after signing up."
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Discount message",
+      "default": "Use this code at checkout for 10% off your first order."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 144
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 144
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear newsletter"
+    }
+  ]
+}
+{% endschema %}

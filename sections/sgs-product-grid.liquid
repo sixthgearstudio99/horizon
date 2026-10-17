@@ -1,0 +1,364 @@
+{%- liquid
+  assign s = section.settings
+  assign source = s.collection | default: collections.all
+  assign limit = s.products_to_show
+
+  if s.view_all_link != blank
+    assign view_all_url = s.view_all_link
+  elsif s.collection != blank
+    assign view_all_url = s.collection.url
+  else
+    assign view_all_url = routes.all_products_collection_url | append: '?sort_by=best-selling'
+  endif
+
+  case s.columns
+    when '3'
+      assign card_sizes = '(min-width: 990px) 31vw, (min-width: 750px) 46vw, 78vw'
+    when '5'
+      assign card_sizes = '(min-width: 990px) 19vw, (min-width: 750px) 46vw, 78vw'
+    else
+      assign card_sizes = '(min-width: 990px) 23vw, (min-width: 750px) 46vw, 78vw'
+  endcase
+  if s.mobile_layout == 'grid'
+    assign card_sizes = card_sizes | replace: '78vw', '46vw'
+  endif
+
+  assign bg = s.background_color | default: settings.color_palette.background
+  assign bg_brightness = bg | color_brightness
+  if bg_brightness < 128
+    assign tone = 'dark'
+  else
+    assign tone = 'light'
+  endif
+-%}
+
+<section
+  class="sgs-grid sgs-grid--{{ tone }} sgs-grid--mobile-{{ s.mobile_layout }}"
+  style="
+    --sgs-grid-bg: {{ bg }};
+    --sgs-grid-columns: {{ s.columns }};
+    --sgs-grid-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-grid-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+  {% if s.heading != blank %}
+    aria-labelledby="SgsGridHeading-{{ section.id }}"
+  {% endif %}
+>
+  <div class="sgs-grid__inner">
+    {%- if s.eyebrow != blank or s.heading != blank or s.view_all_label != blank -%}
+      <header class="sgs-grid__header" data-sgs-reveal>
+        <div class="sgs-grid__titles">
+          {%- if s.eyebrow != blank -%}
+            <p class="sgs-grid__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+          {%- endif -%}
+          {%- if s.heading != blank -%}
+            <h2 id="SgsGridHeading-{{ section.id }}" class="sgs-grid__heading">{{ s.heading }}</h2>
+          {%- endif -%}
+        </div>
+        {%- if s.view_all_label != blank -%}
+          <a class="sgs-link sgs-grid__view-all" href="{{ view_all_url }}">
+            {{- s.view_all_label | escape -}}
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
+
+    <ul class="sgs-grid__list" role="list" data-sgs-reveal-group>
+      {%- if source.products_count > 0 -%}
+        {%- for product in source.products limit: limit -%}
+          <li class="sgs-grid__item" data-sgs-reveal>
+            {% render 'sgs-product-card',
+              product: product,
+              ratio: s.image_ratio,
+              image_fit: s.image_fit,
+              show_secondary: s.show_secondary_image,
+              show_options: s.show_option_count,
+              sizes: card_sizes
+            %}
+          </li>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..limit) -%}
+          {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
+          <li class="sgs-grid__item" data-sgs-reveal>
+            {% render 'sgs-product-card',
+              ratio: s.image_ratio,
+              image_fit: s.image_fit,
+              placeholder_index: placeholder_index
+            %}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-grid {
+    --color-foreground-rgb: 14 14 14;
+
+    padding-block: var(--sgs-grid-pad-top) var(--sgs-grid-pad-bottom);
+    background-color: var(--sgs-grid-bg);
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-grid--dark {
+    --color-foreground-rgb: 245 243 239;
+  }
+
+  .sgs-grid__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-grid__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 48px;
+    margin-bottom: clamp(40px, 4vw, 64px);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .sgs-grid__eyebrow {
+    margin: 0 0 16px;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  .sgs-grid__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-grid__heading em {
+    font-style: normal;
+    color: #e10600;
+  }
+
+  .sgs-grid__view-all {
+    flex-shrink: 0;
+    margin-bottom: 4px;
+  }
+
+  .sgs-grid__list {
+    display: grid;
+    grid-template-columns: repeat(var(--sgs-grid-columns), minmax(0, 1fr));
+    gap: clamp(48px, 4.5vw, 72px) clamp(16px, 1.6vw, 28px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-grid__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-grid {
+      padding-block: calc(var(--sgs-grid-pad-top) * 0.6) calc(var(--sgs-grid-pad-bottom) * 0.6);
+    }
+
+    .sgs-grid__header {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 32px;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .sgs-grid__view-all {
+      order: 2;
+    }
+
+    .sgs-grid--mobile-grid .sgs-grid__list {
+      gap: 40px 12px;
+    }
+
+    /* Swipeable row with the next print peeking in */
+    .sgs-grid--mobile-carousel .sgs-grid__list {
+      display: flex;
+      gap: 12px;
+      margin-inline: calc(var(--page-margin) * -1);
+      padding-inline: var(--page-margin);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--page-margin);
+      scrollbar-width: none;
+    }
+
+    .sgs-grid--mobile-carousel .sgs-grid__list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sgs-grid--mobile-carousel .sgs-grid__item {
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear product grid",
+  "tag": "div",
+  "class": "sgs-grid-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "For best sellers, choose a collection sorted by best selling. Leave empty to show all products."
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 16,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        { "value": "carousel", "label": "Swipeable row" },
+        { "value": "grid", "label": "Two-column grid" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "header",
+      "content": "Product cards"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait 4:5" },
+        { "value": "5 / 7", "label": "Poster" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "select",
+      "id": "image_fit",
+      "label": "Image fit",
+      "options": [
+        { "value": "cover", "label": "Fill the frame" },
+        { "value": "contain", "label": "Show whole image on a wall tone" }
+      ],
+      "default": "cover",
+      "info": "Use 'Show whole image' if your mockups get cropped."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_secondary_image",
+      "label": "Show second image on hover",
+      "default": true,
+      "info": "Make your on-the-wall mockup the product's second image in Shopify."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_option_count",
+      "label": "Show number of sizes",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Best sellers"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Most wanted"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Link label",
+      "default": "Shop all prints"
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "Link",
+      "info": "Defaults to the chosen collection, or all products sorted by best selling."
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear product grid"
+    }
+  ]
+}
+{% endschema %}

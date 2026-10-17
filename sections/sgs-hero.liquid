@@ -71,7 +71,7 @@
   <div class="sgs-hero__inner">
     <div class="sgs-hero__content">
       {%- if s.eyebrow != blank -%}
-        <p class="sgs-hero__eyebrow sgs-hero__rise" style="--i: 0;">{{ s.eyebrow }}</p>
+        <p class="sgs-hero__eyebrow sgs-label sgs-hero__rise" style="--i: 0;">{{ s.eyebrow | escape }}</p>
       {%- endif -%}
 
       {%- if s.heading != blank -%}
@@ -86,7 +86,7 @@
         <div class="sgs-hero__actions sgs-hero__rise" style="--i: 3;">
           {%- if s.button_1_label != blank -%}
             <a
-              class="button sgs-hero__button sgs-hero__button--primary"
+              class="button sgs-hero__button"
               {% if s.button_1_link != blank %}
                 href="{{ s.button_1_link }}"
               {% else %}
@@ -98,7 +98,7 @@
           {%- endif -%}
           {%- if s.button_2_label != blank -%}
             <a
-              class="button button-secondary sgs-hero__button sgs-hero__button--secondary"
+              class="sgs-link sgs-hero__link"
               {% if s.button_2_link != blank %}
                 href="{{ s.button_2_link }}"
               {% else %}
@@ -106,6 +106,9 @@
               {% endif %}
             >
               {{- s.button_2_label | escape -}}
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+                <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </a>
           {%- endif -%}
         </div>
@@ -117,12 +120,7 @@
             {%- assign feature_key = 'feature_' | append: i -%}
             {%- assign feature = s[feature_key] -%}
             {%- if feature != blank -%}
-              <li class="sgs-hero__feature">
-                <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
-                  <path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span>{{ feature | escape }}</span>
-              </li>
+              <li class="sgs-hero__feature sgs-label">{{ feature | escape }}</li>
             {%- endif -%}
           {%- endfor -%}
         </ul>
@@ -148,25 +146,25 @@
             {%- else -%}
               {{ 'product-1' | placeholder_svg_tag: 'sgs-hero__art-img sgs-hero__placeholder' }}
             {%- endif -%}
-        </div>
+          </div>
 
-        {%- if s.show_product_tag and featured_product != blank -%}
-          <a class="sgs-hero__tag" href="{{ featured_product.url }}">
-            <span class="sgs-hero__tag-label">{{ s.product_tag_label | escape }}</span>
-            <span class="sgs-hero__tag-title">{{ featured_product.title | escape }}</span>
-            <span class="sgs-hero__tag-price">
-              {%- if featured_product.price_varies -%}
-                {%- assign from_price = featured_product.price_min | money -%}
-                {{ 'content.price_from' | t: price: from_price }}
-              {%- else -%}
-                {{ featured_product.price | money }}
-              {%- endif -%}
-              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16">
-                <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </a>
-        {%- endif -%}
+          {%- if s.show_product_tag and featured_product != blank -%}
+            <a class="sgs-hero__tag" href="{{ featured_product.url }}">
+              <span class="sgs-hero__tag-label sgs-label">{{ s.product_tag_label | escape }}</span>
+              <span class="sgs-hero__tag-title">{{ featured_product.title | escape }}</span>
+              <span class="sgs-hero__tag-price">
+                {%- if featured_product.price_varies -%}
+                  {%- assign from_price = featured_product.price_min | money -%}
+                  {{ 'content.price_from' | t: price: from_price }}
+                {%- else -%}
+                  {{ featured_product.price | money }}
+                {%- endif -%}
+                <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          {%- endif -%}
         </div>
       </div>
     {%- endif -%}
@@ -176,9 +174,11 @@
 {% stylesheet %}
   .sgs-hero {
     --sgs-hero-fg: #0e0e0e;
-    --sgs-hero-fg-muted: rgb(14 14 14 / 0.68);
+    --sgs-hero-fg-muted: rgb(14 14 14 / 0.62);
+    --sgs-hero-fg-faint: rgb(14 14 14 / 0.4);
     --sgs-hero-line: rgb(14 14 14 / 0.14);
     --sgs-hero-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --sgs-hero-header-offset: calc(var(--header-height, 0px) * var(--transparent-header-offset-boolean, 0));
 
     position: relative;
     isolation: isolate;
@@ -186,27 +186,28 @@
     display: flex;
     align-items: center;
     min-height: var(--sgs-hero-min-height);
-    padding-block: var(--sgs-hero-pad-top) var(--sgs-hero-pad-bottom);
+    padding-block: calc(var(--sgs-hero-pad-top) + var(--sgs-hero-header-offset)) var(--sgs-hero-pad-bottom);
     background-color: var(--sgs-hero-bg);
     color: var(--sgs-hero-fg);
   }
 
   .sgs-hero--dark {
     --sgs-hero-fg: #f5f3ef;
-    --sgs-hero-fg-muted: rgb(245 243 239 / 0.72);
-    --sgs-hero-line: rgb(245 243 239 / 0.16);
+    --sgs-hero-fg-muted: rgb(245 243 239 / 0.66);
+    --sgs-hero-fg-faint: rgb(245 243 239 / 0.42);
+    --sgs-hero-line: rgb(245 243 239 / 0.14);
   }
 
-  /* Soft spotlight behind the artwork */
+  /* Soft gallery spotlight behind the artwork */
   .sgs-hero--split::before {
     content: '';
     position: absolute;
     inset: 0;
     z-index: -1;
     background: radial-gradient(
-      ellipse 55% 70% at 72% 50%,
-      color-mix(in srgb, var(--sgs-hero-fg) 9%, transparent),
-      transparent 70%
+      ellipse 50% 65% at 73% 52%,
+      color-mix(in srgb, var(--sgs-hero-fg) 7%, transparent),
+      transparent 72%
     );
     pointer-events: none;
   }
@@ -221,35 +222,38 @@
 
   .sgs-hero--split .sgs-hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2vw, 32px);
     align-items: center;
-    gap: clamp(40px, 6vw, 112px);
+  }
+
+  .sgs-hero--split .sgs-hero__content {
+    grid-column: 1 / span 6;
+  }
+
+  .sgs-hero--split .sgs-hero__art {
+    grid-column: 8 / span 5;
   }
 
   .sgs-hero__content {
     position: relative;
     z-index: 2;
-    max-width: 640px;
+    max-width: 620px;
   }
 
   .sgs-hero__eyebrow {
     display: flex;
     align-items: center;
-    gap: 14px;
-    margin: 0 0 20px;
-    font-family: var(--font-subheading--family);
-    font-weight: var(--font-subheading--weight);
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+    gap: 16px;
+    margin: 0 0 32px;
     color: var(--sgs-hero-fg-muted);
   }
 
   .sgs-hero__eyebrow::before {
     content: '';
-    width: 32px;
-    height: 2px;
-    background: var(--sgs-hero-accent);
+    width: 40px;
+    height: 1px;
+    background: currentColor;
     flex-shrink: 0;
   }
 
@@ -258,9 +262,9 @@
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
     font-style: var(--font-heading--style);
-    font-size: clamp(2.75rem, 1.4rem + 5.2vw, 6.25rem);
-    line-height: 0.94;
-    letter-spacing: -0.025em;
+    font-size: clamp(3rem, 1.5rem + 5.4vw, 6.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
     text-wrap: balance;
     color: var(--sgs-hero-fg);
@@ -272,10 +276,10 @@
   }
 
   .sgs-hero__text {
-    margin: 24px 0 0;
-    max-width: 46ch;
-    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-    line-height: 1.6;
+    margin: 32px 0 0;
+    max-width: 34ch;
+    font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+    line-height: 1.55;
     color: var(--sgs-hero-fg-muted);
     text-wrap: pretty;
   }
@@ -283,97 +287,78 @@
   .sgs-hero__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 36px;
+    align-items: center;
+    gap: 20px 36px;
+    margin-top: 48px;
   }
 
-  .sgs-hero__button {
-    --button-padding-block: 16px;
-    --button-padding-inline: 30px;
-
-    font-size: 14px;
-    letter-spacing: 0.08em;
-    transition: color var(--animation-speed) var(--animation-easing),
-      box-shadow var(--animation-speed) var(--animation-easing),
-      background-color var(--animation-speed) var(--animation-easing),
-      transform var(--animation-speed) var(--animation-easing);
-  }
-
+  /* Primary: solid, quiet, high-contrast — inverts with the section tone */
+  .sgs-hero__button,
   .sgs-hero__button:hover {
-    transform: translateY(-1px);
-  }
-
-  .sgs-hero__button--primary,
-  .sgs-hero__button--primary:hover {
-    --button-color: #fff;
-    --button-background-color: var(--sgs-hero-accent);
-    --button-border-color: var(--sgs-hero-accent);
-  }
-
-  .sgs-hero__button--primary:hover {
-    --button-background-color: color-mix(in srgb, var(--sgs-hero-accent) 84%, #000);
-    --button-border-color: color-mix(in srgb, var(--sgs-hero-accent) 84%, #000);
-  }
-
-  .sgs-hero__button--secondary {
-    --button-color: var(--sgs-hero-fg);
-    --button-background-color: transparent;
-    --button-border-color: color-mix(in srgb, var(--sgs-hero-fg) 55%, transparent);
-  }
-
-  .sgs-hero__button--secondary:hover {
+    --button-padding-block: 18px;
+    --button-padding-inline: 36px;
     --button-color: var(--sgs-hero-bg);
     --button-background-color: var(--sgs-hero-fg);
     --button-border-color: var(--sgs-hero-fg);
+
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    transition: background-color 0.4s var(--sgs-hero-ease), box-shadow 0.4s var(--sgs-hero-ease),
+      color 0.4s var(--sgs-hero-ease);
+  }
+
+  .sgs-hero__button:hover {
+    --button-background-color: color-mix(in srgb, var(--sgs-hero-fg) 86%, var(--sgs-hero-bg));
+    --button-border-color: color-mix(in srgb, var(--sgs-hero-fg) 86%, var(--sgs-hero-bg));
+  }
+
+  .sgs-hero__link {
+    color: var(--sgs-hero-fg);
   }
 
   .sgs-hero__features {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 28px;
-    margin: 40px 0 0;
-    padding: 24px 0 0;
+    gap: 8px 0;
+    margin: 56px 0 0;
+    padding: 0;
     list-style: none;
-    border-top: 1px solid var(--sgs-hero-line);
+    color: var(--sgs-hero-fg-faint);
   }
 
-  .sgs-hero__feature {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: var(--sgs-hero-fg-muted);
-  }
-
-  .sgs-hero__feature svg {
-    color: var(--sgs-hero-accent);
-    flex-shrink: 0;
+  .sgs-hero__feature + .sgs-hero__feature::before {
+    content: '';
+    display: inline-block;
+    width: 1px;
+    height: 10px;
+    margin-inline: 16px;
+    background: var(--sgs-hero-line);
+    vertical-align: -1px;
   }
 
   /* Artwork */
   .sgs-hero__art {
     position: relative;
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
   }
 
-  /* Racing stripes running behind the print */
+  /* Fine racing pinstripe running behind the print */
   .sgs-hero--stripes .sgs-hero__art::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: -30%;
+    top: 56%;
+    left: -40%;
     right: -100vw;
-    height: clamp(44px, 5vw, 72px);
-    transform: translateY(-50%) rotate(-7deg);
+    height: 12px;
+    transform: rotate(-6deg);
     background: linear-gradient(
       to bottom,
-      var(--sgs-hero-accent) 0 46%,
-      transparent 46% 62%,
-      color-mix(in srgb, var(--sgs-hero-fg) 18%, transparent) 62% 100%
+      var(--sgs-hero-accent) 0 3px,
+      transparent 3px 9px,
+      var(--sgs-hero-line) 9px 10px,
+      transparent 10px
     );
     z-index: 0;
     pointer-events: none;
@@ -382,34 +367,35 @@
   .sgs-hero__stage {
     position: relative;
     z-index: 1;
-    width: min(100%, calc(min(68svh, 720px) * var(--sgs-art-ratio)));
+    width: min(100%, calc(min(58svh, 680px) * var(--sgs-art-ratio)));
   }
 
   .sgs-hero__frame {
     position: relative;
     width: 100%;
     aspect-ratio: var(--sgs-art-ratio);
-    transition: translate 0.6s var(--sgs-hero-ease), box-shadow 0.6s var(--sgs-hero-ease);
+    transition: translate 0.8s var(--sgs-hero-ease), box-shadow 0.8s var(--sgs-hero-ease);
   }
 
-  .sgs-hero__art--shadow .sgs-hero__frame {
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.12), 0 24px 48px -12px rgb(0 0 0 / 0.45),
-      0 60px 100px -40px rgb(0 0 0 / 0.5);
+  .sgs-hero__art--shadow .sgs-hero__frame,
+  .sgs-hero__art--mat .sgs-hero__frame {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.1), 0 30px 60px -20px rgb(0 0 0 / 0.38),
+      0 70px 120px -50px rgb(0 0 0 / 0.45);
   }
 
   .sgs-hero__art--mat .sgs-hero__frame {
     padding: clamp(14px, 1.8vw, 26px);
     background: #fff;
-    box-shadow: 0 2px 4px rgb(0 0 0 / 0.12), 0 24px 48px -12px rgb(0 0 0 / 0.45),
-      0 60px 100px -40px rgb(0 0 0 / 0.5);
-  }
-
-  .sgs-hero__art--plain .sgs-hero__frame {
-    box-shadow: none;
   }
 
   .sgs-hero__stage:hover .sgs-hero__frame {
     translate: 0 -6px;
+  }
+
+  .sgs-hero__art--shadow .sgs-hero__stage:hover .sgs-hero__frame,
+  .sgs-hero__art--mat .sgs-hero__stage:hover .sgs-hero__frame {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.1), 0 40px 70px -24px rgb(0 0 0 / 0.42),
+      0 90px 140px -60px rgb(0 0 0 / 0.5);
   }
 
   .sgs-hero__art-img {
@@ -424,42 +410,32 @@
     fill: color-mix(in srgb, var(--sgs-hero-fg) 35%, transparent);
   }
 
+  /* Gallery caption beneath the print */
   .sgs-hero__tag {
-    position: absolute;
-    z-index: 2;
-    inset-block-end: -28px;
-    inset-inline-end: -32px;
     display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    gap: 2px 20px;
-    width: min(calc(100% + 16px), 340px);
-    padding: 14px 18px;
-    background: #f5f3ef;
-    color: #0e0e0e;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 8px 24px;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--sgs-hero-line);
+    color: var(--sgs-hero-fg);
     text-decoration: none;
-    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.5);
-    transition: translate 0.4s var(--sgs-hero-ease);
-  }
-
-  .sgs-hero__tag:hover {
-    translate: 0 -2px;
   }
 
   .sgs-hero__tag-label {
     grid-column: 1 / -1;
     font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--sgs-hero-accent);
-    font-weight: 600;
+    color: var(--sgs-hero-fg-faint);
   }
 
   .sgs-hero__tag-title {
+    transition: opacity 0.4s var(--sgs-hero-ease);
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
     font-size: 15px;
     line-height: 1.25;
+    letter-spacing: -0.005em;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -469,17 +445,22 @@
   .sgs-hero__tag-price {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-size: 14px;
+    gap: 10px;
+    font-size: 13px;
     white-space: nowrap;
+    color: var(--sgs-hero-fg-muted);
   }
 
   .sgs-hero__tag-price svg {
-    transition: transform 0.3s var(--sgs-hero-ease);
+    transition: translate 0.4s var(--sgs-hero-ease);
+  }
+
+  .sgs-hero__tag:hover .sgs-hero__tag-title {
+    opacity: 0.75;
   }
 
   .sgs-hero__tag:hover .sgs-hero__tag-price svg {
-    transform: translateX(3px);
+    translate: 3px 0;
   }
 
   /* Full-bleed layout */
@@ -507,23 +488,19 @@
     object-fit: cover;
   }
 
-  /* Entrance motion */
+  /* Entrance motion: quiet fade and rise, staggered */
   @media (prefers-reduced-motion: no-preference) {
     .sgs-hero__rise {
-      animation: sgs-hero-rise 0.9s var(--sgs-hero-ease) both;
-      animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+      animation: sgs-hero-rise 1s var(--sgs-hero-ease) both;
+      animation-delay: calc(var(--i, 0) * 100ms + 100ms);
     }
 
-    .sgs-hero__frame {
-      animation: sgs-hero-art 1.2s var(--sgs-hero-ease) 0.15s both;
+    .sgs-hero__stage {
+      animation: sgs-hero-art 1.4s var(--sgs-hero-ease) 0.2s both;
     }
 
     .sgs-hero--stripes .sgs-hero__art::before {
-      animation: sgs-hero-stripes 1.1s var(--sgs-hero-ease) both;
-    }
-
-    .sgs-hero__tag {
-      animation: sgs-hero-rise 0.9s var(--sgs-hero-ease) 0.6s both;
+      animation: sgs-hero-stripes 1.6s var(--sgs-hero-ease) 0.3s both;
     }
 
     .sgs-hero__backdrop-img {
@@ -534,6 +511,7 @@
   @media (prefers-reduced-motion: reduce) {
     .sgs-hero__frame,
     .sgs-hero__tag,
+    .sgs-hero__tag-price svg,
     .sgs-hero__button {
       transition: none;
     }
@@ -542,7 +520,7 @@
   @keyframes sgs-hero-rise {
     from {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(16px);
     }
     to {
       opacity: 1;
@@ -553,7 +531,7 @@
   @keyframes sgs-hero-art {
     from {
       opacity: 0;
-      transform: translateY(28px) scale(0.97);
+      transform: translateY(24px);
     }
     to {
       opacity: 1;
@@ -572,7 +550,7 @@
 
   @keyframes sgs-hero-zoom {
     from {
-      transform: scale(1.06);
+      transform: scale(1.05);
     }
     to {
       transform: none;
@@ -582,34 +560,50 @@
   @media screen and (max-width: 989px) {
     .sgs-hero {
       min-height: 0;
-      padding-block: calc(var(--sgs-hero-pad-top) * 0.6) calc(var(--sgs-hero-pad-bottom) * 0.6);
+      padding-block: calc(var(--sgs-hero-pad-top) * 0.55 + var(--sgs-hero-header-offset))
+        calc(var(--sgs-hero-pad-bottom) * 0.75);
     }
 
     .sgs-hero--split .sgs-hero__inner {
       grid-template-columns: minmax(0, 1fr);
-      gap: 48px;
+      row-gap: 64px;
+    }
+
+    .sgs-hero--split .sgs-hero__content,
+    .sgs-hero--split .sgs-hero__art {
+      grid-column: 1;
     }
 
     .sgs-hero--split::before {
       background: radial-gradient(
-        ellipse 90% 45% at 50% 78%,
-        color-mix(in srgb, var(--sgs-hero-fg) 9%, transparent),
-        transparent 70%
+        ellipse 90% 40% at 50% 78%,
+        color-mix(in srgb, var(--sgs-hero-fg) 7%, transparent),
+        transparent 72%
       );
     }
 
-    .sgs-hero__stage {
-      width: min(100%, 420px, calc(60svh * var(--sgs-art-ratio)));
-      margin-block-end: 28px;
+    .sgs-hero__eyebrow {
+      margin-bottom: 24px;
     }
 
-    .sgs-hero__tag {
-      inset-inline-end: 0;
-      width: min(calc(100% - 24px), 340px);
+    .sgs-hero__text {
+      margin-top: 24px;
+    }
+
+    .sgs-hero__actions {
+      margin-top: 36px;
+    }
+
+    .sgs-hero__features {
+      margin-top: 40px;
+    }
+
+    .sgs-hero__stage {
+      width: min(100%, 440px, calc(62svh * var(--sgs-art-ratio)));
     }
 
     .sgs-hero--full {
-      min-height: max(560px, 80svh);
+      min-height: max(600px, 85svh);
       align-items: flex-end;
     }
 
@@ -624,12 +618,17 @@
   }
 
   @media screen and (max-width: 479px) {
-    .sgs-hero__actions {
-      flex-direction: column;
-    }
-
     .sgs-hero__button {
       width: 100%;
+    }
+
+    .sgs-hero__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .sgs-hero__link {
+      align-self: center;
     }
   }
 {% endstylesheet %}
@@ -663,7 +662,7 @@
       "max": 100,
       "step": 5,
       "unit": "%",
-      "default": 85,
+      "default": 90,
       "info": "Percentage of the screen height on desktop."
     },
     {
@@ -680,7 +679,7 @@
       "type": "product",
       "id": "product",
       "label": "Featured product",
-      "info": "Supplies the image when none is uploaded, and the 'Featured print' link. Defaults to your first product."
+      "info": "Supplies the image when none is uploaded, and the featured print label. Defaults to your first product."
     },
     {
       "type": "select",
@@ -710,7 +709,7 @@
     {
       "type": "checkbox",
       "id": "show_product_tag",
-      "label": "Show featured print link",
+      "label": "Show featured print label",
       "default": true,
       "visible_if": "{{ section.settings.layout == 'split' }}"
     },
@@ -742,49 +741,50 @@
       "type": "inline_richtext",
       "id": "text",
       "label": "Text",
-      "default": "Premium posters of the cars that move us, printed on demand and shipped worldwide."
+      "default": "Iconic machines, rendered for the walls of those who love them."
     },
     {
       "type": "text",
       "id": "button_1_label",
-      "label": "First button label",
+      "label": "Button label",
       "default": "Shop posters"
     },
     {
       "type": "url",
       "id": "button_1_link",
-      "label": "First button link",
+      "label": "Button link",
       "default": "/collections/all"
     },
     {
       "type": "text",
       "id": "button_2_label",
-      "label": "Second button label",
+      "label": "Text link label",
       "default": "Browse collections"
     },
     {
       "type": "url",
       "id": "button_2_link",
-      "label": "Second button link",
+      "label": "Text link",
       "default": "/collections"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional highlights shown as small labels under the buttons. Leave empty for a cleaner hero."
     },
     {
       "type": "text",
       "id": "feature_1",
-      "label": "Highlight 1",
-      "default": "Printed on demand"
+      "label": "Highlight 1"
     },
     {
       "type": "text",
       "id": "feature_2",
-      "label": "Highlight 2",
-      "default": "Shipped worldwide"
+      "label": "Highlight 2"
     },
     {
       "type": "text",
       "id": "feature_3",
-      "label": "Highlight 3",
-      "default": "Secure checkout"
+      "label": "Highlight 3"
     },
     {
       "type": "header",
@@ -805,7 +805,7 @@
     {
       "type": "checkbox",
       "id": "show_stripes",
-      "label": "Show racing stripes",
+      "label": "Show racing pinstripe",
       "default": true,
       "visible_if": "{{ section.settings.layout == 'split' }}"
     },
@@ -832,7 +832,7 @@
       "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 96
+      "default": 128
     },
     {
       "type": "range",
@@ -842,7 +842,7 @@
       "max": 200,
       "step": 4,
       "unit": "px",
-      "default": 96
+      "default": 128
     }
   ],
   "presets": [

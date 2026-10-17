@@ -1,0 +1,164 @@
+/*
+ * SixthGear Studios — global refinements layered on top of Horizon.
+ * Keep this file small: section-specific styles live in each sgs-* section.
+ */
+
+/* ---------- Base ---------- */
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #0e0e0e;
+  color: #f5f3ef;
+}
+
+:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---------- Shared tokens ---------- */
+:root {
+  --sgs-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --sgs-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --sgs-hairline-light: rgb(14 14 14 / 0.12);
+  --sgs-hairline-dark: rgb(245 243 239 / 0.14);
+  --sgs-label-size: 11px;
+  --sgs-label-tracking: 0.2em;
+}
+
+/* Small uppercase label used across sections */
+.sgs-label {
+  font-family: var(--font-body--family);
+  font-size: var(--sgs-label-size);
+  font-weight: 500;
+  letter-spacing: var(--sgs-label-tracking);
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Text link with a hairline underline that draws in on hover */
+.sgs-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding-block: 6px;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-body--family);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.sgs-link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left;
+  transition: opacity 0.4s var(--sgs-ease), transform 0.5s var(--sgs-ease-out);
+}
+
+.sgs-link:hover::after {
+  opacity: 1;
+}
+
+.sgs-link svg {
+  transition: translate 0.4s var(--sgs-ease-out);
+}
+
+.sgs-link:hover svg {
+  translate: 4px 0;
+}
+
+/* ---------- Scroll reveal ----------
+ * Elements marked [data-sgs-reveal] fade and rise into view once.
+ * Only active when JS has run (html.sgs-motion) and motion is allowed,
+ * so content is never hidden for no-JS or reduced-motion visitors.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .sgs-motion [data-sgs-reveal] {
+    opacity: 0;
+    translate: 0 24px;
+    transition: opacity 0.9s var(--sgs-ease), translate 1s var(--sgs-ease-out);
+    transition-delay: calc(var(--sgs-reveal-index, 0) * 80ms);
+  }
+
+  .sgs-motion [data-sgs-reveal].is-revealed {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ---------- Announcement bar ---------- */
+.announcement-bar__text {
+  letter-spacing: 0.2em;
+}
+
+/* ---------- Header ---------- */
+.header .menu-list__link-title {
+  position: relative;
+  padding-inline: 0;
+  margin-inline: clamp(12px, 1.4vw, 22px);
+  letter-spacing: 0.16em;
+}
+
+/* Hairline that draws in under the hovered / current menu item */
+.header .menu-list__link-title::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -6px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--sgs-ease-out);
+}
+
+.header .menu-list__link:hover .menu-list__link-title::after,
+.header .menu-list__link[aria-expanded='true'] .menu-list__link-title::after,
+.header .menu-list__link--active .menu-list__link-title::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+[slot='overflow'] .menu-list__link-title::after {
+  content: none;
+}
+
+/* Softer, translucent bottom hairline while the header floats over a dark hero */
+.header[transparent]:not([data-sticky-state='active']):not(:has(.menu-list__link:hover)):not(
+    :has(header-menu[aria-expanded='true'])
+  )
+  .header__row {
+  border-bottom-color: var(--sgs-hairline-dark);
+}
+
+/* Smooth background fade when the sticky header becomes solid */
+.header__row {
+  transition: background-color 0.35s var(--sgs-ease), border-color 0.35s var(--sgs-ease);
+}
+
+/* Cart count: compact figures inside the red bubble */
+.header .cart-bubble {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header .menu-list__link-title::after,
+  .sgs-link::after,
+  .sgs-link svg {
+    transition: none;
+  }
+}

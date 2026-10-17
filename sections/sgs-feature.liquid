@@ -1,0 +1,400 @@
+{%- liquid
+  assign s = section.settings
+
+  # Image: uploaded > chosen product's second (on-the-wall) image > its first image > first product in store
+  assign feature_product = s.product | default: collections.all.products.first
+  assign feature_image = s.image
+  if feature_image == blank and feature_product != blank
+    for media in feature_product.media
+      if media.position > 1 and media.media_type == 'image'
+        assign feature_image = media.preview_image
+        break
+      endif
+    endfor
+    if feature_image == blank
+      assign feature_image = feature_product.featured_image
+    endif
+  endif
+
+  assign bg = s.background_color | default: settings.color_palette.background
+  assign bg_brightness = bg | color_brightness
+  if bg_brightness < 128
+    assign tone = 'dark'
+  else
+    assign tone = 'light'
+  endif
+-%}
+
+<section
+  class="sgs-feature sgs-feature--{{ tone }} sgs-feature--image-{{ s.image_position }}"
+  style="
+    --sgs-feature-bg: {{ bg }};
+    --sgs-feature-ratio: {{ s.image_ratio }};
+    --sgs-feature-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-feature-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+>
+  <div class="sgs-feature__inner">
+    <div class="sgs-feature__media" data-sgs-reveal>
+      {%- if feature_image != blank -%}
+        {%- assign feature_alt = feature_image.alt | default: '' | escape -%}
+        {{
+          feature_image
+          | image_url: width: 2000
+          | image_tag:
+            widths: '600, 800, 1000, 1200, 1500, 2000',
+            sizes: '(min-width: 990px) 55vw, 100vw',
+            loading: 'lazy',
+            class: 'sgs-feature__img',
+            alt: feature_alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'sgs-feature__img sgs-feature__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="sgs-feature__content" data-sgs-reveal-group>
+      {%- if s.eyebrow != blank -%}
+        <p class="sgs-feature__eyebrow sgs-label" data-sgs-reveal>{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2 class="sgs-feature__heading" data-sgs-reveal>{{ s.heading }}</h2>
+      {%- endif -%}
+      {%- if s.text != blank -%}
+        <div class="sgs-feature__text" data-sgs-reveal>{{ s.text }}</div>
+      {%- endif -%}
+
+      {%- if section.blocks.size > 0 -%}
+        <dl class="sgs-feature__points" data-sgs-reveal>
+          {%- for block in section.blocks -%}
+            <div class="sgs-feature__point" {{ block.shopify_attributes }}>
+              <dt class="sgs-feature__point-title">{{ block.settings.title | escape }}</dt>
+              <dd class="sgs-feature__point-text">{{ block.settings.text | escape }}</dd>
+            </div>
+          {%- endfor -%}
+        </dl>
+      {%- endif -%}
+
+      {%- if s.link_label != blank -%}
+        <a class="sgs-link sgs-feature__link" href="{{ s.link | default: routes.all_products_collection_url }}" data-sgs-reveal>
+          {{- s.link_label | escape -}}
+          <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+            <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-feature {
+    --sgs-feature-fg: 14 14 14;
+
+    padding-block: var(--sgs-feature-pad-top) var(--sgs-feature-pad-bottom);
+    background: var(--sgs-feature-bg);
+    color: rgb(var(--sgs-feature-fg));
+  }
+
+  .sgs-feature--dark {
+    --sgs-feature-fg: 245 243 239;
+  }
+
+  .sgs-feature__inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2vw, 32px);
+    align-items: center;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-feature__media {
+    grid-column: 1 / span 6;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: var(--sgs-feature-ratio);
+    background: #e8e5df;
+  }
+
+  .sgs-feature__content {
+    grid-column: 8 / span 5;
+    max-width: 520px;
+  }
+
+  .sgs-feature--image-right .sgs-feature__media {
+    grid-column: 7 / span 6;
+    order: 2;
+  }
+
+  .sgs-feature--image-right .sgs-feature__content {
+    grid-column: 1 / span 5;
+  }
+
+  .sgs-feature__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-feature__placeholder {
+    fill: rgb(14 14 14 / 0.18);
+  }
+
+  .sgs-feature__eyebrow {
+    margin: 0 0 24px;
+    color: rgb(var(--sgs-feature-fg) / 0.55);
+  }
+
+  .sgs-feature__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-feature__heading em {
+    font-style: normal;
+    color: #e10600;
+  }
+
+  .sgs-feature__text {
+    margin-top: 28px;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.65;
+    color: rgb(var(--sgs-feature-fg) / 0.7);
+  }
+
+  .sgs-feature__text p {
+    margin: 0;
+  }
+
+  .sgs-feature__text p + p {
+    margin-top: 1em;
+  }
+
+  .sgs-feature__points {
+    margin: 48px 0 0;
+    border-top: 1px solid rgb(var(--sgs-feature-fg) / 0.12);
+  }
+
+  .sgs-feature__point {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 8px 24px;
+    padding-block: 20px;
+    border-bottom: 1px solid rgb(var(--sgs-feature-fg) / 0.12);
+  }
+
+  .sgs-feature__point-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.6;
+  }
+
+  .sgs-feature__point-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgb(var(--sgs-feature-fg) / 0.66);
+  }
+
+  .sgs-feature__link {
+    margin-top: 40px;
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-feature__inner {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: 48px;
+    }
+
+    .sgs-feature__media,
+    .sgs-feature__content,
+    .sgs-feature--image-right .sgs-feature__media,
+    .sgs-feature--image-right .sgs-feature__content {
+      grid-column: 1;
+      order: 0;
+    }
+
+    .sgs-feature__content {
+      max-width: 600px;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-feature {
+      padding-block: calc(var(--sgs-feature-pad-top) * 0.6) calc(var(--sgs-feature-pad-bottom) * 0.6);
+    }
+
+    /* Let the image run edge to edge on phones */
+    .sgs-feature__media {
+      margin-inline: calc(var(--page-margin) * -1);
+    }
+
+    .sgs-feature__point {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 6px;
+    }
+
+    .sgs-feature__points {
+      margin-top: 36px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear feature",
+  "tag": "div",
+  "class": "sgs-feature-section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "A lifestyle or on-the-wall photo works best. Leave empty to use the featured product's second image."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Featured product",
+      "info": "Supplies the image when none is uploaded. Defaults to your first product."
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait 4:5" },
+        { "value": "1 / 1", "label": "Square" },
+        { "value": "5 / 4", "label": "Landscape 5:4" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The print"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made to be lived with"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Every SixthGear print begins with the car: its lines, its history, the moment it became a legend. Each one is printed to order and sent straight to your door.</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Shop the prints"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "Detail",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Detail"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Describe a detail of your prints."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear feature",
+      "blocks": [
+        {
+          "type": "point",
+          "settings": { "title": "Considered design", "text": "Every composition is built around the car's defining lines." }
+        },
+        {
+          "type": "point",
+          "settings": { "title": "Sized for your wall", "text": "Choose from the sizes offered on each print." }
+        },
+        {
+          "type": "point",
+          "settings": { "title": "Ready to frame", "text": "Supplied unframed, so you can choose a frame to suit your space." }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

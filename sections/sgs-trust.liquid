@@ -1,0 +1,202 @@
+{%- assign s = section.settings -%}
+
+<section
+  class="sgs-trust"
+  style="
+    --sgs-trust-count: {{ section.blocks.size | at_least: 1 }};
+    --sgs-trust-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-trust-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+>
+  <div class="sgs-trust__inner">
+    <ul class="sgs-trust__list" role="list" data-sgs-reveal-group>
+      {%- for block in section.blocks -%}
+        <li class="sgs-trust__item" data-sgs-reveal {{ block.shopify_attributes }}>
+          <span class="sgs-trust__icon" aria-hidden="true">
+            {%- case block.settings.icon -%}
+              {%- when 'print' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="6.5" y="3.5" width="15" height="21"/><rect x="9.5" y="6.5" width="9" height="11"/><path d="M9.5 20.5h6"/></svg>
+              {%- when 'globe' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="10.5"/><path d="M3.5 14h21M14 3.5c3 3 4.5 6.5 4.5 10.5S17 21.5 14 24.5M14 3.5c-3 3-4.5 6.5-4.5 10.5s1.5 7.5 4.5 10.5"/></svg>
+              {%- when 'lock' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="12.5" width="17" height="12"/><path d="M9.5 12.5V9a4.5 4.5 0 019 0v3.5"/><path d="M14 17v3"/></svg>
+              {%- when 'sizes' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="9.5" width="9" height="13"/><rect x="15.5" y="4.5" width="9" height="18"/></svg>
+              {%- when 'package' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3.5l10 5v11l-10 5-10-5v-11z"/><path d="M4 8.5l10 5 10-5M14 13.5v11"/></svg>
+              {%- when 'chat' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h19v12h-11l-5 4v-4h-3z"/></svg>
+              {%- when 'gear' -%}
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="10.5"/><path d="M9 9v10M14 9v10M19 9v5M9 14h10"/></svg>
+            {%- endcase -%}
+          </span>
+          <span class="sgs-trust__title">{{ block.settings.title | escape }}</span>
+          {%- if block.settings.text != blank -%}
+            <span class="sgs-trust__text">{{ block.settings.text | escape }}</span>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-trust {
+    padding-block: var(--sgs-trust-pad-top) var(--sgs-trust-pad-bottom);
+    color: #0e0e0e;
+  }
+
+  .sgs-trust__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-trust__list {
+    display: grid;
+    grid-template-columns: repeat(var(--sgs-trust-count), minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-trust__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: clamp(40px, 4vw, 56px) clamp(16px, 2vw, 40px);
+    text-align: center;
+  }
+
+  .sgs-trust__item + .sgs-trust__item {
+    border-inline-start: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-trust__icon {
+    display: flex;
+    margin-bottom: 8px;
+    color: #0e0e0e;
+  }
+
+  .sgs-trust__title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .sgs-trust__text {
+    max-width: 30ch;
+    font-size: 14px;
+    line-height: 1.55;
+    color: rgb(14 14 14 / 0.62);
+    text-wrap: pretty;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-trust__list {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .sgs-trust__item {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      align-items: center;
+      gap: 4px 20px;
+      padding: 24px 0;
+      text-align: start;
+    }
+
+    .sgs-trust__item + .sgs-trust__item {
+      border-inline-start: 0;
+      border-top: 1px solid rgb(14 14 14 / 0.12);
+    }
+
+    .sgs-trust__icon {
+      grid-row: span 2;
+      margin: 0;
+    }
+
+    .sgs-trust__text {
+      grid-column: 2;
+      max-width: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear trust strip",
+  "tag": "div",
+  "class": "sgs-trust-section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "print", "label": "Print" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "sizes", "label": "Sizes" },
+            { "value": "package", "label": "Package" },
+            { "value": "chat", "label": "Support" },
+            { "value": "gear", "label": "Gear shift" }
+          ],
+          "default": "print"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Printed to order"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear trust strip",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "print", "title": "Printed to order", "text": "Each print is made for you, the moment you order." } },
+        { "type": "item", "settings": { "icon": "globe", "title": "Shipped worldwide", "text": "From our print partners to your door, wherever you are." } },
+        { "type": "item", "settings": { "icon": "lock", "title": "Secure checkout", "text": "Encrypted payments through Shopify Checkout." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

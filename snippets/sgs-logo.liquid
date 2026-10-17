@@ -1,0 +1,43 @@
+{%- doc -%}
+  Renders a bundled SixthGear Studios logo from theme assets.
+  Used as a fallback when no logo has been uploaded in Theme settings > Logo and favicon.
+
+  @param {string} [variant] - 'default' (dark text), 'inverse' (white text, red accent), 'white' (all white) or 'icon'
+  @param {number} [height] - Rendered height in px on desktop
+  @param {number} [height_mobile] - Rendered height in px on mobile
+  @param {string} [class] - Additional classes
+  @param {string} [loading] - 'eager' or 'lazy'
+
+  @example
+  {% render 'sgs-logo', variant: 'inverse', height: 40, height_mobile: 30, class: 'header-logo__image' %}
+{%- enddoc -%}
+{%- liquid
+  case variant
+    when 'inverse'
+      assign file = 'sgs-logo-inverse.png'
+      assign ratio = 4.7567
+    when 'white'
+      assign file = 'sgs-logo-white.png'
+      assign ratio = 4.5967
+    when 'icon'
+      assign file = 'sgs-logo-icon.png'
+      assign ratio = 1.0109
+    else
+      assign file = 'sgs-logo.png'
+      assign ratio = 4.7567
+  endcase
+
+  assign logo_height = height | default: 40
+  assign logo_height_mobile = height_mobile | default: logo_height
+  assign logo_width = logo_height | times: ratio | ceil
+  assign logo_width_mobile = logo_height_mobile | times: ratio | ceil
+-%}
+<img
+  src="{{ file | asset_url }}"
+  alt="{{ shop.name | escape }}"
+  width="{{ logo_width }}"
+  height="{{ logo_height }}"
+  class="{{ class }}"
+  loading="{{ loading | default: 'eager' }}"
+  style="--header-logo-image-width: {{ logo_width }}px; --header-logo-image-width-mobile: {{ logo_width_mobile }}px; --header-logo-image-height: {{ logo_height }}px; --header-logo-image-height-mobile: {{ logo_height_mobile }}px;"
+>

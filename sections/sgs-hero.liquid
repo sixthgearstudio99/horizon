@@ -1,0 +1,854 @@
+{%- liquid
+  assign s = section.settings
+
+  # Image source: uploaded image > chosen product's image > first product in the store
+  assign featured_product = s.product
+  if featured_product == blank and s.image == blank
+    assign featured_product = collections.all.products.first
+  endif
+
+  assign hero_image = s.image
+  if hero_image == blank and featured_product != blank
+    assign hero_image = featured_product.featured_image
+  endif
+
+  assign hero_alt = hero_image.alt | default: featured_product.title | default: shop.name | escape
+
+  assign bg = s.background_color | default: '#0E0E0E'
+  assign bg_brightness = bg | color_brightness
+  if bg_brightness < 128
+    assign tone = 'dark'
+  else
+    assign tone = 'light'
+  endif
+
+  case s.art_ratio
+    when 'portrait'
+      assign art_ratio = 0.8
+    when 'a-series'
+      assign art_ratio = 0.7071
+    when 'square'
+      assign art_ratio = 1
+    else
+      assign art_ratio = hero_image.aspect_ratio | default: 0.75
+  endcase
+
+  assign layout = s.layout
+  if layout == 'full' and hero_image == blank
+    assign layout = 'split'
+  endif
+-%}
+
+<section
+  class="sgs-hero sgs-hero--{{ layout }} sgs-hero--{{ tone }}{% if s.show_stripes %} sgs-hero--stripes{% endif %}"
+  style="
+    --sgs-hero-bg: {{ bg }};
+    --sgs-hero-accent: {{ s.accent_color | default: '#E10600' }};
+    --sgs-hero-min-height: {{ s.min_height }}svh;
+    --sgs-hero-overlay: {{ s.overlay_opacity }}%;
+    --sgs-art-ratio: {{ art_ratio }};
+    --sgs-hero-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-hero-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+  aria-label="{{ s.eyebrow | default: shop.name | escape }}"
+>
+  {%- if layout == 'full' -%}
+    <div class="sgs-hero__backdrop" aria-hidden="true">
+      {{
+        hero_image
+        | image_url: width: 3200
+        | image_tag:
+          widths: '750, 1100, 1500, 1920, 2400, 3200',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          class: 'sgs-hero__backdrop-img',
+          alt: ''
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="sgs-hero__inner">
+    <div class="sgs-hero__content">
+      {%- if s.eyebrow != blank -%}
+        <p class="sgs-hero__eyebrow sgs-hero__rise" style="--i: 0;">{{ s.eyebrow }}</p>
+      {%- endif -%}
+
+      {%- if s.heading != blank -%}
+        <h1 class="sgs-hero__heading sgs-hero__rise" style="--i: 1;">{{ s.heading }}</h1>
+      {%- endif -%}
+
+      {%- if s.text != blank -%}
+        <p class="sgs-hero__text sgs-hero__rise" style="--i: 2;">{{ s.text }}</p>
+      {%- endif -%}
+
+      {%- if s.button_1_label != blank or s.button_2_label != blank -%}
+        <div class="sgs-hero__actions sgs-hero__rise" style="--i: 3;">
+          {%- if s.button_1_label != blank -%}
+            <a
+              class="button sgs-hero__button sgs-hero__button--primary"
+              {% if s.button_1_link != blank %}
+                href="{{ s.button_1_link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+            >
+              {{- s.button_1_label | escape -}}
+            </a>
+          {%- endif -%}
+          {%- if s.button_2_label != blank -%}
+            <a
+              class="button button-secondary sgs-hero__button sgs-hero__button--secondary"
+              {% if s.button_2_link != blank %}
+                href="{{ s.button_2_link }}"
+              {% else %}
+                role="link" aria-disabled="true"
+              {% endif %}
+            >
+              {{- s.button_2_label | escape -}}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if s.feature_1 != blank or s.feature_2 != blank or s.feature_3 != blank -%}
+        <ul class="sgs-hero__features sgs-hero__rise" style="--i: 4;" role="list">
+          {%- for i in (1..3) -%}
+            {%- assign feature_key = 'feature_' | append: i -%}
+            {%- assign feature = s[feature_key] -%}
+            {%- if feature != blank -%}
+              <li class="sgs-hero__feature">
+                <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M2.5 7.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{{ feature | escape }}</span>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- if layout == 'split' -%}
+      <div class="sgs-hero__art sgs-hero__art--{{ s.art_style }}">
+        <div class="sgs-hero__stage">
+          <div class="sgs-hero__frame">
+            {%- if hero_image != blank -%}
+              {{
+                hero_image
+                | image_url: width: 1600
+                | image_tag:
+                  widths: '400, 600, 800, 1000, 1200, 1600',
+                  sizes: '(min-width: 990px) 42vw, 86vw',
+                  loading: 'eager',
+                  fetchpriority: 'high',
+                  class: 'sgs-hero__art-img',
+                  alt: hero_alt
+              }}
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'sgs-hero__art-img sgs-hero__placeholder' }}
+            {%- endif -%}
+        </div>
+
+        {%- if s.show_product_tag and featured_product != blank -%}
+          <a class="sgs-hero__tag" href="{{ featured_product.url }}">
+            <span class="sgs-hero__tag-label">{{ s.product_tag_label | escape }}</span>
+            <span class="sgs-hero__tag-title">{{ featured_product.title | escape }}</span>
+            <span class="sgs-hero__tag-price">
+              {%- if featured_product.price_varies -%}
+                {%- assign from_price = featured_product.price_min | money -%}
+                {{ 'content.price_from' | t: price: from_price }}
+              {%- else -%}
+                {{ featured_product.price | money }}
+              {%- endif -%}
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </a>
+        {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-hero {
+    --sgs-hero-fg: #0e0e0e;
+    --sgs-hero-fg-muted: rgb(14 14 14 / 0.68);
+    --sgs-hero-line: rgb(14 14 14 / 0.14);
+    --sgs-hero-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    min-height: var(--sgs-hero-min-height);
+    padding-block: var(--sgs-hero-pad-top) var(--sgs-hero-pad-bottom);
+    background-color: var(--sgs-hero-bg);
+    color: var(--sgs-hero-fg);
+  }
+
+  .sgs-hero--dark {
+    --sgs-hero-fg: #f5f3ef;
+    --sgs-hero-fg-muted: rgb(245 243 239 / 0.72);
+    --sgs-hero-line: rgb(245 243 239 / 0.16);
+  }
+
+  /* Soft spotlight behind the artwork */
+  .sgs-hero--split::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      ellipse 55% 70% at 72% 50%,
+      color-mix(in srgb, var(--sgs-hero-fg) 9%, transparent),
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .sgs-hero__inner {
+    position: relative;
+    width: 100%;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-hero--split .sgs-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: clamp(40px, 6vw, 112px);
+  }
+
+  .sgs-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+  }
+
+  .sgs-hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 20px;
+    font-family: var(--font-subheading--family);
+    font-weight: var(--font-subheading--weight);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sgs-hero-fg-muted);
+  }
+
+  .sgs-hero__eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 2px;
+    background: var(--sgs-hero-accent);
+    flex-shrink: 0;
+  }
+
+  .sgs-hero__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-style: var(--font-heading--style);
+    font-size: clamp(2.75rem, 1.4rem + 5.2vw, 6.25rem);
+    line-height: 0.94;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--sgs-hero-fg);
+  }
+
+  .sgs-hero__heading em {
+    font-style: normal;
+    color: var(--sgs-hero-accent);
+  }
+
+  .sgs-hero__text {
+    margin: 24px 0 0;
+    max-width: 46ch;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--sgs-hero-fg-muted);
+    text-wrap: pretty;
+  }
+
+  .sgs-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .sgs-hero__button {
+    --button-padding-block: 16px;
+    --button-padding-inline: 30px;
+
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    transition: color var(--animation-speed) var(--animation-easing),
+      box-shadow var(--animation-speed) var(--animation-easing),
+      background-color var(--animation-speed) var(--animation-easing),
+      transform var(--animation-speed) var(--animation-easing);
+  }
+
+  .sgs-hero__button:hover {
+    transform: translateY(-1px);
+  }
+
+  .sgs-hero__button--primary,
+  .sgs-hero__button--primary:hover {
+    --button-color: #fff;
+    --button-background-color: var(--sgs-hero-accent);
+    --button-border-color: var(--sgs-hero-accent);
+  }
+
+  .sgs-hero__button--primary:hover {
+    --button-background-color: color-mix(in srgb, var(--sgs-hero-accent) 84%, #000);
+    --button-border-color: color-mix(in srgb, var(--sgs-hero-accent) 84%, #000);
+  }
+
+  .sgs-hero__button--secondary {
+    --button-color: var(--sgs-hero-fg);
+    --button-background-color: transparent;
+    --button-border-color: color-mix(in srgb, var(--sgs-hero-fg) 55%, transparent);
+  }
+
+  .sgs-hero__button--secondary:hover {
+    --button-color: var(--sgs-hero-bg);
+    --button-background-color: var(--sgs-hero-fg);
+    --button-border-color: var(--sgs-hero-fg);
+  }
+
+  .sgs-hero__features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    margin: 40px 0 0;
+    padding: 24px 0 0;
+    list-style: none;
+    border-top: 1px solid var(--sgs-hero-line);
+  }
+
+  .sgs-hero__feature {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--sgs-hero-fg-muted);
+  }
+
+  .sgs-hero__feature svg {
+    color: var(--sgs-hero-accent);
+    flex-shrink: 0;
+  }
+
+  /* Artwork */
+  .sgs-hero__art {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Racing stripes running behind the print */
+  .sgs-hero--stripes .sgs-hero__art::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -30%;
+    right: -100vw;
+    height: clamp(44px, 5vw, 72px);
+    transform: translateY(-50%) rotate(-7deg);
+    background: linear-gradient(
+      to bottom,
+      var(--sgs-hero-accent) 0 46%,
+      transparent 46% 62%,
+      color-mix(in srgb, var(--sgs-hero-fg) 18%, transparent) 62% 100%
+    );
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .sgs-hero__stage {
+    position: relative;
+    z-index: 1;
+    width: min(100%, calc(min(68svh, 720px) * var(--sgs-art-ratio)));
+  }
+
+  .sgs-hero__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--sgs-art-ratio);
+    transition: translate 0.6s var(--sgs-hero-ease), box-shadow 0.6s var(--sgs-hero-ease);
+  }
+
+  .sgs-hero__art--shadow .sgs-hero__frame {
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.12), 0 24px 48px -12px rgb(0 0 0 / 0.45),
+      0 60px 100px -40px rgb(0 0 0 / 0.5);
+  }
+
+  .sgs-hero__art--mat .sgs-hero__frame {
+    padding: clamp(14px, 1.8vw, 26px);
+    background: #fff;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.12), 0 24px 48px -12px rgb(0 0 0 / 0.45),
+      0 60px 100px -40px rgb(0 0 0 / 0.5);
+  }
+
+  .sgs-hero__art--plain .sgs-hero__frame {
+    box-shadow: none;
+  }
+
+  .sgs-hero__stage:hover .sgs-hero__frame {
+    translate: 0 -6px;
+  }
+
+  .sgs-hero__art-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-hero__placeholder {
+    background: color-mix(in srgb, var(--sgs-hero-fg) 8%, transparent);
+    fill: color-mix(in srgb, var(--sgs-hero-fg) 35%, transparent);
+  }
+
+  .sgs-hero__tag {
+    position: absolute;
+    z-index: 2;
+    inset-block-end: -28px;
+    inset-inline-end: -32px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2px 20px;
+    width: min(calc(100% + 16px), 340px);
+    padding: 14px 18px;
+    background: #f5f3ef;
+    color: #0e0e0e;
+    text-decoration: none;
+    box-shadow: 0 18px 40px -16px rgb(0 0 0 / 0.5);
+    transition: translate 0.4s var(--sgs-hero-ease);
+  }
+
+  .sgs-hero__tag:hover {
+    translate: 0 -2px;
+  }
+
+  .sgs-hero__tag-label {
+    grid-column: 1 / -1;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sgs-hero-accent);
+    font-weight: 600;
+  }
+
+  .sgs-hero__tag-title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 15px;
+    line-height: 1.25;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .sgs-hero__tag-price {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .sgs-hero__tag-price svg {
+    transition: transform 0.3s var(--sgs-hero-ease);
+  }
+
+  .sgs-hero__tag:hover .sgs-hero__tag-price svg {
+    transform: translateX(3px);
+  }
+
+  /* Full-bleed layout */
+  .sgs-hero__backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .sgs-hero__backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--sgs-hero-bg) var(--sgs-hero-overlay), transparent) 0%,
+      color-mix(in srgb, var(--sgs-hero-bg) calc(var(--sgs-hero-overlay) * 0.6), transparent) 45%,
+      transparent 85%
+    );
+  }
+
+  .sgs-hero__backdrop-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Entrance motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .sgs-hero__rise {
+      animation: sgs-hero-rise 0.9s var(--sgs-hero-ease) both;
+      animation-delay: calc(var(--i, 0) * 90ms + 80ms);
+    }
+
+    .sgs-hero__frame {
+      animation: sgs-hero-art 1.2s var(--sgs-hero-ease) 0.15s both;
+    }
+
+    .sgs-hero--stripes .sgs-hero__art::before {
+      animation: sgs-hero-stripes 1.1s var(--sgs-hero-ease) both;
+    }
+
+    .sgs-hero__tag {
+      animation: sgs-hero-rise 0.9s var(--sgs-hero-ease) 0.6s both;
+    }
+
+    .sgs-hero__backdrop-img {
+      animation: sgs-hero-zoom 2.4s var(--sgs-hero-ease) both;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-hero__frame,
+    .sgs-hero__tag,
+    .sgs-hero__button {
+      transition: none;
+    }
+  }
+
+  @keyframes sgs-hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes sgs-hero-art {
+    from {
+      opacity: 0;
+      transform: translateY(28px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes sgs-hero-stripes {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes sgs-hero-zoom {
+    from {
+      transform: scale(1.06);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-hero {
+      min-height: 0;
+      padding-block: calc(var(--sgs-hero-pad-top) * 0.6) calc(var(--sgs-hero-pad-bottom) * 0.6);
+    }
+
+    .sgs-hero--split .sgs-hero__inner {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 48px;
+    }
+
+    .sgs-hero--split::before {
+      background: radial-gradient(
+        ellipse 90% 45% at 50% 78%,
+        color-mix(in srgb, var(--sgs-hero-fg) 9%, transparent),
+        transparent 70%
+      );
+    }
+
+    .sgs-hero__stage {
+      width: min(100%, 420px, calc(60svh * var(--sgs-art-ratio)));
+      margin-block-end: 28px;
+    }
+
+    .sgs-hero__tag {
+      inset-inline-end: 0;
+      width: min(calc(100% - 24px), 340px);
+    }
+
+    .sgs-hero--full {
+      min-height: max(560px, 80svh);
+      align-items: flex-end;
+    }
+
+    .sgs-hero__backdrop::after {
+      background: linear-gradient(
+        0deg,
+        color-mix(in srgb, var(--sgs-hero-bg) var(--sgs-hero-overlay), transparent) 0%,
+        color-mix(in srgb, var(--sgs-hero-bg) calc(var(--sgs-hero-overlay) * 0.5), transparent) 55%,
+        transparent 100%
+      );
+    }
+  }
+
+  @media screen and (max-width: 479px) {
+    .sgs-hero__actions {
+      flex-direction: column;
+    }
+
+    .sgs-hero__button {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear hero",
+  "tag": "div",
+  "class": "sgs-hero-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Print showcase (text + artwork)" },
+        { "value": "full", "label": "Full-width background image" }
+      ],
+      "default": "split",
+      "info": "Use full-width once you have a wide lifestyle photo."
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 85,
+      "info": "Percentage of the screen height on desktop."
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "Leave empty to use the featured product's main image (your Printify mockup)."
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Featured product",
+      "info": "Supplies the image when none is uploaded, and the 'Featured print' link. Defaults to your first product."
+    },
+    {
+      "type": "select",
+      "id": "art_ratio",
+      "label": "Artwork shape",
+      "options": [
+        { "value": "natural", "label": "Match image" },
+        { "value": "a-series", "label": "Poster (A-size)" },
+        { "value": "portrait", "label": "Portrait 4:5" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "natural",
+      "visible_if": "{{ section.settings.layout == 'split' }}"
+    },
+    {
+      "type": "select",
+      "id": "art_style",
+      "label": "Artwork style",
+      "options": [
+        { "value": "shadow", "label": "Floating with shadow" },
+        { "value": "mat", "label": "White border" },
+        { "value": "plain", "label": "Plain" }
+      ],
+      "default": "shadow",
+      "visible_if": "{{ section.settings.layout == 'split' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_tag",
+      "label": "Show featured print link",
+      "default": true,
+      "visible_if": "{{ section.settings.layout == 'split' }}"
+    },
+    {
+      "type": "text",
+      "id": "product_tag_label",
+      "label": "Featured print label",
+      "default": "Featured print",
+      "visible_if": "{{ section.settings.layout == 'split' and section.settings.show_product_tag }}"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Automotive art prints"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Art for the <em>driven</em>",
+      "info": "Italicise a word to highlight it in the accent colour."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "Premium posters of the cars that move us, printed on demand and shipped worldwide."
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "First button label",
+      "default": "Shop posters"
+    },
+    {
+      "type": "url",
+      "id": "button_1_link",
+      "label": "First button link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Second button label",
+      "default": "Browse collections"
+    },
+    {
+      "type": "url",
+      "id": "button_2_link",
+      "label": "Second button link",
+      "default": "/collections"
+    },
+    {
+      "type": "text",
+      "id": "feature_1",
+      "label": "Highlight 1",
+      "default": "Printed on demand"
+    },
+    {
+      "type": "text",
+      "id": "feature_2",
+      "label": "Highlight 2",
+      "default": "Shipped worldwide"
+    },
+    {
+      "type": "text",
+      "id": "feature_3",
+      "label": "Highlight 3",
+      "default": "Secure checkout"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0E0E0E"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#E10600"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stripes",
+      "label": "Show racing stripes",
+      "default": true,
+      "visible_if": "{{ section.settings.layout == 'split' }}"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay",
+      "min": 0,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "default": 75,
+      "visible_if": "{{ section.settings.layout == 'full' }}"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear hero"
+    }
+  ]
+}
+{% endschema %}

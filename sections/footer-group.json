@@ -18,12 +18,19 @@
         "menu_1_heading": "Shop",
         "menu_1": "main-menu",
         "menu_2_heading": "Collections",
+        "menu_2": "collections",
         "menu_3_heading": "Help",
         "menu_3": "footer",
+        "instagram_url": "",
+        "tiktok_url": "",
+        "youtube_url": "",
+        "pinterest_url": "",
+        "facebook_url": "",
+        "x_url": "",
         "copyright_name": "SixthGear Studios",
         "show_policies": true,
         "show_payment_icons": true,
-        "background_color": "#0E0E0E"
+        "background_color": "#0e0e0e"
       }
     }
   },

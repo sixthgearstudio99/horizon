@@ -50,7 +50,8 @@
         "heading": "Most wanted",
         "view_all_label": "Shop all prints",
         "padding-block-start": 136,
-        "padding-block-end": 136
+        "padding-block-end": 136,
+        "collection": "best-sellers"
       }
     },
     "sgs_collections": {
@@ -59,50 +60,43 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "title": "Lineage",
-            "text": "Generations of an icon, side by side. Watch a legend evolve."
+            "collection": "lineage"
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "title": "Portraits",
-            "text": "One car, every line. A study of a single machine."
+            "collection": "portraits"
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "title": "Grand Prix",
-            "text": "Formula One, framed. From the legends to today's grid."
+            "collection": "grand-prix"
           }
         },
         "feature_4": {
           "type": "feature",
           "settings": {
-            "title": "Mindset",
-            "text": "Words for the driven. Keep pushing, on and off the track."
+            "collection": "mindset"
           }
         },
         "compact_5": {
           "type": "compact",
           "settings": {
-            "title": "German Engineering",
-            "text": "Precision from Stuttgart, Munich and Ingolstadt."
+            "collection": "german-engineering"
           }
         },
         "compact_6": {
           "type": "compact",
           "settings": {
-            "title": "JDM",
-            "text": "Turbocharged icons of Japanese performance."
+            "collection": "jdm"
           }
         },
         "compact_7": {
           "type": "compact",
           "settings": {
-            "title": "Super & Hypercars",
-            "text": "The fastest, rarest machines on the road."
+            "collection": "super-hypercars"
           }
         }
       },

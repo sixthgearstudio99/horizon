@@ -1,0 +1,143 @@
+{%- liquid
+  assign s = section.settings
+  assign bg = s.background_color | default: settings.color_palette.background
+  assign bg_brightness = bg | color_brightness
+  if bg_brightness < 128
+    assign tone = 'dark'
+  else
+    assign tone = 'light'
+  endif
+-%}
+
+<section
+  class="sgs-statement sgs-statement--{{ tone }}"
+  style="
+    --sgs-statement-bg: {{ bg }};
+    --sgs-statement-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-statement-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+>
+  <div class="sgs-statement__inner" data-sgs-reveal-group>
+    {%- if s.eyebrow != blank -%}
+      <p class="sgs-statement__eyebrow sgs-label" data-sgs-reveal>{{ s.eyebrow | escape }}</p>
+    {%- endif -%}
+    {%- if s.text != blank -%}
+      <p class="sgs-statement__text" data-sgs-reveal>{{ s.text }}</p>
+    {%- endif -%}
+    {%- if s.caption != blank -%}
+      <p class="sgs-statement__caption sgs-label" data-sgs-reveal>{{ s.caption | escape }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-statement {
+    --sgs-statement-fg: 14 14 14;
+
+    padding-block: var(--sgs-statement-pad-top) var(--sgs-statement-pad-bottom);
+    background: var(--sgs-statement-bg);
+    color: rgb(var(--sgs-statement-fg));
+  }
+
+  .sgs-statement--dark {
+    --sgs-statement-fg: 245 243 239;
+  }
+
+  .sgs-statement__inner {
+    max-width: calc(1100px + var(--page-margin) * 2);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+    text-align: center;
+  }
+
+  .sgs-statement__eyebrow {
+    margin: 0 0 32px;
+    color: rgb(var(--sgs-statement-fg) / 0.55);
+  }
+
+  .sgs-statement__text {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2rem, 1.2rem + 3.4vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-statement__text em {
+    font-style: normal;
+    color: #e10600;
+  }
+
+  .sgs-statement__caption {
+    margin: 36px 0 0;
+    color: rgb(var(--sgs-statement-fg) / 0.55);
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-statement {
+      padding-block: calc(var(--sgs-statement-pad-top) * 0.6) calc(var(--sgs-statement-pad-bottom) * 0.6);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear statement",
+  "tag": "div",
+  "class": "sgs-statement-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Our belief"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Statement",
+      "default": "Every car has a story. <em>We put it on your wall.</em>",
+      "info": "Italicise words to highlight them in red."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption",
+      "default": "SixthGear Studios"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 144
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 144
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear statement"
+    }
+  ]
+}
+{% endschema %}

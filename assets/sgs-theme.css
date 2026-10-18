@@ -189,6 +189,140 @@ button[ref='addToCartButton'] {
   letter-spacing: 0.18em;
 }
 
+/* ---------- Horizon product cards (collection, search) ---------- */
+.product-card .card-gallery {
+  background: #ebe8e2;
+}
+
+.product-card .price,
+.product-card .price-item__group {
+  color: rgb(var(--color-foreground-rgb) / 0.72);
+  font-variant-numeric: tabular-nums;
+}
+
+.product-card .compare-at-price {
+  color: rgb(var(--color-foreground-rgb) / 0.4);
+}
+
+.product-badges .product-badges__badge,
+.product-card .product-badges > * {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+}
+
+/* Filters and sorting: quiet, tracked labels on a hairline rule */
+.facets--horizontal {
+  border-block: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  padding-block: 6px;
+}
+
+.facets--horizontal summary,
+.facets--horizontal label,
+.facets--horizontal button {
+  letter-spacing: 0.14em;
+}
+
+/* Search header */
+.search-page__header :is(h1, h2) {
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+/* ---------- Cart drawer ---------- */
+.theme-drawer__title,
+.cart-title {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.cart-items__title {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  letter-spacing: -0.005em;
+  text-decoration: none;
+}
+
+.cart-items__media-container {
+  background: #ebe8e2;
+}
+
+.cart-items__variant,
+.cart-items__variants {
+  font-size: 13px;
+  color: rgb(var(--color-foreground-rgb) / 0.62);
+}
+
+.cart-totals__total {
+  font-variant-numeric: tabular-nums;
+}
+
+#checkout {
+  min-height: 56px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+/* ---------- Policy pages ---------- */
+.shopify-policy__container {
+  max-width: calc(760px + var(--page-margin, 40px) * 2);
+  margin-inline: auto;
+  padding: clamp(64px, 8vw, 120px) var(--page-margin, 40px) clamp(80px, 10vw, 140px);
+}
+
+.shopify-policy__title {
+  margin-bottom: clamp(40px, 5vw, 64px);
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgb(14 14 14 / 0.12);
+  text-align: start;
+}
+
+.shopify-policy__title h1 {
+  margin: 0;
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  font-size: clamp(2.5rem, 1.6rem + 3vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.shopify-policy__body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgb(14 14 14 / 0.78);
+}
+
+.shopify-policy__body :is(h2, h3, h4) {
+  margin: 2.4em 0 0.8em;
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  font-size: 1.125rem;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: #0e0e0e;
+}
+
+.shopify-policy__body a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Generic page content ---------- */
+.page-content {
+  max-width: 68ch;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.page-content :is(h2, h3) {
+  font-family: var(--font-heading--family);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .header .menu-list__link-title::after,
   .sgs-link::after,

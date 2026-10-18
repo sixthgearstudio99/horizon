@@ -64,11 +64,7 @@
 
 <div class="sgs-card{% if secondary_image != blank %} sgs-card--has-secondary{% endif %}">
   {%- if product != blank -%}
-    <a
-      class="sgs-card__link"
-      href="{{ product.url }}"
-      aria-label="{{ product.title | escape }}"
-    >
+    <a class="sgs-card__link" href="{{ product.url }}">
       <span
         class="sgs-card__media sgs-card__media--{{ card_fit }}"
         style="--sgs-card-ratio: {{ card_ratio }};"

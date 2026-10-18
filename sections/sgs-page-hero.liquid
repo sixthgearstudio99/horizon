@@ -1,0 +1,422 @@
+{%- liquid
+  assign s = section.settings
+
+  # Pull title, text and image from whatever this template is showing
+  assign hero_title = s.heading
+  assign hero_text = s.text
+  assign hero_image = s.image
+  assign hero_meta = blank
+  assign crumb_label = blank
+  assign crumb_url = blank
+
+  if collection != blank and template.name == 'collection'
+    if hero_title == blank
+      assign hero_title = collection.title | escape
+    endif
+    if hero_text == blank and collection.description != blank
+      assign hero_text = collection.description
+    endif
+    if hero_image == blank
+      assign hero_image = collection.image
+    endif
+    if s.show_count
+      assign hero_meta = collection.products_count | append: ' prints'
+    endif
+    assign crumb_label = 'Collections'
+    assign crumb_url = routes.collections_url
+  elsif page != blank and template.name == 'page'
+    if hero_title == blank
+      assign hero_title = page.title | escape
+    endif
+  endif
+
+  assign layout = 'text'
+  if s.show_image and hero_image != blank
+    assign layout = 'banner'
+  endif
+-%}
+
+<section
+  class="sgs-phero sgs-phero--{{ layout }} sgs-phero--align-{{ s.alignment }}"
+  style="
+    --sgs-phero-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-phero-pad-bottom: {{ s['padding-block-end'] }}px;
+    --sgs-phero-overlay: {{ s.overlay_opacity }}%;
+  "
+>
+  {%- if layout == 'banner' -%}
+    <div class="sgs-phero__media" aria-hidden="true">
+      {{
+        hero_image
+        | image_url: width: 3000
+        | image_tag:
+          widths: '750, 1100, 1500, 1920, 2400, 3000',
+          sizes: '100vw',
+          loading: 'eager',
+          fetchpriority: 'high',
+          class: 'sgs-phero__img',
+          alt: ''
+      }}
+    </div>
+  {%- endif -%}
+
+  <div class="sgs-phero__inner">
+    {%- if s.show_breadcrumb and crumb_label != blank -%}
+      <nav class="sgs-phero__crumbs sgs-label" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ crumb_url }}">{{ crumb_label }}</a>
+      </nav>
+    {%- elsif s.eyebrow != blank -%}
+      <p class="sgs-phero__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+    {%- endif -%}
+
+    <div class="sgs-phero__row">
+      <div class="sgs-phero__titles">
+        <h1 class="sgs-phero__heading">{{ hero_title }}</h1>
+        {%- if hero_text != blank -%}
+          <div class="sgs-phero__text">{{ hero_text }}</div>
+        {%- endif -%}
+      </div>
+      {%- if hero_meta != blank -%}
+        <p class="sgs-phero__meta sgs-label">{{ hero_meta }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if s.button_label != blank or s.link_label != blank -%}
+      <div class="sgs-phero__actions">
+        {%- if s.button_label != blank -%}
+          <a class="button sgs-phero__button" href="{{ s.button_link | default: routes.all_products_collection_url }}">
+            {{- s.button_label | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if s.link_label != blank -%}
+          <a class="sgs-link" href="{{ s.link_url | default: routes.root_url }}">
+            {{- s.link_label | escape -}}
+            <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+              <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-phero {
+    --sgs-phero-fg: 14 14 14;
+
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding-block: var(--sgs-phero-pad-top) var(--sgs-phero-pad-bottom);
+    color: rgb(var(--sgs-phero-fg));
+  }
+
+  .sgs-phero--banner {
+    --sgs-phero-fg: 245 243 239;
+
+    display: flex;
+    align-items: flex-end;
+    min-height: clamp(380px, 56svh, 620px);
+    background: #0e0e0e;
+  }
+
+  .sgs-phero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .sgs-phero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(10 10 10 / var(--sgs-phero-overlay)) 0%,
+      rgb(10 10 10 / calc(var(--sgs-phero-overlay) * 0.45)) 55%,
+      rgb(10 10 10 / 0.15) 100%
+    );
+  }
+
+  .sgs-phero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sgs-phero__img {
+      animation: sgs-phero-zoom 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+
+    .sgs-phero__inner {
+      animation: sgs-phero-rise 1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.1s both;
+    }
+  }
+
+  @keyframes sgs-phero-zoom {
+    from {
+      transform: scale(1.05);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  @keyframes sgs-phero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .sgs-phero__inner {
+    width: 100%;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-phero__crumbs,
+  .sgs-phero__eyebrow {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 24px;
+    color: rgb(var(--sgs-phero-fg) / 0.6);
+  }
+
+  .sgs-phero__crumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sgs-phero__crumbs a:hover {
+    color: rgb(var(--sgs-phero-fg));
+  }
+
+  .sgs-phero__row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 48px;
+  }
+
+  .sgs-phero--text .sgs-phero__row {
+    padding-bottom: 28px;
+    border-bottom: 1px solid rgb(var(--sgs-phero-fg) / 0.12);
+  }
+
+  .sgs-phero__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.75rem, 1.6rem + 4.2vw, 5.75rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-phero__heading em {
+    font-style: normal;
+    color: #e10600;
+  }
+
+  .sgs-phero__text {
+    max-width: 52ch;
+    margin-top: 24px;
+    font-size: clamp(1rem, 0.95rem + 0.2vw, 1.125rem);
+    line-height: 1.6;
+    color: rgb(var(--sgs-phero-fg) / 0.7);
+  }
+
+  .sgs-phero__text p {
+    margin: 0;
+  }
+
+  .sgs-phero__meta {
+    flex-shrink: 0;
+    margin: 0 0 6px;
+    color: rgb(var(--sgs-phero-fg) / 0.6);
+  }
+
+  .sgs-phero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px 36px;
+    margin-top: 40px;
+  }
+
+  .sgs-phero__button {
+    --button-padding-block: 18px;
+    --button-padding-inline: 36px;
+
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+  }
+
+  .sgs-phero--align-center .sgs-phero__actions {
+    justify-content: center;
+  }
+
+  .sgs-phero--align-center .sgs-phero__inner {
+    text-align: center;
+  }
+
+  .sgs-phero--align-center .sgs-phero__row {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .sgs-phero--align-center .sgs-phero__crumbs,
+  .sgs-phero--align-center .sgs-phero__eyebrow {
+    justify-content: center;
+  }
+
+  .sgs-phero--align-center .sgs-phero__text {
+    margin-inline: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-phero {
+      padding-block: calc(var(--sgs-phero-pad-top) * 0.6) calc(var(--sgs-phero-pad-bottom) * 0.6);
+    }
+
+    .sgs-phero__row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .sgs-phero--banner {
+      min-height: clamp(340px, 52svh, 520px);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear page header",
+  "tag": "div",
+  "class": "sgs-phero-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On collection and page templates the title, description and image fill in automatically. Use the fields below to override them."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Text link label"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Text link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "label": "Show image banner",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb on collections",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_count",
+      "label": "Show number of prints",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear page header"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,330 @@
+{%- liquid
+  assign s = section.settings
+  assign form_id = 'SgsContact-' | append: section.id
+  assign contact_email = s.email | default: shop.email
+-%}
+
+<section
+  class="sgs-contact"
+  style="
+    --sgs-contact-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-contact-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+>
+  <div class="sgs-contact__inner">
+    <aside class="sgs-contact__aside" data-sgs-reveal>
+      {%- if s.intro != blank -%}
+        <p class="sgs-contact__intro">{{ s.intro }}</p>
+      {%- endif -%}
+
+      <dl class="sgs-contact__details">
+        {%- if contact_email != blank -%}
+          <div>
+            <dt class="sgs-label">Email</dt>
+            <dd><a href="mailto:{{ contact_email }}">{{ contact_email }}</a></dd>
+          </div>
+        {%- endif -%}
+        {%- if s.response_time != blank -%}
+          <div>
+            <dt class="sgs-label">Replies</dt>
+            <dd>{{ s.response_time | escape }}</dd>
+          </div>
+        {%- endif -%}
+        {%- if s.orders_note != blank -%}
+          <div>
+            <dt class="sgs-label">Orders</dt>
+            <dd>{{ s.orders_note }}</dd>
+          </div>
+        {%- endif -%}
+      </dl>
+    </aside>
+
+    <div class="sgs-contact__form-wrap" data-sgs-reveal>
+      {%- form 'contact', id: form_id, class: 'sgs-contact__form' -%}
+        {%- if form.posted_successfully? -%}
+          <div class="sgs-contact__success" role="status">
+            <p class="sgs-contact__success-title">{{ s.success_heading | escape }}</p>
+            <p class="sgs-contact__success-text">{{ s.success_text | escape }}</p>
+          </div>
+        {%- else -%}
+          {%- if form.errors -%}
+            <div class="sgs-contact__errors" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="sgs-contact__grid">
+            <div class="sgs-field">
+              <label class="sgs-field__label sgs-label" for="{{ form_id }}-name">Name</label>
+              <input class="sgs-field__input" id="{{ form_id }}-name" type="text" name="contact[name]" autocomplete="name" value="{{ form.name }}">
+            </div>
+            <div class="sgs-field">
+              <label class="sgs-field__label sgs-label" for="{{ form_id }}-email">Email <span aria-hidden="true">*</span></label>
+              <input class="sgs-field__input" id="{{ form_id }}-email" type="email" name="contact[email]" autocomplete="email" autocapitalize="off" spellcheck="false" required value="{{ form.email }}">
+            </div>
+            <div class="sgs-field sgs-field--full">
+              <label class="sgs-field__label sgs-label" for="{{ form_id }}-order">Order number <span class="sgs-field__optional">(optional)</span></label>
+              <input class="sgs-field__input" id="{{ form_id }}-order" type="text" name="contact[order_number]" value="{{ form.order_number }}">
+            </div>
+            <div class="sgs-field sgs-field--full">
+              <label class="sgs-field__label sgs-label" for="{{ form_id }}-message">Message <span aria-hidden="true">*</span></label>
+              <textarea class="sgs-field__input sgs-field__input--textarea" id="{{ form_id }}-message" name="contact[body]" rows="6" required>{{ form.body }}</textarea>
+            </div>
+          </div>
+
+          <button class="button sgs-contact__submit" type="submit">{{ s.button_label | escape }}</button>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-contact {
+    padding-block: var(--sgs-contact-pad-top) var(--sgs-contact-pad-bottom);
+    color: #0e0e0e;
+  }
+
+  .sgs-contact__inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(16px, 2vw, 32px);
+    row-gap: 56px;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-contact__aside {
+    grid-column: 1 / span 4;
+  }
+
+  .sgs-contact__form-wrap {
+    grid-column: 6 / span 7;
+  }
+
+  .sgs-contact__intro {
+    margin: 0;
+    font-size: clamp(1.125rem, 1rem + 0.4vw, 1.375rem);
+    line-height: 1.5;
+    color: rgb(14 14 14 / 0.78);
+    text-wrap: pretty;
+  }
+
+  .sgs-contact__details {
+    margin: 40px 0 0;
+    border-top: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-contact__details > div {
+    display: grid;
+    gap: 6px;
+    padding-block: 20px;
+    border-bottom: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-contact__details dt {
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-contact__details dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .sgs-contact__details a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  .sgs-contact__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 24px;
+  }
+
+  .sgs-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sgs-field--full {
+    grid-column: 1 / -1;
+  }
+
+  .sgs-field__label {
+    color: rgb(14 14 14 / 0.6);
+  }
+
+  .sgs-field__optional {
+    letter-spacing: 0.04em;
+    text-transform: none;
+  }
+
+  .sgs-field__input {
+    width: 100%;
+    padding: 12px 0;
+    border: 0;
+    border-bottom: 1px solid rgb(14 14 14 / 0.3);
+    border-radius: 0;
+    background: transparent;
+    color: #0e0e0e;
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .sgs-field__input:focus {
+    border-bottom-color: #0e0e0e;
+  }
+
+  .sgs-field__input--textarea {
+    min-height: 160px;
+    resize: vertical;
+  }
+
+  .sgs-contact__submit {
+    --button-padding-block: 18px;
+    --button-padding-inline: 40px;
+
+    margin-top: 40px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+  }
+
+  .sgs-contact__errors {
+    margin-bottom: 32px;
+    padding: 16px 20px;
+    border-left: 2px solid #e10600;
+    background: rgb(225 6 0 / 0.05);
+    font-size: 14px;
+  }
+
+  .sgs-contact__errors ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+
+  .sgs-contact__success {
+    padding-block: 32px;
+    border-block: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-contact__success-title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 24px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .sgs-contact__success-text {
+    margin: 12px 0 0;
+    color: rgb(14 14 14 / 0.7);
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-contact__aside,
+    .sgs-contact__form-wrap {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-contact {
+      padding-block: calc(var(--sgs-contact-pad-top) * 0.6) calc(var(--sgs-contact-pad-bottom) * 0.6);
+    }
+
+    .sgs-contact__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 28px;
+    }
+
+    .sgs-contact__submit {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear contact",
+  "tag": "div",
+  "class": "sgs-contact-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "Questions about a print, an order or a collaboration? Drop us a line."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email address",
+      "info": "Defaults to your store's sender email."
+    },
+    {
+      "type": "text",
+      "id": "response_time",
+      "label": "Reply note",
+      "default": "We read every message and reply as soon as we can."
+    },
+    {
+      "type": "inline_richtext",
+      "id": "orders_note",
+      "label": "Orders note",
+      "default": "Include your order number and we'll find it faster."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Thank-you heading",
+      "default": "Message received"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Thank-you text",
+      "default": "Thanks for getting in touch. We'll be back to you shortly."
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear contact"
+    }
+  ]
+}
+{% endschema %}

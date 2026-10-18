@@ -12,6 +12,24 @@
     "main": {
       "type": "product-information",
       "blocks": {
+        "disclosures": {
+          "type": "disclosures",
+          "settings": {
+            "heading": "Disclosures",
+            "heading_preset": "h4",
+            "open_by_default": false,
+            "icon": "caret",
+            "disclosure_heading_preset": "h5",
+            "text_color": "",
+            "dividers": true,
+            "divider_color": "",
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -25,6 +43,7 @@
             "slideshow_mobile_controls_style": "counter",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
+            "thumbnail_radius": 0,
             "aspect_ratio": "1/1.25",
             "constrain_to_viewport": false,
             "media_fit": "cover",
@@ -53,11 +72,13 @@
             "gap": 32,
             "sticky_details_desktop": true,
             "background_media": "none",
+            "background_color": "",
             "video_position": "cover",
             "background_image_position": "cover",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
+            "border_color": "",
             "border_radius": 0,
             "padding-block-start": 24,
             "padding-block-end": 24,
@@ -87,6 +108,7 @@
                 "line_height": "normal",
                 "letter_spacing": "normal",
                 "case": "none",
+                "text_color": "",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -112,6 +134,15 @@
               "settings": {
                 "variant_style": "buttons",
                 "show_swatches": false,
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
                 "alignment": "left",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
@@ -124,8 +155,23 @@
               "type": "buy-buttons",
               "settings": {
                 "stacking": true,
+                "text_color": "",
                 "show_pickup_availability": false,
                 "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "border_width": 1,
+                "border_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -135,14 +181,24 @@
                 "quantity": {
                   "type": "quantity",
                   "static": true,
-                  "settings": {},
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.foreground }}",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
                   "blocks": {}
                 },
                 "add-to-cart": {
                   "type": "add-to-cart",
                   "static": true,
                   "settings": {
-                    "style_class": "button"
+                    "style_class": "button",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}"
                   },
                   "blocks": {}
                 },
@@ -162,9 +218,9 @@
                 "description_heading": "About this print",
                 "open_first": true,
                 "paper_heading": "Paper",
-                "paper": "",
+                "paper": "Premium semi-gloss art paper",
                 "finish_heading": "Finish",
-                "finish": "",
+                "finish": "Semi-gloss, printed with fade-resistant, gallery-quality inks",
                 "framing_heading": "Framing",
                 "framing": "Supplied unframed, ready for the frame of your choice.",
                 "shipping_heading": "Shipping & delivery",
@@ -181,14 +237,6 @@
             "buy_buttons_eYQEYi",
             "sgs_details"
           ]
-        },
-        "disclosures": {
-          "type": "disclosures",
-          "settings": {
-            "padding-block-start": 0,
-            "padding-block-end": 0
-          },
-          "blocks": {}
         }
       },
       "block_order": [
@@ -200,9 +248,10 @@
         "equal_columns": false,
         "limit_details_width": true,
         "gap": 48,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "",
         "padding-block-start": 32,
-        "padding-block-end": 96,
-        "enable_sticky_add_to_cart": true
+        "padding-block-end": 96
       }
     },
     "sgs_recs": {

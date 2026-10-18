@@ -155,6 +155,40 @@ html {
   letter-spacing: 0;
 }
 
+/* ---------- Product page ---------- */
+.variant-option--buttons legend {
+  margin-block-end: 14px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.variant-option--buttons legend .variant-option__swatch-value {
+  padding-inline-start: 8px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.variant-option--buttons {
+  gap: 8px;
+}
+
+.variant-option__button-label {
+  min-height: 48px;
+  padding-inline: 20px;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+button[ref='addToCartButton'] {
+  min-height: 56px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .header .menu-list__link-title::after,
   .sgs-link::after,

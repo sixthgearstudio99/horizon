@@ -1,0 +1,178 @@
+{%- liquid
+  assign s = section.settings
+  assign limit = s.products_to_show
+  assign card_sizes = '(min-width: 990px) 23vw, (min-width: 750px) 46vw, 78vw'
+-%}
+
+{%- capture header -%}
+  {%- if s.eyebrow != blank or s.heading != blank -%}
+    <header class="sgs-grid__header" data-sgs-reveal>
+      <div class="sgs-grid__titles">
+        {%- if s.eyebrow != blank -%}
+          <p class="sgs-grid__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="sgs-grid__heading">{{ s.heading }}</h2>
+        {%- endif -%}
+      </div>
+      <a class="sgs-link sgs-grid__view-all" href="{{ routes.all_products_collection_url }}">
+        {{- s.view_all_label | escape -}}
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
+          <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </header>
+  {%- endif -%}
+{%- endcapture -%}
+
+{% render 'sgs-grid-styles' %}
+
+<section
+  class="sgs-grid sgs-grid--light sgs-grid--mobile-carousel sgs-recs"
+  style="
+    --sgs-grid-bg: transparent;
+    --sgs-grid-columns: 4;
+    --sgs-grid-pad-top: {{ s['padding-block-start'] }}px;
+    --sgs-grid-pad-bottom: {{ s['padding-block-end'] }}px;
+  "
+>
+  <div class="sgs-grid__inner">
+    {%- if recommendations.performed? -%}
+      {%- comment -%} Rendered by the recommendations endpoint and swapped in by sgs-recommendations.js {%- endcomment -%}
+      <ul class="sgs-grid__list" role="list" data-sgs-recs-list>
+        {%- for rec in recommendations.products limit: limit -%}
+          <li class="sgs-grid__item is-revealed" data-sgs-reveal>
+            {% render 'sgs-product-card',
+              product: rec,
+              ratio: s.image_ratio,
+              show_secondary: true,
+              show_options: true,
+              sizes: card_sizes
+            %}
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- elsif product != blank -%}
+      {%- liquid
+        # Instant fallback: other prints from this print's first collection
+        assign fallback_source = collections.all
+        for c in product.collections
+          if c.handle != 'all' and c.handle != 'frontpage' and c.products_count > 1
+            assign fallback_source = c
+            break
+          endif
+        endfor
+      -%}
+      <sgs-recommendations
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}&intent=related"
+      >
+        {{ header }}
+        <ul class="sgs-grid__list" role="list" data-sgs-recs-list data-sgs-reveal-group>
+          {%- assign shown = 0 -%}
+          {%- for rec in fallback_source.products limit: 12 -%}
+            {%- if rec.id != product.id and shown < limit -%}
+              {%- assign shown = shown | plus: 1 -%}
+              <li class="sgs-grid__item" data-sgs-reveal>
+                {% render 'sgs-product-card',
+                  product: rec,
+                  ratio: s.image_ratio,
+                  show_secondary: true,
+                  show_options: true,
+                  sizes: card_sizes
+                %}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </sgs-recommendations>
+    {%- endif -%}
+  </div>
+</section>
+
+<script src="{{ 'sgs-recommendations.js' | asset_url }}" defer></script>
+
+{% stylesheet %}
+  .sgs-recs {
+    border-top: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-recs sgs-recommendations {
+    display: block;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear recommendations",
+  "tag": "div",
+  "class": "sgs-recs-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "You may also like"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the wall"
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "Link label",
+      "default": "Shop all prints"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image shape",
+      "options": [
+        { "value": "4 / 5", "label": "Portrait 4:5" },
+        { "value": "5 / 7", "label": "Poster" },
+        { "value": "1 / 1", "label": "Square" }
+      ],
+      "default": "4 / 5"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear recommendations"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,93 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product_resource = closest.product
+
+  # Eyebrow: the print's first style collection, skipping utility collections
+  assign eyebrow = blank
+  case block_settings.eyebrow_source
+    when 'collection'
+      assign skip_handles = 'all,frontpage,best-sellers' | split: ','
+      for c in product_resource.collections
+        unless skip_handles contains c.handle
+          assign eyebrow = c.title
+          break
+        endunless
+      endfor
+    when 'type'
+      assign eyebrow = product_resource.type
+    when 'custom'
+      assign eyebrow = block_settings.eyebrow_text
+  endcase
+-%}
+
+<div class="sgs-pdp-header" {{ block.shopify_attributes }}>
+  {%- if eyebrow != blank -%}
+    <p class="sgs-pdp-header__eyebrow sgs-label">{{ eyebrow | escape }}</p>
+  {%- endif -%}
+  <h1 class="sgs-pdp-header__title">{{ product_resource.title | escape }}</h1>
+</div>
+
+{% stylesheet %}
+  .sgs-pdp-header {
+    width: 100%;
+  }
+
+  .sgs-pdp-header__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 0 18px;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  .sgs-pdp-header__eyebrow::before {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .sgs-pdp-header__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 3.25rem);
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear product title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "eyebrow_source",
+      "label": "Label above title",
+      "options": [
+        { "value": "collection", "label": "First collection" },
+        { "value": "type", "label": "Product type" },
+        { "value": "custom", "label": "Custom text" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Custom label",
+      "default": "Automotive art print",
+      "visible_if": "{{ block.settings.eyebrow_source == 'custom' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear product title"
+    }
+  ]
+}
+{% endschema %}

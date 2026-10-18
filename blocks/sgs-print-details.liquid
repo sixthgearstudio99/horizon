@@ -1,0 +1,248 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product_resource = closest.product
+
+  # Per-product metafields (namespace "custom") override the shared text below
+  assign paper = product_resource.metafields.custom.paper.value | default: block_settings.paper
+  assign finish = product_resource.metafields.custom.finish.value | default: block_settings.finish
+  assign shipping = product_resource.metafields.custom.shipping.value | default: block_settings.shipping
+  assign framing = product_resource.metafields.custom.framing.value | default: block_settings.framing
+-%}
+
+<div class="sgs-details" {{ block.shopify_attributes }}>
+  {%- if block_settings.show_description and product_resource.description != blank -%}
+    <details class="sgs-details__item"{% if block_settings.open_first %} open{% endif %}>
+      <summary class="sgs-details__summary">
+        <span class="sgs-label">{{ block_settings.description_heading | escape }}</span>
+        <span class="sgs-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-details__body rte">{{ product_resource.description }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if paper != blank -%}
+    <details class="sgs-details__item">
+      <summary class="sgs-details__summary">
+        <span class="sgs-label">{{ block_settings.paper_heading | escape }}</span>
+        <span class="sgs-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-details__body">{{ paper | newline_to_br }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if finish != blank -%}
+    <details class="sgs-details__item">
+      <summary class="sgs-details__summary">
+        <span class="sgs-label">{{ block_settings.finish_heading | escape }}</span>
+        <span class="sgs-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-details__body">{{ finish | newline_to_br }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if framing != blank -%}
+    <details class="sgs-details__item">
+      <summary class="sgs-details__summary">
+        <span class="sgs-label">{{ block_settings.framing_heading | escape }}</span>
+        <span class="sgs-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-details__body">{{ framing | newline_to_br }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if shipping != blank -%}
+    <details class="sgs-details__item">
+      <summary class="sgs-details__summary">
+        <span class="sgs-label">{{ block_settings.shipping_heading | escape }}</span>
+        <span class="sgs-details__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-details__body">{{ shipping | newline_to_br }}</div>
+    </details>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .sgs-details {
+    width: 100%;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .sgs-details__item {
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .sgs-details__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 20px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .sgs-details__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sgs-details__icon {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+  }
+
+  .sgs-details__icon::before,
+  .sgs-details__icon::after {
+    content: '';
+    position: absolute;
+    inset: 5px 0 auto;
+    height: 1px;
+    background: currentColor;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sgs-details__icon::after {
+    transform: rotate(90deg);
+  }
+
+  .sgs-details__item[open] .sgs-details__icon::after {
+    transform: rotate(0deg);
+  }
+
+  .sgs-details__body {
+    padding-bottom: 24px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
+  }
+
+  .sgs-details__body > :first-child {
+    margin-top: 0;
+  }
+
+  .sgs-details__body > :last-child {
+    margin-bottom: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sgs-details__item[open] .sgs-details__body {
+      animation: sgs-details-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+  }
+
+  @keyframes sgs-details-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear print details",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Each row is hidden when empty. To override a row for one print, add a product metafield in the 'custom' namespace: paper, finish, framing or shipping."
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show product description",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "description_heading",
+      "label": "Heading",
+      "default": "About this print"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open by default",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Paper"
+    },
+    {
+      "type": "text",
+      "id": "paper_heading",
+      "label": "Heading",
+      "default": "Paper"
+    },
+    {
+      "type": "textarea",
+      "id": "paper",
+      "label": "Text",
+      "info": "e.g. paper weight and type from your Printify product."
+    },
+    {
+      "type": "header",
+      "content": "Finish"
+    },
+    {
+      "type": "text",
+      "id": "finish_heading",
+      "label": "Heading",
+      "default": "Finish"
+    },
+    {
+      "type": "textarea",
+      "id": "finish",
+      "label": "Text",
+      "info": "e.g. matte or satin, colour notes."
+    },
+    {
+      "type": "header",
+      "content": "Framing"
+    },
+    {
+      "type": "text",
+      "id": "framing_heading",
+      "label": "Heading",
+      "default": "Framing"
+    },
+    {
+      "type": "textarea",
+      "id": "framing",
+      "label": "Text",
+      "default": "Supplied unframed, ready for the frame of your choice."
+    },
+    {
+      "type": "header",
+      "content": "Shipping"
+    },
+    {
+      "type": "text",
+      "id": "shipping_heading",
+      "label": "Heading",
+      "default": "Shipping & delivery"
+    },
+    {
+      "type": "textarea",
+      "id": "shipping",
+      "label": "Text",
+      "default": "Each print is made to order, then dispatched from our print partner. Delivery options and costs are shown at checkout."
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear print details"
+    }
+  ]
+}
+{% endschema %}

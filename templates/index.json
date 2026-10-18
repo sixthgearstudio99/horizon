@@ -14,6 +14,7 @@
       "settings": {
         "layout": "split",
         "min_height": 90,
+        "product": "",
         "art_ratio": "natural",
         "art_style": "shadow",
         "show_product_tag": true,
@@ -28,8 +29,8 @@
         "feature_1": "",
         "feature_2": "",
         "feature_3": "",
-        "background_color": "#0E0E0E",
-        "accent_color": "#E10600",
+        "background_color": "#0e0e0e",
+        "accent_color": "#e10600",
         "show_stripes": true,
         "overlay_opacity": 75,
         "padding-block-start": 128,
@@ -39,6 +40,7 @@
     "sgs_best_sellers": {
       "type": "sgs-product-grid",
       "settings": {
+        "collection": "best-sellers",
         "products_to_show": 4,
         "columns": "4",
         "mobile_layout": "carousel",
@@ -49,9 +51,10 @@
         "eyebrow": "Best sellers",
         "heading": "Most wanted",
         "view_all_label": "Shop all prints",
+        "view_all_link": "",
+        "background_color": "",
         "padding-block-start": 136,
-        "padding-block-end": 136,
-        "collection": "best-sellers"
+        "padding-block-end": 136
       }
     },
     "sgs_collections": {
@@ -60,43 +63,57 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "collection": "lineage"
+            "collection": "lineage",
+            "title": "",
+            "text": ""
           }
         },
         "feature_2": {
           "type": "feature",
           "settings": {
-            "collection": "portraits"
+            "collection": "portraits",
+            "title": "",
+            "text": ""
           }
         },
         "feature_3": {
           "type": "feature",
           "settings": {
-            "collection": "grand-prix"
+            "collection": "grand-prix",
+            "title": "",
+            "text": ""
           }
         },
         "feature_4": {
           "type": "feature",
           "settings": {
-            "collection": "mindset"
+            "collection": "mindset",
+            "title": "",
+            "text": ""
           }
         },
         "compact_5": {
           "type": "compact",
           "settings": {
-            "collection": "german-engineering"
+            "collection": "german-engineering",
+            "title": "",
+            "text": ""
           }
         },
         "compact_6": {
           "type": "compact",
           "settings": {
-            "collection": "jdm"
+            "collection": "jdm",
+            "title": "",
+            "text": ""
           }
         },
         "compact_7": {
           "type": "compact",
           "settings": {
-            "collection": "super-hypercars"
+            "collection": "super-hypercars",
+            "title": "",
+            "text": ""
           }
         }
       },
@@ -113,6 +130,7 @@
         "eyebrow": "The collections",
         "heading": "Shop by style",
         "view_all_label": "All collections",
+        "view_all_link": "",
         "tile_ratio": "3 / 4",
         "tile_link_label": "Explore",
         "mobile_layout": "carousel",
@@ -152,12 +170,15 @@
         "point_3"
       ],
       "settings": {
+        "product": "",
         "image_ratio": "4 / 5",
         "image_position": "left",
         "eyebrow": "The print",
         "heading": "Made to be lived with",
         "text": "<p>Every SixthGear print begins with the car: its lines, its history, the moment it became a legend. Each one is printed to order and sent straight to your door.</p>",
         "link_label": "Shop the prints",
+        "link": "",
+        "background_color": "",
         "padding-block-start": 136,
         "padding-block-end": 136
       }
@@ -210,9 +231,9 @@
         "button_label": "Subscribe",
         "fine_print": "By subscribing you agree to receive marketing emails. Unsubscribe at any time.",
         "success_heading": "Welcome to the paddock",
-        "discount_code": "",
+        "discount_code": "WELCOME10",
         "success_text": "Use this code at checkout for 10% off your first order.",
-        "background_color": "#0E0E0E",
+        "background_color": "#0e0e0e",
         "padding-block-start": 144,
         "padding-block-end": 144
       }

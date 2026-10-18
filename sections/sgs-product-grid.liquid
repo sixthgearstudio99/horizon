@@ -32,6 +32,8 @@
   endif
 -%}
 
+{% render 'sgs-grid-styles' %}
+
 <section
   class="sgs-grid sgs-grid--{{ tone }} sgs-grid--mobile-{{ s.mobile_layout }}"
   style="
@@ -96,121 +98,6 @@
   </div>
 </section>
 
-{% stylesheet %}
-  .sgs-grid {
-    --color-foreground-rgb: 14 14 14;
-
-    padding-block: var(--sgs-grid-pad-top) var(--sgs-grid-pad-bottom);
-    background-color: var(--sgs-grid-bg);
-    color: rgb(var(--color-foreground-rgb));
-  }
-
-  .sgs-grid--dark {
-    --color-foreground-rgb: 245 243 239;
-  }
-
-  .sgs-grid__inner {
-    max-width: var(--page-width);
-    margin-inline: auto;
-    padding-inline: var(--page-margin);
-  }
-
-  .sgs-grid__header {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 24px 48px;
-    margin-bottom: clamp(40px, 4vw, 64px);
-    padding-bottom: 24px;
-    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
-  }
-
-  .sgs-grid__eyebrow {
-    margin: 0 0 16px;
-    color: rgb(var(--color-foreground-rgb) / 0.55);
-  }
-
-  .sgs-grid__heading {
-    margin: 0;
-    font-family: var(--font-heading--family);
-    font-weight: var(--font-heading--weight);
-    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
-    line-height: 0.95;
-    letter-spacing: -0.025em;
-    text-transform: uppercase;
-    text-wrap: balance;
-  }
-
-  .sgs-grid__heading em {
-    font-style: normal;
-    color: #e10600;
-  }
-
-  .sgs-grid__view-all {
-    flex-shrink: 0;
-    margin-bottom: 4px;
-  }
-
-  .sgs-grid__list {
-    display: grid;
-    grid-template-columns: repeat(var(--sgs-grid-columns), minmax(0, 1fr));
-    gap: clamp(48px, 4.5vw, 72px) clamp(16px, 1.6vw, 28px);
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  @media screen and (max-width: 989px) {
-    .sgs-grid__list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media screen and (max-width: 749px) {
-    .sgs-grid {
-      padding-block: calc(var(--sgs-grid-pad-top) * 0.6) calc(var(--sgs-grid-pad-bottom) * 0.6);
-    }
-
-    .sgs-grid__header {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 20px;
-      margin-bottom: 32px;
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
-
-    .sgs-grid__view-all {
-      order: 2;
-    }
-
-    .sgs-grid--mobile-grid .sgs-grid__list {
-      gap: 40px 12px;
-    }
-
-    /* Swipeable row with the next print peeking in */
-    .sgs-grid--mobile-carousel .sgs-grid__list {
-      display: flex;
-      gap: 12px;
-      margin-inline: calc(var(--page-margin) * -1);
-      padding-inline: var(--page-margin);
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-snap-type: x mandatory;
-      scroll-padding-inline: var(--page-margin);
-      scrollbar-width: none;
-    }
-
-    .sgs-grid--mobile-carousel .sgs-grid__list::-webkit-scrollbar {
-      display: none;
-    }
-
-    .sgs-grid--mobile-carousel .sgs-grid__item {
-      flex: 0 0 78%;
-      scroll-snap-align: start;
-    }
-  }
-{% endstylesheet %}
 
 {% schema %}
 {

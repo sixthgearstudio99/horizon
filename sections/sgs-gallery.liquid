@@ -1,0 +1,399 @@
+{%- liquid
+  assign s = section.settings
+
+  # Hide the section on the live store until at least one image is uploaded
+  assign has_image = false
+  for block in section.blocks
+    if block.settings.image != blank
+      assign has_image = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if has_image or request.design_mode -%}
+  <section
+    class="sgs-gallery sgs-gallery--mobile-{{ s.mobile_layout }}"
+    style="
+      --sgs-gallery-pad-top: {{ s['padding-block-start'] }}px;
+      --sgs-gallery-pad-bottom: {{ s['padding-block-end'] }}px;
+    "
+    {% if s.heading != blank %}
+      aria-labelledby="SgsGalleryHeading-{{ section.id }}"
+    {% endif %}
+  >
+    <div class="sgs-gallery__inner">
+      {%- if s.eyebrow != blank or s.heading != blank or s.text != blank -%}
+        <header class="sgs-gallery__header" data-sgs-reveal>
+          <div>
+            {%- if s.eyebrow != blank -%}
+              <p class="sgs-gallery__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+            {%- endif -%}
+            {%- if s.heading != blank -%}
+              <h2 id="SgsGalleryHeading-{{ section.id }}" class="sgs-gallery__heading">{{ s.heading }}</h2>
+            {%- endif -%}
+          </div>
+          {%- if s.text != blank -%}
+            <p class="sgs-gallery__text">{{ s.text }}</p>
+          {%- endif -%}
+        </header>
+      {%- endif -%}
+
+      <ul class="sgs-gallery__grid" role="list" data-sgs-reveal-group>
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign link_url = b.product.url | default: b.link
+            if forloop.first
+              assign img_sizes = '(min-width: 990px) 62vw, 82vw'
+            else
+              assign img_sizes = '(min-width: 990px) 31vw, 82vw'
+            endif
+          -%}
+          <li class="sgs-gallery__item" data-sgs-reveal {{ block.shopify_attributes }}>
+            <figure class="sgs-gallery__figure">
+              {%- if link_url != blank -%}<a class="sgs-gallery__link" href="{{ link_url }}" aria-label="{{ b.caption | default: b.product.title | default: s.link_label | escape }}">{%- endif -%}
+              <span class="sgs-gallery__media">
+                {%- if b.image != blank -%}
+                  {%- assign img_alt = b.image.alt | default: b.caption | escape -%}
+                  {{
+                    b.image
+                    | image_url: width: 1800
+                    | image_tag:
+                      widths: '400, 600, 800, 1000, 1200, 1500, 1800',
+                      sizes: img_sizes,
+                      loading: 'lazy',
+                      class: 'sgs-gallery__img',
+                      alt: img_alt
+                  }}
+                {%- else -%}
+                  {%- assign placeholder_index = forloop.index | modulo: 2 | plus: 1 -%}
+                  {%- assign placeholder_name = 'lifestyle-' | append: placeholder_index -%}
+                  {{ placeholder_name | placeholder_svg_tag: 'sgs-gallery__img sgs-gallery__placeholder' }}
+                {%- endif -%}
+              </span>
+              {%- if link_url != blank -%}</a>{%- endif -%}
+              {%- if b.caption != blank or b.product != blank -%}
+                <figcaption class="sgs-gallery__caption">
+                  <span>{{ b.caption | default: b.product.title | escape }}</span>
+                  {%- if link_url != blank -%}
+                    <a class="sgs-gallery__shop sgs-label" href="{{ link_url }}">
+                      {{- s.link_label | escape -}}
+                    </a>
+                  {%- endif -%}
+                </figcaption>
+              {%- endif -%}
+            </figure>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-gallery {
+    padding-block: var(--sgs-gallery-pad-top) var(--sgs-gallery-pad-bottom);
+    color: #0e0e0e;
+  }
+
+  .sgs-gallery__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-gallery__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 64px;
+    margin-bottom: clamp(40px, 4vw, 64px);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-gallery__eyebrow {
+    margin: 0 0 16px;
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-gallery__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-gallery__text {
+    max-width: 38ch;
+    margin: 0 0 4px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(14 14 14 / 0.66);
+  }
+
+  /* Editorial grid: one large image, the rest in an even rhythm */
+  .sgs-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(32px, 3vw, 48px) clamp(12px, 1.4vw, 24px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-gallery__item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .sgs-gallery__figure {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin: 0;
+  }
+
+  .sgs-gallery__link {
+    display: flex;
+    flex: 1;
+    color: inherit;
+  }
+
+  .sgs-gallery__media {
+    position: relative;
+    display: block;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #e8e5df;
+  }
+
+  .sgs-gallery__item:first-child .sgs-gallery__media {
+    aspect-ratio: auto;
+  }
+
+  .sgs-gallery__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .sgs-gallery__placeholder {
+    fill: rgb(14 14 14 / 0.18);
+  }
+
+  @media (hover: hover) {
+    .sgs-gallery__link:hover .sgs-gallery__img {
+      scale: 1.03;
+    }
+  }
+
+  .sgs-gallery__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 14px;
+    font-size: 14px;
+    color: rgb(14 14 14 / 0.72);
+  }
+
+  .sgs-gallery__shop {
+    flex-shrink: 0;
+    color: #0e0e0e;
+    text-decoration: none;
+    border-bottom: 1px solid rgb(14 14 14 / 0.3);
+    padding-bottom: 2px;
+    transition: border-color 0.3s ease;
+  }
+
+  .sgs-gallery__shop:hover {
+    border-color: #0e0e0e;
+  }
+
+  @media screen and (max-width: 989px) {
+    .sgs-gallery__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sgs-gallery__item:first-child {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+
+    .sgs-gallery__item:first-child .sgs-gallery__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-gallery {
+      padding-block: calc(var(--sgs-gallery-pad-top) * 0.6) calc(var(--sgs-gallery-pad-bottom) * 0.6);
+    }
+
+    .sgs-gallery__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .sgs-gallery--mobile-carousel .sgs-gallery__grid {
+      display: flex;
+      gap: 12px;
+      margin-inline: calc(var(--page-margin) * -1);
+      padding-inline: var(--page-margin);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--page-margin);
+      scrollbar-width: none;
+    }
+
+    .sgs-gallery--mobile-carousel .sgs-gallery__grid::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sgs-gallery--mobile-carousel .sgs-gallery__item {
+      flex: 0 0 82%;
+      scroll-snap-align: start;
+    }
+
+    .sgs-gallery--mobile-carousel .sgs-gallery__item:first-child .sgs-gallery__media {
+      aspect-ratio: 4 / 5;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-gallery__img {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear on the wall",
+  "tag": "div",
+  "class": "sgs-gallery-section",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add lifestyle photos as blocks. The first image is shown large; 3 or 6 photos fill the grid perfectly. The section stays hidden on your live store until at least one image is uploaded."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "On the wall"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Made for your space"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "In the living room, the study or the garage. See how the prints look at home."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Product link label",
+      "default": "Shop the print"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        { "value": "carousel", "label": "Swipeable row" },
+        { "value": "stack", "label": "Stacked" }
+      ],
+      "default": "carousel"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 136
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Portrait images work best. Add alt text to each image in the Files library."
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "info": "e.g. the print's name or the room."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Featured print",
+          "info": "Adds a 'Shop the print' link."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Used when no product is chosen."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear on the wall",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

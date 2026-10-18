@@ -1,0 +1,135 @@
+{
+  "sections": {
+    "sgs_header": {
+      "type": "sgs-page-hero",
+      "settings": {
+        "eyebrow": "About SixthGear Studios",
+        "heading": "Built for the <em>driven</em>",
+        "text": "<p>We're a UK studio making automotive art prints for people who feel something when the right engine fires.</p>",
+        "show_image": true,
+        "overlay_opacity": 70,
+        "show_breadcrumb": false,
+        "show_count": false,
+        "alignment": "left",
+        "padding-block-start": 120,
+        "padding-block-end": 64
+      }
+    },
+    "sgs_story": {
+      "type": "sgs-feature",
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "title": "Generations",
+            "text": "Iconic cars, traced through every chapter of their story."
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "title": "Motorsport",
+            "text": "The machines and moments that defined racing."
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "title": "Car culture",
+            "text": "The scene, the style and the mindset behind it all."
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ],
+      "settings": {
+        "image_ratio": "4 / 5",
+        "image_position": "right",
+        "eyebrow": "The studio",
+        "heading": "Why sixth gear",
+        "text": "<p>Sixth gear is where the road opens up: the moment a car stops being transport and becomes something more. That's the feeling we design for.</p><p>Every print celebrates an icon, from the generations that shaped a legend to the machines that defined motorsport and the culture that grew up around them.</p>",
+        "link_label": "Explore the collections",
+        "link": "/collections",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "sgs_statement": {
+      "type": "sgs-statement",
+      "settings": {
+        "eyebrow": "Our belief",
+        "text": "Every car has a story. <em>We put it on your wall.</em>",
+        "caption": "SixthGear Studios",
+        "background_color": "#0E0E0E",
+        "padding-block-start": 144,
+        "padding-block-end": 144
+      }
+    },
+    "sgs_trust": {
+      "type": "sgs-trust",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "gear",
+            "title": "A UK studio",
+            "text": "Independent, and obsessed with cars."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "print",
+            "title": "Made to order",
+            "text": "Printed for you, with nothing wasted."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "globe",
+            "title": "Shipped worldwide",
+            "text": "From our print partners to walls everywhere."
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ],
+      "settings": {
+        "padding-block-start": 120,
+        "padding-block-end": 0
+      }
+    },
+    "sgs_grid": {
+      "type": "sgs-product-grid",
+      "settings": {
+        "collection": "best-sellers",
+        "products_to_show": 4,
+        "columns": "4",
+        "mobile_layout": "carousel",
+        "image_ratio": "4 / 5",
+        "image_fit": "cover",
+        "show_secondary_image": true,
+        "show_option_count": true,
+        "eyebrow": "Start your wall",
+        "heading": "Most wanted",
+        "view_all_label": "Shop all prints",
+        "padding-block-start": 120,
+        "padding-block-end": 136
+      }
+    }
+  },
+  "order": [
+    "sgs_header",
+    "sgs_story",
+    "sgs_statement",
+    "sgs_trust",
+    "sgs_grid"
+  ]
+}

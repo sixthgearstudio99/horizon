@@ -129,6 +129,17 @@
               },
               "blocks": {}
             },
+            "sgs_personalise": {
+              "type": "sgs-personalise",
+              "settings": {
+                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+                "eyebrow": "Personalise your print",
+                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "proof_note": "We'll email you a proof within 3 working days before printing.",
+                "max_file_mb": 20
+              },
+              "blocks": {}
+            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -225,17 +236,6 @@
                 "framing": "Supplied unframed, ready for the frame of your choice.",
                 "shipping_heading": "Shipping & delivery",
                 "shipping": "Each print is made to order, then dispatched from our print partner. Delivery options and costs are shown at checkout."
-              },
-              "blocks": {}
-            },
-            "sgs_personalise": {
-              "type": "sgs-personalise",
-              "settings": {
-                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car",
-                "eyebrow": "Personalise your print",
-                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
-                "proof_note": "We'll email you a proof within 3 working days before printing.",
-                "max_file_mb": 20
               },
               "blocks": {}
             }

@@ -1,0 +1,500 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+
+  # Only render for the product handle(s) listed in the block settings
+  assign matched = false
+  assign handles = bs.product_handles | split: ','
+  for raw_handle in handles
+    assign wanted = raw_handle | strip
+    if wanted != blank and wanted == product_resource.handle
+      assign matched = true
+      break
+    endif
+  endfor
+
+  # Horizon's buy-buttons form id; fields join that form via the form attribute
+  assign form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign uid = 'SgsPers-' | append: block.id
+-%}
+
+{%- if matched -%}
+  <script src="{{ 'sgs-personalise.js' | asset_url }}" defer></script>
+
+  {%- comment -%}
+    Express checkout buttons and the sticky bar would skip the personalisation,
+    so they are hidden on this product only.
+  {%- endcomment -%}
+  <style>
+    .accelerated-checkout-block,
+    sticky-add-to-cart {
+      display: none !important;
+    }
+  </style>
+
+  <sgs-personalise
+    class="sgs-pers"
+    data-form-id="{{ form_id }}"
+    data-max-mb="{{ bs.max_file_mb }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="sgs-pers__head">
+      <p class="sgs-pers__eyebrow sgs-label">{{ bs.eyebrow | escape }}</p>
+      {%- if bs.intro != blank -%}
+        <p class="sgs-pers__intro">{{ bs.intro }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="sgs-pers__grid">
+      <div class="sgs-pers__field sgs-pers__field--full" data-field>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-headline">Headline <span aria-hidden="true">*</span></label>
+        <input
+          class="sgs-pers__input"
+          id="{{ uid }}-headline"
+          type="text"
+          name="properties[Headline]"
+          form="{{ form_id }}"
+          maxlength="30"
+          placeholder="DISCIPLINE ACHIEVES DREAMS"
+          autocomplete="off"
+          required
+          data-count
+          aria-describedby="{{ uid }}-headline-error"
+        >
+        <div class="sgs-pers__meta">
+          <span class="sgs-pers__error" id="{{ uid }}-headline-error" data-error></span>
+          <span class="sgs-pers__count" data-counter aria-hidden="true">0/30</span>
+        </div>
+      </div>
+
+      <div class="sgs-pers__field sgs-pers__field--full" data-field>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-subtitle">Subtitle <span aria-hidden="true">*</span></label>
+        <input
+          class="sgs-pers__input"
+          id="{{ uid }}-subtitle"
+          type="text"
+          name="properties[Subtitle]"
+          form="{{ form_id }}"
+          maxlength="30"
+          placeholder="JOSH'S 140I · EST 2020"
+          autocomplete="off"
+          required
+          data-count
+          aria-describedby="{{ uid }}-subtitle-error"
+        >
+        <div class="sgs-pers__meta">
+          <span class="sgs-pers__error" id="{{ uid }}-subtitle-error" data-error></span>
+          <span class="sgs-pers__count" data-counter aria-hidden="true">0/30</span>
+        </div>
+      </div>
+
+      <div class="sgs-pers__field" data-field>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-car">Car make and model <span aria-hidden="true">*</span></label>
+        <input
+          class="sgs-pers__input"
+          id="{{ uid }}-car"
+          type="text"
+          name="properties[Car make and model]"
+          form="{{ form_id }}"
+          maxlength="60"
+          placeholder="BMW M140i"
+          required
+          aria-describedby="{{ uid }}-car-error"
+        >
+        <div class="sgs-pers__meta">
+          <span class="sgs-pers__error" id="{{ uid }}-car-error" data-error></span>
+        </div>
+      </div>
+
+      <div class="sgs-pers__field" data-field>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-year">Year and colour <span aria-hidden="true">*</span></label>
+        <input
+          class="sgs-pers__input"
+          id="{{ uid }}-year"
+          type="text"
+          name="properties[Year and colour]"
+          form="{{ form_id }}"
+          maxlength="60"
+          placeholder="2020, Estoril Blue"
+          required
+          aria-describedby="{{ uid }}-year-error"
+        >
+        <div class="sgs-pers__meta">
+          <span class="sgs-pers__error" id="{{ uid }}-year-error" data-error></span>
+        </div>
+      </div>
+
+      <fieldset class="sgs-pers__field sgs-pers__field--full sgs-pers__photos" data-photos>
+        <legend class="sgs-pers__label sgs-label">Photos of your car <span aria-hidden="true">*</span></legend>
+        <p class="sgs-pers__hint">
+          A side-on photo in good light works best. Add up to 3 images, {{ bs.max_file_mb }} MB each.
+        </p>
+        <div class="sgs-pers__tiles">
+          {%- for i in (1..3) -%}
+            <div class="sgs-pers__tile" data-tile>
+              <label class="sgs-pers__tile-label" for="{{ uid }}-photo-{{ i }}">
+                <input
+                  class="sgs-pers__file"
+                  id="{{ uid }}-photo-{{ i }}"
+                  type="file"
+                  accept="image/*"
+                  name="properties[Photo {{ i }}]"
+                  form="{{ form_id }}"
+                  {% if forloop.first %}
+                    required
+                  {% endif %}
+                  data-photo
+                >
+                <span class="sgs-pers__tile-empty">
+                  <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                  <span class="sgs-pers__tile-text">
+                    {%- if forloop.first -%}Main photo{%- else -%}Optional{%- endif -%}
+                  </span>
+                </span>
+                <img class="sgs-pers__preview" alt="" width="160" height="120" hidden data-preview>
+                <span class="sgs-pers__filename" hidden data-filename></span>
+              </label>
+              <button class="sgs-pers__remove" type="button" hidden data-remove aria-label="Remove photo {{ i }}">
+                <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              </button>
+            </div>
+          {%- endfor -%}
+        </div>
+        <span class="sgs-pers__error" data-photo-error role="alert"></span>
+      </fieldset>
+
+      <div class="sgs-pers__field sgs-pers__field--full" data-field>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-notes">Anything else we should know</label>
+        <textarea
+          class="sgs-pers__input sgs-pers__input--textarea"
+          id="{{ uid }}-notes"
+          name="properties[Notes]"
+          form="{{ form_id }}"
+          rows="3"
+          maxlength="500"
+          placeholder="Mods, plates, backgrounds, anything you'd like us to include."
+        ></textarea>
+      </div>
+    </div>
+
+    {%- if bs.proof_note != blank -%}
+      <p class="sgs-pers__note">
+        <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14"><rect x="1.5" y="3" width="11" height="8" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M1.5 3.5L7 7.5l5.5-4" fill="none" stroke="currentColor" stroke-width="1.1"/></svg>
+        {{ bs.proof_note | escape }}
+      </p>
+    {%- endif -%}
+
+    <p class="sgs-pers__status" data-status role="status" aria-live="polite"></p>
+  </sgs-personalise>
+{%- elsif request.design_mode -%}
+  <p class="sgs-pers-editor-note" {{ block.shopify_attributes }}>
+    Personalisation form: shown only on products with handle
+    <strong>{{ bs.product_handles | escape }}</strong>
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-pers {
+    --sgs-pers-line: rgb(var(--color-foreground-rgb) / 0.14);
+    --sgs-pers-muted: rgb(var(--color-foreground-rgb) / 0.6);
+
+    display: block;
+    width: 100%;
+    padding: 28px 0 8px;
+    border-top: 1px solid var(--sgs-pers-line);
+  }
+
+  .sgs-pers__eyebrow {
+    margin: 0 0 10px;
+  }
+
+  .sgs-pers__intro {
+    margin: 0 0 28px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--sgs-pers-muted);
+  }
+
+  .sgs-pers__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 20px;
+  }
+
+  .sgs-pers__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .sgs-pers__field--full {
+    grid-column: 1 / -1;
+  }
+
+  .sgs-pers__label {
+    padding: 0;
+    color: var(--sgs-pers-muted);
+  }
+
+  /* Scoped twice to beat Horizon's global input background/border rule */
+  .sgs-pers .sgs-pers__input {
+    width: 100%;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.3);
+    border-radius: 0;
+    background-color: transparent;
+    color: rgb(var(--color-foreground-rgb));
+    font-family: var(--font-body--family);
+    font-size: 16px;
+    box-shadow: none;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+
+  .sgs-pers .sgs-pers__input::placeholder {
+    color: rgb(var(--color-foreground-rgb) / 0.35);
+    opacity: 1;
+  }
+
+  .sgs-pers .sgs-pers__input:focus {
+    border-bottom-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-pers .sgs-pers__input[aria-invalid='true'] {
+    border-bottom-color: #e10600;
+  }
+
+  .sgs-pers .sgs-pers__input--textarea {
+    min-height: 84px;
+    resize: vertical;
+  }
+
+  .sgs-pers__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 16px;
+    font-size: 12px;
+  }
+
+  .sgs-pers__count {
+    margin-inline-start: auto;
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-pers__error {
+    color: #c00500;
+    font-size: 12px;
+  }
+
+  .sgs-pers__error:empty {
+    display: none;
+  }
+
+  .sgs-pers__hint {
+    margin: 6px 0 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-pers-muted);
+  }
+
+  .sgs-pers__tiles {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .sgs-pers__tile {
+    position: relative;
+  }
+
+  .sgs-pers__tile-label {
+    position: relative;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border: 1px dashed rgb(var(--color-foreground-rgb) / 0.3);
+    background: rgb(var(--color-foreground-rgb) / 0.02);
+    color: var(--sgs-pers-muted);
+    cursor: pointer;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .sgs-pers__tile-label:hover,
+  .sgs-pers__tile-label:focus-within {
+    border-color: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-pers__tile-label:focus-within {
+    outline: 2px solid rgb(var(--color-foreground-rgb));
+    outline-offset: 2px;
+  }
+
+  .sgs-pers__tile[data-invalid] .sgs-pers__tile-label {
+    border-color: #e10600;
+  }
+
+  .sgs-pers__tile[data-filled] .sgs-pers__tile-label {
+    border-style: solid;
+    border-color: rgb(var(--color-foreground-rgb) / 0.2);
+  }
+
+  .sgs-pers__file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .sgs-pers__tile-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sgs-pers__tile-text {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .sgs-pers__tile[data-filled] .sgs-pers__tile-empty {
+    display: none;
+  }
+
+  .sgs-pers__preview {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-pers__filename {
+    padding: 8px;
+    font-size: 11px;
+    text-align: center;
+    word-break: break-all;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-pers__remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgb(14 14 14 / 0.75);
+    color: #f5f3ef;
+    cursor: pointer;
+  }
+
+  .sgs-pers__remove[hidden] {
+    display: none;
+  }
+
+  .sgs-pers__note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0 0;
+    font-size: 13px;
+    color: var(--sgs-pers-muted);
+  }
+
+  .sgs-pers__status {
+    margin: 10px 0 0;
+    font-size: 13px;
+    color: #c00500;
+  }
+
+  .sgs-pers__status:empty {
+    display: none;
+  }
+
+  /* Add to cart stays visibly locked until the form is complete */
+  .sgs-pers-locked button[ref='addToCartButton'] {
+    opacity: 0.38;
+    cursor: not-allowed;
+  }
+
+  .sgs-pers-editor-note {
+    width: 100%;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px dashed rgb(var(--color-foreground-rgb) / 0.3);
+    font-size: 12px;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-pers__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 22px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear personalisation",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "product_handles",
+      "label": "Product handles",
+      "default": "custom-car-poster-personalized-car-print-with-your-own-car",
+      "info": "The form only appears on these products (comma-separated handles). Find a handle at the end of the product's URL."
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Heading",
+      "default": "Personalise your print"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "Tell us about your car and the words you want on it. We'll design the poster around them."
+    },
+    {
+      "type": "text",
+      "id": "proof_note",
+      "label": "Proof note",
+      "default": "We'll email you a proof within 3 working days before printing."
+    },
+    {
+      "type": "range",
+      "id": "max_file_mb",
+      "label": "Maximum photo size",
+      "min": 5,
+      "max": 20,
+      "step": 1,
+      "unit": "MB",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear personalisation"
+    }
+  ]
+}
+{% endschema %}

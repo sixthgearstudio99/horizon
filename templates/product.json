@@ -35,18 +35,18 @@
           "static": true,
           "settings": {
             "media_presentation": "grid",
-            "media_columns": "two",
+            "media_columns": "one",
             "image_gap": 12,
-            "large_first_image": true,
+            "large_first_image": false,
             "icons_style": "arrow",
             "slideshow_controls_style": "counter",
             "slideshow_mobile_controls_style": "counter",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
             "thumbnail_radius": 0,
-            "aspect_ratio": "1/1.25",
-            "constrain_to_viewport": false,
-            "media_fit": "cover",
+            "aspect_ratio": "adapt",
+            "constrain_to_viewport": true,
+            "media_fit": "contain",
             "media_radius": 0,
             "extend_media": true,
             "zoom": true,
@@ -90,7 +90,8 @@
               "type": "sgs-product-header",
               "settings": {
                 "eyebrow_source": "collection",
-                "eyebrow_text": "Automotive art print"
+                "eyebrow_text": "Automotive art print",
+                "preferred_collections": "lineage,portraits,grand-prix,mindset"
               },
               "blocks": {}
             },

@@ -3,22 +3,44 @@
   assign product_resource = closest.product
 
   # Eyebrow: the print's first style collection, skipping utility collections
-  assign eyebrow = blank
+  assign eyebrow = ''
   case block_settings.eyebrow_source
     when 'collection'
-      assign skip_handles = 'all,frontpage,best-sellers' | split: ','
-      for c in product_resource.collections
-        unless skip_handles contains c.handle
+      # 1) the first of the preferred style collections this print belongs to
+      assign preferred = block_settings.preferred_collections | split: ','
+      for wanted in preferred
+        assign wanted_handle = wanted | strip
+        for c in product_resource.collections
+          if c.handle == wanted_handle
+            assign eyebrow = c.title
+            break
+          endif
+        endfor
+        if eyebrow != ''
+          break
+        endif
+      endfor
+
+      # 2) otherwise any collection that isn't a utility one (all, home page, best sellers)
+      if eyebrow == ''
+        assign skip_handles = 'all,frontpage,home,home-page' | split: ','
+        for c in product_resource.collections
+          assign squashed = c.handle | remove: '-' | remove: '_'
+          if skip_handles contains c.handle or squashed contains 'bestseller'
+            continue
+          endif
           assign eyebrow = c.title
           break
-        endunless
-      endfor
+        endfor
+      endif
     when 'type'
       assign eyebrow = product_resource.type
     when 'custom'
       assign eyebrow = block_settings.eyebrow_text
   endcase
 -%}
+
+<script src="{{ 'sgs-gallery-fit.js' | asset_url }}" defer></script>
 
 <div class="sgs-pdp-header" {{ block.shopify_attributes }}>
   {%- if eyebrow != blank -%}
@@ -75,6 +97,14 @@
         { "value": "none", "label": "None" }
       ],
       "default": "collection"
+    },
+    {
+      "type": "text",
+      "id": "preferred_collections",
+      "label": "Preferred collections",
+      "default": "lineage,portraits,grand-prix,mindset",
+      "info": "Collection handles, in order. The label shows the first one the print belongs to.",
+      "visible_if": "{{ block.settings.eyebrow_source == 'collection' }}"
     },
     {
       "type": "text",

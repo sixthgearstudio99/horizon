@@ -115,9 +115,17 @@
         assign featured_media_class = media_class | replace: '[media_type]', featured_media.media_type | append: media_class_suffix
       %}
       {%- if product.media.size == 1 -%}
+        {%- liquid
+          # SixthGear: show landscape prints whole on the wall tone instead of cropping
+          assign featured_fit = media_fit | default: 'cover'
+          if featured_media.preview_image.aspect_ratio > 1.05
+            assign featured_fit = 'contain'
+            assign featured_media_class = featured_media_class | append: ' sgs-fit-contain'
+          endif
+        -%}
         <div
           class="{{ featured_media_class }}"
-          style="--product-media-fit: {{ media_fit | default: 'cover' }};"
+          style="--product-media-fit: {{ featured_fit }};"
         >
           {% render 'product-media',
             media: featured_media,
@@ -185,7 +193,14 @@
                 render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true
               endcapture
 
-              render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
+              # SixthGear: show landscape prints whole on the wall tone instead of cropping
+              assign slide_fit = media_fit
+              if media.preview_image.aspect_ratio > 1.05
+                assign slide_fit = 'contain'
+                assign class = class | append: ' sgs-fit-contain'
+              endif
+
+              render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: slide_fit
             endfor
           endcapture
 

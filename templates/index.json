@@ -218,7 +218,7 @@
       ],
       "settings": {
         "padding-block-start": 0,
-        "padding-block-end": 120
+        "padding-block-end": 64
       }
     },
     "sgs_newsletter": {
@@ -234,7 +234,7 @@
         "discount_code": "WELCOME10",
         "success_text": "Use this code at checkout for 10% off your first order.",
         "background_color": "#0e0e0e",
-        "padding-block-start": 144,
+        "padding-block-start": 112,
         "padding-block-end": 144
       }
     },

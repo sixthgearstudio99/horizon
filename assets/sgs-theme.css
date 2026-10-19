@@ -189,6 +189,33 @@ button[ref='addToCartButton'] {
   letter-spacing: 0.18em;
 }
 
+/* Landscape prints in Horizon cards: whole print, inset on the wall tone */
+.product-card .sgs-fit-contain img {
+  box-sizing: border-box;
+  padding: 9%;
+  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.14));
+}
+
+/* ---------- Product page gallery: natural aspect ratios, never cropped ---------- */
+/* Desktop: one image per row, capped to the viewport height and centred */
+.product-media-container.constrain-height {
+  --viewport-offset: 180px;
+}
+
+/* Mobile: each slide keeps its own height; sgs-gallery-fit.js sizes the slider to the current one */
+@media screen and (max-width: 749px) {
+  media-gallery slideshow-slides {
+    align-items: flex-start;
+    transition: height 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  media-gallery slideshow-slides {
+    transition: none;
+  }
+}
+
 /* ---------- Horizon product cards (collection, search) ---------- */
 .product-card .card-gallery {
   background: #ebe8e2;

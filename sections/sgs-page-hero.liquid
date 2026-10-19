@@ -5,9 +5,9 @@
   assign hero_title = s.heading
   assign hero_text = s.text
   assign hero_image = s.image
-  assign hero_meta = blank
-  assign crumb_label = blank
-  assign crumb_url = blank
+  assign hero_meta = nil
+  assign crumb_label = nil
+  assign crumb_url = nil
 
   if collection != blank and template.name == 'collection'
     if hero_title == blank

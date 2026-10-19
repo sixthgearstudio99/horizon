@@ -27,7 +27,7 @@
   if product != blank
     assign primary_image = product.featured_media.preview_image
 
-    assign secondary_image = blank
+    assign secondary_image = nil
     if show_secondary
       for media in product.media
         if media.position > 1 and media.media_type == 'image'
@@ -35,6 +35,16 @@
           break
         endif
       endfor
+    endif
+
+    # Landscape images are shown whole (contain) on the wall tone instead of being cropped
+    assign primary_class = 'sgs-card__img sgs-card__img--primary'
+    if card_fit == 'contain' or primary_image.aspect_ratio > 1.05
+      assign primary_class = primary_class | append: ' sgs-card__img--contain'
+    endif
+    assign secondary_class = 'sgs-card__img sgs-card__img--secondary'
+    if card_fit == 'contain' or secondary_image.aspect_ratio > 1.05
+      assign secondary_class = secondary_class | append: ' sgs-card__img--contain'
     endif
 
     # Count the sizes (or other options) this product actually offers
@@ -62,7 +72,7 @@
   endif
 -%}
 
-<div class="sgs-card{% if secondary_image != blank %} sgs-card--has-secondary{% endif %}">
+<div class="sgs-card{% if secondary_image %} sgs-card--has-secondary{% endif %}">
   {%- if product != blank -%}
     <a class="sgs-card__link" href="{{ product.url }}">
       <span
@@ -78,14 +88,14 @@
               widths: '300, 450, 600, 800, 1000, 1200, 1400',
               sizes: card_sizes,
               loading: card_loading,
-              class: 'sgs-card__img sgs-card__img--primary',
+              class: primary_class,
               alt: primary_alt
           }}
         {%- else -%}
           {{ 'product-1' | placeholder_svg_tag: 'sgs-card__img sgs-card__placeholder' }}
         {%- endif -%}
 
-        {%- if secondary_image != blank -%}
+        {%- if secondary_image -%}
           {{
             secondary_image
             | image_url: width: 1400
@@ -93,7 +103,7 @@
               widths: '300, 450, 600, 800, 1000, 1200, 1400',
               sizes: card_sizes,
               loading: 'lazy',
-              class: 'sgs-card__img sgs-card__img--secondary',
+              class: secondary_class,
               alt: ''
           }}
         {%- endif -%}
@@ -179,7 +189,8 @@
     transition: opacity 0.7s var(--sgs-card-ease), scale 1.2s var(--sgs-card-ease);
   }
 
-  .sgs-card__media--contain .sgs-card__img {
+  .sgs-card__media--contain .sgs-card__img,
+  .sgs-card__img--contain {
     inset: 9%;
     width: 82%;
     height: 82%;

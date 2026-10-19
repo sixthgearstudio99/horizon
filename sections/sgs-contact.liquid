@@ -178,7 +178,17 @@
     transition: border-color 0.3s ease;
   }
 
-  .sgs-field__input:focus {
+  /* Beat Horizon's global input background/border rule */
+  .sgs-contact .sgs-field__input {
+    background-color: transparent;
+    border-color: rgb(14 14 14 / 0.3);
+  }
+
+  .sgs-contact .sgs-field__input::placeholder {
+    color: rgb(14 14 14 / 0.4);
+  }
+
+  .sgs-contact .sgs-field__input:focus {
     border-bottom-color: #0e0e0e;
   }
 

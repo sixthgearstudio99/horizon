@@ -179,7 +179,13 @@
     box-shadow: none;
   }
 
-  .sgs-news__input::placeholder {
+  /* Beat Horizon's global input background/border (input:not([type=…]) is more specific than one class) */
+  .sgs-news .sgs-news__input {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .sgs-news .sgs-news__input::placeholder {
     color: rgb(var(--sgs-news-fg) / 0.45);
     opacity: 1;
   }

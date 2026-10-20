@@ -237,7 +237,7 @@
     --sgs-hero-fg-faint: rgb(14 14 14 / 0.4);
     --sgs-hero-line: rgb(14 14 14 / 0.14);
     --sgs-hero-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-    --sgs-hero-header-offset: calc(var(--header-height, 0px) * var(--transparent-header-offset-boolean, 0));
+    --sgs-hero-header-offset: 0px;
 
     position: relative;
     isolation: isolate;
@@ -248,6 +248,21 @@
     padding-block: calc(var(--sgs-hero-pad-top) + var(--sgs-hero-header-offset)) var(--sgs-hero-pad-bottom);
     background-color: var(--sgs-hero-bg);
     color: var(--sgs-hero-fg);
+  }
+
+  /*
+   * Under a transparent header Horizon pulls the first section up behind the whole header group
+   * (announcement bar, Christmas banner, header). Clear all of it: --header-group-height covers the
+   * bars above the header, and the header itself is added when it isn't already counted in it.
+   * Both values are measured by Horizon (theme.liquid before first paint, header.js on resize).
+   */
+  #header-group:has(> .header-section > #header-component[transparent])
+    ~ .content-for-layout
+    > .shopify-section:first-child
+    .sgs-hero {
+    --sgs-hero-header-offset: calc(
+      var(--header-group-height, 0px) + var(--header-height, 0px) * var(--transparent-header-offset-boolean, 0)
+    );
   }
 
   .sgs-hero--dark {

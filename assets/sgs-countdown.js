@@ -1,6 +1,7 @@
 /*
  * SixthGear Studios: Christmas cut-off banner.
- * The cut-off is entered as a UK date and time; the banner hides once it has passed.
+ * The cut-off is entered as a UK date and time (the same date the message shows);
+ * the banner hides once it has passed.
  */
 if (!customElements.get('sgs-countdown')) {
   /** Minutes Europe/London is ahead of UTC at a given instant (0 in GMT, 60 in BST) */
@@ -63,6 +64,7 @@ if (!customElements.get('sgs-countdown')) {
         const secs = s % 60;
         this.timer.textContent =
           days > 0 ? `${days}d ${pad(hours)}h ${pad(mins)}m ${pad(secs)}s` : `${pad(hours)}h ${pad(mins)}m ${pad(secs)}s`;
+        this.timer.classList.add('is-live');
       }
     }
   );

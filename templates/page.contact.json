@@ -26,6 +26,7 @@
     "sgs_contact": {
       "type": "sgs-contact",
       "settings": {
+        "email": "hello@sixthgearstudios.co.uk",
         "intro": "Questions about a print, an order or a collaboration? Drop us a line.",
         "response_time": "We read every message and reply as soon as we can.",
         "orders_note": "Include your order number and we'll find it faster.",

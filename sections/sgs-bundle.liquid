@@ -1,0 +1,435 @@
+{%- liquid
+  assign s = section.settings
+
+  # Shown on the prints in the set itself, plus any extra products picked below
+  assign show = false
+  if product != blank
+    for p in s.products
+      if p.id == product.id
+        assign show = true
+        break
+      endif
+    endfor
+    unless show
+      for p in s.also_show_on
+        if p.id == product.id
+          assign show = true
+          break
+        endif
+      endfor
+    endunless
+  endif
+  if request.design_mode
+    assign show = true
+  endif
+-%}
+
+{%- if show and s.products.size > 1 -%}
+  <section
+    class="sgs-set"
+    style="--sgs-set-pad-top: {{ s['padding-block-start'] }}px; --sgs-set-pad-bottom: {{ s['padding-block-end'] }}px; --sgs-set-count: {{ s.products.size }};"
+    aria-labelledby="SgsSet-{{ section.id }}"
+  >
+    <sgs-bundle class="sgs-set__inner" data-currency="{{ cart.currency.iso_code }}" data-money-format="{{ shop.money_format | strip_html | escape }}">
+      <header class="sgs-set__header" data-sgs-reveal>
+        <div>
+          {%- if s.eyebrow != blank -%}
+            <p class="sgs-set__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="sgs-set__heading" id="SgsSet-{{ section.id }}">{{ s.heading }}</h2>
+        </div>
+        {%- if s.text != blank -%}
+          <p class="sgs-set__text">{{ s.text }}</p>
+        {%- endif -%}
+      </header>
+
+      <ul class="sgs-set__items" role="list" data-sgs-reveal-group>
+        {%- for p in s.products limit: 3 -%}
+          {%- liquid
+            assign img = p.featured_image
+            assign first_variant = p.selected_or_first_available_variant
+            if img.aspect_ratio > 1.05
+              assign fit_class = ' sgs-set__img--contain'
+            else
+              assign fit_class = ''
+            endif
+          -%}
+          <li class="sgs-set__item" data-sgs-reveal data-item>
+            <a class="sgs-set__media" href="{{ p.url }}">
+              {%- if img != blank -%}
+                {%- assign img_class = 'sgs-set__img' | append: fit_class -%}
+                {{
+                  img
+                  | image_url: width: 900
+                  | image_tag:
+                    widths: '300, 450, 600, 900',
+                    sizes: '(min-width: 990px) 28vw, 80vw',
+                    loading: 'lazy',
+                    class: img_class,
+                    alt: p.title
+                }}
+              {%- endif -%}
+              {%- unless forloop.last -%}
+                <span class="sgs-set__plus" aria-hidden="true">+</span>
+              {%- endunless -%}
+            </a>
+            <div class="sgs-set__info">
+              <a class="sgs-set__title" href="{{ p.url }}">{{ p.title | escape }}</a>
+              {%- if p.has_only_default_variant -%}
+                <input type="hidden" data-variant value="{{ first_variant.id }}" data-price="{{ first_variant.price }}">
+              {%- else -%}
+                <label class="visually-hidden" for="SgsSet-{{ section.id }}-{{ forloop.index }}">Size for {{ p.title | escape }}</label>
+                <select class="sgs-set__select" id="SgsSet-{{ section.id }}-{{ forloop.index }}" data-variant>
+                  {%- for v in p.variants -%}
+                    <option
+                      value="{{ v.id }}"
+                      data-price="{{ v.price }}"
+                      {% if v.id == first_variant.id %}selected{% endif %}
+                      {% unless v.available %}disabled{% endunless %}
+                    >
+                      {{- v.title | escape }} · {{ v.price | money -}}
+                      {%- unless v.available %} (sold out){% endunless -%}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <div class="sgs-set__footer" data-sgs-reveal>
+        <div class="sgs-set__total">
+          <span class="sgs-label">{{ s.total_label | escape }}</span>
+          <strong data-total></strong>
+          {%- if s.discount_note != blank -%}
+            <span class="sgs-set__note">{{ s.discount_note | escape }}</span>
+          {%- endif -%}
+        </div>
+        <button type="button" class="button sgs-set__button" data-add>
+          <span data-label>{{ s.button_label | escape }}</span>
+        </button>
+        <p class="sgs-set__status" role="status" aria-live="polite" data-status></p>
+      </div>
+    </sgs-bundle>
+  </section>
+  <script src="{{ 'sgs-bundle.js' | asset_url }}" type="module"></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-set {
+    padding-block: var(--sgs-set-pad-top) var(--sgs-set-pad-bottom);
+    color: #0e0e0e;
+  }
+
+  .sgs-set__inner {
+    display: block;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-set__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 64px;
+    margin-bottom: clamp(40px, 4vw, 56px);
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-set__eyebrow {
+    margin: 0 0 16px;
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-set__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-set__text {
+    max-width: 38ch;
+    margin: 0 0 4px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(14 14 14 / 0.66);
+  }
+
+  .sgs-set__items {
+    display: grid;
+    grid-template-columns: repeat(var(--sgs-set-count), minmax(0, 1fr));
+    gap: clamp(20px, 3vw, 48px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-set__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    background: #ebe8e2;
+  }
+
+  .sgs-set__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-set__img--contain {
+    inset: 9%;
+    width: 82%;
+    height: 82%;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.14));
+  }
+
+  .sgs-set__plus {
+    position: absolute;
+    top: 50%;
+    right: calc(-1 * clamp(20px, 3vw, 48px) / 2);
+    z-index: 1;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f5f3ef;
+    font-family: var(--font-heading--family);
+    font-size: 18px;
+    transform: translate(50%, -50%);
+    box-shadow: 0 0 0 1px rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-set__info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .sgs-set__title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 16px;
+    line-height: 1.25;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sgs-set .sgs-set__select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 36px 0 12px;
+    border: 1px solid rgb(14 14 14 / 0.2);
+    border-radius: 2px;
+    background: transparent
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%230e0e0e' stroke-width='1.2'/%3E%3C/svg%3E")
+      no-repeat right 14px center;
+    color: #0e0e0e;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    appearance: none;
+  }
+
+  .sgs-set__footer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px 32px;
+    margin-top: clamp(32px, 4vw, 48px);
+    padding-top: 28px;
+    border-top: 1px solid rgb(14 14 14 / 0.12);
+  }
+
+  .sgs-set__total {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 16px;
+  }
+
+  .sgs-set__total .sgs-label {
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-set__total strong {
+    font-family: var(--font-heading--family);
+    font-size: 24px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-set__note {
+    font-size: 13px;
+    color: #0e0e0e;
+  }
+
+  .sgs-set__button {
+    --button-padding-block: 18px;
+    --button-padding-inline: 40px;
+
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+  }
+
+  .sgs-set__button[aria-busy='true'] {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
+  .sgs-set__status {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 13px;
+  }
+
+  .sgs-set__status:empty {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-set {
+      padding-block: calc(var(--sgs-set-pad-top) * 0.6) calc(var(--sgs-set-pad-bottom) * 0.6);
+    }
+
+    .sgs-set__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .sgs-set__items {
+      grid-template-columns: repeat(var(--sgs-set-count), minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .sgs-set__plus {
+      width: 26px;
+      height: 26px;
+      font-size: 14px;
+      right: -6px;
+    }
+
+    .sgs-set__title {
+      font-size: 13px;
+    }
+
+    .sgs-set .sgs-set__select {
+      font-size: 12px;
+      padding-inline: 8px 26px;
+      background-position: right 8px center;
+    }
+
+    .sgs-set__footer {
+      grid-template-columns: 1fr;
+    }
+
+    .sgs-set__button {
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Complete the set",
+  "tag": "div",
+  "class": "sgs-set-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Pick 2 or 3 prints that hang well together. The set shows on each of those prints' pages. Add the section again for another set."
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Prints in the set",
+      "limit": 3
+    },
+    {
+      "type": "product_list",
+      "id": "also_show_on",
+      "label": "Also show on",
+      "limit": 20
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Gallery wall"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the set"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "Three prints chosen to hang together. Pick your sizes and add the set in one go."
+    },
+    {
+      "type": "text",
+      "id": "total_label",
+      "label": "Total label",
+      "default": "Set total"
+    },
+    {
+      "type": "text",
+      "id": "discount_note",
+      "label": "Discount note",
+      "default": "Set discount applied at checkout",
+      "info": "Only promise this once the automatic discount is set up in Shopify."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Add the set to cart"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "Complete the set"
+    }
+  ]
+}
+{% endschema %}

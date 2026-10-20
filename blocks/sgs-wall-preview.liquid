@@ -1,0 +1,328 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+  assign form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign uid = 'SgsWall-' | append: block.id
+
+  # Artwork: a flat artwork image (metafield custom.artwork) works best; else the featured image
+  assign art = product_resource.metafields.custom.artwork.value | default: product_resource.featured_image
+-%}
+
+{%- if art != blank and product_resource.has_only_default_variant == false -%}
+  <sgs-wall-preview
+    class="sgs-wall"
+    data-form-id="{{ form_id }}"
+    data-ratio="{{ art.aspect_ratio | default: 0.75 }}"
+    data-wall-cm="{{ bs.wall_width_cm }}"
+    {{ block.shopify_attributes }}
+  >
+    <button type="button" class="sgs-wall__open" data-open hidden>
+      <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><rect x="5.5" y="1.5" width="7" height="8"/><path d="M1.5 16.5v-3.5a1.5 1.5 0 011.5-1.5h12a1.5 1.5 0 011.5 1.5v3.5M3 11.5v-1a1 1 0 011-1h10a1 1 0 011 1v1M3 16.5v1M15 16.5v1"/></svg>
+      <span>{{ bs.button_label | escape }}</span>
+      <span class="sgs-wall__open-size" data-open-size></span>
+    </button>
+
+    <dialog class="sgs-wall__dialog" id="{{ uid }}" aria-labelledby="{{ uid }}-title" data-dialog>
+      <div class="sgs-wall__panel">
+        <header class="sgs-wall__head">
+          <div>
+            <p class="sgs-label sgs-wall__eyebrow">{{ bs.button_label | escape }}</p>
+            <h2 class="sgs-wall__title" id="{{ uid }}-title">{{ product_resource.title | escape }}</h2>
+          </div>
+          <button type="button" class="sgs-wall__close" data-close aria-label="Close">
+            <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path d="M3 3l10 10M13 3L3 13" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </button>
+        </header>
+
+        <div class="sgs-wall__room" data-room>
+          <div class="sgs-wall__wall"></div>
+          <div class="sgs-wall__floor"></div>
+          <div class="sgs-wall__print" data-print>
+            <img
+              data-src="{{ art | image_url: width: 1400 }}"
+              alt="{{ product_resource.title | escape }} shown to scale above a sofa"
+              width="{{ art.width }}"
+              height="{{ art.height }}"
+            >
+          </div>
+          <svg class="sgs-wall__sofa" data-sofa viewBox="0 0 210 85" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <rect x="0" y="22" width="22" height="55" rx="7" fill="#a79f94"/>
+            <rect x="188" y="22" width="22" height="55" rx="7" fill="#a79f94"/>
+            <rect x="12" y="6" width="186" height="46" rx="9" fill="#b7afa4"/>
+            <rect x="20" y="44" width="85" height="26" rx="6" fill="#c2bbb0"/>
+            <rect x="105" y="44" width="85" height="26" rx="6" fill="#bfb8ad"/>
+            <rect x="10" y="66" width="190" height="11" rx="3" fill="#9d958a"/>
+            <rect x="22" y="77" width="4" height="8" fill="#5b544c"/>
+            <rect x="184" y="77" width="4" height="8" fill="#5b544c"/>
+          </svg>
+          <p class="sgs-wall__scale" aria-hidden="true">
+            <span data-scale-label></span>
+          </p>
+        </div>
+
+        <div class="sgs-wall__sizes" role="group" aria-label="Preview size" data-sizes></div>
+        <p class="sgs-wall__caption" data-caption aria-live="polite"></p>
+      </div>
+    </dialog>
+
+    <script type="application/json" data-variants>
+      {%- capture variant_json -%}
+        [{%- for v in product_resource.variants -%}{"id":{{ v.id }},"title":{{ v.title | json }},"options":{{ v.options | json }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+      {%- endcapture -%}
+      {{ variant_json }}
+    </script>
+  </sgs-wall-preview>
+  <script src="{{ 'sgs-wall-preview.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-wall {
+    display: block;
+    width: 100%;
+  }
+
+  .sgs-wall__open {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border: 0;
+    background: none;
+    color: rgb(var(--color-foreground-rgb));
+    font-family: var(--font-body--family);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.3);
+    transition: border-color 0.3s ease;
+  }
+
+  .sgs-wall__open:hover {
+    border-bottom-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-wall__open[hidden] {
+    display: none;
+  }
+
+  .sgs-wall__open-size {
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  .sgs-wall__dialog {
+    width: min(960px, calc(100vw - 32px));
+    max-height: calc(100svh - 32px);
+    padding: 0;
+    border: 0;
+    background: #f5f3ef;
+    color: #0e0e0e;
+    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 0.45);
+    overflow: auto;
+  }
+
+  .sgs-wall__dialog::backdrop {
+    background: rgb(14 14 14 / 0.55);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sgs-wall__dialog[open] {
+      animation: sgs-wall-in 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+
+    .sgs-wall__print {
+      transition: width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), height 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+        bottom 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    }
+  }
+
+  @keyframes sgs-wall-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .sgs-wall__panel {
+    padding: clamp(20px, 3vw, 32px);
+  }
+
+  .sgs-wall__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .sgs-wall__eyebrow {
+    margin: 0 0 6px;
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-wall__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .sgs-wall__close {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgb(14 14 14 / 0.15);
+    border-radius: 50%;
+    background: transparent;
+    color: #0e0e0e;
+    cursor: pointer;
+  }
+
+  /* The room: 6:5, representing a wall of --sgs-wall-cm centimetres */
+  .sgs-wall__room {
+    position: relative;
+    aspect-ratio: 6 / 5;
+    overflow: hidden;
+    container-type: inline-size;
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-wall__room {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .sgs-wall__wall {
+    position: absolute;
+    inset: 0 0 10% 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 30%, #f1eee8 0%, #e6e1d8 60%, #ddd7cc 100%);
+  }
+
+  .sgs-wall__floor {
+    position: absolute;
+    inset: 90% 0 0 0;
+    background: linear-gradient(to bottom, #b9ad9c 0, #a99c8a 100%);
+    box-shadow: 0 -1px 0 rgb(0 0 0 / 0.08);
+  }
+
+  .sgs-wall__sofa {
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 8px 10px rgb(0 0 0 / 0.18));
+  }
+
+  .sgs-wall__print {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.12), 0 14px 24px -8px rgb(0 0 0 / 0.3);
+  }
+
+  .sgs-wall__print img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-wall__scale {
+    position: absolute;
+    left: 12px;
+    bottom: 8px;
+    margin: 0;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .sgs-wall__sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .sgs-wall__size {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid rgb(14 14 14 / 0.2);
+    border-radius: 2px;
+    background: transparent;
+    color: #0e0e0e;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  }
+
+  .sgs-wall__size[aria-pressed='true'] {
+    background: #0e0e0e;
+    border-color: #0e0e0e;
+    color: #f5f3ef;
+  }
+
+  .sgs-wall__size-current {
+    margin-inline-start: 6px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  .sgs-wall__caption {
+    margin: 14px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgb(14 14 14 / 0.62);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear wall preview",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the print to scale above a sofa. Sizes are read from variant names such as 16\"x24\", 30x40 cm or A3. For best results add a flat artwork image as a product metafield custom.artwork (file)."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "See it on your wall"
+    },
+    {
+      "type": "range",
+      "id": "wall_width_cm",
+      "label": "Wall width shown",
+      "min": 220,
+      "max": 400,
+      "step": 10,
+      "unit": "cm",
+      "default": 300,
+      "info": "The sofa is 210 cm wide."
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear wall preview"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,143 @@
+{%- liquid
+  assign s = section.settings
+  assign cutoff_label = s.cutoff_date | date: '%A %-d %B'
+  assign message = s.message | replace: '[date]', cutoff_label
+-%}
+
+{%- if s.enabled and s.cutoff_date != blank -%}
+  <sgs-countdown
+    class="sgs-cd"
+    data-date="{{ s.cutoff_date | escape }}"
+    data-time="{{ s.cutoff_time | default: '23:59' | escape }}"
+    style="--sgs-cd-bg: {{ s.background_color }}; --sgs-cd-fg: {{ s.text_color }};"
+  >
+    {%- if s.link != blank -%}<a class="sgs-cd__inner" href="{{ s.link }}">{%- else -%}<div class="sgs-cd__inner">{%- endif -%}
+      <svg class="sgs-cd__icon" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14"><rect x="1.5" y="5" width="11" height="7.5" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M1 3h12v2H1zM7 3v9.5M7 3C6 1 4 1 4 2.2S7 3 7 3s3-0.2 3-0.8S8 1 7 3z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+      <span class="sgs-cd__message">{{ message | escape }}</span>
+      {%- if s.show_countdown -%}
+        <span class="sgs-cd__timer" data-timer aria-hidden="true"></span>
+      {%- endif -%}
+    {%- if s.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
+  </sgs-countdown>
+  <script src="{{ 'sgs-countdown.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-cd {
+    display: block;
+    background: var(--sgs-cd-bg);
+    color: var(--sgs-cd-fg);
+  }
+
+  .sgs-cd[hidden] {
+    display: none;
+  }
+
+  .sgs-cd__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+    min-height: 36px;
+    padding: 8px var(--page-margin, 16px);
+    color: inherit;
+    font-family: var(--font-body--family);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .sgs-cd__timer {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    padding-inline-start: 12px;
+    border-inline-start: 1px solid currentColor;
+  }
+
+  .sgs-cd__timer:empty {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-cd__inner {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .sgs-cd__icon {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Christmas banner",
+  "tag": "div",
+  "class": "sgs-cd-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Show banner",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "Order by [date] for Christmas delivery",
+      "info": "[date] is replaced with the cut-off date, e.g. Thursday 18 December."
+    },
+    {
+      "type": "text",
+      "id": "cutoff_date",
+      "label": "Cut-off date",
+      "default": "2026-12-16",
+      "info": "Format YYYY-MM-DD. The banner hides itself after this."
+    },
+    {
+      "type": "text",
+      "id": "cutoff_time",
+      "label": "Cut-off time (UK)",
+      "default": "12:00",
+      "info": "24-hour, HH:MM"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show live countdown",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#E10600"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#FFFFFF"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Christmas banner"
+    }
+  ]
+}
+{% endschema %}

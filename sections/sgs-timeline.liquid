@@ -1,0 +1,411 @@
+{%- liquid
+  assign s = section.settings
+
+  # Visibility: the products picked below; or, if none are picked, any print in the chosen collection
+  assign show = false
+  if product != blank
+    if s.products.size > 0
+      for p in s.products
+        if p.id == product.id
+          assign show = true
+          break
+        endif
+      endfor
+    else
+      for c in product.collections
+        if c.handle == s.collection_handle
+          assign show = true
+          break
+        endif
+      endfor
+    endif
+  endif
+  if request.design_mode
+    assign show = true
+  endif
+-%}
+
+{%- if show and section.blocks.size > 0 -%}
+  <section
+    class="sgs-tl"
+    style="--sgs-tl-pad-top: {{ s['padding-block-start'] }}px; --sgs-tl-pad-bottom: {{ s['padding-block-end'] }}px;"
+    aria-labelledby="SgsTl-{{ section.id }}"
+  >
+    <div class="sgs-tl__inner">
+      <header class="sgs-tl__header" data-sgs-reveal>
+        <div>
+          {%- if s.eyebrow != blank -%}
+            <p class="sgs-tl__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
+          {%- endif -%}
+          <h2 class="sgs-tl__heading" id="SgsTl-{{ section.id }}">{{ s.heading }}</h2>
+        </div>
+        <div class="sgs-tl__nav" data-tl-nav hidden>
+          <button type="button" class="sgs-tl__arrow" data-tl-prev aria-label="Previous">
+            <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 14 14"><path d="M13 7H1M5.5 2.5L1 7l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button type="button" class="sgs-tl__arrow" data-tl-next aria-label="Next">
+            <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 14 14"><path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <sgs-timeline class="sgs-tl__track-wrap">
+        <ol class="sgs-tl__track" data-tl-track data-sgs-reveal-group>
+          {%- for block in section.blocks -%}
+            {%- assign b = block.settings -%}
+            <li class="sgs-tl__step{% if b.image != blank %} sgs-tl__step--image{% endif %}" data-sgs-reveal {{ block.shopify_attributes }}>
+              <div class="sgs-tl__media">
+                {%- if b.image != blank -%}
+                  {%- assign step_alt = b.image.alt | default: b.model | escape -%}
+                  {{
+                    b.image
+                    | image_url: width: 900
+                    | image_tag:
+                      widths: '300, 450, 600, 900',
+                      sizes: '(min-width: 990px) 22vw, 70vw',
+                      loading: 'lazy',
+                      class: 'sgs-tl__img',
+                      alt: step_alt
+                  }}
+                {%- endif -%}
+              </div>
+              <span class="sgs-tl__dot" aria-hidden="true"></span>
+              <p class="sgs-tl__years">{{ b.years | escape }}</p>
+              <h3 class="sgs-tl__model">{{ b.model | escape }}</h3>
+              {%- if b.text != blank -%}
+                <p class="sgs-tl__text">{{ b.text }}</p>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+      </sgs-timeline>
+    </div>
+  </section>
+  <script src="{{ 'sgs-timeline.js' | asset_url }}" defer></script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-tl {
+    padding-block: var(--sgs-tl-pad-top) var(--sgs-tl-pad-bottom);
+    color: #0e0e0e;
+    overflow: hidden;
+  }
+
+  .sgs-tl__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-tl__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(40px, 4vw, 64px);
+  }
+
+  .sgs-tl__eyebrow {
+    margin: 0 0 16px;
+    color: rgb(14 14 14 / 0.55);
+  }
+
+  .sgs-tl__heading {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  .sgs-tl__nav {
+    display: flex;
+    gap: 8px;
+  }
+
+  .sgs-tl__nav[hidden] {
+    display: none;
+  }
+
+  .sgs-tl__arrow {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgb(14 14 14 / 0.2);
+    border-radius: 50%;
+    background: transparent;
+    color: #0e0e0e;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  }
+
+  .sgs-tl__arrow:hover:not(:disabled) {
+    background: #0e0e0e;
+    color: #f5f3ef;
+  }
+
+  .sgs-tl__arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+
+  .sgs-tl__track-wrap {
+    display: block;
+  }
+
+  .sgs-tl__track {
+    --sgs-tl-step: clamp(240px, 24vw, 340px);
+
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--sgs-tl-step);
+    gap: clamp(24px, 3vw, 48px);
+    margin: 0 calc(var(--page-margin) * -1);
+    padding: 0 var(--page-margin) 8px;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-margin);
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+  }
+
+  .sgs-tl__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sgs-tl__step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+  }
+
+  .sgs-tl__media {
+    aspect-ratio: 4 / 3;
+    margin-bottom: 28px;
+    overflow: hidden;
+    background: #e8e5df;
+  }
+
+  .sgs-tl__step:not(.sgs-tl__step--image) .sgs-tl__media {
+    background: repeating-linear-gradient(135deg, #ebe8e2 0 12px, #e5e1da 12px 13px);
+  }
+
+  .sgs-tl__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: scale 1.2s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .sgs-tl__step:hover .sgs-tl__img {
+    scale: 1.03;
+  }
+
+  /* The line runs through every dot; each step draws its own segment */
+  .sgs-tl__dot {
+    position: relative;
+    display: block;
+    width: 11px;
+    height: 11px;
+    margin-bottom: 22px;
+    border: 1px solid #0e0e0e;
+    border-radius: 50%;
+    background: #f5f3ef;
+    z-index: 1;
+  }
+
+  .sgs-tl__step::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: calc(-1 * clamp(24px, 3vw, 48px));
+    top: calc(var(--sgs-tl-step) * 0.75 + 28px + 5px);
+    height: 1px;
+    background: rgb(14 14 14 / 0.2);
+    transform-origin: left;
+  }
+
+  .sgs-tl__step:last-child::before {
+    right: 0;
+  }
+
+  .sgs-tl__step:first-child .sgs-tl__dot {
+    background: #e10600;
+    border-color: #e10600;
+  }
+
+  .sgs-tl__years {
+    margin: 0 0 8px;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: clamp(1.75rem, 1.4rem + 1vw, 2.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-tl__model {
+    margin: 0;
+    font-family: var(--font-body--family);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .sgs-tl__text {
+    margin: 14px 0 0;
+    max-width: 32ch;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgb(14 14 14 / 0.66);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sgs-motion .sgs-tl__step[data-sgs-reveal]::before {
+      transform: scaleX(0);
+      transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: calc(var(--sgs-reveal-index, 0) * 80ms + 150ms);
+    }
+
+    .sgs-motion .sgs-tl__step[data-sgs-reveal].is-revealed::before {
+      transform: scaleX(1);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-tl {
+      padding-block: calc(var(--sgs-tl-pad-top) * 0.6) calc(var(--sgs-tl-pad-bottom) * 0.6);
+    }
+
+    .sgs-tl__track {
+      --sgs-tl-step: 72vw;
+    }
+
+    .sgs-tl__header {
+      margin-bottom: 32px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-tl__track {
+      scroll-behavior: auto;
+    }
+
+    .sgs-tl__img {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear timeline",
+  "tag": "div",
+  "class": "sgs-tl-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Add one timeline per car. It only appears on the products picked below, or, if none are picked, on every print in the collection below."
+    },
+    {
+      "type": "product_list",
+      "id": "products",
+      "label": "Show on these prints",
+      "limit": 20
+    },
+    {
+      "type": "text",
+      "id": "collection_handle",
+      "label": "Otherwise show on collection",
+      "default": "lineage"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "The lineage"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Every generation"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "model",
+          "label": "Model name",
+          "default": "911 (964)"
+        },
+        {
+          "type": "text",
+          "id": "years",
+          "label": "Years",
+          "default": "1989–1994"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Short line",
+          "default": "Coil springs, all-wheel drive and the last of the classic silhouette."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear timeline",
+      "blocks": [
+        { "type": "step", "settings": { "model": "911 (901)", "years": "1963–1973", "text": "The original. Air-cooled, rear-engined and impossibly pure." } },
+        { "type": "step", "settings": { "model": "911 (G-Series)", "years": "1974–1989", "text": "Impact bumpers, Turbo whale tails and a decade of icons." } },
+        { "type": "step", "settings": { "model": "911 (964)", "years": "1989–1994", "text": "Coil springs, all-wheel drive and the last of the classic silhouette." } },
+        { "type": "step", "settings": { "model": "911 (993)", "years": "1994–1998", "text": "The final air-cooled 911, and for many the most beautiful." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

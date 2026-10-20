@@ -14,7 +14,7 @@
     "sgs_countdown": {
       "type": "sgs-countdown",
       "settings": {
-        "enabled": false,
+        "enabled": true,
         "cutoff_date": "2026-12-09",
         "cutoff_time": "23:59",
         "text_before": "Order by",

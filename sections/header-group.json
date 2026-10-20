@@ -11,6 +11,19 @@
   "type": "header",
   "name": "t:names.header",
   "sections": {
+    "sgs_countdown": {
+      "type": "sgs-countdown",
+      "settings": {
+        "enabled": true,
+        "message": "Order by Wednesday 9 December for Christmas delivery",
+        "cutoff_date": "2026-12-16",
+        "cutoff_time": "12:00",
+        "show_countdown": true,
+        "link": "",
+        "background_color": "#e10600",
+        "text_color": "#ffffff"
+      }
+    },
     "header_announcements_9jGBFp": {
       "type": "header-announcements",
       "blocks": {
@@ -24,7 +37,7 @@
             "weight": "500",
             "letter_spacing": "loose",
             "case": "uppercase",
-            "text_color": "#F5F3EF"
+            "text_color": "#f5f3ef"
           },
           "blocks": {}
         }
@@ -36,10 +49,11 @@
       "settings": {
         "speed": 5,
         "section_width": "page-width",
+        "background_color": "#0e0e0e",
         "divider_width": 0,
+        "divider_color": "",
         "padding-block-start": 11,
-        "padding-block-end": 11,
-        "background_color": "#0E0E0E"
+        "padding-block-end": 11
       }
     },
     "header_section": {
@@ -60,6 +74,8 @@
           "static": true,
           "settings": {
             "menu": "main-menu",
+            "background_color": "{{ settings.color_palette.background }}",
+            "text_color": "",
             "type_font_primary_size": "0.75rem",
             "menu_font_style": "inverse",
             "type_font_primary_link": "body",
@@ -69,6 +85,8 @@
             "featured_collections_aspect_ratio": "16 / 9",
             "image_border_radius": 0,
             "navigation_bar": false,
+            "background_color_navigation_bar": "{{ settings.color_palette.background }}",
+            "text_color_navigation_bar": "",
             "drawer_accordion": false,
             "drawer_accordion_expand_first": false,
             "drawer_dividers": false
@@ -80,6 +98,7 @@
         "logo_position": "left",
         "menu_position": "center",
         "menu_row": "top",
+        "customer_account_menu": "customer-account-main-menu",
         "show_search": true,
         "search_position": "right",
         "search_row": "top",
@@ -95,29 +114,29 @@
         "enable_sticky_header": "scroll-up",
         "divider_width": 0,
         "divider_size": "page-width",
+        "divider_color": "",
         "border_width": 1,
-        "enable_transparent_header_home": true,
-        "enable_transparent_header_product": false,
-        "enable_transparent_header_collection": false,
-        "bottom_border_color": "#DCD8D0",
+        "bottom_border_color": "#dcd8d0",
         "actions_display_style": "icon",
+        "actions_font_size": "0.875rem",
+        "actions_font": "body",
+        "actions_text_case": "none",
+        "background_color_top": "",
+        "text_color_top": "",
+        "background_color_bottom": "",
+        "text_color_bottom": "",
         "bubble_style": "custom",
-        "bubble_background_color": "#E10600",
-        "bubble_text_color": "#FFFFFF",
+        "bubble_background_color": "#e10600",
+        "bubble_text_color": "#ffffff",
+        "enable_transparent_header_home": true,
         "home_inverse_logo": true,
-        "text_color_transparent_home": "#F5F3EF"
-      }
-    },
-    "sgs_countdown": {
-      "type": "sgs-countdown",
-      "settings": {
-        "enabled": false,
-        "message": "Order by [date] for Christmas delivery",
-        "cutoff_date": "2026-12-16",
-        "cutoff_time": "12:00",
-        "show_countdown": true,
-        "background_color": "#E10600",
-        "text_color": "#FFFFFF"
+        "text_color_transparent_home": "#f5f3ef",
+        "enable_transparent_header_product": false,
+        "product_inverse_logo": false,
+        "text_color_transparent_product": "",
+        "enable_transparent_header_collection": false,
+        "collection_inverse_logo": false,
+        "text_color_transparent_collection": ""
       }
     }
   },

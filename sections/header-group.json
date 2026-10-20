@@ -15,9 +15,10 @@
       "type": "sgs-countdown",
       "settings": {
         "enabled": true,
-        "message": "Order by Wednesday 9 December for Christmas delivery",
-        "cutoff_date": "2026-12-16",
-        "cutoff_time": "12:00",
+        "cutoff_date": "2026-12-09",
+        "cutoff_time": "23:59",
+        "text_before": "Order by",
+        "text_after": "for Christmas delivery",
         "show_countdown": true,
         "link": "",
         "background_color": "#e10600",

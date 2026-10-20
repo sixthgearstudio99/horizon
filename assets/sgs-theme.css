@@ -99,8 +99,25 @@ html {
 }
 
 /* ---------- Announcement bar ---------- */
-.announcement-bar__text {
+/* A single message has no arrows: use the full width instead of reserving space for them */
+.announcement-bar__slider:not(:has(slideshow-arrows)) .announcement-bar__slides {
+  box-sizing: border-box;
+  width: 100%;
+  padding-inline: var(--page-margin, 16px);
+}
+
+/* Horizon sets a line-height of 1, which cramps the text when it wraps on phones */
+.announcement-bar .announcement-bar__text {
   letter-spacing: 0.2em;
+  line-height: 1.6;
+  text-align: center;
+  text-wrap: balance;
+}
+
+@media screen and (max-width: 749px) {
+  .announcement-bar .announcement-bar__text {
+    letter-spacing: 0.12em;
+  }
 }
 
 /* ---------- Header ---------- */

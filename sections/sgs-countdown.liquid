@@ -1,25 +1,46 @@
 {%- liquid
   assign s = section.settings
-  assign cutoff_label = s.cutoff_date | date: '%A %-d %B'
-  assign message = s.message | replace: '[date]', cutoff_label
+  assign cutoff = s.cutoff_date | strip
+  assign cutoff_check = cutoff | date: '%Y-%m-%d'
+  assign valid_date = false
+  if cutoff.size == 10 and cutoff_check == cutoff
+    assign valid_date = true
+  endif
+
+  # One date drives the message and the countdown, so they can never disagree
+  assign date_long = cutoff | date: '%A %-d %B'
+  assign date_short = cutoff | date: '%a %-d %b'
+  assign today = 'now' | date: '%Y-%m-%d'
+  assign cutoff_time = s.cutoff_time | strip | default: '23:59'
 -%}
 
-{%- if s.enabled and s.cutoff_date != blank -%}
+{%- if s.enabled and valid_date and today <= cutoff -%}
   <sgs-countdown
     class="sgs-cd"
-    data-date="{{ s.cutoff_date | escape }}"
-    data-time="{{ s.cutoff_time | default: '23:59' | escape }}"
+    data-date="{{ cutoff | escape }}"
+    data-time="{{ cutoff_time | escape }}"
     style="--sgs-cd-bg: {{ s.background_color }}; --sgs-cd-fg: {{ s.text_color }};"
   >
     {%- if s.link != blank -%}<a class="sgs-cd__inner" href="{{ s.link }}">{%- else -%}<div class="sgs-cd__inner">{%- endif -%}
       <svg class="sgs-cd__icon" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14"><rect x="1.5" y="5" width="11" height="7.5" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M1 3h12v2H1zM7 3v9.5M7 3C6 1 4 1 4 2.2S7 3 7 3s3-0.2 3-0.8S8 1 7 3z" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
-      <span class="sgs-cd__message">{{ message | escape }}</span>
+      <span class="sgs-cd__message">
+        {%- if s.text_before != blank -%}{{ s.text_before | escape }} {% endif -%}
+        <span class="sgs-cd__date sgs-cd__date--long">{{ date_long }}</span>
+        {%- comment -%} Abbreviated on phones so the message fits on one line {%- endcomment -%}
+        <span class="sgs-cd__date sgs-cd__date--short">{{ date_short }}</span>
+        {%- if s.text_after != blank %} {{ s.text_after | escape }}{%- endif -%}
+      </span>
       {%- if s.show_countdown -%}
-        <span class="sgs-cd__timer" data-timer aria-hidden="true"></span>
+        {%- comment -%} Placeholder reserves the timer's space so the banner height never changes after load {%- endcomment -%}
+        <span class="sgs-cd__timer" data-timer aria-hidden="true">00d 00h 00m 00s</span>
       {%- endif -%}
     {%- if s.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
   </sgs-countdown>
   <script src="{{ 'sgs-countdown.js' | asset_url }}" defer></script>
+{%- elsif s.enabled and request.design_mode and valid_date == false -%}
+  <div class="sgs-cd" style="--sgs-cd-bg: {{ s.background_color }}; --sgs-cd-fg: {{ s.text_color }};">
+    <div class="sgs-cd__inner">Christmas banner: enter the cut-off date as YYYY-MM-DD, e.g. 2026-12-09</div>
+  </div>
 {%- endif -%}
 
 {% stylesheet %}
@@ -38,38 +59,61 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 4px 12px;
+    gap: 4px 14px;
     min-height: 36px;
-    padding: 8px var(--page-margin, 16px);
+    padding: 9px var(--page-margin, 16px);
     color: inherit;
     font-family: var(--font-body--family);
     font-size: 11px;
     font-weight: 500;
+    line-height: 1.5;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     text-align: center;
     text-decoration: none;
+    text-wrap: balance;
+  }
+
+  .sgs-cd__date--short {
+    display: none;
   }
 
   .sgs-cd__timer {
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.08em;
-    padding-inline-start: 12px;
+    white-space: nowrap;
+    padding-inline-start: 14px;
     border-inline-start: 1px solid currentColor;
   }
 
-  .sgs-cd__timer:empty {
-    display: none;
+  /* Hidden until the first tick replaces the placeholder; its space is already reserved */
+  .sgs-cd__timer:not(.is-live) {
+    visibility: hidden;
   }
 
   @media screen and (max-width: 749px) {
+    /* Phones: message on one line, countdown on the line below, no divider */
     .sgs-cd__inner {
+      flex-direction: column;
+      gap: 2px;
+      padding-block: 8px;
       font-size: 10px;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
     }
 
-    .sgs-cd__icon {
+    .sgs-cd__icon,
+    .sgs-cd__date--long {
       display: none;
+    }
+
+    .sgs-cd__date--short {
+      display: inline;
+    }
+
+    .sgs-cd__timer {
+      padding-inline-start: 0;
+      border-inline-start: 0;
+      opacity: 0.85;
     }
   }
 {% endstylesheet %}
@@ -91,24 +135,30 @@
     },
     {
       "type": "text",
-      "id": "message",
-      "label": "Message",
-      "default": "Order by [date] for Christmas delivery",
-      "info": "[date] is replaced with the cut-off date, e.g. Thursday 18 December."
-    },
-    {
-      "type": "text",
       "id": "cutoff_date",
       "label": "Cut-off date",
-      "default": "2026-12-16",
-      "info": "Format YYYY-MM-DD. The banner hides itself after this."
+      "default": "2026-12-09",
+      "info": "YYYY-MM-DD. Used for both the message and the countdown, and the banner hides itself once it has passed."
     },
     {
       "type": "text",
       "id": "cutoff_time",
       "label": "Cut-off time (UK)",
-      "default": "12:00",
-      "info": "24-hour, HH:MM"
+      "default": "23:59",
+      "info": "24-hour, HH:MM, UK time"
+    },
+    {
+      "type": "text",
+      "id": "text_before",
+      "label": "Text before the date",
+      "default": "Order by"
+    },
+    {
+      "type": "text",
+      "id": "text_after",
+      "label": "Text after the date",
+      "default": "for Christmas delivery",
+      "info": "The date is filled in from the cut-off date, e.g. Order by Wednesday 9 December for Christmas delivery (Wed 9 Dec on phones)."
     },
     {
       "type": "checkbox",

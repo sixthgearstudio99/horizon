@@ -2116,5 +2116,42 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "SixthGear: gift note",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A gift note field in the cart drawer and cart page. It's saved as the cart attribute 'Gift note' and appears on the order."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_gift_note",
+        "label": "Show gift note",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "sgs_gift_note_label",
+        "label": "Label",
+        "default": "Add a gift note"
+      },
+      {
+        "type": "text",
+        "id": "sgs_gift_note_placeholder",
+        "label": "Placeholder",
+        "default": "Write a short message. We'll include it with your order."
+      },
+      {
+        "type": "range",
+        "id": "sgs_gift_note_max",
+        "label": "Maximum length",
+        "min": 100,
+        "max": 500,
+        "step": 20,
+        "unit": "chr",
+        "default": 240
+      }
+    ]
   }
 ]

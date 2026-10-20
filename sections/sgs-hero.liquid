@@ -34,8 +34,49 @@
   endcase
 
   assign layout = s.layout
-  if layout == 'full' and hero_image == blank
+
+  # Background video: Shopify-hosted video (uploaded MP4) or a direct MP4 link.
+  # Desktop prefers <=1080p, mobile <=720p. The image stays as poster/fallback.
+  assign video_src = ''
+  assign video_mobile_src = ''
+  assign video_poster = hero_image
+  if s.background == 'video'
+    assign best_height = 0
+    for source in s.video.sources
+      if source.format == 'mp4' and source.height <= 1080 and source.height > best_height
+        assign video_src = source.url
+        assign best_height = source.height
+      endif
+    endfor
+    if video_src == ''
+      assign video_src = s.video_url | default: ''
+    endif
+
+    assign best_height = 0
+    for source in s.video_mobile.sources
+      if source.format == 'mp4' and source.height <= 720 and source.height > best_height
+        assign video_mobile_src = source.url
+        assign best_height = source.height
+      endif
+    endfor
+    if video_mobile_src == ''
+      assign video_mobile_src = s.video_mobile_url | default: ''
+    endif
+
+    if video_poster == blank and s.video != blank
+      assign video_poster = s.video.preview_image
+    endif
+  endif
+
+  assign has_video = false
+  if video_src != '' or video_mobile_src != ''
+    assign has_video = true
+    assign layout = 'full'
+  endif
+
+  if layout == 'full' and video_poster == blank
     assign layout = 'split'
+    assign has_video = false
   endif
 -%}
 
@@ -46,6 +87,7 @@
     --sgs-hero-accent: {{ s.accent_color | default: '#E10600' }};
     --sgs-hero-min-height: {{ s.min_height }}svh;
     --sgs-hero-overlay: {{ s.overlay_opacity }}%;
+    --sgs-hero-dim: {% if has_video %}{{ s.dim_opacity | divided_by: 100.0 }}{% else %}0{% endif %};
     --sgs-art-ratio: {{ art_ratio }};
     --sgs-hero-pad-top: {{ s['padding-block-start'] }}px;
     --sgs-hero-pad-bottom: {{ s['padding-block-end'] }}px;
@@ -53,9 +95,9 @@
   aria-label="{{ s.eyebrow | default: shop.name | escape }}"
 >
   {%- if layout == 'full' -%}
-    <div class="sgs-hero__backdrop" aria-hidden="true">
+    <div class="sgs-hero__backdrop{% if has_video %} sgs-hero__backdrop--video{% endif %}" aria-hidden="true">
       {{
-        hero_image
+        video_poster
         | image_url: width: 3200
         | image_tag:
           widths: '750, 1100, 1500, 1920, 2400, 3200',
@@ -65,7 +107,24 @@
           class: 'sgs-hero__backdrop-img',
           alt: ''
       }}
+      {%- if has_video -%}
+        <video
+          class="sgs-hero__video"
+          muted
+          loop
+          playsinline
+          preload="none"
+          disablepictureinpicture
+          tabindex="-1"
+          data-sgs-hero-video
+          data-src="{{ video_src }}"
+          data-src-mobile="{{ video_mobile_src }}"
+        ></video>
+      {%- endif -%}
     </div>
+    {%- if has_video -%}
+      <script src="{{ 'sgs-hero-video.js' | asset_url }}" defer></script>
+    {%- endif -%}
   {%- endif -%}
 
   <div class="sgs-hero__inner">
@@ -470,11 +529,26 @@
     z-index: -1;
   }
 
+  .sgs-hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+
+  .sgs-hero__video.is-playing {
+    opacity: 1;
+  }
+
   .sgs-hero__backdrop::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
+    background: linear-gradient(rgb(0 0 0 / var(--sgs-hero-dim, 0)), rgb(0 0 0 / var(--sgs-hero-dim, 0))),
+      linear-gradient(
       90deg,
       color-mix(in srgb, var(--sgs-hero-bg) var(--sgs-hero-overlay), transparent) 0%,
       color-mix(in srgb, var(--sgs-hero-bg) calc(var(--sgs-hero-overlay) * 0.6), transparent) 45%,
@@ -652,7 +726,60 @@
         { "value": "full", "label": "Full-width background image" }
       ],
       "default": "split",
-      "info": "Use full-width once you have a wide lifestyle photo."
+      "info": "Use full-width once you have a wide lifestyle photo. A background video always uses full-width."
+    },
+    {
+      "type": "header",
+      "content": "Background video"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        { "value": "image", "label": "Image" },
+        { "value": "video", "label": "Video" }
+      ],
+      "default": "image",
+      "info": "The image below is used as the video's poster and as the fallback."
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video",
+      "info": "Upload an MP4 (muted, looping, under 3 MB, 1920px wide or less).",
+      "visible_if": "{{ section.settings.background == 'video' }}"
+    },
+    {
+      "type": "url",
+      "id": "video_url",
+      "label": "Or MP4 link",
+      "info": "Direct link to an .mp4 file, e.g. from Content > Files. Used if no video is uploaded above.",
+      "visible_if": "{{ section.settings.background == 'video' }}"
+    },
+    {
+      "type": "video",
+      "id": "video_mobile",
+      "label": "Mobile video",
+      "info": "Optional smaller portrait/square video for phones (under 1.5 MB). Without one, phones show the image.",
+      "visible_if": "{{ section.settings.background == 'video' }}"
+    },
+    {
+      "type": "url",
+      "id": "video_mobile_url",
+      "label": "Or mobile MP4 link",
+      "visible_if": "{{ section.settings.background == 'video' }}"
+    },
+    {
+      "type": "range",
+      "id": "dim_opacity",
+      "label": "Darken video",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 30,
+      "visible_if": "{{ section.settings.background == 'video' }}"
     },
     {
       "type": "range",
@@ -818,7 +945,7 @@
       "step": 5,
       "unit": "%",
       "default": 75,
-      "visible_if": "{{ section.settings.layout == 'full' }}"
+      "visible_if": "{{ section.settings.layout == 'full' or section.settings.background == 'video' }}"
     },
     {
       "type": "header",

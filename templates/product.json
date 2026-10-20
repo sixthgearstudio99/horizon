@@ -239,6 +239,14 @@
                 "shipping": "Each print is made to order, then dispatched from our print partner. Delivery options and costs are shown at checkout."
               },
               "blocks": {}
+            },
+            "sgs_wall": {
+              "type": "sgs-wall-preview",
+              "settings": {
+                "button_label": "See it on your wall",
+                "wall_width_cm": 300
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -247,6 +255,7 @@
             "divider_VJhene",
             "sgs_personalise",
             "variant_picker_R3rGDr",
+            "sgs_wall",
             "buy_buttons_eYQEYi",
             "sgs_details"
           ]
@@ -316,10 +325,78 @@
         "padding-block-start": 0,
         "padding-block-end": 120
       }
+    },
+    "sgs_timeline": {
+      "type": "sgs-timeline",
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "model": "911 (901)",
+            "years": "1963–1973",
+            "text": "The original. Air-cooled, rear-engined and impossibly pure."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "model": "911 (G-Series)",
+            "years": "1974–1989",
+            "text": "Impact bumpers, Turbo whale tails and a decade of icons."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "model": "911 (964)",
+            "years": "1989–1994",
+            "text": "Coil springs, all-wheel drive and the last of the classic silhouette."
+          }
+        },
+        "step_4": {
+          "type": "step",
+          "settings": {
+            "model": "911 (993)",
+            "years": "1994–1998",
+            "text": "The final air-cooled 911, and for many the most beautiful."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3",
+        "step_4"
+      ],
+      "settings": {
+        "products": [],
+        "collection_handle": "",
+        "eyebrow": "The lineage",
+        "heading": "Every generation",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "sgs_bundle": {
+      "type": "sgs-bundle",
+      "settings": {
+        "products": [],
+        "also_show_on": [],
+        "eyebrow": "Gallery wall",
+        "heading": "Complete the set",
+        "text": "Three prints chosen to hang together. Pick your sizes and add the set in one go.",
+        "total_label": "Set total",
+        "discount_note": "Set discount applied at checkout",
+        "button_label": "Add the set to cart",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
     }
   },
   "order": [
     "main",
+    "sgs_timeline",
+    "sgs_bundle",
     "sgs_recs",
     "sgs_trust"
   ]

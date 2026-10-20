@@ -107,9 +107,22 @@
         "home_inverse_logo": true,
         "text_color_transparent_home": "#F5F3EF"
       }
+    },
+    "sgs_countdown": {
+      "type": "sgs-countdown",
+      "settings": {
+        "enabled": false,
+        "message": "Order by [date] for Christmas delivery",
+        "cutoff_date": "2026-12-16",
+        "cutoff_time": "12:00",
+        "show_countdown": true,
+        "background_color": "#E10600",
+        "text_color": "#FFFFFF"
+      }
     }
   },
   "order": [
+    "sgs_countdown",
     "header_announcements_9jGBFp",
     "header_section"
   ]

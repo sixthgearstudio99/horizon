@@ -13,6 +13,10 @@
       "type": "sgs-hero",
       "settings": {
         "layout": "split",
+        "background": "video",
+        "video_url": "",
+        "video_mobile_url": "",
+        "dim_opacity": 30,
         "min_height": 90,
         "product": "",
         "art_ratio": "natural",
@@ -183,6 +187,82 @@
         "padding-block-end": 136
       }
     },
+    "sgs_gallery": {
+      "type": "sgs-gallery",
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/download.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110909-1f1c9520-28bc-6750-8101-9e60e19fe692_5e5defc5-f08f-4417-966f-e82d5ab8dd24.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/11751085743962704082_2048.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110904-1f1c951f-f9b8-662a-8a4e-badafe601b0d.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/3904930222023306051_2048.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110920-1f1c9520-9280-67a4-9497-5ac66732e5be.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5",
+        "image_6"
+      ],
+      "settings": {
+        "eyebrow": "On the wall",
+        "heading": "Made for your space",
+        "text": "In the living room, the study or the garage. See how the prints look at home.",
+        "link_label": "Shop the print",
+        "mobile_layout": "carousel",
+        "padding-block-start": 0,
+        "padding-block-end": 136
+      }
+    },
     "sgs_trust": {
       "type": "sgs-trust",
       "blocks": {
@@ -236,52 +316,6 @@
         "background_color": "#0e0e0e",
         "padding-block-start": 112,
         "padding-block-end": 144
-      }
-    },
-    "sgs_gallery": {
-      "type": "sgs-gallery",
-      "blocks": {
-        "image_1": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_2": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_3": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_4": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_5": {
-          "type": "image",
-          "settings": {}
-        },
-        "image_6": {
-          "type": "image",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "image_1",
-        "image_2",
-        "image_3",
-        "image_4",
-        "image_5",
-        "image_6"
-      ],
-      "settings": {
-        "eyebrow": "On the wall",
-        "heading": "Made for your space",
-        "text": "In the living room, the study or the garage. See how the prints look at home.",
-        "link_label": "Shop the print",
-        "mobile_layout": "carousel",
-        "padding-block-start": 0,
-        "padding-block-end": 136
       }
     }
   },

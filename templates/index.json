@@ -13,11 +13,11 @@
       "type": "sgs-hero",
       "settings": {
         "layout": "split",
-        "background": "image",
+        "background": "video",
         "video": "shopify://files/videos/gemini_generated_video_0c2ec674.mp4",
         "video_url": "",
         "video_mobile_url": "",
-        "dim_opacity": 30,
+        "dim_opacity": 50,
         "min_height": 50,
         "product": "",
         "art_ratio": "natural",

@@ -12,7 +12,6 @@
   <sgs-wall-preview
     class="sgs-wall"
     data-form-id="{{ form_id }}"
-    data-ratio="{{ art.aspect_ratio | default: 0.75 }}"
     data-wall-cm="{{ bs.wall_width_cm }}"
     {{ block.shopify_attributes }}
   >
@@ -233,11 +232,18 @@
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.12), 0 14px 24px -8px rgb(0 0 0 / 0.3);
   }
 
+  /* Artwork (or the featured image) is cropped to the print's own shape, never stretched */
+  .sgs-wall__print {
+    overflow: hidden;
+  }
+
   .sgs-wall__print img {
     display: block;
     width: 100%;
     height: 100%;
+    max-width: none;
     object-fit: cover;
+    object-position: center;
   }
 
   .sgs-wall__scale {
@@ -299,7 +305,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Shows the print to scale above a sofa. Sizes are read from variant names such as 16\"x24\", 30x40 cm or A3. For best results add a flat artwork image as a product metafield custom.artwork (file)."
+      "content": "Shows the print to scale above a sofa. Sizes and orientation are read from variant names such as 16\" x 24\" (Vertical), 30x40 cm or A3 (Landscape). For best results add a flat artwork image as a product metafield custom.artwork (file)."
     },
     {
       "type": "text",

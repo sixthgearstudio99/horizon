@@ -3,8 +3,6 @@
   Sizes and prices are read from each product's own variants (set by Printify), never hard-coded.
 
   @param {object} [product] - Product to render. Renders a placeholder card when blank.
-  @param {string} [ratio] - CSS aspect ratio for the image, e.g. '4 / 5'
-  @param {string} [image_fit] - 'cover' or 'contain'
   @param {boolean} [show_secondary] - Reveal the second product image (e.g. an on-the-wall mockup) on hover
   @param {boolean} [show_options] - Show the number of sizes / options
   @param {string} [sizes] - Value for the image sizes attribute
@@ -12,11 +10,12 @@
   @param {number} [placeholder_index] - Which placeholder illustration to use when product is blank
 
   @example
-  {% render 'sgs-product-card', product: product, ratio: '4 / 5', show_secondary: true %}
+  {% render 'sgs-product-card', product: product, show_secondary: true %}
 {%- enddoc -%}
 {%- liquid
-  assign card_ratio = ratio | default: '4 / 5'
-  assign card_fit = image_fit | default: 'cover'
+  # Every card is the same 4:5 portrait, image filling the frame (cover, centred)
+  assign card_ratio = '4 / 5'
+  assign card_fit = 'cover'
   assign card_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 80vw'
   if eager
     assign card_loading = 'eager'
@@ -37,15 +36,8 @@
       endfor
     endif
 
-    # Landscape images are shown whole (contain) on the wall tone instead of being cropped
     assign primary_class = 'sgs-card__img sgs-card__img--primary'
-    if card_fit == 'contain' or primary_image.aspect_ratio > 1.05
-      assign primary_class = primary_class | append: ' sgs-card__img--contain'
-    endif
     assign secondary_class = 'sgs-card__img sgs-card__img--secondary'
-    if card_fit == 'contain' or secondary_image.aspect_ratio > 1.05
-      assign secondary_class = secondary_class | append: ' sgs-card__img--contain'
-    endif
 
     # Count the sizes (or other options) this product actually offers
     assign option_count = 0
@@ -186,16 +178,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     transition: opacity 0.7s var(--sgs-card-ease), scale 1.2s var(--sgs-card-ease);
-  }
-
-  .sgs-card__media--contain .sgs-card__img,
-  .sgs-card__img--contain {
-    inset: 9%;
-    width: 82%;
-    height: 82%;
-    object-fit: contain;
-    filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.16));
   }
 
   .sgs-card__img--secondary {

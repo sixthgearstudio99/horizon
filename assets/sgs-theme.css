@@ -206,11 +206,9 @@ button[ref='addToCartButton'] {
   letter-spacing: 0.18em;
 }
 
-/* Landscape prints in Horizon cards: whole print, inset on the wall tone */
-.product-card .sgs-fit-contain img {
-  box-sizing: border-box;
-  padding: 9%;
-  filter: drop-shadow(0 14px 18px rgb(0 0 0 / 0.14));
+/* Horizon product cards: every image fills the 4:5 frame, centred (ratio set in card-gallery.liquid) */
+.product-card .card-gallery img {
+  object-position: center;
 }
 
 /* ---------- Product page gallery: natural aspect ratios, never cropped ---------- */

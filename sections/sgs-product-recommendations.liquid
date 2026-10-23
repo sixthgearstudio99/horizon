@@ -44,7 +44,6 @@
           <li class="sgs-grid__item is-revealed" data-sgs-reveal>
             {% render 'sgs-product-card',
               product: rec,
-              ratio: s.image_ratio,
               show_secondary: true,
               show_options: true,
               sizes: card_sizes
@@ -75,7 +74,6 @@
               <li class="sgs-grid__item" data-sgs-reveal>
                 {% render 'sgs-product-card',
                   product: rec,
-                  ratio: s.image_ratio,
                   show_secondary: true,
                   show_options: true,
                   sizes: card_sizes
@@ -136,17 +134,6 @@
       "max": 8,
       "step": 1,
       "default": 4
-    },
-    {
-      "type": "select",
-      "id": "image_ratio",
-      "label": "Image shape",
-      "options": [
-        { "value": "4 / 5", "label": "Portrait 4:5" },
-        { "value": "5 / 7", "label": "Poster" },
-        { "value": "1 / 1", "label": "Square" }
-      ],
-      "default": "4 / 5"
     },
     {
       "type": "range",

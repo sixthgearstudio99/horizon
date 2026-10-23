@@ -74,8 +74,6 @@
           <li class="sgs-grid__item" data-sgs-reveal>
             {% render 'sgs-product-card',
               product: product,
-              ratio: s.image_ratio,
-              image_fit: s.image_fit,
               show_secondary: s.show_secondary_image,
               show_options: s.show_option_count,
               sizes: card_sizes
@@ -87,8 +85,6 @@
           {%- assign placeholder_index = forloop.index0 | modulo: 6 | plus: 1 -%}
           <li class="sgs-grid__item" data-sgs-reveal>
             {% render 'sgs-product-card',
-              ratio: s.image_ratio,
-              image_fit: s.image_fit,
               placeholder_index: placeholder_index
             %}
           </li>
@@ -148,28 +144,6 @@
     {
       "type": "header",
       "content": "Product cards"
-    },
-    {
-      "type": "select",
-      "id": "image_ratio",
-      "label": "Image shape",
-      "options": [
-        { "value": "4 / 5", "label": "Portrait 4:5" },
-        { "value": "5 / 7", "label": "Poster" },
-        { "value": "1 / 1", "label": "Square" }
-      ],
-      "default": "4 / 5"
-    },
-    {
-      "type": "select",
-      "id": "image_fit",
-      "label": "Image fit",
-      "options": [
-        { "value": "cover", "label": "Fill the frame" },
-        { "value": "contain", "label": "Show whole image on a wall tone" }
-      ],
-      "default": "cover",
-      "info": "Use 'Show whole image' if your mockups get cropped."
     },
     {
       "type": "checkbox",

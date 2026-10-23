@@ -46,7 +46,6 @@
         "point_3"
       ],
       "settings": {
-        "image_ratio": "4 / 5",
         "image_position": "right",
         "eyebrow": "The studio",
         "heading": "Why sixth gear",
@@ -113,8 +112,6 @@
         "products_to_show": 4,
         "columns": "4",
         "mobile_layout": "carousel",
-        "image_ratio": "4 / 5",
-        "image_fit": "cover",
         "show_secondary_image": true,
         "show_option_count": true,
         "eyebrow": "Start your wall",

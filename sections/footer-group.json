@@ -14,7 +14,7 @@
     "sgs_footer": {
       "type": "sgs-footer",
       "settings": {
-        "tagline": "Automotive art prints for the driven. Printed to order, shipped worldwide.",
+        "tagline": "Automotive art prints for the driven. Printed to order. Free UK delivery.",
         "menu_1_heading": "Shop",
         "menu_1": "main-menu",
         "menu_2_heading": "Collections",
@@ -27,6 +27,10 @@
         "pinterest_url": "https://www.pinterest.com/sixthgearstudio99/",
         "facebook_url": "",
         "x_url": "",
+        "business_address": "SixthGear Studios, 3 Fossedale Avenue, Bristol BS14 9LR, United Kingdom",
+        "business_email": "hello@sixthgearstudios.co.uk",
+        "business_phone": "0117 441 6014",
+        "disclaimer": "Independent artwork. Not affiliated with or endorsed by any vehicle manufacturer. All trademarks belong to their respective owners.",
         "copyright_name": "SixthGear Studios",
         "show_policies": true,
         "show_payment_icons": true,

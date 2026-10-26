@@ -24,6 +24,16 @@
             <dd><a href="mailto:{{ contact_email }}">{{ contact_email }}</a></dd>
           </div>
         {%- endif -%}
+        {%- if s.address != blank or s.phone_note != blank -%}
+          <div class="sgs-contact__business">
+            {%- if s.address != blank -%}
+              <p>{{ s.address | escape }}</p>
+            {%- endif -%}
+            {%- if s.phone_note != blank -%}
+              <p>{{ s.phone_note | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
         {%- if s.response_time != blank -%}
           <div>
             <dt class="sgs-label">Replies</dt>
@@ -80,6 +90,17 @@
 </section>
 
 {% stylesheet %}
+  .sgs-contact__business p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+  }
+
+  .sgs-contact__business p + p {
+    margin-top: 8px;
+  }
+
   .sgs-contact {
     padding-block: var(--sgs-contact-pad-top) var(--sgs-contact-pad-bottom);
     color: #0e0e0e;
@@ -282,9 +303,21 @@
     },
     {
       "type": "text",
+      "id": "address",
+      "label": "Business address",
+      "default": "SixthGear Studios, 3 Fossedale Avenue, Bristol BS14 9LR, United Kingdom"
+    },
+    {
+      "type": "text",
+      "id": "phone_note",
+      "label": "Phone note",
+      "default": "Phone (messages only): 0117 441 6014. For the fastest reply, email hello@sixthgearstudios.co.uk."
+    },
+    {
+      "type": "text",
       "id": "response_time",
       "label": "Reply note",
-      "default": "We read every message and reply as soon as we can."
+      "default": "We reply within 1 working day, Monday to Friday."
     },
     {
       "type": "inline_richtext",

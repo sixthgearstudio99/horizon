@@ -80,6 +80,21 @@
       </nav>
     </div>
 
+    {%- if s.business_address != blank or s.business_email != blank or s.business_phone != blank or s.disclaimer != blank -%}
+      <div class="sgs-footer__legal">
+        {%- if s.business_address != blank or s.business_email != blank or s.business_phone != blank -%}
+          <p class="sgs-footer__business">
+            {%- if s.business_address != blank -%}<span>{{ s.business_address | escape }}</span>{%- endif -%}
+            {%- if s.business_email != blank -%}<span><a href="mailto:{{ s.business_email | escape }}">{{ s.business_email | escape }}</a></span>{%- endif -%}
+            {%- if s.business_phone != blank -%}<span>{{ s.business_phone | escape }}</span>{%- endif -%}
+          </p>
+        {%- endif -%}
+        {%- if s.disclaimer != blank -%}
+          <p class="sgs-footer__disclaimer">{{ s.disclaimer | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
     <div class="sgs-footer__bottom">
       <p class="sgs-footer__copyright">
         &copy; {{ 'now' | date: '%Y' }} {{ s.copyright_name | default: shop.name | escape }}
@@ -213,6 +228,48 @@
     background-size: 100% 1px;
   }
 
+  /* Business details and disclaimer: small print above the copyright row */
+  .sgs-footer__legal {
+    padding-block: 24px;
+    border-top: 1px solid rgb(var(--sgs-footer-fg) / 0.12);
+    font-size: 12px;
+    line-height: 1.7;
+    color: rgb(var(--sgs-footer-fg) / 0.5);
+  }
+
+  .sgs-footer__legal p {
+    margin: 0;
+  }
+
+  .sgs-footer__business {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 0;
+  }
+
+  .sgs-footer__business span:not(:last-child)::after {
+    content: '·';
+    margin-inline: 10px;
+    opacity: 0.6;
+  }
+
+  .sgs-footer__business a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--sgs-footer-fg) / 0.3);
+    text-underline-offset: 3px;
+    transition: color 0.3s ease;
+  }
+
+  .sgs-footer__business a:hover {
+    color: rgb(var(--sgs-footer-fg));
+  }
+
+  .sgs-footer__disclaimer {
+    max-width: 72ch;
+    margin-top: 6px !important;
+  }
+
   .sgs-footer__bottom {
     display: flex;
     flex-wrap: wrap;
@@ -302,7 +359,7 @@
       "type": "inline_richtext",
       "id": "tagline",
       "label": "Tagline",
-      "default": "Automotive art prints for the driven. Printed to order, shipped worldwide."
+      "default": "Automotive art prints for the driven. Printed to order. Free UK delivery."
     },
     {
       "type": "header",
@@ -356,6 +413,34 @@
     {
       "type": "header",
       "content": "Bottom bar"
+    },
+    {
+      "type": "header",
+      "content": "Business details"
+    },
+    {
+      "type": "text",
+      "id": "business_address",
+      "label": "Address",
+      "default": "SixthGear Studios, 3 Fossedale Avenue, Bristol BS14 9LR, United Kingdom"
+    },
+    {
+      "type": "text",
+      "id": "business_email",
+      "label": "Email",
+      "default": "hello@sixthgearstudios.co.uk"
+    },
+    {
+      "type": "text",
+      "id": "business_phone",
+      "label": "Phone",
+      "default": "0117 441 6014"
+    },
+    {
+      "type": "textarea",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "Independent artwork. Not affiliated with or endorsed by any vehicle manufacturer. All trademarks belong to their respective owners."
     },
     {
       "type": "text",

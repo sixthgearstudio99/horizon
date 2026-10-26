@@ -28,7 +28,9 @@
       "settings": {
         "email": "hello@sixthgearstudios.co.uk",
         "intro": "Questions about a print, an order or a collaboration? Drop us a line.",
-        "response_time": "We read every message and reply as soon as we can.",
+        "address": "SixthGear Studios, 3 Fossedale Avenue, Bristol BS14 9LR, United Kingdom",
+        "phone_note": "Phone (messages only): 0117 441 6014. For the fastest reply, email hello@sixthgearstudios.co.uk.",
+        "response_time": "We reply within 1 working day, Monday to Friday.",
         "orders_note": "Include your order number and we'll find it faster.",
         "button_label": "Send message",
         "success_heading": "Message received",

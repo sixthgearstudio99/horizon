@@ -301,9 +301,9 @@
         "item_2": {
           "type": "item",
           "settings": {
-            "icon": "globe",
-            "title": "Shipped worldwide",
-            "text": "From our print partners to your door, wherever you are."
+            "icon": "package",
+            "title": "Free UK delivery",
+            "text": "Printed in the UK and delivered free to your door."
           }
         },
         "item_3": {

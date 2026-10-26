@@ -89,9 +89,9 @@
         "item_3": {
           "type": "item",
           "settings": {
-            "icon": "globe",
-            "title": "Shipped worldwide",
-            "text": "From our print partners to walls everywhere."
+            "icon": "package",
+            "title": "Free UK delivery",
+            "text": "Printed in the UK and delivered free to your door."
           }
         }
       },

@@ -272,6 +272,24 @@
                 "item_4_text": "Secure checkout",
                 "item_4_link": ""
               }
+            },
+            "sgs_faq": {
+              "type": "sgs-faq",
+              "settings": {
+                "heading": "Questions",
+                "question_1": "How long does delivery take?",
+                "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
+                "question_2": "Is it framed?",
+                "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
+                "question_3": "What paper is it printed on?",
+                "answer_3": "Premium semi-gloss paper with rich colour and deep blacks.",
+                "question_4": "Can I return it?",
+                "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty.",
+                "question_5": "",
+                "answer_5": "",
+                "question_6": "",
+                "answer_6": ""
+              }
             }
           },
           "block_order": [
@@ -284,7 +302,8 @@
             "buy_buttons_eYQEYi",
             "sgs_delivery",
             "sgs_ptrust",
-            "sgs_details"
+            "sgs_details",
+            "sgs_faq"
           ]
         }
       },

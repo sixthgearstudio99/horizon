@@ -247,6 +247,49 @@
                 "wall_width_cm": 300
               },
               "blocks": {}
+            },
+            "sgs_delivery": {
+              "type": "sgs-delivery-estimate",
+              "settings": {
+                "text_before": "Order today, arrives",
+                "min_working_days": 4,
+                "max_working_days": 9,
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card"
+              }
+            },
+            "sgs_ptrust": {
+              "type": "sgs-product-trust",
+              "settings": {
+                "item_1_text": "Free UK delivery",
+                "item_1_link": "",
+                "item_2_text": "Printed in the UK",
+                "item_2_link": "",
+                "item_3_text": "14-day returns",
+                "item_3_link": "/policies/refund-policy",
+                "item_4_text": "Secure checkout",
+                "item_4_link": ""
+              }
+            },
+            "sgs_faq": {
+              "type": "sgs-faq",
+              "settings": {
+                "heading": "Questions",
+                "question_1": "How long does delivery take?",
+                "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
+                "question_2": "Is it framed?",
+                "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
+                "question_3": "What paper is it printed on?",
+                "answer_3": "Premium semi-gloss paper with rich colour and deep blacks.",
+                "question_4": "Can I return it?",
+                "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty.",
+                "question_5": "",
+                "answer_5": "",
+                "question_6": "",
+                "answer_6": ""
+              }
             }
           },
           "block_order": [
@@ -257,7 +300,10 @@
             "variant_picker_R3rGDr",
             "sgs_wall",
             "buy_buttons_eYQEYi",
-            "sgs_details"
+            "sgs_delivery",
+            "sgs_ptrust",
+            "sgs_details",
+            "sgs_faq"
           ]
         }
       },

@@ -73,6 +73,8 @@
       </span>
     </a>
   {%- else -%}
+    {%- comment -%} SixthGear: multi-buy progress (display only) {%- endcomment -%}
+    {% render 'sgs-wall-progress' %}
     <span
       class="visually-hidden"
       ref="cartItemCount"

@@ -2153,5 +2153,57 @@
         "default": 240
       }
     ]
+  },
+  {
+    "name": "SixthGear: build your wall",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A multi-buy progress message and bar at the top of the cart drawer and cart page. Display only: the 15% and 25% discounts are your automatic discounts in Shopify."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_wall_progress",
+        "label": "Show build your wall progress",
+        "default": true
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_wall_excluded_handles",
+        "label": "Products that don't count",
+        "default": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+        "info": "Product handles, separated by commas. Gift cards never count."
+      },
+      {
+        "type": "text",
+        "id": "sgs_wall_message_1",
+        "label": "1 print",
+        "default": "Add 1 more print to save 15%"
+      },
+      {
+        "type": "text",
+        "id": "sgs_wall_message_2",
+        "label": "2 prints",
+        "default": "You're saving 15%. Add 1 more to save 25%"
+      },
+      {
+        "type": "text",
+        "id": "sgs_wall_message_3",
+        "label": "3 or more prints",
+        "default": "You're saving 25%"
+      },
+      {
+        "type": "text",
+        "id": "sgs_wall_link_label",
+        "label": "Link label",
+        "default": "Shop more prints"
+      },
+      {
+        "type": "text",
+        "id": "sgs_wall_link_url",
+        "label": "Link",
+        "default": "/collections/all"
+      }
+    ]
   }
 ]

@@ -1,0 +1,130 @@
+{%- doc -%}
+  SixthGear Studios: "Build your wall" progress in the cart drawer and cart page.
+  Display only: the multi-buy discounts themselves are automatic discounts in Shopify.
+  Counts print quantities, leaving out the handles listed in Theme settings (the custom
+  poster) and gift cards. Rendered by Liquid inside the cart contents, so it refreshes
+  whenever Horizon re-renders the cart after an add, remove or quantity change.
+
+  @example
+  {% render 'sgs-wall-progress' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign excluded = settings.sgs_wall_excluded_handles | split: ','
+  assign prints = 0
+  for item in cart.items
+    if item.product.gift_card?
+      continue
+    endif
+    assign skip = false
+    for raw_handle in excluded
+      assign handle = raw_handle | strip
+      if handle != blank and handle == item.product.handle
+        assign skip = true
+        break
+      endif
+    endfor
+    unless skip
+      assign prints = prints | plus: item.quantity
+    endunless
+  endfor
+
+  case prints
+    when 0
+      assign message = ''
+    when 1
+      assign message = settings.sgs_wall_message_1
+      assign fill = 33.333
+    when 2
+      assign message = settings.sgs_wall_message_2
+      assign fill = 66.667
+    else
+      assign message = settings.sgs_wall_message_3
+      assign fill = 100
+  endcase
+-%}
+
+{%- if settings.sgs_wall_progress and prints > 0 and message != blank -%}
+  <div class="sgs-wallprog" data-prints="{{ prints }}">
+    <div class="sgs-wallprog__row">
+      <p class="sgs-wallprog__message">{{ message | escape }}</p>
+      {%- if settings.sgs_wall_link_label != blank -%}
+        <a class="sgs-wallprog__link" href="{{ settings.sgs_wall_link_url | default: routes.all_products_collection_url | escape }}">
+          {{- settings.sgs_wall_link_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+    <div
+      class="sgs-wallprog__bar"
+      role="progressbar"
+      aria-label="{{ message | escape }}"
+      aria-valuemin="0"
+      aria-valuemax="3"
+      aria-valuenow="{% if prints > 3 %}3{% else %}{{ prints }}{% endif %}"
+    >
+      <span class="sgs-wallprog__fill" style="width: {{ fill }}%;"></span>
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-wallprog {
+    margin: 0 0 20px;
+    padding: 14px 0 16px;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .sgs-wallprog__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+  }
+
+  .sgs-wallprog__message {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-wallprog__link {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb));
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--color-foreground-rgb) / 0.3);
+    text-underline-offset: 4px;
+  }
+
+  .sgs-wallprog__link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .sgs-wallprog__bar {
+    position: relative;
+    height: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .sgs-wallprog__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    background: #e10600;
+    transition: width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-wallprog__fill {
+      transition: none;
+    }
+  }
+{% endstylesheet %}

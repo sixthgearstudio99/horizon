@@ -72,6 +72,15 @@ if (!customElements.get('sgs-personalise')) {
           { signal }
         );
 
+        // Live name plate preview of the Headline
+        this.plate = this.querySelector('[data-plate]');
+        this.headline = this.querySelector('input[name="properties[Headline]"]');
+        if (this.plate && this.headline) {
+          this.headline.addEventListener('input', () => this.#syncPlate(), { signal });
+          window.addEventListener('resize', () => this.#fitPlate(), { signal });
+          this.#syncPlate();
+        }
+
         this.#syncLock();
       }
 
@@ -87,6 +96,28 @@ if (!customElements.get('sgs-personalise')) {
 
       get form() {
         return document.getElementById(this.formId);
+      }
+
+      /* ---------- Headline preview ---------- */
+
+      #syncPlate() {
+        const text = this.headline.value.trim();
+        this.plate.textContent = text || this.plate.dataset.platePlaceholder || '';
+        this.plate.classList.toggle('is-placeholder', !text);
+        this.#fitPlate();
+      }
+
+      /** Shrinks the preview text (26px down to 14px) to keep it on one line; wraps only if it still won't fit */
+      #fitPlate() {
+        const plate = this.plate;
+        let size = 26;
+        plate.classList.remove('is-wrapped');
+        plate.style.setProperty('--sgs-plate-size', `${size}px`);
+        while (size > 14 && plate.scrollWidth > plate.clientWidth) {
+          size -= 1;
+          plate.style.setProperty('--sgs-plate-size', `${size}px`);
+        }
+        plate.classList.toggle('is-wrapped', plate.scrollWidth > plate.clientWidth);
       }
 
       /* ---------- Text fields ---------- */

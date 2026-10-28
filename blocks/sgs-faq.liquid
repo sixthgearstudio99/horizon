@@ -11,7 +11,8 @@
   endfor
 -%}
 
-{%- if has_items -%}
+{%- comment -%} Print questions don't apply to gift cards {%- endcomment -%}
+{%- if has_items and closest.product.gift_card? != true -%}
   <div class="sgs-faq" {{ block.shopify_attributes }}>
     {%- if bs.heading != blank -%}
       <h2 class="sgs-faq__heading sgs-label">{{ bs.heading | escape }}</h2>

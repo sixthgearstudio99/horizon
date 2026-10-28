@@ -1,3 +1,4 @@
+{%- comment -%} Not shown on gift card products: nothing is printed or delivered {%- endcomment -%}
 {%- liquid
   assign bs = block.settings
   assign uid = 'SgsDelivery-' | append: block.id
@@ -22,6 +23,7 @@
   endif
 -%}
 
+{%- unless closest.product.gift_card? -%}
 <div class="sgs-delivery" id="{{ uid }}" {{ block.shopify_attributes }}>
   <svg class="sgs-delivery__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
 
@@ -86,6 +88,7 @@
     root.querySelector('[data-range]').textContent = range;
   })();
 </script>
+{%- endunless -%}
 
 {% stylesheet %}
   .sgs-delivery {

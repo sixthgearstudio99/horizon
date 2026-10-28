@@ -2,6 +2,7 @@
   assign bs = block.settings
 -%}
 
+{%- unless closest.product.gift_card? -%}
 <div class="sgs-ptrust-wrap" {{ block.shopify_attributes }}>
 <ul class="sgs-ptrust" role="list">
   {%- for i in (1..4) -%}
@@ -33,6 +34,7 @@
   {%- endfor -%}
 </ul>
 </div>
+{%- endunless -%}
 
 {% stylesheet %}
   /* The strip sizes to the product column, not the window */

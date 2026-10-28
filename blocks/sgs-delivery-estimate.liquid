@@ -1,0 +1,204 @@
+{%- liquid
+  assign bs = block.settings
+  assign uid = 'SgsDelivery-' | append: block.id
+
+  # The Christmas message links its [bracketed] words to the gift card, but only if that product exists
+  assign gift_card = nil
+  if bs.gift_card_handle != blank
+    assign gift_card_product = all_products[bs.gift_card_handle]
+    if gift_card_product.id != blank
+      assign gift_card = gift_card_product
+    endif
+  endif
+
+  assign christmas_parts = bs.christmas_message | split: '['
+  assign christmas_before = christmas_parts.first
+  assign christmas_link_text = ''
+  assign christmas_after = ''
+  if christmas_parts.size > 1
+    assign christmas_rest = christmas_parts[1] | split: ']'
+    assign christmas_link_text = christmas_rest.first
+    assign christmas_after = christmas_rest | slice: 1, 99 | join: ']'
+  endif
+-%}
+
+<div class="sgs-delivery" id="{{ uid }}" {{ block.shopify_attributes }}>
+  <svg class="sgs-delivery__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
+
+  <p class="sgs-delivery__text" data-standard>
+    {{ bs.text_before | escape }} <strong data-range></strong>
+  </p>
+
+  <p class="sgs-delivery__text" data-christmas hidden>
+    {{- christmas_before | escape -}}
+    {%- if christmas_link_text != blank -%}
+      {%- if gift_card -%}
+        <a href="{{ gift_card.url }}">{{ christmas_link_text | escape }}</a>
+      {%- else -%}
+        {{- christmas_link_text | escape -}}
+      {%- endif -%}
+    {%- endif -%}
+    {{- christmas_after | escape -}}
+  </p>
+</div>
+
+{%- comment -%}
+  Inline so the dates are filled in before first paint (no layout shift). The range is worked out
+  in the visitor's browser from their current date, counting Monday to Friday only.
+{%- endcomment -%}
+<script>
+  (function () {
+    var root = document.getElementById({{ uid | json }});
+    if (!root) return;
+    var minDays = {{ bs.min_working_days | default: 4 }};
+    var maxDays = {{ bs.max_working_days | default: 9 }};
+    var start = {{ bs.christmas_from | default: '12-10' | json }};
+    var end = {{ bs.christmas_to | default: '12-24' | json }};
+
+    var addWorkingDays = function (from, days) {
+      var d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
+      var added = 0;
+      while (added < days) {
+        d.setDate(d.getDate() + 1);
+        var day = d.getDay();
+        if (day !== 0 && day !== 6) added++;
+      }
+      return d;
+    };
+    var part = function (d, opts) { return d.toLocaleDateString('en-GB', opts); };
+    var weekdayDay = function (d) { return part(d, { weekday: 'short' }) + ' ' + d.getDate(); };
+    var month = function (d) { return part(d, { month: 'short' }); };
+
+    var today = new Date();
+    var mmdd = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+    if (mmdd >= start && mmdd <= end) {
+      root.querySelector('[data-standard]').hidden = true;
+      root.querySelector('[data-christmas]').hidden = false;
+      return;
+    }
+
+    var first = addWorkingDays(today, minDays);
+    var last = addWorkingDays(today, maxDays);
+    var range = first.getMonth() === last.getMonth()
+      ? weekdayDay(first) + ' – ' + weekdayDay(last) + ' ' + month(last)
+      : weekdayDay(first) + ' ' + month(first) + ' – ' + weekdayDay(last) + ' ' + month(last);
+    root.querySelector('[data-range]').textContent = range;
+  })();
+</script>
+
+{% stylesheet %}
+  .sgs-delivery {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    /* Sit close to the Add to cart button rather than a full block gap below it */
+    margin-block-start: -12px;
+    color: rgb(var(--color-foreground-rgb) / 0.78);
+  }
+
+  .sgs-delivery__icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+  }
+
+  .sgs-delivery__text {
+    margin: 0;
+    min-height: 1.5em;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .sgs-delivery__text[hidden] {
+    display: none;
+  }
+
+  .sgs-delivery__text strong {
+    font-weight: 500;
+    color: rgb(var(--color-foreground-rgb));
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-delivery__text a {
+    color: rgb(var(--color-foreground-rgb));
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Delivery estimate",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Shows the delivery window from the visitor's own date, counting Monday to Friday only."
+    },
+    {
+      "type": "text",
+      "id": "text_before",
+      "label": "Text before the dates",
+      "default": "Order today, arrives"
+    },
+    {
+      "type": "range",
+      "id": "min_working_days",
+      "label": "Earliest arrival",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "unit": "days",
+      "default": 4,
+      "info": "Working days from today"
+    },
+    {
+      "type": "range",
+      "id": "max_working_days",
+      "label": "Latest arrival",
+      "min": 1,
+      "max": 30,
+      "step": 1,
+      "unit": "days",
+      "default": 9,
+      "info": "Working days from today"
+    },
+    {
+      "type": "header",
+      "content": "Christmas cut-off"
+    },
+    {
+      "type": "text",
+      "id": "christmas_from",
+      "label": "Show from (MM-DD)",
+      "default": "12-10"
+    },
+    {
+      "type": "text",
+      "id": "christmas_to",
+      "label": "Show until (MM-DD)",
+      "default": "12-24"
+    },
+    {
+      "type": "text",
+      "id": "christmas_message",
+      "label": "Message",
+      "default": "Too late for Christmas delivery – send a [digital gift card] instead",
+      "info": "Words in [brackets] link to the gift card product, if it exists."
+    },
+    {
+      "type": "text",
+      "id": "gift_card_handle",
+      "label": "Gift card product handle",
+      "default": "gift-card"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Delivery estimate"
+    }
+  ]
+}
+{% endschema %}

@@ -247,6 +247,18 @@
                 "wall_width_cm": 300
               },
               "blocks": {}
+            },
+            "sgs_delivery": {
+              "type": "sgs-delivery-estimate",
+              "settings": {
+                "text_before": "Order today, arrives",
+                "min_working_days": 4,
+                "max_working_days": 9,
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card"
+              }
             }
           },
           "block_order": [
@@ -257,6 +269,7 @@
             "variant_picker_R3rGDr",
             "sgs_wall",
             "buy_buttons_eYQEYi",
+            "sgs_delivery",
             "sgs_details"
           ]
         }

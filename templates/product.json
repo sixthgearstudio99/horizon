@@ -259,6 +259,19 @@
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
                 "gift_card_handle": "gift-card"
               }
+            },
+            "sgs_ptrust": {
+              "type": "sgs-product-trust",
+              "settings": {
+                "item_1_text": "Free UK delivery",
+                "item_1_link": "",
+                "item_2_text": "Printed in the UK",
+                "item_2_link": "",
+                "item_3_text": "14-day returns",
+                "item_3_link": "/policies/refund-policy",
+                "item_4_text": "Secure checkout",
+                "item_4_link": ""
+              }
             }
           },
           "block_order": [
@@ -270,6 +283,7 @@
             "sgs_wall",
             "buy_buttons_eYQEYi",
             "sgs_delivery",
+            "sgs_ptrust",
             "sgs_details"
           ]
         }

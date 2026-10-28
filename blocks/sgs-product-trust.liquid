@@ -1,0 +1,173 @@
+{%- liquid
+  assign bs = block.settings
+-%}
+
+<div class="sgs-ptrust-wrap" {{ block.shopify_attributes }}>
+<ul class="sgs-ptrust" role="list">
+  {%- for i in (1..4) -%}
+    {%- liquid
+      assign text_key = 'item_' | append: i | append: '_text'
+      assign link_key = 'item_' | append: i | append: '_link'
+      assign text = bs[text_key]
+      assign link = bs[link_key] | strip
+    -%}
+    {%- if text != blank -%}
+      <li class="sgs-ptrust__item">
+        {%- case i -%}
+          {%- when 1 -%}
+            <svg class="sgs-ptrust__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
+          {%- when 2 -%}
+            <svg class="sgs-ptrust__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M5.5 7.5V2.5h9v5M5.5 14.5h-3v-7h15v7h-3"/><path d="M5.5 11.5h9v6h-9z"/></svg>
+          {%- when 3 -%}
+            <svg class="sgs-ptrust__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 8.5a6.5 6.5 0 1 1 1.4 5"/><path d="M3.5 3.5v5h5"/></svg>
+          {%- else -%}
+            <svg class="sgs-ptrust__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><rect x="4" y="8.5" width="12" height="9" rx="1"/><path d="M6.5 8.5V6a3.5 3.5 0 0 1 7 0v2.5"/></svg>
+        {%- endcase -%}
+        {%- if link != blank -%}
+          <a class="sgs-ptrust__text" href="{{ link | escape }}">{{ text | escape }}</a>
+        {%- else -%}
+          <span class="sgs-ptrust__text">{{ text | escape }}</span>
+        {%- endif -%}
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+</ul>
+</div>
+
+{% stylesheet %}
+  /* The strip sizes to the product column, not the window */
+  .sgs-ptrust-wrap {
+    width: 100%;
+    margin-top: -8px;
+    container-type: inline-size;
+  }
+
+  .sgs-ptrust {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px 16px;
+    margin: 0;
+    padding: 18px 0 0;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    list-style: none;
+  }
+
+  /* Desktop with a wide enough column: one row of four, icon above each label so labels stay
+     on one line. Phones, and narrow product columns, keep the 2 x 2 grid. */
+  @media screen and (min-width: 750px) {
+    @container (min-width: 384px) {
+      .sgs-ptrust {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0 4px;
+        padding-top: 20px;
+      }
+
+      .sgs-ptrust .sgs-ptrust__item {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+      }
+
+      .sgs-ptrust .sgs-ptrust__text {
+        font-size: 11px;
+        letter-spacing: 0;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .sgs-ptrust__item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+  }
+
+  .sgs-ptrust__icon {
+    flex-shrink: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+  }
+
+  .sgs-ptrust__text {
+    font-size: 12px;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    color: inherit;
+  }
+
+  a.sgs-ptrust__text {
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--color-foreground-rgb) / 0.25);
+    text-underline-offset: 3px;
+    transition: color 0.3s ease, text-decoration-color 0.3s ease;
+  }
+
+  a.sgs-ptrust__text:hover {
+    color: rgb(var(--color-foreground-rgb));
+    text-decoration-color: currentColor;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product trust strip",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Four short reassurances under the delivery estimate. Leave an item empty to hide it."
+    },
+    {
+      "type": "text",
+      "id": "item_1_text",
+      "label": "Item 1 (delivery)",
+      "default": "Free UK delivery"
+    },
+    {
+      "type": "text",
+      "id": "item_1_link",
+      "label": "Item 1 link"
+    },
+    {
+      "type": "text",
+      "id": "item_2_text",
+      "label": "Item 2 (printing)",
+      "default": "Printed in the UK"
+    },
+    {
+      "type": "text",
+      "id": "item_2_link",
+      "label": "Item 2 link"
+    },
+    {
+      "type": "text",
+      "id": "item_3_text",
+      "label": "Item 3 (returns)",
+      "default": "14-day returns"
+    },
+    {
+      "type": "text",
+      "id": "item_3_link",
+      "label": "Item 3 link",
+      "default": "/policies/refund-policy"
+    },
+    {
+      "type": "text",
+      "id": "item_4_text",
+      "label": "Item 4 (checkout)",
+      "default": "Secure checkout"
+    },
+    {
+      "type": "text",
+      "id": "item_4_link",
+      "label": "Item 4 link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product trust strip"
+    }
+  ]
+}
+{% endschema %}

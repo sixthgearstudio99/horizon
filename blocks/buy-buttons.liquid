@@ -150,9 +150,9 @@
                   <span>
                     <bdi>
                       {%- if use_currency -%}
-                        {{- variant.price | money_with_currency | strip -}}
+                        {{- variant.price | money_with_currency | replace: '.00 ', ' ' | strip -}}
                       {%- else -%}
-                        {{- variant.price | money | strip -}}
+                        {{- variant.price | money_without_trailing_zeros | strip -}}
                       {%- endif -%}</bdi
                     >/{{ 'content.each_abbreviation' | t -}}
                   </span>
@@ -171,9 +171,9 @@
                     <span>
                       <bdi>
                         {%- if use_currency -%}
-                          {{- price_break.price | money_with_currency | strip -}}
+                          {{- price_break.price | money_with_currency | replace: '.00 ', ' ' | strip -}}
                         {%- else -%}
-                          {{- price_break.price | money | strip -}}
+                          {{- price_break.price | money_without_trailing_zeros | strip -}}
                         {%- endif -%}</bdi
                       >/{{ 'content.each_abbreviation' | t -}}
                     </span>
@@ -198,9 +198,9 @@
                         <span>
                           <bdi>
                             {%- if use_currency -%}
-                              {{- price_break.price | money_with_currency | strip -}}
+                              {{- price_break.price | money_with_currency | replace: '.00 ', ' ' | strip -}}
                             {%- else -%}
-                              {{- price_break.price | money | strip -}}
+                              {{- price_break.price | money_without_trailing_zeros | strip -}}
                             {%- endif -%}</bdi
                           >/{{ 'content.each_abbreviation' | t -}}
                         </span>
@@ -343,7 +343,7 @@
             <h4 class="pickup-location__h4">{{ closest.product.title }}</h4>
             {% unless closest.product.has_only_default_variant %}
               <p class="pickup-location__text-sm">
-                {{ closest.product.selected_or_first_available_variant.title }}
+                {% render 'sgs-variant-label', variant: closest.product.selected_or_first_available_variant %}
               </p>
             {% endunless %}
           </div>

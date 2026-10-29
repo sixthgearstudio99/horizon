@@ -17,9 +17,9 @@
   assign show_currency = settings.currency_code_enabled_product_pages
 
   if show_currency
-    assign formatted_price = price_value | money_with_currency
+    assign formatted_price = price_value | money_with_currency | replace: '.00 ', ' '
   else
-    assign formatted_price = price_value | money
+    assign formatted_price = price_value | money_without_trailing_zeros
   endif
 
   # callers using this in attributes strip the bdi via strip_html

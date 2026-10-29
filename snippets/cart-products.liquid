@@ -102,7 +102,7 @@
           >
             {{ 'content.cart_total' | t }}
             <span
-              ><bdi>{{ cart.total_price | money_with_currency }}</bdi></span
+              ><bdi>{{ cart.total_price | money_with_currency | replace: '.00 ', ' ' }}</bdi></span
             >
           </caption>
 
@@ -245,7 +245,7 @@
                             <div class="cart-items__variant">
                               <dt class="visually-hidden">{{ option.name }}:</dt>
                               <dd>
-                                {{- option.value -}}
+                                {%- render 'sgs-size-label', value: option.value -%}
                                 {%- if forloop.last != true %},&nbsp;{% endif -%}
                               </dd>
                             </div>
@@ -307,14 +307,14 @@
                       {% if item.original_price != item.final_price %}
                         <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
                         <span
-                          ><bdi>{{ item.final_price | money }}</bdi></span
+                          ><bdi>{{ item.final_price | money_without_trailing_zeros }}</bdi></span
                         >
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                         <s class="compare-at-price">
                           {% if item.variant.compare_at_price > item.original_price %}
-                            <bdi>{{ item.variant.compare_at_price | money }}</bdi>
+                            <bdi>{{ item.variant.compare_at_price | money_without_trailing_zeros }}</bdi>
                           {% else %}
-                            <bdi>{{ item.original_price | money }}</bdi>
+                            <bdi>{{ item.original_price | money_without_trailing_zeros }}</bdi>
                           {% endif %}
                         </s>
                       {% else %}
@@ -325,13 +325,13 @@
                         {% endif %}
 
                         <span
-                          ><bdi>{{ item.original_price | money }}</bdi></span
+                          ><bdi>{{ item.original_price | money_without_trailing_zeros }}</bdi></span
                         >
 
                         {% if item.variant.compare_at_price > item.original_price %}
                           <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                           <s class="compare-at-price"
-                            ><bdi>{{ item.variant.compare_at_price | money }}</bdi></s
+                            ><bdi>{{ item.variant.compare_at_price | money_without_trailing_zeros }}</bdi></s
                           >
                         {% endif %}
                       {% endif %}
@@ -399,11 +399,11 @@
                 </td>
                 {%- liquid
                   if settings.currency_code_enabled_cart_items
-                    assign price = item.final_line_price | money_with_currency
-                    assign unit_price = item.unit_price | money_with_currency
+                    assign price = item.final_line_price | money_with_currency | replace: '.00 ', ' '
+                    assign unit_price = item.unit_price | money_with_currency | replace: '.00 ', ' '
                   else
-                    assign price = item.final_line_price | money
-                    assign unit_price = item.unit_price | money
+                    assign price = item.final_line_price | money_without_trailing_zeros
+                    assign unit_price = item.unit_price | money_without_trailing_zeros
                   endif
                 -%}
                 <td

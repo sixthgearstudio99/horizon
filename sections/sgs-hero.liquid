@@ -213,10 +213,10 @@
               <span class="sgs-hero__tag-title">{{ featured_product.title | escape }}</span>
               <span class="sgs-hero__tag-price">
                 {%- if featured_product.price_varies -%}
-                  {%- assign from_price = featured_product.price_min | money -%}
+                  {%- assign from_price = featured_product.price_min | money_without_trailing_zeros -%}
                   {{ 'content.price_from' | t: price: from_price }}
                 {%- else -%}
-                  {{ featured_product.price | money }}
+                  {{ featured_product.price | money_without_trailing_zeros }}
                 {%- endif -%}
                 <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
                   <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>

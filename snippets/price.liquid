@@ -62,15 +62,15 @@
 
   # Format all prices
   if use_currency
-    assign price = price | money_with_currency
-    assign compare_at_price = compare_at_price | money_with_currency
-    assign price_min = price_min | money_with_currency
-    assign price_max = price_max | money_with_currency
+    assign price = price | money_with_currency | replace: '.00 ', ' '
+    assign compare_at_price = compare_at_price | money_with_currency | replace: '.00 ', ' '
+    assign price_min = price_min | money_with_currency | replace: '.00 ', ' '
+    assign price_max = price_max | money_with_currency | replace: '.00 ', ' '
   else
-    assign price = price | money
-    assign compare_at_price = compare_at_price | money
-    assign price_min = price_min | money
-    assign price_max = price_max | money
+    assign price = price | money_without_trailing_zeros
+    assign compare_at_price = compare_at_price | money_without_trailing_zeros
+    assign price_min = price_min | money_without_trailing_zeros
+    assign price_max = price_max | money_without_trailing_zeros
   endif
 -%}
 
@@ -118,9 +118,9 @@
   {%- if selected_variant.unit_price and show_unit_price %}
     {%- liquid
       if use_currency
-        assign unit_price = selected_variant.unit_price | money_with_currency
+        assign unit_price = selected_variant.unit_price | money_with_currency | replace: '.00 ', ' '
       else
-        assign unit_price = selected_variant.unit_price | money
+        assign unit_price = selected_variant.unit_price | money_without_trailing_zeros
       endif
     -%}
     {% render 'unit-price', price: unit_price, measurement: selected_variant.unit_price_measurement %}

@@ -24,6 +24,13 @@
     endif
     assign crumb_label = 'Collections'
     assign crumb_url = routes.collections_url
+
+    # The automatic all-products page (/collections/all) is titled "Products" by Shopify
+    if collection.handle == 'all' and s.heading == blank and s.all_products_title != blank
+      assign hero_title = s.all_products_title | escape
+      assign crumb_label = s.all_products_title
+      assign crumb_url = collection.url
+    endif
   elsif page != blank and template.name == 'page'
     if hero_title == blank
       assign hero_title = page.title | escape
@@ -65,7 +72,7 @@
       <nav class="sgs-phero__crumbs sgs-label" aria-label="Breadcrumb">
         <a href="{{ routes.root_url }}">Home</a>
         <span aria-hidden="true">/</span>
-        <a href="{{ crumb_url }}">{{ crumb_label }}</a>
+        <a href="{{ crumb_url }}"{% if crumb_url == collection.url %} aria-current="page"{% endif %}>{{ crumb_label | escape }}</a>
       </nav>
     {%- elsif s.eyebrow != blank -%}
       <p class="sgs-phero__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
@@ -375,6 +382,13 @@
       "id": "show_breadcrumb",
       "label": "Show breadcrumb on collections",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "all_products_title",
+      "label": "All products page title",
+      "default": "All Prints",
+      "info": "Heading and breadcrumb for /collections/all, which Shopify otherwise calls Products."
     },
     {
       "type": "checkbox",

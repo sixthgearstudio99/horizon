@@ -83,7 +83,8 @@
               class="variant-option__swatch-value"
               data-testid="variant-option-single-value"
             >
-              {{- product_option.selected_value -}}
+              {%- comment -%} SixthGear: friendly size label (display only) {%- endcomment -%}
+              {%- render 'sgs-size-label', value: product_option.selected_value -%}
             </span>
           </div>
         {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
@@ -96,12 +97,14 @@
             <legend>
               {{ product_option.name | escape -}}
               {%- if variant_style == 'swatch' -%}
-                <span class="variant-option__swatch-value">{{ product_option.selected_value }}</span>
+                <span class="variant-option__swatch-value">{% render 'sgs-size-label', value: product_option.selected_value %}</span>
               {%- endif %}
             </legend>
             {%- for product_option_value in product_option.values -%}
-              {% if product_option_value.size > longest_value and option_id_attribute %}
-                {% assign longest_value = product_option_value.size %}
+              {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
+              {%- assign value_label_length = value_label | size -%}
+              {% if value_label_length > longest_value and option_id_attribute %}
+                {% assign longest_value = value_label_length %}
               {% endif %}
               <label
                 class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
@@ -110,7 +113,7 @@
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ product_option_value.name | escape }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  aria-label="{{ value_label }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
                   {% if product_option_value.available == false %}
                     aria-disabled="true"
                   {% endif %}
@@ -159,7 +162,7 @@
                     class="variant-option__button-label__text"
                     data-key="variant-option-text"
                   >
-                    {{- product_option_value | escape -}}
+                    {{- value_label -}}
                   </span>
                 {% endif %}
                 {% render 'strikethrough-variant', product_option: product_option_value %}
@@ -216,10 +219,11 @@
                       selected="selected"
                     {% endif %}
                   >
+                    {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
                     {% if product_option_value.available == false %}
-                      {{ product_option_value | escape }} - {{ 'content.unavailable' | t }}
+                      {{ value_label }} - {{ 'content.unavailable' | t }}
                     {% else %}
-                      {{ product_option_value | escape }}
+                      {{ value_label }}
                     {% endif %}
                   </option>
                 {%- endfor -%}

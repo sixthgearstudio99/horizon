@@ -32,11 +32,11 @@
         on:keydown="/removeFilter?form="
       >
         {%- if filter.min_value.value != null and filter.max_value.value != null %}
-          <bdi>{{ filter.min_value.value | money }}–{{ filter.max_value.value | money }}</bdi>
+          <bdi>{{ filter.min_value.value | money_without_trailing_zeros }}–{{ filter.max_value.value | money_without_trailing_zeros }}</bdi>
         {%- elsif filter.min_value.value != null -%}
-          <bdi>{{ filter.min_value.value | money }}–{{ filter.range_max | money }}</bdi>
+          <bdi>{{ filter.min_value.value | money_without_trailing_zeros }}–{{ filter.range_max | money_without_trailing_zeros }}</bdi>
         {%- elsif filter.max_value.value != null -%}
-          <bdi>{{ 0 | money }}–{{ filter.max_value.value | money }}</bdi>
+          <bdi>{{ 0 | money_without_trailing_zeros }}–{{ filter.max_value.value | money_without_trailing_zeros }}</bdi>
         {%- endif -%}
         <span class="svg-wrapper svg-wrapper--smaller">
           {{- 'icon-filters-close.svg' | inline_asset_content -}}

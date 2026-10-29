@@ -113,7 +113,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "tax_note_text": "Free UK delivery · Taxes included"
               },
               "blocks": {}
             },
@@ -257,7 +258,9 @@
                 "christmas_from": "12-10",
                 "christmas_to": "12-24",
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card"
+                "gift_card_handle": "gift-card",
+                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
+                "christmas_line_until": "2026-12-09"
               }
             },
             "sgs_ptrust": {

@@ -19,7 +19,12 @@
 >
 
 {%- liquid
-  assign og_title = page_title | default: shop.name
+  # SixthGear: Shopify titles the automatic /collections/all page "Products"
+  assign sgs_page_title = page_title
+  if template.name == 'collection' and collection.handle == 'all' and page_title == 'Products'
+    assign sgs_page_title = 'All Prints'
+  endif
+  assign og_title = sgs_page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
   assign og_description = page_description | default: shop.description | default: shop.name
@@ -104,10 +109,10 @@
 >
 
 <title>
-  {{ page_title }}
+  {{ sgs_page_title }}
   {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
   {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- unless sgs_page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
 </title>
 
 <link

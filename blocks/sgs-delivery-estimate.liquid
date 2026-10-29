@@ -27,6 +27,7 @@
 <div class="sgs-delivery" id="{{ uid }}" {{ block.shopify_attributes }}>
   <svg class="sgs-delivery__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
 
+  <div class="sgs-delivery__body">
   <p class="sgs-delivery__text" data-standard>
     {{ bs.text_before | escape }} <strong data-range></strong>
   </p>
@@ -42,6 +43,10 @@
     {%- endif -%}
     {{- christmas_after | escape -}}
   </p>
+  {%- if bs.christmas_line != blank -%}
+    <p class="sgs-delivery__xmas" id="{{ uid }}-xmas" hidden>{{ bs.christmas_line | escape }}</p>
+  {%- endif -%}
+  </div>
 </div>
 
 {%- comment -%}
@@ -73,6 +78,12 @@
 
     var today = new Date();
     var mmdd = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    var ymd = today.getFullYear() + '-' + mmdd;
+
+    // Christmas order-by line: shown up to and including its last day
+    var xmas = document.getElementById({{ uid | append: '-xmas' | json }});
+    var xmasUntil = {{ bs.christmas_line_until | strip | json }};
+    if (xmas && xmasUntil && ymd <= xmasUntil) xmas.hidden = false;
 
     if (mmdd >= start && mmdd <= end) {
       root.querySelector('[data-standard]').hidden = true;
@@ -114,8 +125,20 @@
     line-height: 1.5;
   }
 
-  .sgs-delivery__text[hidden] {
+  .sgs-delivery__text[hidden],
+  .sgs-delivery__xmas[hidden] {
     display: none;
+  }
+
+  .sgs-delivery__body {
+    min-width: 0;
+  }
+
+  .sgs-delivery__xmas {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #e10600;
   }
 
   .sgs-delivery__text strong {
@@ -171,6 +194,19 @@
     {
       "type": "header",
       "content": "Christmas cut-off"
+    },
+    {
+      "type": "text",
+      "id": "christmas_line",
+      "label": "Order-by line",
+      "default": "Order by Wed 9 Dec for Christmas delivery",
+      "info": "Small line under the delivery estimate. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "christmas_line_until",
+      "label": "Show order-by line until (YYYY-MM-DD)",
+      "default": "2026-12-09"
     },
     {
       "type": "text",

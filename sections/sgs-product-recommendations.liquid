@@ -2,6 +2,11 @@
   assign s = section.settings
   assign limit = s.products_to_show
   assign card_sizes = '(min-width: 990px) 23vw, (min-width: 750px) 46vw, 78vw'
+
+  # Products kept out of these suggestions (the Custom Car Poster), unless the print being
+  # viewed belongs to one of their own collections
+  assign hidden_handles = ',' | append: s.hidden_products | remove: ' ' | append: ','
+  assign custom_collections = ',' | append: s.hidden_products_collections | remove: ' ' | append: ','
 -%}
 
 {%- capture header -%}
@@ -38,48 +43,94 @@
 >
   <div class="sgs-grid__inner">
     {%- if recommendations.performed? -%}
-      {%- comment -%} Rendered by the recommendations endpoint and swapped in by sgs-recommendations.js {%- endcomment -%}
+      {%- comment -%} Shopify's related prints, fetched by sgs-recommendations.js to fill any spare slots {%- endcomment -%}
       <ul class="sgs-grid__list" role="list" data-sgs-recs-list>
-        {%- for rec in recommendations.products limit: limit -%}
-          <li class="sgs-grid__item is-revealed" data-sgs-reveal>
-            {% render 'sgs-product-card',
-              product: rec,
-              show_secondary: true,
-              show_options: true,
-              sizes: card_sizes
-            %}
-          </li>
+        {%- for rec in recommendations.products -%}
+          {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
+          {%- unless hidden_handles contains rec_key -%}
+            <li class="sgs-grid__item is-revealed" data-sgs-reveal data-handle="{{ rec.handle }}">
+              {% render 'sgs-product-card',
+                product: rec,
+                show_secondary: true,
+                show_options: true,
+                sizes: card_sizes
+              %}
+            </li>
+          {%- endunless -%}
         {%- endfor -%}
       </ul>
     {%- elsif product != blank -%}
       {%- liquid
-        # Instant fallback: other prints from this print's first collection
-        assign fallback_source = collections.all
-        for c in product.collections
-          if c.handle != 'all' and c.handle != 'frontpage' and c.products_count > 1
-            assign fallback_source = c
+        # 1) The print's own collection: the first preferred style collection it belongs to,
+        #    else its first specific collection (not all / home page / best sellers)
+        assign source = nil
+        assign preferred = s.preferred_collections | split: ','
+        for wanted in preferred
+          assign wanted_handle = wanted | strip
+          for c in product.collections
+            if c.handle == wanted_handle and c.products_count > 1
+              assign source = c
+              break
+            endif
+          endfor
+          if source
             break
           endif
         endfor
+        unless source
+          for c in product.collections
+            assign generic = false
+            if c.handle == 'all' or c.handle == 'frontpage' or c.handle contains 'best-seller' or c.handle contains 'bestseller'
+              assign generic = true
+            endif
+            if generic == false and c.products_count > 1
+              assign source = c
+              break
+            endif
+          endfor
+        endunless
+
+        assign allow_hidden = false
+        if source
+          assign source_key = ',' | append: source.handle | append: ','
+          if custom_collections contains source_key
+            assign allow_hidden = true
+          endif
+        endif
+
+        assign shown = 0
+        assign shown_handles = ',' | append: product.handle | append: ','
       -%}
       <sgs-recommendations
-        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ limit }}&intent=related"
+        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=10&intent=related"
+        data-limit="{{ limit }}"
       >
         {{ header }}
         <ul class="sgs-grid__list" role="list" data-sgs-recs-list data-sgs-reveal-group>
-          {%- assign shown = 0 -%}
-          {%- for rec in fallback_source.products limit: 12 -%}
-            {%- if rec.id != product.id and shown < limit -%}
+          {%- if source -%}
+            {%- for rec in source.products limit: 30 -%}
+              {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+              {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
+              {%- if shown_handles contains rec_key -%}{%- continue -%}{%- endif -%}
+              {%- if hidden_handles contains rec_key and allow_hidden == false -%}{%- continue -%}{%- endif -%}
               {%- assign shown = shown | plus: 1 -%}
-              <li class="sgs-grid__item" data-sgs-reveal>
-                {% render 'sgs-product-card',
-                  product: rec,
-                  show_secondary: true,
-                  show_options: true,
-                  sizes: card_sizes
-                %}
+              {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
+              <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="collection">
+                {% render 'sgs-product-card', product: rec, show_secondary: true, show_options: true, sizes: card_sizes %}
               </li>
-            {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+
+          {%- comment -%} 2) Placeholders from the whole shop; Shopify's related prints replace these when they load {%- endcomment -%}
+          {%- for rec in collections.all.products limit: 30 -%}
+            {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+            {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
+            {%- if shown_handles contains rec_key or hidden_handles contains rec_key -%}{%- continue -%}{%- endif -%}
+            {%- assign shown = shown | plus: 1 -%}
+            {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
+            <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="fill">
+              {% render 'sgs-product-card', product: rec, show_secondary: true, show_options: true, sizes: card_sizes %}
+            </li>
           {%- endfor -%}
         </ul>
       </sgs-recommendations>
@@ -125,6 +176,27 @@
       "id": "view_all_label",
       "label": "Link label",
       "default": "Shop all prints"
+    },
+    {
+      "type": "text",
+      "id": "preferred_collections",
+      "label": "Preferred collections",
+      "default": "lineage,portraits,grand-prix,mindset",
+      "info": "Prints from the viewed print's own collection come first. Collection handles, in order of preference."
+    },
+    {
+      "type": "text",
+      "id": "hidden_products",
+      "label": "Keep these products out",
+      "default": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+      "info": "Product handles, separated by commas (the Custom Car Poster)."
+    },
+    {
+      "type": "text",
+      "id": "hidden_products_collections",
+      "label": "Except on these collections",
+      "default": "custom-car-posters, custom-posters, custom",
+      "info": "Handles of the custom poster's own collection(s). On prints from these collections it can be suggested."
     },
     {
       "type": "range",

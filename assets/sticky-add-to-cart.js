@@ -276,7 +276,12 @@ class StickyAddToCartComponent extends Component {
     if (!variantTitleElement || !variantPicker) return;
 
     const selectedOptions = Array.from(variantPicker.querySelectorAll('input:checked'))
-      .map((option) => /** @type {HTMLInputElement} */ (option).value)
+      // SixthGear: show the friendly label the picker displays, not the raw value
+      .map(
+        (option) =>
+          option.closest('label')?.querySelector('.variant-option__button-label__text')?.textContent?.trim() ||
+          /** @type {HTMLInputElement} */ (option).value
+      )
       .filter((value) => value !== '')
       .join(' / ');
     if (!selectedOptions) return;

@@ -4,7 +4,19 @@
 {%- assign plain_text = block_settings.text | strip_newlines | strip_html | strip -%}
 {%- assign block_index = section.blocks | find_index: 'id', block.id -%}
 
-{%- unless plain_text == '' -%}
+{%- liquid
+  # SixthGear: an announcement can switch itself off after a date (YYYY-MM-DD, UK)
+  assign expired = false
+  if block_settings.hide_after != blank
+    assign today = 'now' | date: '%Y-%m-%d'
+    assign hide_after = block_settings.hide_after | strip
+    if today > hide_after
+      assign expired = true
+    endif
+  endif
+-%}
+
+{%- unless plain_text == '' or expired -%}
   <slideshow-slide
     ref="slides[]"
     class="
@@ -59,6 +71,12 @@
       "type": "url",
       "id": "link",
       "label": "t:settings.link"
+    },
+    {
+      "type": "text",
+      "id": "hide_after",
+      "label": "Hide after date",
+      "info": "Optional, YYYY-MM-DD. The announcement stops showing after this day."
     },
     {
       "type": "header",

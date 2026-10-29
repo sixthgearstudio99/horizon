@@ -14,7 +14,7 @@
     "sgs_countdown": {
       "type": "sgs-countdown",
       "settings": {
-        "enabled": true,
+        "enabled": false,
         "cutoff_date": "2026-12-09",
         "cutoff_time": "23:59",
         "text_before": "Order by",
@@ -31,7 +31,7 @@
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "FREE UK DELIVERY · BUY 2 SAVE 15% · BUY 3+ SAVE 25%",
+            "text": "FREE UK DELIVERY",
             "link": "",
             "font": "var(--font-body--family)",
             "font_size": "0.625rem",
@@ -41,14 +41,45 @@
             "text_color": "#f5f3ef"
           },
           "blocks": {}
+        },
+        "announcement_multibuy": {
+          "type": "_announcement",
+          "settings": {
+            "text": "BUY 2 SAVE 15% · BUY 3+ SAVE 25%",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "0.625rem",
+            "weight": "500",
+            "letter_spacing": "loose",
+            "case": "uppercase",
+            "text_color": "#f5f3ef"
+          },
+          "blocks": {}
+        },
+        "announcement_christmas": {
+          "type": "_announcement",
+          "settings": {
+            "text": "ORDER BY WED 9 DEC FOR CHRISTMAS",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "0.625rem",
+            "weight": "500",
+            "letter_spacing": "loose",
+            "case": "uppercase",
+            "text_color": "#f5f3ef",
+            "hide_after": "2026-12-09"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "announcement_BxgCk9"
+        "announcement_BxgCk9",
+        "announcement_multibuy",
+        "announcement_christmas"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
-        "speed": 5,
+        "speed": 4,
         "section_width": "page-width",
         "background_color": "#0e0e0e",
         "divider_width": 0,

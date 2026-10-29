@@ -1,0 +1,54 @@
+{%- doc -%}
+  SixthGear Studios: friendly label for a size option value, for display only.
+  "16″ x 24″ (Vertical)" or '24" x 36" (Vertical)' -> "16 × 24 in · 40 × 60 cm"; "30x40 cm" -> "30 × 40 cm"; "A3 (Landscape)" -> "A3".
+  Centimetres are rounded to the nearest 5, matching standard poster sizes (40 × 60, 60 × 90).
+  Anything that isn't a size (e.g. "Semi Glossy") is returned unchanged. The underlying variant
+  values (synced from Printify) are never changed, so use this only for visible text.
+
+  @param {string} value - The option value or variant title to label
+
+  @example
+  {% render 'sgs-size-label', value: product_option_value.name %}
+{%- enddoc -%}
+
+{%- liquid
+  assign raw = value | append: '' | strip
+  assign label = raw
+
+  # Drop inch marks and any "(Vertical)" style suffix
+  assign base = raw | replace: '″', '' | replace: '”', '' | replace: '“', '' | replace: '"', '' | split: '(' | first | strip
+  assign compact = base | downcase | replace: '×', 'x' | replace: ' ', ''
+  assign unit = 'in'
+  if compact contains 'cm'
+    assign unit = 'cm'
+  endif
+  assign numbers = compact | remove: 'inches' | remove: 'inch' | remove: 'in' | remove: 'cm' | split: 'x'
+
+  # Paper sizes such as "A3 (Landscape)" -> "A3"
+  assign first_char = compact | slice: 0
+  assign rest = compact | slice: 1
+  assign rest_number = rest | plus: 0
+  assign rest_check = rest_number | append: ''
+  if compact.size == 2 and first_char == 'a' and rest_check == rest
+    assign label = base | upcase
+  endif
+
+  if numbers.size == 2
+    assign a_text = numbers[0]
+    assign b_text = numbers[1]
+    assign a = a_text | plus: 0
+    assign b = b_text | plus: 0
+    assign a_check = a | append: ''
+    assign b_check = b | append: ''
+    if a > 0 and b > 0 and a_check == a_text and b_check == b_text
+      if unit == 'cm'
+        assign label = a | append: ' × ' | append: b | append: ' cm'
+      else
+        assign a_cm = a | times: 2.54 | divided_by: 5.0 | round | times: 5
+        assign b_cm = b | times: 2.54 | divided_by: 5.0 | round | times: 5
+        assign label = a | append: ' × ' | append: b | append: ' in · ' | append: a_cm | append: ' × ' | append: b_cm | append: ' cm'
+      endif
+    endif
+  endif
+-%}
+{{- label | escape -}}

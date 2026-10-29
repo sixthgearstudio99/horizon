@@ -105,7 +105,7 @@
         >
           {% unless product.has_only_default_variant %}
             {% if current_variant != blank %}
-              {% assign variant_title = current_variant.title | escape %}
+              {%- capture variant_title -%}{% render 'sgs-variant-label', variant: current_variant %}{%- endcapture -%}
             {% endif %}
             {{ variant_title }}
           {% endunless %}

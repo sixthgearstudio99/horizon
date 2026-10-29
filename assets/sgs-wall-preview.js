@@ -83,6 +83,14 @@ if (!customElements.get('sgs-wall-preview')) {
   };
 
   const fmt = (n) => (Math.round(n * 10) / 10).toString();
+  const round5 = (cm) => Math.round(cm / 5) * 5;
+
+  /** Friendly label, matching snippets/sgs-size-label.liquid: "16 × 24 in · 40 × 60 cm" */
+  const friendly = (size) => {
+    if (size.named) return String(size.label).split('(')[0].trim();
+    if (size.unit === 'cm') return `${fmt(size.a)} × ${fmt(size.b)} cm`;
+    return `${fmt(size.a / 2.54)} × ${fmt(size.b / 2.54)} in · ${round5(size.a)} × ${round5(size.b)} cm`;
+  };
 
   customElements.define(
     'sgs-wall-preview',
@@ -161,7 +169,8 @@ if (!customElements.get('sgs-wall-preview')) {
         this.currentLabel = current?.label;
         if (!this.previewLabel || !this.dialog.open) this.previewLabel = this.currentLabel;
         const openSize = this.querySelector('[data-open-size]');
-        if (openSize) openSize.textContent = current ? `· ${current.label}` : '';
+        // The button shows the short size; the chips and caption give inches and centimetres
+        if (openSize) openSize.textContent = current ? `· ${friendly(current).split(' · ')[0]}` : '';
         if (this.dialog.open) {
           this.previewLabel = this.currentLabel;
           this.renderChips();
@@ -186,7 +195,7 @@ if (!customElements.get('sgs-wall-preview')) {
             b.type = 'button';
             b.className = 'sgs-wall__size';
             b.setAttribute('aria-pressed', String(size.label === this.previewLabel));
-            b.textContent = size.label;
+            b.textContent = friendly(size);
             if (size.label === this.currentLabel) {
               const tag = document.createElement('span');
               tag.className = 'sgs-wall__size-current';
@@ -230,11 +239,8 @@ if (!customElements.get('sgs-wall-preview')) {
         this.print.style.bottom = `${bottom}px`;
 
         // Caption keeps the dimensions in the order written in the variant name
-        const cm = `${fmt(size.a)} × ${fmt(size.b)} cm`;
-        const inches = `${fmt(size.a / 2.54)} × ${fmt(size.b / 2.54)} in`;
         this.querySelector('[data-caption]').textContent =
-          `${size.label}: ${size.unit === 'in' ? `${inches} (${cm})` : `${cm} (${inches})`}. ` +
-          `Shown to scale above a ${SOFA_CM.width} cm sofa.`;
+          `${friendly(size)}, shown to scale above a ${SOFA_CM.width} cm sofa.`;
         this.querySelector('[data-scale-label]').textContent = `Wall shown ${(roomW / pxPerCm / 100).toFixed(1)} m wide`;
       }
     }
@@ -243,4 +249,5 @@ if (!customElements.get('sgs-wall-preview')) {
   // Exposed for testing
   window.SgsWallPreviewParse = parseSize;
   window.SgsWallPreviewSize = sizeOfVariant;
+  window.SgsWallPreviewLabel = friendly;
 }

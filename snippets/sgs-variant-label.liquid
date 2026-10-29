@@ -1,0 +1,14 @@
+{%- doc -%}
+  SixthGear Studios: a variant's options joined with " / ", each size shown with sgs-size-label.
+  Display only; the variant itself is unchanged.
+
+  @param {object} variant - The variant to label
+
+  @example
+  {% render 'sgs-variant-label', variant: current_variant %}
+{%- enddoc -%}
+
+{%- for option_value in variant.options -%}
+  {%- render 'sgs-size-label', value: option_value -%}
+  {%- unless forloop.last %} / {% endunless -%}
+{%- endfor -%}

@@ -87,7 +87,7 @@
                       {% if v.id == first_variant.id %}selected{% endif %}
                       {% unless v.available %}disabled{% endunless %}
                     >
-                      {{- v.title | escape }} · {{ v.price | money -}}
+                      {%- render 'sgs-variant-label', variant: v %} · {{ v.price | money_without_trailing_zeros -}}
                       {%- unless v.available %} (sold out){% endunless -%}
                     </option>
                   {%- endfor -%}

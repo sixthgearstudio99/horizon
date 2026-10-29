@@ -24,13 +24,15 @@ if (!customElements.get('sgs-bundle')) {
         });
       }
 
+      /** Store money format, without pence when they're zero (£35, not £35.00), like the rest of the site */
       formatMoney(cents) {
         const format = this.dataset.moneyFormat || '£{{amount}}';
-        const amount = (cents / 100).toFixed(2);
+        const whole = cents % 100 === 0;
+        const amount = (cents / 100).toFixed(whole ? 0 : 2);
         return format
           .replace(/\{\{\s*amount_no_decimals\s*\}\}/, Math.round(cents / 100).toString())
           .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, amount.replace('.', ','))
-          .replace(/\{\{\s*amount\s*\}\}/, Number(amount).toLocaleString('en-GB', { minimumFractionDigits: 2 }));
+          .replace(/\{\{\s*amount\s*\}\}/, Number(amount).toLocaleString('en-GB', { minimumFractionDigits: whole ? 0 : 2 }));
       }
 
       total() {

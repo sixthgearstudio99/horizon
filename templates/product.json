@@ -114,7 +114,8 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
-                "tax_note_text": "Free UK delivery · Taxes included"
+                "tax_note_text": "Free UK delivery · Taxes included",
+                "print_note": "Print only – frame not included. Fits standard frames."
               },
               "blocks": {}
             },
@@ -160,7 +161,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "size_label_suffix": "(unframed)"
               },
               "blocks": {}
             },

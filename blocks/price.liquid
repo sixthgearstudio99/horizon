@@ -57,6 +57,11 @@
     show_sale_price_first: block_settings.show_sale_price_first
   %}
 
+  {%- comment -%} SixthGear: short note under the price (not on gift cards) {%- endcomment -%}
+  {%- if block_settings.print_note != blank and product_resource.gift_card? != true -%}
+    <p class="sgs-print-note">{{ block_settings.print_note | escape }}</p>
+  {%- endif -%}
+
   {% if block_settings.show_tax_info %}
     <div class="tax-note">
       {%- comment -%} SixthGear: optional custom note in place of Horizon's tax and shipping text {%- endcomment -%}
@@ -92,6 +97,20 @@
 </product-price>
 
 {% render 'payment-terms-styles' %}
+
+{% stylesheet %}
+  /* Secondary text under the price: same size and tone as the delivery estimate */
+  .sgs-print-note {
+    margin: 4px 0 0;
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
@@ -130,6 +149,12 @@
       "label": "Custom tax note",
       "info": "Replaces the tax and shipping text, e.g. Free UK delivery · Taxes included",
       "visible_if": "{{ block.settings.show_tax_info }}"
+    },
+    {
+      "type": "text",
+      "id": "print_note",
+      "label": "Note under the price",
+      "info": "e.g. Print only – frame not included. Fits standard frames."
     },
     {
       "type": "header",

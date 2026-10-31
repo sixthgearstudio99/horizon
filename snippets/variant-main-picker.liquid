@@ -55,6 +55,13 @@
     <form class="variant-picker__form">
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
+          # SixthGear: display heading for the option, e.g. "Size (unframed)"; the option itself is unchanged
+          assign option_label = product_option.name | escape
+          assign option_name_lower = product_option.name | downcase
+          if option_name_lower contains 'size' and block_settings.size_label_suffix != blank
+            assign option_label = option_label | append: ' ' | append: block_settings.size_label_suffix | escape
+          endif
+
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
 
@@ -78,7 +85,7 @@
             class="variant-option"
             data-testid="variant-option-single"
           >
-            {{- product_option.name | escape -}}
+            {{- option_label -}}
             <span
               class="variant-option__swatch-value"
               data-testid="variant-option-single-value"
@@ -95,7 +102,7 @@
             {{ option_id_attribute }}
           >
             <legend>
-              {{ product_option.name | escape -}}
+              {{ option_label -}}
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value">{% render 'sgs-size-label', value: product_option.selected_value %}</span>
               {%- endif %}
@@ -193,7 +200,7 @@
           %}
 
           <div class="variant-option variant-option--dropdowns">
-            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ product_option.name | escape }}</label>
+            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ option_label }}</label>
             <div
               class="variant-option__select-wrapper"
               style="

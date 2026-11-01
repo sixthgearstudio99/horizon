@@ -1,0 +1,94 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+{% render 'sgs-spec-styles' %}
+
+<section
+  class="sgs-specsec"
+  style="--sgs-specsec-pad-top: {{ s['padding-block-start'] }}px; --sgs-specsec-pad-bottom: {{ s['padding-block-end'] }}px;"
+>
+  <div class="sgs-specsec__inner">
+    <header class="sgs-specsec__header" data-sgs-reveal>
+      {%- if s.eyebrow != blank -%}
+        <p class="sgs-label sgs-specsec__eyebrow">{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2 class="sgs-spec__heading">{{ s.heading }}</h2>
+      {%- endif -%}
+      {%- if s.text != blank -%}
+        <div class="sgs-specsec__text">{{ s.text }}</div>
+      {%- endif -%}
+    </header>
+
+    <dl class="sgs-spec__list" data-sgs-reveal>
+      {%- for block in section.blocks -%}
+        <div class="sgs-spec__row" {{ block.shopify_attributes }}>
+          <dt class="sgs-spec__label sgs-label">{{ block.settings.label | escape }}</dt>
+          <dd class="sgs-spec__value">{{ block.settings.value | escape }}</dd>
+        </div>
+      {%- endfor -%}
+    </dl>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-specsec {
+    padding-block: var(--sgs-specsec-pad-top) var(--sgs-specsec-pad-bottom);
+  }
+
+  .sgs-specsec__inner {
+    display: grid;
+    gap: 40px clamp(24px, 4vw, 80px);
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  @media screen and (min-width: 990px) {
+    .sgs-specsec__inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+
+  .sgs-specsec__eyebrow {
+    margin: 0 0 20px;
+  }
+
+  .sgs-spec__heading {
+    margin: 0;
+  }
+
+  .sgs-specsec__text {
+    margin-top: 20px;
+    max-width: 38ch;
+    color: var(--sgs-text-2, #9a968e);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear spec list",
+  "tag": "div",
+  "class": "sgs-specsec-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "04 — The studio" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "The spec" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Spec row",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Paper" },
+        { "type": "text", "id": "value", "label": "Value", "default": "Premium semi-gloss paper" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "SixthGear spec list" }]
+}
+{% endschema %}

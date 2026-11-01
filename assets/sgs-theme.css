@@ -11,8 +11,8 @@ html {
 }
 
 ::selection {
-  background: #0e0e0e;
-  color: #f5f3ef;
+  background: #e10600;
+  color: #f2f0eb;
 }
 
 :focus-visible {
@@ -23,10 +23,18 @@ html {
 :root {
   --sgs-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --sgs-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --sgs-hairline-light: rgb(14 14 14 / 0.12);
-  --sgs-hairline-dark: rgb(245 243 239 / 0.14);
+  --sgs-hairline-light: rgb(255 255 255 / 0.12);
+  --sgs-hairline-dark: rgb(255 255 255 / 0.12);
   --sgs-label-size: 11px;
-  --sgs-label-tracking: 0.2em;
+  --sgs-label-tracking: 0.12em;
+
+  /* Studio redesign palette */
+  --sgs-bg: #0b0b0b;
+  --sgs-raised: #141414;
+  --sgs-line: rgb(255 255 255 / 0.12);
+  --sgs-text: #f2f0eb;
+  --sgs-text-2: #9a968e;
+  --sgs-red: #e10600;
 }
 
 /* Small uppercase label used across sections */
@@ -249,7 +257,7 @@ button[ref='addToCartButton'] {
 
 /* ---------- Horizon product cards (collection, search) ---------- */
 .product-card .card-gallery {
-  background: #ebe8e2;
+  background: var(--sgs-raised);
 }
 
 .product-card .price,
@@ -303,7 +311,7 @@ button[ref='addToCartButton'] {
 }
 
 .cart-items__media-container {
-  background: #ebe8e2;
+  background: var(--sgs-raised);
 }
 
 .cart-items__variant,
@@ -333,7 +341,7 @@ button[ref='addToCartButton'] {
 .shopify-policy__title {
   margin-bottom: clamp(40px, 5vw, 64px);
   padding-bottom: 28px;
-  border-bottom: 1px solid rgb(14 14 14 / 0.12);
+  border-bottom: 1px solid rgb(242 240 235 / 0.12);
   text-align: start;
 }
 
@@ -350,7 +358,7 @@ button[ref='addToCartButton'] {
 .shopify-policy__body {
   font-size: 15px;
   line-height: 1.75;
-  color: rgb(14 14 14 / 0.78);
+  color: rgb(242 240 235 / 0.78);
 }
 
 .shopify-policy__body :is(h2, h3, h4) {
@@ -360,7 +368,7 @@ button[ref='addToCartButton'] {
   font-size: 1.125rem;
   letter-spacing: -0.005em;
   text-transform: uppercase;
-  color: #0e0e0e;
+  color: var(--sgs-text);
 }
 
 .shopify-policy__body a {

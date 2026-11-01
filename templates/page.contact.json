@@ -19,7 +19,7 @@
         "show_breadcrumb": false,
         "show_count": false,
         "alignment": "left",
-        "padding-block-start": 96,
+        "padding-block-start": 124,
         "padding-block-end": 0
       }
     },
@@ -35,8 +35,8 @@
         "button_label": "Send message",
         "success_heading": "Message received",
         "success_text": "Thanks for getting in touch. We'll be back to you shortly.",
-        "padding-block-start": 64,
-        "padding-block-end": 136
+        "padding-block-start": 84,
+        "padding-block-end": 176
       }
     }
   },

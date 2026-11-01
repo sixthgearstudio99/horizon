@@ -94,7 +94,7 @@
 {% stylesheet %}
   .sgs-gallery {
     padding-block: var(--sgs-gallery-pad-top) var(--sgs-gallery-pad-bottom);
-    color: #0e0e0e;
+    color: var(--sgs-text);
   }
 
   .sgs-gallery__inner {
@@ -110,12 +110,12 @@
     gap: 24px 64px;
     margin-bottom: clamp(40px, 4vw, 64px);
     padding-bottom: 24px;
-    border-bottom: 1px solid rgb(14 14 14 / 0.12);
+    border-bottom: 1px solid rgb(242 240 235 / 0.12);
   }
 
   .sgs-gallery__eyebrow {
     margin: 0 0 16px;
-    color: rgb(14 14 14 / 0.55);
+    color: rgb(242 240 235 / 0.55);
   }
 
   .sgs-gallery__heading {
@@ -134,7 +134,7 @@
     margin: 0 0 4px;
     font-size: 15px;
     line-height: 1.6;
-    color: rgb(14 14 14 / 0.66);
+    color: rgb(242 240 235 / 0.66);
   }
 
   /* Editorial grid: one large image, the rest in an even rhythm */
@@ -190,7 +190,7 @@
   }
 
   .sgs-gallery__placeholder {
-    fill: rgb(14 14 14 / 0.18);
+    fill: rgb(242 240 235 / 0.18);
   }
 
   @media (hover: hover) {
@@ -206,20 +206,20 @@
     gap: 16px;
     margin-top: 14px;
     font-size: 14px;
-    color: rgb(14 14 14 / 0.72);
+    color: rgb(242 240 235 / 0.72);
   }
 
   .sgs-gallery__shop {
     flex-shrink: 0;
-    color: #0e0e0e;
+    color: var(--sgs-text);
     text-decoration: none;
-    border-bottom: 1px solid rgb(14 14 14 / 0.3);
+    border-bottom: 1px solid rgb(242 240 235 / 0.3);
     padding-bottom: 2px;
     transition: border-color 0.3s ease;
   }
 
   .sgs-gallery__shop:hover {
-    border-color: #0e0e0e;
+    border-color: var(--sgs-text);
   }
 
   @media screen and (max-width: 989px) {

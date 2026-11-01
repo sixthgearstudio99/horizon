@@ -1,0 +1,91 @@
+{%- doc -%}
+  SixthGear Studios studio redesign: self-hosted fonts (SIL Open Font License 1.1).
+  Archivo Expanded (width 125) 600 for headings, Inter 300/400 for body, JetBrains Mono 400 for
+  labels, prices, sizes and buttons. The two above-the-fold faces are preloaded, and every family
+  has a metric-matched local fallback (size-adjust / ascent / descent overrides), so swapping from
+  the fallback to the web font doesn't shift the layout.
+
+  @example
+  {% render 'sgs-fonts' %}
+{%- enddoc -%}
+
+{{ 'sgs-archivo-expanded-600.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{{ 'sgs-inter-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+
+<style>
+  @font-face {
+    font-family: 'SGS Archivo';
+    src: url('{{ 'sgs-archivo-expanded-600.woff2' | asset_url }}') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'SGS Inter';
+    src: url('{{ 'sgs-inter-300.woff2' | asset_url }}') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'SGS Inter';
+    src: url('{{ 'sgs-inter-400.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'SGS Mono';
+    src: url('{{ 'sgs-jetbrains-mono-400.woff2' | asset_url }}') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Metric-matched fallbacks (measured from the font files against Arial / Courier New) */
+  @font-face {
+    font-family: 'SGS Archivo Fallback';
+    src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+    size-adjust: 129.87%;
+    ascent-override: 67.6%;
+    descent-override: 16.17%;
+    line-gap-override: 0%;
+  }
+
+  @font-face {
+    font-family: 'SGS Inter Fallback';
+    src: local('Arial'), local('Helvetica'), local('Liberation Sans');
+    size-adjust: 108.18%;
+    ascent-override: 89.55%;
+    descent-override: 22.3%;
+    line-gap-override: 0%;
+  }
+
+  @font-face {
+    font-family: 'SGS Mono Fallback';
+    src: local('Courier New'), local('Courier'), local('Liberation Mono');
+    size-adjust: 100%;
+    ascent-override: 102%;
+    descent-override: 30%;
+    line-gap-override: 0%;
+  }
+
+  :root {
+    --sgs-font-display: 'SGS Archivo', 'SGS Archivo Fallback', sans-serif;
+    --sgs-font-body: 'SGS Inter', 'SGS Inter Fallback', sans-serif;
+    --sgs-font-mono: 'SGS Mono', 'SGS Mono Fallback', monospace;
+
+    /* Point Horizon's font variables at the self-hosted families */
+    --font-body--family: var(--sgs-font-body);
+    --font-body--weight: 300;
+    --font-subheading--family: var(--sgs-font-mono);
+    --font-subheading--weight: 400;
+    --font-heading--family: var(--sgs-font-display);
+    --font-heading--weight: 600;
+    --font-accent--family: var(--sgs-font-mono);
+    --font-accent--weight: 400;
+  }
+</style>

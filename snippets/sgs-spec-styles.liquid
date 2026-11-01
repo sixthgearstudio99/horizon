@@ -1,0 +1,35 @@
+{%- doc -%}
+  SixthGear Studios: shared styles for spec tables (homepage studio spec, product print specification).
+{%- enddoc -%}
+{% stylesheet %}
+  .sgs-spec__list {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-spec__row {
+    display: grid;
+    grid-template-columns: minmax(96px, 30%) minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    padding-block: 16px;
+    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-spec__label {
+    margin: 0;
+  }
+
+  .sgs-spec__value {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-spec__value--mono {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+{% endstylesheet %}

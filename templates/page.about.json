@@ -11,8 +11,8 @@
         "show_breadcrumb": false,
         "show_count": false,
         "alignment": "left",
-        "padding-block-start": 120,
-        "padding-block-end": 64
+        "padding-block-start": 156,
+        "padding-block-end": 84
       }
     },
     "sgs_story": {
@@ -52,8 +52,8 @@
         "text": "<p>Sixth gear is where the road opens up: the moment a car stops being transport and becomes something more. That's the feeling we design for.</p><p>Every print celebrates an icon, from the generations that shaped a legend to the machines that defined motorsport and the culture that grew up around them.</p>",
         "link_label": "Explore the collections",
         "link": "/collections",
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_statement": {
@@ -63,8 +63,8 @@
         "text": "Every car has a story. <em>We put it on your wall.</em>",
         "caption": "SixthGear Studios",
         "background_color": "#0E0E0E",
-        "padding-block-start": 144,
-        "padding-block-end": 144
+        "padding-block-start": 188,
+        "padding-block-end": 188
       }
     },
     "sgs_trust": {
@@ -101,7 +101,7 @@
         "item_3"
       ],
       "settings": {
-        "padding-block-start": 120,
+        "padding-block-start": 156,
         "padding-block-end": 0
       }
     },
@@ -117,8 +117,8 @@
         "eyebrow": "Start your wall",
         "heading": "Most wanted",
         "view_all_label": "Shop all prints",
-        "padding-block-start": 120,
-        "padding-block-end": 136
+        "padding-block-start": 156,
+        "padding-block-end": 176
       }
     }
   },

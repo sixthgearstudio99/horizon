@@ -117,14 +117,15 @@
     max-height: calc(100svh - 32px);
     padding: 0;
     border: 0;
-    background: #f5f3ef;
-    color: #0e0e0e;
-    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 0.45);
+    background: var(--sgs-raised);
+    color: var(--sgs-text);
+    border: 1px solid var(--sgs-line);
+    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 0.7);
     overflow: auto;
   }
 
   .sgs-wall__dialog::backdrop {
-    background: rgb(14 14 14 / 0.55);
+    background: rgb(0 0 0 / 0.7);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -163,7 +164,7 @@
 
   .sgs-wall__eyebrow {
     margin: 0 0 6px;
-    color: rgb(14 14 14 / 0.55);
+    color: rgb(242 240 235 / 0.55);
   }
 
   .sgs-wall__title {
@@ -182,10 +183,10 @@
     flex-shrink: 0;
     width: 40px;
     height: 40px;
-    border: 1px solid rgb(14 14 14 / 0.15);
+    border: 1px solid rgb(242 240 235 / 0.15);
     border-radius: 50%;
     background: transparent;
-    color: #0e0e0e;
+    color: var(--sgs-text);
     cursor: pointer;
   }
 
@@ -266,10 +267,10 @@
   .sgs-wall__size {
     min-height: 40px;
     padding: 0 16px;
-    border: 1px solid rgb(14 14 14 / 0.2);
+    border: 1px solid rgb(242 240 235 / 0.2);
     border-radius: 2px;
     background: transparent;
-    color: #0e0e0e;
+    color: var(--sgs-text);
     font-size: 13px;
     font-variant-numeric: tabular-nums;
     cursor: pointer;
@@ -277,9 +278,9 @@
   }
 
   .sgs-wall__size[aria-pressed='true'] {
-    background: #0e0e0e;
-    border-color: #0e0e0e;
-    color: #f5f3ef;
+    background: var(--sgs-text);
+    border-color: var(--sgs-text);
+    color: var(--sgs-bg);
   }
 
   .sgs-wall__size-current {
@@ -294,7 +295,7 @@
     margin: 14px 0 0;
     font-size: 13px;
     line-height: 1.5;
-    color: rgb(14 14 14 / 0.62);
+    color: rgb(242 240 235 / 0.62);
   }
 {% endstylesheet %}
 

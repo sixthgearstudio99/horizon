@@ -24,8 +24,8 @@
         "show_breadcrumb": false,
         "show_count": false,
         "alignment": "center",
-        "padding-block-start": 144,
-        "padding-block-end": 96
+        "padding-block-start": 188,
+        "padding-block-end": 124
       }
     },
     "sgs_grid": {
@@ -40,8 +40,8 @@
         "eyebrow": "While you're here",
         "heading": "Most wanted",
         "view_all_label": "Shop all prints",
-        "padding-block-start": 64,
-        "padding-block-end": 136
+        "padding-block-start": 84,
+        "padding-block-end": 176
       }
     }
   },

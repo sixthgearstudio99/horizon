@@ -14,7 +14,7 @@
     "sgs_footer": {
       "type": "sgs-footer",
       "settings": {
-        "tagline": "Automotive art prints for the driven. Printed to order. Free UK delivery.",
+        "tagline": "Car culture, framed for your wall.",
         "menu_1_heading": "Shop",
         "menu_1": "main-menu",
         "menu_2_heading": "Collections",
@@ -34,7 +34,7 @@
         "copyright_name": "SixthGear Studios",
         "show_policies": true,
         "show_payment_icons": true,
-        "background_color": "#0e0e0e"
+        "background_color": "#0b0b0b"
       }
     }
   },

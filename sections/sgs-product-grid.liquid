@@ -1,12 +1,21 @@
 {%- liquid
   assign s = section.settings
   assign source = s.collection | default: collections.all
+
+  # A preferred collection (e.g. "featured") wins whenever it exists and has prints
+  if s.preferred_collection != blank
+    assign preferred_handle = s.preferred_collection | strip
+    assign preferred_source = collections[preferred_handle]
+    if preferred_source.products_count > 0
+      assign source = preferred_source
+    endif
+  endif
   assign limit = s.products_to_show
 
   if s.view_all_link != blank
     assign view_all_url = s.view_all_link
-  elsif s.collection != blank
-    assign view_all_url = s.collection.url
+  elsif source.url != blank and source.handle != 'all'
+    assign view_all_url = source.url
   else
     assign view_all_url = routes.all_products_collection_url | append: '?sort_by=best-selling'
   endif
@@ -35,7 +44,7 @@
 {% render 'sgs-grid-styles' %}
 
 <section
-  class="sgs-grid sgs-grid--{{ tone }} sgs-grid--mobile-{{ s.mobile_layout }}"
+  class="sgs-grid sgs-grid--{{ tone }} sgs-grid--mobile-{{ s.mobile_layout }}{% if s.desktop_layout == 'carousel' %} sgs-grid--desktop-carousel{% endif %}"
   style="
     --sgs-grid-bg: {{ bg }};
     --sgs-grid-columns: {{ s.columns }};
@@ -130,6 +139,22 @@
         { "value": "5", "label": "5" }
       ],
       "default": "4"
+    },
+    {
+      "type": "text",
+      "id": "preferred_collection",
+      "label": "Preferred collection handle",
+      "info": "Used instead of the collection above whenever it exists and has prints, e.g. featured."
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Scrolling row" }
+      ],
+      "default": "grid"
     },
     {
       "type": "select",

@@ -1,0 +1,83 @@
+{%- liquid
+  assign s = section.settings
+-%}
+
+<section
+  class="sgs-faqs"
+  style="--sgs-faqs-pad-top: {{ s['padding-block-start'] }}px; --sgs-faqs-pad-bottom: {{ s['padding-block-end'] }}px;"
+>
+  <div class="sgs-faqs__inner">
+    <header class="sgs-faqs__header" data-sgs-reveal>
+      {%- if s.eyebrow != blank -%}
+        <p class="sgs-label sgs-faqs__eyebrow">{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2 class="sgs-faqs__heading">{{ s.heading }}</h2>
+      {%- endif -%}
+    </header>
+    <div class="sgs-faq sgs-faqs__list" data-sgs-reveal>
+      {% render 'sgs-faq-list', settings: s %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .sgs-faqs {
+    padding-block: var(--sgs-faqs-pad-top) var(--sgs-faqs-pad-bottom);
+  }
+
+  .sgs-faqs__inner {
+    display: grid;
+    gap: 32px clamp(24px, 4vw, 80px);
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  @media screen and (min-width: 990px) {
+    .sgs-faqs__inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      align-items: start;
+    }
+  }
+
+  .sgs-faqs__eyebrow {
+    margin: 0 0 20px;
+  }
+
+  .sgs-faqs__heading {
+    margin: 0;
+  }
+
+  .sgs-faqs__list {
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear FAQ",
+  "tag": "div",
+  "class": "sgs-faqs-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "FAQ" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "Questions" },
+    { "type": "paragraph", "content": "Questions and answers, with matching FAQ structured data. Leave a question empty to hide it." },
+    { "type": "text", "id": "question_1", "label": "Question 1", "default": "How long does delivery take?" },
+    { "type": "textarea", "id": "answer_1", "label": "Answer 1", "default": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free." },
+    { "type": "text", "id": "question_2", "label": "Question 2", "default": "Is it framed?" },
+    { "type": "textarea", "id": "answer_2", "label": "Answer 2", "default": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches)." },
+    { "type": "text", "id": "question_3", "label": "Question 3", "default": "What paper is it printed on?" },
+    { "type": "textarea", "id": "answer_3", "label": "Answer 3", "default": "Premium semi-gloss paper with rich colour and deep blacks." },
+    { "type": "text", "id": "question_4", "label": "Question 4", "default": "Can I return it?" },
+    { "type": "textarea", "id": "answer_4", "label": "Answer 4", "default": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty." },
+    { "type": "text", "id": "question_5", "label": "Question 5" },
+    { "type": "textarea", "id": "answer_5", "label": "Answer 5" },
+    { "type": "text", "id": "question_6", "label": "Question 6" },
+    { "type": "textarea", "id": "answer_6", "label": "Answer 6" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 }
+  ],
+  "presets": [{ "name": "SixthGear FAQ" }]
+}
+{% endschema %}

@@ -1,0 +1,131 @@
+{%- liquid
+  assign s = section.settings
+  assign min_reviews = s.min_reviews | default: 5
+  assign review_count = section.blocks.size
+-%}
+
+{%- comment -%}
+  Built but hidden: the section only appears once it holds at least the minimum number of genuine
+  customer reviews (5 by default). Add each real review as a block.
+{%- endcomment -%}
+{%- if review_count >= min_reviews -%}
+  <section
+    class="sgs-reviews"
+    style="--sgs-reviews-pad-top: {{ s['padding-block-start'] }}px; --sgs-reviews-pad-bottom: {{ s['padding-block-end'] }}px;"
+  >
+    <div class="sgs-reviews__inner">
+      <header class="sgs-reviews__header" data-sgs-reveal>
+        {%- if s.eyebrow != blank -%}
+          <p class="sgs-label sgs-reviews__eyebrow">{{ s.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="sgs-reviews__heading">{{ s.heading }}</h2>
+        {%- endif -%}
+      </header>
+
+      <ul class="sgs-reviews__list" role="list" data-sgs-reveal-group>
+        {%- for block in section.blocks -%}
+          <li class="sgs-reviews__item" data-sgs-reveal {{ block.shopify_attributes }}>
+            <p class="sgs-reviews__rating sgs-label">{{ block.settings.rating }}/5</p>
+            <blockquote class="sgs-reviews__quote">{{ block.settings.quote | escape | newline_to_br }}</blockquote>
+            <p class="sgs-reviews__name sgs-label">
+              {{- block.settings.name | escape -}}
+              {%- if block.settings.detail != blank %} · {{ block.settings.detail | escape }}{% endif -%}
+            </p>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- elsif request.design_mode -%}
+  <p class="sgs-reviews__editor-note">
+    Reviews: hidden until there are {{ min_reviews }} reviews ({{ review_count }} added). Add genuine customer reviews as blocks.
+  </p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-reviews {
+    padding-block: var(--sgs-reviews-pad-top) var(--sgs-reviews-pad-bottom);
+  }
+
+  .sgs-reviews__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-reviews__eyebrow {
+    margin: 0 0 20px;
+  }
+
+  .sgs-reviews__heading {
+    margin: 0 0 48px;
+  }
+
+  .sgs-reviews__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-reviews__item {
+    padding: 28px 24px 28px 0;
+    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-reviews__rating {
+    margin: 0 0 16px;
+    color: var(--sgs-red, #e10600);
+  }
+
+  .sgs-reviews__quote {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .sgs-reviews__name {
+    margin: 20px 0 0;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-reviews__editor-note {
+    margin: 0;
+    padding: 24px var(--page-margin);
+    font-size: 13px;
+    opacity: 0.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear reviews",
+  "tag": "div",
+  "class": "sgs-reviews-section",
+  "settings": [
+    { "type": "paragraph", "content": "Hidden on the store until it holds the minimum number of reviews below. Only add genuine customer reviews." },
+    { "type": "range", "id": "min_reviews", "label": "Show once there are at least", "min": 1, "max": 10, "step": 1, "default": 5 },
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "From the paddock" },
+    { "type": "inline_richtext", "id": "heading", "label": "Heading", "default": "On their walls" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 4, "unit": "px", "default": 128 }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Review" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "detail", "label": "Detail", "info": "e.g. the print they bought, or their town" },
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "SixthGear reviews" }]
+}
+{% endschema %}

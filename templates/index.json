@@ -22,21 +22,21 @@
         "product": "",
         "art_ratio": "natural",
         "art_style": "shadow",
-        "show_product_tag": true,
+        "show_product_tag": false,
         "product_tag_label": "Featured print",
-        "eyebrow": "Automotive art prints",
+        "eyebrow": "Car culture · Designed in Bristol · Printed in the UK",
         "heading": "Art for the <em>driven</em>",
-        "text": "Iconic machines, rendered for the walls of those who love them.",
-        "button_1_label": "Shop posters",
+        "text": "",
+        "button_1_label": "Shop the prints",
         "button_1_link": "shopify://collections/all",
-        "button_2_label": "Browse collections",
-        "button_2_link": "/collections",
+        "button_2_label": "",
+        "button_2_link": "",
         "feature_1": "",
         "feature_2": "",
         "feature_3": "",
-        "background_color": "#0e0e0e",
+        "background_color": "#0b0b0b",
         "accent_color": "#e10600",
-        "show_stripes": true,
+        "show_stripes": false,
         "overlay_opacity": 75,
         "padding-block-start": 128,
         "padding-block-end": 128
@@ -46,18 +46,20 @@
       "type": "sgs-product-grid",
       "settings": {
         "collection": "best-sellers",
-        "products_to_show": 4,
+        "products_to_show": 8,
         "columns": "4",
         "mobile_layout": "carousel",
         "show_secondary_image": true,
         "show_option_count": true,
-        "eyebrow": "The collection",
-        "heading": "Start your wall",
+        "eyebrow": "01 — Start your wall",
+        "heading": "Most wanted",
         "view_all_label": "Shop all prints",
         "view_all_link": "",
         "background_color": "",
-        "padding-block-start": 136,
-        "padding-block-end": 136
+        "padding-block-start": 156,
+        "padding-block-end": 156,
+        "preferred_collection": "featured",
+        "desktop_layout": "carousel"
       }
     },
     "sgs_collections": {
@@ -84,7 +86,7 @@
           "settings": {
             "collection": "grand-prix",
             "title": "",
-            "text": ""
+            "text": "Formula One, for your wall."
           }
         },
         "feature_4": {
@@ -94,95 +96,42 @@
             "title": "",
             "text": ""
           }
-        },
-        "compact_5": {
-          "type": "compact",
-          "settings": {
-            "collection": "german-engineering",
-            "title": "",
-            "text": ""
-          }
-        },
-        "compact_6": {
-          "type": "compact",
-          "settings": {
-            "collection": "jdm",
-            "title": "",
-            "text": ""
-          }
-        },
-        "compact_7": {
-          "type": "compact",
-          "settings": {
-            "collection": "super-hypercars",
-            "title": "",
-            "text": ""
-          }
         }
       },
       "block_order": [
         "feature_1",
         "feature_2",
         "feature_3",
-        "feature_4",
-        "compact_5",
-        "compact_6",
-        "compact_7"
+        "feature_4"
       ],
       "settings": {
-        "eyebrow": "The collections",
-        "heading": "Shop by style",
+        "eyebrow": "02 — Shop by style",
+        "heading": "Pick your discipline",
         "view_all_label": "All collections",
         "view_all_link": "",
         "tile_ratio": "3 / 4",
         "tile_link_label": "Explore",
         "mobile_layout": "carousel",
-        "secondary_label": "By origin",
-        "padding-block-start": 120,
-        "padding-block-end": 136
+        "secondary_label": "",
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_feature": {
       "type": "sgs-feature",
-      "blocks": {
-        "point_1": {
-          "type": "point",
-          "settings": {
-            "title": "Considered design",
-            "text": "Every composition is built around the car's defining lines."
-          }
-        },
-        "point_2": {
-          "type": "point",
-          "settings": {
-            "title": "Sized for your wall",
-            "text": "Choose from the sizes offered on each print."
-          }
-        },
-        "point_3": {
-          "type": "point",
-          "settings": {
-            "title": "Ready to frame",
-            "text": "Supplied unframed, so you can choose a frame to suit your space."
-          }
-        }
-      },
-      "block_order": [
-        "point_1",
-        "point_2",
-        "point_3"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
-        "product": "",
-        "image_position": "left",
-        "eyebrow": "The print",
-        "heading": "Made to be lived with",
-        "text": "<p>Every SixthGear print begins with the car: its lines, its history, the moment it became a legend. Each one is printed to order and sent straight to your door.</p>",
-        "link_label": "Shop the prints",
-        "link": "",
+        "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+        "image_position": "right",
+        "eyebrow": "Custom poster",
+        "heading": "Your car. <em>Your wall.</em>",
+        "text": "<p>Send us a photo of your car and the words you want on it. We design the poster around them and print it in the UK.</p>",
+        "link_label": "Design yours",
+        "link": "/products/custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
         "background_color": "",
-        "padding-block-start": 136,
-        "padding-block-end": 136
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_gallery": {
@@ -252,13 +201,13 @@
         "image_6"
       ],
       "settings": {
-        "eyebrow": "On the wall",
+        "eyebrow": "05 — On the wall",
         "heading": "Made for your space",
         "text": "In the living room, the study or the garage. See how the prints look at home.",
         "link_label": "Shop the print",
         "mobile_layout": "carousel",
-        "padding-block-start": 0,
-        "padding-block-end": 136
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_trust": {
@@ -297,33 +246,183 @@
       "settings": {
         "padding-block-start": 0,
         "padding-block-end": 64
-      }
+      },
+      "disabled": true
     },
     "sgs_newsletter": {
       "type": "sgs-newsletter",
       "settings": {
-        "eyebrow": "Join the paddock",
-        "heading": "10% off your first print",
-        "text": "New releases, limited drops and the stories behind the cars. Delivered occasionally, never cluttered.",
+        "eyebrow": "",
+        "heading": "Join the paddock",
+        "text": "Early access to new prints, member-only drops and 10% off your first order.",
         "placeholder": "Your email address",
         "button_label": "Subscribe",
         "fine_print": "By subscribing you agree to receive marketing emails. Unsubscribe at any time.",
         "success_heading": "Welcome to the paddock",
         "discount_code": "WELCOME10",
         "success_text": "Use this code at checkout for 10% off your first order.",
-        "background_color": "#0e0e0e",
-        "padding-block-start": 112,
-        "padding-block-end": 144
+        "background_color": "#0b0b0b",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_culture": {
+      "type": "sgs-statement",
+      "settings": {
+        "eyebrow": "",
+        "text": "Car culture isn't decoration. It's who you are. <em>Put it on the wall.</em>",
+        "caption": "",
+        "background_color": "",
+        "padding-block-start": 168,
+        "padding-block-end": 168
+      }
+    },
+    "sgs_origins": {
+      "type": "sgs-collections",
+      "blocks": {
+        "compact_5": {
+          "type": "compact",
+          "settings": {
+            "collection": "german-engineering",
+            "title": "",
+            "text": ""
+          }
+        },
+        "compact_6": {
+          "type": "compact",
+          "settings": {
+            "collection": "jdm",
+            "title": "",
+            "text": ""
+          }
+        },
+        "compact_7": {
+          "type": "compact",
+          "settings": {
+            "collection": "super-hypercars",
+            "title": "",
+            "text": ""
+          }
+        }
+      },
+      "block_order": [
+        "compact_5",
+        "compact_6",
+        "compact_7"
+      ],
+      "settings": {
+        "eyebrow": "03 — By origin",
+        "heading": "Where it was built",
+        "view_all_label": "",
+        "view_all_link": "",
+        "tile_ratio": "3 / 4",
+        "tile_link_label": "Explore",
+        "mobile_layout": "carousel",
+        "secondary_label": "",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_spec": {
+      "type": "sgs-spec",
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "label": "Design",
+            "value": "Designed in Bristol by SixthGear Studios"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "label": "Paper",
+            "value": "Premium semi-gloss paper, rich colour and deep blacks"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "label": "Production",
+            "value": "Made to order in the UK in 2 to 5 working days"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "label": "Delivery",
+            "value": "Free UK delivery in 2 to 4 working days"
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "label": "Framing",
+            "value": "Supplied unframed"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4",
+        "row_5"
+      ],
+      "settings": {
+        "eyebrow": "04 — The studio",
+        "heading": "The spec",
+        "text": "<p>Car culture, framed for your wall. Every print is designed in our Bristol studio and made to order in the UK.</p>",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_reviews": {
+      "type": "sgs-reviews",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "min_reviews": 5,
+        "eyebrow": "From the paddock",
+        "heading": "On their walls",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_faqs": {
+      "type": "sgs-faqs",
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Questions",
+        "question_1": "How long does delivery take?",
+        "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
+        "question_2": "Is it framed?",
+        "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
+        "question_3": "What paper is it printed on?",
+        "answer_3": "Premium semi-gloss paper with rich colour and deep blacks.",
+        "question_4": "Can I return it?",
+        "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty.",
+        "question_5": "",
+        "answer_5": "",
+        "question_6": "",
+        "answer_6": "",
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     }
   },
   "order": [
     "sgs_hero",
     "sgs_best_sellers",
+    "sgs_culture",
     "sgs_collections",
-    "sgs_feature",
+    "sgs_origins",
+    "sgs_spec",
     "sgs_gallery",
-    "sgs_trust",
-    "sgs_newsletter"
+    "sgs_feature",
+    "sgs_reviews",
+    "sgs_faqs",
+    "sgs_newsletter",
+    "sgs_trust"
   ]
 }

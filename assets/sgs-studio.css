@@ -1,0 +1,399 @@
+/*
+ * SixthGear Studios: "studio spec sheet" redesign layer.
+ * Dark, precise, editorial. Loaded after sgs-theme.css; fonts and font variables come from
+ * snippets/sgs-fonts.liquid, colours from the theme palette and the --sgs-* tokens.
+ *
+ * Type system: three heading sizes only (display / section / small), Archivo Expanded 600
+ * uppercase; body Inter 300/400; labels, prices, sizes, breadcrumbs, buttons and spec tables in
+ * JetBrains Mono 400 uppercase 11-13px, tracked 0.12em.
+ */
+
+:root {
+  --sgs-h1: clamp(2.25rem, 1.2rem + 4vw, 4.75rem);
+  --sgs-h2: clamp(1.5rem, 1.15rem + 1.5vw, 2.5rem);
+  --sgs-h3: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --sgs-mono-size: 12px;
+  --sgs-mono-tracking: 0.12em;
+
+  /* Horizon's own headings collapse onto the same three sizes */
+  --font-h1--size: var(--sgs-h1);
+  --font-h2--size: var(--sgs-h2);
+  --font-h3--size: var(--sgs-h3);
+  --font-h4--size: var(--sgs-h3);
+  --font-h5--size: var(--sgs-h3);
+  --font-h6--size: var(--sgs-h3);
+}
+
+/* ---------- Base ---------- */
+html,
+body {
+  background-color: var(--sgs-bg);
+  color: var(--sgs-text);
+}
+
+body {
+  font-family: var(--sgs-font-body);
+  font-weight: 300;
+}
+
+strong,
+b {
+  font-weight: 400;
+}
+
+/* ---------- Headings: Archivo Expanded 600, uppercase, three sizes ---------- */
+:is(h1, h2, h3, h4, h5, h6),
+:is(
+    .sgs-hero__heading,
+    .sgs-phero__heading,
+    .sgs-statement__text,
+    .shopify-policy__title h1,
+    .sgs-grid__heading,
+    .sgs-cols__heading,
+    .sgs-gallery__heading,
+    .sgs-feature__heading,
+    .sgs-tl__heading,
+    .sgs-set__heading,
+    .sgs-news__heading,
+    .sgs-pdp-header__title,
+    .sgs-spec__heading,
+    .sgs-reviews__heading,
+    .sgs-faqs__heading,
+    .sgs-tile__title,
+    .sgs-row__title,
+    .sgs-card__title,
+    .sgs-set__title,
+    .sgs-wall__title,
+    .sgs-news__success-title,
+    .sgs-contact__success-title,
+    .sgs-hero__tag-title,
+    .product-card a.user-select-text .text-block,
+    .cart-items__title
+  ) {
+  font-family: var(--sgs-font-display) !important;
+  font-weight: 600 !important;
+  font-style: normal;
+  text-transform: uppercase !important;
+  letter-spacing: 0 !important;
+}
+
+:is(.sgs-hero__heading, .sgs-phero__heading, .sgs-statement__text, .shopify-policy__title h1) {
+  font-size: var(--sgs-h1) !important;
+  line-height: 1.02 !important;
+}
+
+:is(
+    .sgs-grid__heading,
+    .sgs-cols__heading,
+    .sgs-gallery__heading,
+    .sgs-feature__heading,
+    .sgs-tl__heading,
+    .sgs-set__heading,
+    .sgs-news__heading,
+    .sgs-pdp-header__title,
+    .sgs-spec__heading,
+    .sgs-reviews__heading,
+    .sgs-faqs__heading
+  ) {
+  font-size: var(--sgs-h2) !important;
+  line-height: 1.08 !important;
+}
+
+:is(
+    .sgs-tile__title,
+    .sgs-row__title,
+    .sgs-card__title,
+    .sgs-set__title,
+    .sgs-wall__title,
+    .sgs-news__success-title,
+    .sgs-contact__success-title,
+    .sgs-hero__tag-title,
+    .product-card a.user-select-text .text-block,
+    .cart-items__title
+  ) {
+  font-size: var(--sgs-h3) !important;
+  line-height: 1.25 !important;
+}
+
+/* The one red word in a heading (e.g. DRIVEN) */
+:is(.sgs-hero__heading, .sgs-statement__text, .sgs-feature__heading, .sgs-band__heading) em {
+  font-style: normal;
+  color: var(--sgs-red);
+}
+
+/* ---------- Mono: labels, prices, sizes, breadcrumbs, buttons, spec tables ---------- */
+.sgs-label,
+:is(
+    .sgs-hero__eyebrow,
+    .sgs-phero__eyebrow,
+    .sgs-phero__crumbs,
+    .sgs-phero__meta,
+    .sgs-grid__eyebrow,
+    .sgs-cols__eyebrow,
+    .sgs-cols__secondary-label,
+    .sgs-gallery__eyebrow,
+    .sgs-feature__eyebrow,
+    .sgs-statement__eyebrow,
+    .sgs-tl__eyebrow,
+    .sgs-set__eyebrow,
+    .sgs-news__eyebrow,
+    .sgs-pdp-header__eyebrow,
+    .sgs-crumbs,
+    .sgs-tile__number,
+    .sgs-tile__cta,
+    .sgs-card__price,
+    .sgs-card__meta,
+    .sgs-card__options,
+    .sgs-print-note,
+    .sgs-spec__label,
+    .sgs-spec__value--mono,
+    .sgs-tl__years,
+    .sgs-set__plus,
+    .sgs-set__total strong,
+    .sgs-pers__step-num,
+    .sgs-news__code strong,
+    .sgs-wall__size,
+    .sgs-wall__open,
+    .sgs-wallprog__link,
+    .sgs-ptrust__text,
+    .sgs-link,
+    .announcement-bar__text,
+    .menu-list__link-title,
+    .price,
+    product-price,
+    .tax-note,
+    .variant-option__button-label__text,
+    .variant-option legend,
+    [data-testid='variant-option-single'],
+    .cart-items__price,
+    .cart-items__variants,
+    .cart-totals__total,
+    .button,
+    .button-secondary,
+    button[ref='addToCartButton'],
+    .sgs-news__button,
+    .sgs-contact__submit,
+    .sgs-set__button,
+    .sgs-hero__button,
+    .sgs-hero__link
+  ) {
+  font-family: var(--sgs-font-mono) !important;
+  font-weight: 400 !important;
+  font-style: normal;
+  font-size: var(--sgs-mono-size) !important;
+  letter-spacing: var(--sgs-mono-tracking) !important;
+  text-transform: uppercase !important;
+}
+
+/* Secondary (muted) labels */
+:is(
+    .sgs-hero__eyebrow,
+    .sgs-phero__eyebrow,
+    .sgs-phero__crumbs,
+    .sgs-phero__meta,
+    .sgs-grid__eyebrow,
+    .sgs-cols__eyebrow,
+    .sgs-cols__secondary-label,
+    .sgs-gallery__eyebrow,
+    .sgs-feature__eyebrow,
+    .sgs-statement__eyebrow,
+    .sgs-tl__eyebrow,
+    .sgs-set__eyebrow,
+    .sgs-news__eyebrow,
+    .sgs-pdp-header__eyebrow,
+    .sgs-crumbs,
+    .sgs-spec__label,
+    .tax-note
+  ) {
+  font-size: 11px;
+  color: var(--sgs-text-2);
+}
+
+:is(.sgs-phero__crumbs, .sgs-crumbs) a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:is(.sgs-phero__crumbs, .sgs-crumbs) a:hover {
+  color: var(--sgs-text);
+}
+
+/* Prices are figures, so a touch larger */
+:is(.price, product-price, .sgs-card__price, .cart-items__price, .cart-totals__total) {
+  font-size: 13px !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Horizon draws a hairline rule before eyebrows; the numbered labels carry it instead */
+:is(.sgs-hero__eyebrow, .sgs-grid__eyebrow, .sgs-cols__eyebrow, .sgs-gallery__eyebrow, .sgs-feature__eyebrow)::before {
+  display: none;
+}
+
+/* ---------- Buttons: square, mono, hairline ---------- */
+:is(.button, .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit, .sgs-set__button, .sgs-hero__button) {
+  border-radius: 0;
+  min-height: 52px;
+}
+
+/* ---------- Secondary text ---------- */
+:is(
+    .sgs-hero__text,
+    .sgs-grid__text,
+    .sgs-gallery__text,
+    .sgs-feature__text,
+    .sgs-news__text,
+    .sgs-card__vendor,
+    .sgs-row__text,
+    .sgs-tile__text,
+    .sgs-delivery__text,
+    .sgs-faq__answer
+  ) {
+  color: var(--sgs-text-2);
+}
+
+/* ---------- Layout: hairline rules between page sections ---------- */
+.content-for-layout > .shopify-section + .shopify-section {
+  border-top: 1px solid var(--sgs-line);
+}
+
+/* Sections that drew their own top rule now rely on the shared one */
+.sgs-recs,
+.sgs-trust {
+  border-top: 0;
+}
+
+/* ---------- Film grain: hero and large images only ---------- */
+.sgs-hero::after,
+.sgs-gallery__media::after,
+.sgs-feature__media::after,
+.sgs-band__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.sgs-gallery__media,
+.sgs-feature__media,
+.sgs-band__media {
+  position: relative;
+}
+
+/* ---------- No strikethrough prices or percentage badges ---------- */
+.compare-at-price,
+.price s,
+.price del,
+product-price s,
+.sgs-card__compare,
+.cart-items__price s,
+.cart-items__price del,
+.sgs-card__badge--sale,
+.product-badges__badge.color-custom-badge-sale {
+  display: none !important;
+}
+
+/* ---------- Collection grid: 2 columns on phones, 3 on desktop, 12px gutters, 4:5 ---------- */
+.product-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  column-gap: 12px !important;
+}
+
+@media screen and (min-width: 990px) {
+  .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+.product-card .card-gallery {
+  background: var(--sgs-raised);
+}
+
+/* ---------- Header ---------- */
+.header,
+.header__row {
+  border-color: var(--sgs-line);
+}
+
+.menu-list__link-title {
+  font-size: 11px !important;
+}
+
+.announcement-bar {
+  background: #000;
+}
+
+/* ---------- Product page ---------- */
+.sgs-print-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  color: var(--sgs-text);
+  font-size: 11px !important;
+}
+
+.sgs-print-note::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  background: var(--sgs-red);
+}
+
+/* Size tiles: square, mono, hairline */
+.variant-option__button-label {
+  border-radius: 0;
+}
+
+.variant-option__button-label__text {
+  font-size: 11px !important;
+}
+
+/* ---------- Cards ---------- */
+.sgs-card__media {
+  background: var(--sgs-raised);
+}
+
+/* ---------- Footer: hairline columns ---------- */
+.sgs-footer {
+  --sgs-footer-bg: var(--sgs-bg);
+}
+
+@media screen and (min-width: 990px) {
+  .sgs-footer__nav > * + * {
+    padding-inline-start: 24px;
+    border-inline-start: 1px solid var(--sgs-line);
+  }
+}
+
+.sgs-footer :is(.sgs-footer__col-heading) {
+  font-family: var(--sgs-font-mono);
+  font-size: 11px;
+  letter-spacing: var(--sgs-mono-tracking);
+  text-transform: uppercase;
+  color: var(--sgs-text-2);
+}
+
+/* ---------- Drawers, menus and popups stay dark ---------- */
+.theme-drawer__dialog,
+.quick-add-modal,
+.dialog-modal,
+.menu-drawer,
+.header-menu .menu-list__submenu,
+.search-modal__content {
+  background-color: var(--sgs-bg);
+  color: var(--sgs-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sgs-hero::after,
+  .sgs-gallery__media::after,
+  .sgs-feature__media::after,
+  .sgs-band__media::after {
+    display: none;
+  }
+}

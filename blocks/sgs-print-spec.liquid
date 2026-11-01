@@ -1,0 +1,84 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+-%}
+
+{%- comment -%} The print specification; Sizes are read from the product's own size option {%- endcomment -%}
+{%- unless product_resource.gift_card? -%}
+  {% render 'sgs-spec-styles' %}
+  <div class="sgs-pspec" {{ block.shopify_attributes }}>
+    {%- if bs.heading != blank -%}
+      <h2 class="sgs-pspec__heading sgs-label">{{ bs.heading | escape }}</h2>
+    {%- endif -%}
+    <dl class="sgs-spec__list">
+      {%- if bs.paper != blank -%}
+        <div class="sgs-spec__row">
+          <dt class="sgs-spec__label sgs-label">Paper</dt>
+          <dd class="sgs-spec__value">{{ bs.paper | escape }}</dd>
+        </div>
+      {%- endif -%}
+
+      {%- liquid
+        assign size_values = nil
+        for option in product_resource.options_with_values
+          assign option_name = option.name | downcase
+          if option_name contains 'size'
+            assign size_values = option.values
+            break
+          endif
+        endfor
+      -%}
+      {%- if size_values -%}
+        <div class="sgs-spec__row">
+          <dt class="sgs-spec__label sgs-label">Sizes</dt>
+          <dd class="sgs-spec__value sgs-spec__value--mono">
+            {%- for value in size_values -%}
+              {%- render 'sgs-size-label', value: value.name -%}
+              {%- unless forloop.last -%}<br>{%- endunless -%}
+            {%- endfor -%}
+          </dd>
+        </div>
+      {%- endif -%}
+
+      {%- assign spec_keys = 'production,delivery,framing,returns' | split: ',' -%}
+      {%- for key in spec_keys -%}
+        {%- if bs[key] != blank -%}
+          <div class="sgs-spec__row">
+            <dt class="sgs-spec__label sgs-label">{{ key | capitalize }}</dt>
+            <dd class="sgs-spec__value">{{ bs[key] | escape }}</dd>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </dl>
+  </div>
+{%- endunless -%}
+
+{% stylesheet %}
+  .sgs-pspec {
+    width: 100%;
+  }
+
+  .sgs-pspec__heading {
+    margin: 0 0 12px;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--sgs-text, #f2f0eb);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Print specification",
+  "tag": null,
+  "settings": [
+    { "type": "paragraph", "content": "Sizes are listed automatically from the product's size option." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Print specification" },
+    { "type": "text", "id": "paper", "label": "Paper", "default": "Premium semi-gloss paper, rich colour and deep blacks" },
+    { "type": "text", "id": "production", "label": "Production", "default": "Made to order in the UK in 2 to 5 working days" },
+    { "type": "text", "id": "delivery", "label": "Delivery", "default": "Free UK delivery, 2 to 4 working days" },
+    { "type": "text", "id": "framing", "label": "Framing", "default": "Supplied unframed" },
+    { "type": "text", "id": "returns", "label": "Returns", "default": "14 days on standard prints. Faulty prints replaced free" }
+  ],
+  "presets": [{ "name": "Print specification" }]
+}
+{% endschema %}

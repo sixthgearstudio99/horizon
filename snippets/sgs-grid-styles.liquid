@@ -3,7 +3,7 @@
 {%- enddoc -%}
 {% stylesheet %}
   .sgs-grid {
-    --color-foreground-rgb: 14 14 14;
+    --color-foreground-rgb: 242 240 235;
 
     padding-block: var(--sgs-grid-pad-top) var(--sgs-grid-pad-bottom);
     background-color: var(--sgs-grid-bg);
@@ -113,6 +113,31 @@
     .sgs-grid--mobile-carousel .sgs-grid__item {
       flex: 0 0 78%;
       scroll-snap-align: start;
+    }
+  }
+
+  /* Desktop scrolling row: four across with the next print peeking in */
+  @media screen and (min-width: 750px) {
+    .sgs-grid--desktop-carousel .sgs-grid__list {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: rgb(var(--color-foreground-rgb) / 0.25) transparent;
+      padding-bottom: 16px;
+    }
+
+    .sgs-grid--desktop-carousel .sgs-grid__item {
+      flex: 0 0 calc((100% - 2 * 12px) / 2.4);
+      scroll-snap-align: start;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .sgs-grid--desktop-carousel .sgs-grid__item {
+      flex-basis: calc((100% - 3 * 12px) / 4.25);
     }
   }
 {% endstylesheet %}

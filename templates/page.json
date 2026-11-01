@@ -17,7 +17,7 @@
         "show_breadcrumb": false,
         "show_count": false,
         "alignment": "left",
-        "padding-block-start": 96,
+        "padding-block-start": 124,
         "padding-block-end": 0
       }
     },

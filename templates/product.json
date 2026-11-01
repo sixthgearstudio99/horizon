@@ -91,7 +91,8 @@
               "settings": {
                 "eyebrow_source": "collection",
                 "eyebrow_text": "Automotive art print",
-                "preferred_collections": "lineage,portraits,grand-prix,mindset"
+                "preferred_collections": "lineage,portraits,grand-prix,mindset",
+                "show_breadcrumb": true
               },
               "blocks": {}
             },
@@ -115,7 +116,7 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "tax_note_text": "Free UK delivery · Taxes included",
-                "print_note": "Print only – frame not included. Fits standard frames."
+                "print_note": "Print only – frame not included"
               },
               "blocks": {}
             },
@@ -295,6 +296,17 @@
                 "question_6": "",
                 "answer_6": ""
               }
+            },
+            "sgs_pspec": {
+              "type": "sgs-print-spec",
+              "settings": {
+                "heading": "Print specification",
+                "paper": "Premium semi-gloss paper, rich colour and deep blacks",
+                "production": "Made to order in the UK in 2 to 5 working days",
+                "delivery": "Free UK delivery, 2 to 4 working days",
+                "framing": "Supplied unframed",
+                "returns": "14 days on standard prints. Faulty prints replaced free"
+              }
             }
           },
           "block_order": [
@@ -307,6 +319,7 @@
             "buy_buttons_eYQEYi",
             "sgs_delivery",
             "sgs_ptrust",
+            "sgs_pspec",
             "sgs_details",
             "sgs_faq"
           ]
@@ -334,8 +347,8 @@
         "heading": "Complete the wall",
         "view_all_label": "Shop all prints",
         "products_to_show": 4,
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_trust": {
@@ -373,7 +386,7 @@
       ],
       "settings": {
         "padding-block-start": 0,
-        "padding-block-end": 120
+        "padding-block-end": 156
       }
     },
     "sgs_timeline": {
@@ -423,8 +436,8 @@
         "collection_handle": "",
         "eyebrow": "The lineage",
         "heading": "Every generation",
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     },
     "sgs_bundle": {
@@ -438,8 +451,8 @@
         "total_label": "Set total",
         "discount_note": "Set discount applied at checkout",
         "button_label": "Add the set to cart",
-        "padding-block-start": 120,
-        "padding-block-end": 120
+        "padding-block-start": 156,
+        "padding-block-end": 156
       }
     }
   },

@@ -1,0 +1,410 @@
+/*
+ * SixthGear Studios: Judge.me reviews, restyled to the dark studio theme. CSS only; the Judge.me
+ * app block and app embed are untouched.
+ *
+ * Judge.me writes its own colours from the app settings (teal stars, bars and verified badges) in
+ * selectors such as `.jdgm-star` and `.jdgm-rev__buyer-badge.jdgm-rev__buyer-badge`, sometimes
+ * after this file loads, so colours below are marked !important. Star glyphs come from Judge.me's
+ * icon font on ::before, so no rule here sets a font on the stars.
+ */
+
+:root {
+  --sgs-jdgm-text: #f2f0eb;
+  --sgs-jdgm-text-2: #9a968e;
+  --sgs-jdgm-line: rgb(255 255 255 / 0.12);
+  --sgs-jdgm-bg: #0b0b0b;
+  --sgs-jdgm-raised: #141414;
+}
+
+/* ---------- Hide when there are no reviews ---------- */
+/* Product page: the widget and the page section around it, so no empty band is left behind */
+.jdgm-rev-widg[data-number-of-reviews='0'],
+.jdgm-review-widget[data-number-of-reviews='0'],
+.jdgm-widget:has(> .jdgm-rev-widg[data-number-of-reviews='0']),
+.shopify-app-block:has(.jdgm-rev-widg[data-number-of-reviews='0']),
+.shopify-section:has(.jdgm-rev-widg[data-number-of-reviews='0']),
+.shopify-section:has(.jdgm-review-widget[data-number-of-reviews='0']) {
+  display: none !important;
+}
+
+/* Product cards and other star badges with no reviews */
+.jdgm-prev-badge[data-number-of-reviews='0'],
+.jdgm-preview-badge:has(.jdgm-prev-badge[data-number-of-reviews='0']),
+.jdgm-all-reviews-rating[data-number-of-reviews='0'] {
+  display: none !important;
+}
+
+/* ---------- Hidden parts ---------- */
+/* Trust and authenticity medals (Gold Authenticity, Silver Transparency, etc.) */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    [class*='jdgm-medal'],
+    [class*='jdgm-trust'],
+    [class*='authenticity'],
+    [class*='transparency'],
+    [class*='verified-shop']
+  ),
+.jdgm-medals-wrapper,
+.jdgm-verified-badge-wrapper {
+  display: none !important;
+}
+
+/* Photo and video gallery above the reviews (photos inside each review stay) */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    [class*='jdgm-gallery'],
+    [class*='media-gallery'],
+    [class*='jdgm-carousel'],
+    .jdgm-rev-widg__media
+  ) {
+  display: none !important;
+}
+
+/* Custom questions and slider scales in the summary and in each review. Fields inside the
+   write-a-review form are left alone, so a required question can still be answered. */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    [class*='jdgm-cf'],
+    [class*='jdgm-rev__cf'],
+    [class*='jdgm-rev__prod-cf'],
+    [class*='custom-form'],
+    [class*='custom-question'],
+    [class*='jdgm-slider'],
+    [class*='jdgm-scale']
+  ):not(.jdgm-form *, .jdgm-form) {
+  display: none !important;
+}
+
+/* ---------- Base: transparent, light text, theme body font ---------- */
+.jdgm-widget,
+.jdgm-rev-widg {
+  background: transparent !important;
+  color: var(--sgs-jdgm-text) !important;
+  font-family: var(--sgs-font-body) !important;
+  font-weight: 300;
+}
+
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    .jdgm-rev-widg__header,
+    .jdgm-rev-widg__body,
+    .jdgm-rev-widg__reviews,
+    .jdgm-rev-widg__summary,
+    .jdgm-rev,
+    .jdgm-rev__content,
+    .jdgm-rev__reply,
+    .jdgm-widget-actions-wrapper,
+    .jdgm-row-actions,
+    .jdgm-form-wrapper,
+    .jdgm-form,
+    .jdgm-quest,
+    .jdgm-paginate
+  ) {
+  background: transparent !important;
+  color: inherit !important;
+  box-shadow: none !important;
+}
+
+/* Everything inherits the light text unless given a muted colour below */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(p, span, a, div, label, h1, h2, h3, h4, h5, h6, b, strong) {
+  color: inherit;
+}
+
+:is(.jdgm-widget, .jdgm-rev-widg) a:not(.jdgm-write-rev-link, .jdgm-ask-question-btn) {
+  color: var(--sgs-jdgm-text) !important;
+  text-decoration-color: var(--sgs-jdgm-line);
+  text-underline-offset: 3px;
+}
+
+/* ---------- Dividers ---------- */
+.jdgm-rev-widg,
+.jdgm-rev-widg :is(
+    .jdgm-rev-widg__header,
+    .jdgm-rev-widg__body,
+    .jdgm-rev-widg__summary,
+    .jdgm-rev-widg__actions,
+    .jdgm-rev,
+    .jdgm-rev__reply,
+    .jdgm-form-wrapper,
+    .jdgm-form__fieldset,
+    .jdgm-paginate,
+    hr
+  ) {
+  border-color: var(--sgs-jdgm-line) !important;
+}
+
+.jdgm-rev-widg .jdgm-rev {
+  border-top: 1px solid var(--sgs-jdgm-line) !important;
+  padding-block: 24px;
+}
+
+.jdgm-rev-widg .jdgm-rev-widg__reviews > .jdgm-rev:last-child {
+  border-bottom: 1px solid var(--sgs-jdgm-line) !important;
+}
+
+/* ---------- Headings: Archivo Expanded, uppercase ---------- */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    .jdgm-rev-widg__title,
+    .jdgm-form__title,
+    .jdgm-rev__title,
+    .jdgm-quest__title,
+    h1,
+    h2,
+    h3,
+    h4
+  ) {
+  font-family: var(--sgs-font-display) !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0 !important;
+  color: var(--sgs-jdgm-text) !important;
+}
+
+.jdgm-rev-widg .jdgm-rev-widg__title {
+  font-size: var(--sgs-h2, clamp(1.5rem, 1.15rem + 1.5vw, 2.5rem)) !important;
+  line-height: 1.08 !important;
+  margin: 0 0 24px !important;
+  text-align: start !important;
+}
+
+.jdgm-rev-widg :is(.jdgm-rev__title, .jdgm-form__title, .jdgm-quest__title) {
+  font-size: var(--sgs-h3, 1.0625rem) !important;
+  line-height: 1.25 !important;
+  margin-block: 12px 8px !important;
+}
+
+/* ---------- Body text: Inter ---------- */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(.jdgm-rev__body, .jdgm-rev__reply-content, .jdgm-quest__body, .jdgm-rev__body p) {
+  font-family: var(--sgs-font-body) !important;
+  font-weight: 300 !important;
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+  color: var(--sgs-jdgm-text) !important;
+}
+
+/* ---------- Labels, counts, dates: JetBrains Mono uppercase ---------- */
+:is(.jdgm-widget, .jdgm-rev-widg, .jdgm-prev-badge) :is(
+    .jdgm-rev-widg__summary-text,
+    .jdgm-rev-widg__summary-average,
+    .jdgm-histogram__frequency,
+    .jdgm-histogram__percentage,
+    .jdgm-rev__timestamp,
+    .jdgm-rev__author,
+    .jdgm-rev__location,
+    .jdgm-rev__votes,
+    .jdgm-rev__reply-title,
+    .jdgm-rev__prod-link-prefix,
+    .jdgm-rev__buyer-badge,
+    .jdgm-sort-dropdown,
+    .jdgm-paginate__page,
+    .jdgm-paginate__load-more,
+    .jdgm-form__fieldset > label,
+    .jdgm-prev-badge__text,
+    .jdgm-rev__votes-count
+  ) {
+  font-family: var(--sgs-font-mono) !important;
+  font-weight: 400 !important;
+  font-style: normal !important;
+  font-size: 11px !important;
+  line-height: 1.5 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+}
+
+/* Secondary (muted) labels */
+:is(.jdgm-widget, .jdgm-rev-widg, .jdgm-prev-badge) :is(
+    .jdgm-rev-widg__summary-text,
+    .jdgm-histogram__frequency,
+    .jdgm-histogram__percentage,
+    .jdgm-rev__timestamp,
+    .jdgm-rev__location,
+    .jdgm-rev__votes,
+    .jdgm-rev__votes-count,
+    .jdgm-rev__reply-title,
+    .jdgm-rev__prod-link-prefix,
+    .jdgm-paginate__page,
+    .jdgm-form__fieldset > label,
+    .jdgm-prev-badge__text
+  ) {
+  color: var(--sgs-jdgm-text-2) !important;
+}
+
+/* Reviewer name and the average figure stay full strength */
+.jdgm-rev-widg :is(.jdgm-rev__author, .jdgm-rev-widg__summary-average) {
+  color: var(--sgs-jdgm-text) !important;
+  font-size: 12px !important;
+}
+
+.jdgm-rev-widg .jdgm-paginate__page.jdgm-curt {
+  color: var(--sgs-jdgm-text) !important;
+}
+
+/* ---------- Stars: light, never teal ---------- */
+.jdgm-star,
+:is(.jdgm-widget, .jdgm-rev-widg, .jdgm-prev-badge, .jdgm-preview-badge) .jdgm-star.jdgm-star,
+.jdgm-form .jdgm-star.jdgm-star {
+  color: var(--sgs-jdgm-text) !important;
+}
+
+.jdgm-rev-widg :is(.jdgm-rev-widg__summary-stars, .jdgm-rev__rating) {
+  color: var(--sgs-jdgm-text) !important;
+}
+
+/* ---------- Histogram ---------- */
+.jdgm-rev-widg .jdgm-histogram .jdgm-histogram__bar {
+  background-color: var(--sgs-jdgm-line) !important;
+  border-radius: 0 !important;
+}
+
+.jdgm-rev-widg .jdgm-histogram .jdgm-histogram__bar-content {
+  background-color: var(--sgs-jdgm-text) !important;
+  border-radius: 0 !important;
+}
+
+.jdgm-rev-widg .jdgm-histogram__row.jdgm-histogram__row {
+  color: var(--sgs-jdgm-text-2) !important;
+}
+
+/* ---------- Verified buyer: hairline mono tag, no green ---------- */
+.jdgm-rev__buyer-badge.jdgm-rev__buyer-badge,
+.jdgm-rev[data-verified-buyer='true'] .jdgm-rev__buyer-badge {
+  background: transparent !important;
+  color: var(--sgs-jdgm-text-2) !important;
+  border: 1px solid var(--sgs-jdgm-line) !important;
+  border-radius: 0 !important;
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+}
+
+/* Reviewer avatar circle and its verified tick */
+.jdgm-rev-widg .jdgm-rev__icon {
+  background: var(--sgs-jdgm-raised) !important;
+  color: var(--sgs-jdgm-text) !important;
+  border: 1px solid var(--sgs-jdgm-line);
+}
+
+.jdgm-rev-widg .jdgm-rev__icon.jdgm-rev__icon::after,
+.jdgm-rev[data-verified-buyer='true'] .jdgm-rev__icon.jdgm-rev__icon::after {
+  background-color: var(--sgs-jdgm-bg) !important;
+  color: var(--sgs-jdgm-text) !important;
+  border: 1px solid var(--sgs-jdgm-line);
+}
+
+/* ---------- Buttons: square, hairline, mono; invert on hover ---------- */
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    .jdgm-write-rev-link,
+    .jdgm-ask-question-btn,
+    .jdgm-submit-rev,
+    .jdgm-cancel-rev,
+    .jdgm-btn,
+    .jdgm-paginate__load-more
+  ) {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 24px !important;
+  border: 1px solid var(--sgs-jdgm-text) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--sgs-jdgm-text) !important;
+  box-shadow: none !important;
+  font-family: var(--sgs-font-mono) !important;
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 1 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+:is(.jdgm-widget, .jdgm-rev-widg) :is(
+    .jdgm-write-rev-link,
+    .jdgm-ask-question-btn,
+    .jdgm-submit-rev,
+    .jdgm-cancel-rev,
+    .jdgm-btn,
+    .jdgm-paginate__load-more
+  ):is(:hover, :focus-visible) {
+  background: var(--sgs-jdgm-text) !important;
+  color: var(--sgs-jdgm-bg) !important;
+}
+
+:is(.jdgm-widget, .jdgm-rev-widg) :is(.jdgm-write-rev-link, .jdgm-submit-rev, .jdgm-btn):focus-visible {
+  outline: 1px solid var(--sgs-jdgm-text);
+  outline-offset: 3px;
+}
+
+/* ---------- Write-a-review form fields and sort menu ---------- */
+.jdgm-rev-widg :is(input[type='text'], input[type='email'], input[type='url'], textarea, select),
+.jdgm-rev-widg .jdgm-sort-dropdown {
+  background-color: var(--sgs-jdgm-raised) !important;
+  color: var(--sgs-jdgm-text) !important;
+  border: 1px solid var(--sgs-jdgm-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--sgs-font-body);
+}
+
+.jdgm-rev-widg :is(input, textarea)::placeholder {
+  color: var(--sgs-jdgm-text-2);
+}
+
+.jdgm-rev-widg :is(input, textarea, select):focus {
+  border-color: var(--sgs-jdgm-text) !important;
+  outline: none;
+}
+
+.jdgm-rev-widg .jdgm-sort-dropdown option {
+  background-color: var(--sgs-jdgm-raised);
+  color: var(--sgs-jdgm-text);
+}
+
+/* ---------- Layout: page width, steady at phone width ---------- */
+.jdgm-widget.jdgm-review-widget {
+  width: 100%;
+  margin-inline: auto;
+  padding-block: 48px;
+}
+
+.jdgm-rev-widg .jdgm-rev-widg__summary {
+  margin-bottom: 16px;
+}
+
+/* No box around the widget: it sits on the page like the other sections */
+.jdgm-rev-widg.jdgm-rev-widg {
+  border: 0 !important;
+  padding-inline: 0 !important;
+}
+
+/* Photos inside a review stay thumbnails */
+.jdgm-rev-widg .jdgm-rev__pics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.jdgm-rev-widg .jdgm-rev__pics img,
+.jdgm-rev-widg .jdgm-rev__pic-img {
+  width: 88px !important;
+  height: 88px !important;
+  max-width: none;
+  object-fit: cover;
+  border-radius: 0 !important;
+  background: var(--sgs-jdgm-raised);
+}
+
+@media screen and (max-width: 749px) {
+  .jdgm-widget.jdgm-review-widget {
+    padding-block: 32px;
+  }
+
+  .jdgm-rev-widg :is(.jdgm-write-rev-link, .jdgm-ask-question-btn) {
+    width: 100%;
+  }
+}
+
+.jdgm-rev-widg .jdgm-rev-widg__sort-wrapper {
+  margin-block: 16px 0;
+}

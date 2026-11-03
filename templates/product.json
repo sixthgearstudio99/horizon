@@ -89,10 +89,10 @@
             "sgs_header": {
               "type": "sgs-product-header",
               "settings": {
+                "show_breadcrumb": true,
                 "eyebrow_source": "collection",
-                "eyebrow_text": "Automotive art print",
                 "preferred_collections": "lineage,portraits,grand-prix,mindset",
-                "show_breadcrumb": true
+                "eyebrow_text": "Automotive art print"
               },
               "blocks": {}
             },
@@ -102,6 +102,8 @@
                 "show_sale_price_first": true,
                 "show_installments": true,
                 "show_tax_info": true,
+                "tax_note_text": "Free UK delivery · Taxes included",
+                "print_note": "Print only – frame not included",
                 "type_preset": "custom",
                 "width": "100%",
                 "alignment": "left",
@@ -114,9 +116,7 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "tax_note_text": "Free UK delivery · Taxes included",
-                "print_note": "Print only – frame not included"
+                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -137,8 +137,14 @@
               "type": "sgs-personalise",
               "settings": {
                 "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+                "how_heading": "How it works",
+                "step_1": "Upload a photo of your car",
+                "step_2": "Add your own headline text",
+                "step_3": "We design it and print it in the UK",
                 "eyebrow": "Personalise your print",
                 "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "show_plate_preview": true,
+                "plate_label": "Preview",
                 "proof_note": "We'll email you a proof within 3 working days before printing.",
                 "max_file_mb": 20
               },
@@ -147,6 +153,7 @@
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
+                "size_label_suffix": "(unframed)",
                 "variant_style": "buttons",
                 "show_swatches": false,
                 "option_label_text_color": "",
@@ -162,8 +169,15 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "size_label_suffix": "(unframed)"
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "sgs_wall": {
+              "type": "sgs-wall-preview",
+              "settings": {
+                "button_label": "See it on your wall",
+                "wall_width_cm": 300
               },
               "blocks": {}
             },
@@ -227,6 +241,47 @@
               },
               "block_order": []
             },
+            "sgs_delivery": {
+              "type": "sgs-delivery-estimate",
+              "settings": {
+                "text_before": "Order today, arrives",
+                "min_working_days": 4,
+                "max_working_days": 9,
+                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
+                "christmas_line_until": "2026-12-09",
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card"
+              },
+              "blocks": {}
+            },
+            "sgs_ptrust": {
+              "type": "sgs-product-trust",
+              "settings": {
+                "item_1_text": "Free UK delivery",
+                "item_1_link": "",
+                "item_2_text": "Printed in the UK",
+                "item_2_link": "",
+                "item_3_text": "14-day returns",
+                "item_3_link": "/policies/refund-policy",
+                "item_4_text": "Secure checkout",
+                "item_4_link": ""
+              },
+              "blocks": {}
+            },
+            "sgs_pspec": {
+              "type": "sgs-print-spec",
+              "settings": {
+                "heading": "Print specification",
+                "paper": "Premium semi-gloss paper, rich colour and deep blacks",
+                "production": "Made to order in the UK in 2 to 5 working days",
+                "delivery": "Free UK delivery, 2 to 4 working days",
+                "framing": "Supplied unframed",
+                "returns": "14 days on standard prints. Faulty prints replaced free"
+              },
+              "blocks": {}
+            },
             "sgs_details": {
               "type": "sgs-print-details",
               "settings": {
@@ -244,41 +299,6 @@
               },
               "blocks": {}
             },
-            "sgs_wall": {
-              "type": "sgs-wall-preview",
-              "settings": {
-                "button_label": "See it on your wall",
-                "wall_width_cm": 300
-              },
-              "blocks": {}
-            },
-            "sgs_delivery": {
-              "type": "sgs-delivery-estimate",
-              "settings": {
-                "text_before": "Order today, arrives",
-                "min_working_days": 4,
-                "max_working_days": 9,
-                "christmas_from": "12-10",
-                "christmas_to": "12-24",
-                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card",
-                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
-                "christmas_line_until": "2026-12-09"
-              }
-            },
-            "sgs_ptrust": {
-              "type": "sgs-product-trust",
-              "settings": {
-                "item_1_text": "Free UK delivery",
-                "item_1_link": "",
-                "item_2_text": "Printed in the UK",
-                "item_2_link": "",
-                "item_3_text": "14-day returns",
-                "item_3_link": "/policies/refund-policy",
-                "item_4_text": "Secure checkout",
-                "item_4_link": ""
-              }
-            },
             "sgs_faq": {
               "type": "sgs-faq",
               "settings": {
@@ -295,18 +315,8 @@
                 "answer_5": "",
                 "question_6": "",
                 "answer_6": ""
-              }
-            },
-            "sgs_pspec": {
-              "type": "sgs-print-spec",
-              "settings": {
-                "heading": "Print specification",
-                "paper": "Premium semi-gloss paper, rich colour and deep blacks",
-                "production": "Made to order in the UK in 2 to 5 working days",
-                "delivery": "Free UK delivery, 2 to 4 working days",
-                "framing": "Supplied unframed",
-                "returns": "14 days on standard prints. Faulty prints replaced free"
-              }
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -338,55 +348,6 @@
         "background_color": "",
         "padding-block-start": 32,
         "padding-block-end": 96
-      }
-    },
-    "sgs_recs": {
-      "type": "sgs-product-recommendations",
-      "settings": {
-        "eyebrow": "You may also like",
-        "heading": "Complete the wall",
-        "view_all_label": "Shop all prints",
-        "products_to_show": 4,
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
-    "sgs_trust": {
-      "type": "sgs-trust",
-      "blocks": {
-        "item_1": {
-          "type": "item",
-          "settings": {
-            "icon": "print",
-            "title": "Printed to order",
-            "text": "Each print is made for you, the moment you order."
-          }
-        },
-        "item_2": {
-          "type": "item",
-          "settings": {
-            "icon": "package",
-            "title": "Free UK delivery",
-            "text": "Printed in the UK and delivered free to your door."
-          }
-        },
-        "item_3": {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "title": "Secure checkout",
-            "text": "Encrypted payments through Shopify Checkout."
-          }
-        }
-      },
-      "block_order": [
-        "item_1",
-        "item_2",
-        "item_3"
-      ],
-      "settings": {
-        "padding-block-start": 0,
-        "padding-block-end": 156
       }
     },
     "sgs_timeline": {
@@ -454,10 +415,108 @@
         "padding-block-start": 156,
         "padding-block-end": 156
       }
+    },
+    "sgs_recs": {
+      "type": "sgs-product-recommendations",
+      "settings": {
+        "eyebrow": "You may also like",
+        "heading": "Complete the wall",
+        "view_all_label": "Shop all prints",
+        "preferred_collections": "lineage,portraits,grand-prix,mindset",
+        "hidden_products": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+        "hidden_products_collections": "custom-car-posters, custom-posters, custom",
+        "products_to_show": 4,
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_trust": {
+      "type": "sgs-trust",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "print",
+            "title": "Printed to order",
+            "text": "Each print is made for you, the moment you order."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "package",
+            "title": "Free UK delivery",
+            "text": "Printed in the UK and delivered free to your door."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "text": "Encrypted payments through Shopify Checkout."
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ],
+      "settings": {
+        "padding-block-start": 0,
+        "padding-block-end": 156
+      }
+    },
+    "17937299023bbff9d5": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_review_widget_yHapyB": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "empty_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_yHapyB"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "main",
+    "17937299023bbff9d5",
     "sgs_timeline",
     "sgs_bundle",
     "sgs_recs",

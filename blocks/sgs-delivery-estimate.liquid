@@ -12,6 +12,19 @@
     endif
   endif
 
+  # Gift line under the estimate. Custom posters take longer to make, so they get their own line and date.
+  assign gift_line = bs.christmas_line
+  assign gift_line_until = bs.christmas_line_until | strip
+  assign custom_handles = bs.custom_handles | strip_newlines | remove: ' ' | split: ','
+  if custom_handles contains closest.product.handle
+    if bs.custom_line != blank
+      assign gift_line = bs.custom_line
+    endif
+    if bs.custom_line_until != blank
+      assign gift_line_until = bs.custom_line_until | strip
+    endif
+  endif
+
   assign christmas_parts = bs.christmas_message | split: '['
   assign christmas_before = christmas_parts.first
   assign christmas_link_text = ''
@@ -43,8 +56,8 @@
     {%- endif -%}
     {{- christmas_after | escape -}}
   </p>
-  {%- if bs.christmas_line != blank -%}
-    <p class="sgs-delivery__xmas" id="{{ uid }}-xmas" hidden>{{ bs.christmas_line | escape }}</p>
+  {%- if gift_line != blank -%}
+    <p class="sgs-delivery__xmas" id="{{ uid }}-xmas" hidden>{{ gift_line | escape }}</p>
   {%- endif -%}
   </div>
 </div>
@@ -82,7 +95,7 @@
 
     // Christmas order-by line: shown up to and including its last day
     var xmas = document.getElementById({{ uid | append: '-xmas' | json }});
-    var xmasUntil = {{ bs.christmas_line_until | strip | json }};
+    var xmasUntil = {{ gift_line_until | json }};
     if (xmas && xmasUntil && ymd <= xmasUntil) xmas.hidden = false;
 
     if (mmdd >= start && mmdd <= end) {
@@ -135,10 +148,14 @@
   }
 
   .sgs-delivery__xmas {
-    margin: 2px 0 0;
-    font-size: 13px;
+    margin: 6px 0 0;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 11px;
     line-height: 1.5;
-    color: #e10600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-wrap: balance;
+    color: var(--sgs-text, #f2f0eb);
   }
 
   .sgs-delivery__text strong {
@@ -191,20 +208,43 @@
     },
     {
       "type": "header",
-      "content": "Christmas cut-off"
+      "content": "Christmas gift line"
     },
     {
       "type": "text",
       "id": "christmas_line",
-      "label": "Order-by line",
-      "default": "Order by Wed 9 Dec for Christmas delivery",
+      "label": "Gift line",
+      "default": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
       "info": "Small line under the delivery estimate. Leave empty to hide."
     },
     {
       "type": "text",
       "id": "christmas_line_until",
-      "label": "Show order-by line until (YYYY-MM-DD)",
+      "label": "Show gift line until (YYYY-MM-DD)",
       "default": "2026-12-09"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_handles",
+      "label": "Custom poster products",
+      "default": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+      "info": "Product handles, separated by commas. These show the custom poster gift line instead."
+    },
+    {
+      "type": "text",
+      "id": "custom_line",
+      "label": "Custom poster gift line",
+      "default": "🎁 Gift it · Order by Wed 2 Dec for Christmas"
+    },
+    {
+      "type": "text",
+      "id": "custom_line_until",
+      "label": "Show custom poster line until (YYYY-MM-DD)",
+      "default": "2026-12-02"
+    },
+    {
+      "type": "header",
+      "content": "After the Christmas cut-off"
     },
     {
       "type": "text",

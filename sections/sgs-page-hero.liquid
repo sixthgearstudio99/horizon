@@ -8,12 +8,18 @@
   assign hero_meta = nil
   assign crumb_label = nil
   assign crumb_url = nil
+  assign show_intro = false
 
   if collection != blank and template.name == 'collection'
     if hero_title == blank
       assign hero_title = collection.title | escape
     endif
-    if hero_text == blank and collection.description != blank
+
+    # Chosen collections show their full description under the banner, above the grid
+    assign intro_handles = s.description_below | remove: ' ' | split: ','
+    if intro_handles contains collection.handle and collection.description != blank
+      assign show_intro = true
+    elsif hero_text == blank and collection.description != blank
       assign hero_text = collection.description
     endif
     if hero_image == blank
@@ -109,6 +115,17 @@
     {%- endif -%}
   </div>
 </section>
+
+{%- if show_intro -%}
+  <div class="sgs-phero-intro">
+    <div class="sgs-phero-intro__inner">
+      {%- if s.description_label != blank -%}
+        <p class="sgs-phero-intro__label sgs-label">{{ s.description_label | escape }}</p>
+      {%- endif -%}
+      <div class="sgs-phero-intro__text rte">{{ collection.description }}</div>
+    </div>
+  </div>
+{%- endif -%}
 
 {% stylesheet %}
   .sgs-phero {
@@ -295,6 +312,87 @@
     margin-inline: auto;
   }
 
+  /* Collection description under the banner: label on the left, text on the right (desktop) */
+  .sgs-phero-intro {
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-phero-intro__inner {
+    display: grid;
+    gap: 16px;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding: 40px var(--page-margin, 16px);
+  }
+
+  @media screen and (min-width: 990px) {
+    .sgs-phero-intro__inner {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: 48px;
+      padding-block: 56px;
+    }
+  }
+
+  .sgs-phero-intro__label {
+    align-self: start;
+    margin: 0;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-phero-intro__text {
+    max-width: 68ch;
+    font-family: var(--sgs-font-body);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-phero-intro__text > :first-child {
+    margin-top: 0;
+  }
+
+  .sgs-phero-intro__text > :last-child {
+    margin-bottom: 0;
+  }
+
+  .sgs-phero-intro__text :is(p, ul, ol) {
+    margin: 0 0 1em;
+  }
+
+  .sgs-phero-intro__text :is(ul, ol) {
+    padding-inline-start: 1.2em;
+  }
+
+  .sgs-phero-intro__text :is(strong, b) {
+    color: var(--sgs-text, #f2f0eb);
+    font-weight: 400;
+  }
+
+  .sgs-phero-intro__text :is(h1, h2, h3, h4, h5, h6) {
+    margin: 1.6em 0 0.6em;
+    font-size: var(--sgs-h3, 1.0625rem) !important;
+    line-height: 1.25 !important;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-phero-intro__text a {
+    color: var(--sgs-text, #f2f0eb);
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .sgs-phero-intro__text a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .sgs-phero-intro__text img {
+    max-width: 100%;
+    height: auto;
+  }
+
   @media screen and (max-width: 749px) {
     .sgs-phero {
       padding-block: calc(var(--sgs-phero-pad-top) * 0.6) calc(var(--sgs-phero-pad-bottom) * 0.6);
@@ -389,6 +487,19 @@
       "label": "All products page title",
       "default": "All Prints",
       "info": "Heading and breadcrumb for /collections/all, which Shopify otherwise calls Products."
+    },
+    {
+      "type": "textarea",
+      "id": "description_below",
+      "label": "Show the description under the banner on",
+      "default": "gifts-for-car-lovers",
+      "info": "Collection handles, separated by commas. These collections show their full description above the grid instead of inside the banner."
+    },
+    {
+      "type": "text",
+      "id": "description_label",
+      "label": "Label beside that description",
+      "default": "The gift guide"
     },
     {
       "type": "checkbox",

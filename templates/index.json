@@ -9,6 +9,21 @@
  */
 {
   "sections": {
+    "sgs_gift_band": {
+      "type": "sgs-gift-band",
+      "settings": {
+        "collection": "gifts-for-car-lovers",
+        "overlay_opacity": 55,
+        "eyebrow": "01 — Christmas",
+        "heading": "The gift for the car lover",
+        "subline": "From £25 · Free UK delivery · Order by Wed 9 Dec for Christmas",
+        "button_label": "Shop gifts",
+        "button_link": "/collections/gifts-for-car-lovers",
+        "hide_after": "2026-12-24",
+        "min_height": 560,
+        "min_height_mobile": 460
+      }
+    },
     "sgs_hero": {
       "type": "sgs-hero",
       "settings": {
@@ -51,7 +66,7 @@
         "mobile_layout": "carousel",
         "show_secondary_image": true,
         "show_option_count": true,
-        "eyebrow": "01 — Start your wall",
+        "eyebrow": "02 — Start your wall",
         "heading": "Most wanted",
         "view_all_label": "Shop all prints",
         "view_all_link": "",
@@ -105,7 +120,7 @@
         "feature_4"
       ],
       "settings": {
-        "eyebrow": "02 — Shop by style",
+        "eyebrow": "03 — Shop by style",
         "heading": "Pick your discipline",
         "view_all_label": "All collections",
         "view_all_link": "",
@@ -201,7 +216,7 @@
         "image_6"
       ],
       "settings": {
-        "eyebrow": "05 — On the wall",
+        "eyebrow": "06 — On the wall",
         "heading": "Made for your space",
         "text": "In the living room, the study or the garage. See how the prints look at home.",
         "link_label": "Shop the print",
@@ -311,7 +326,7 @@
         "compact_7"
       ],
       "settings": {
-        "eyebrow": "03 — By origin",
+        "eyebrow": "04 — By origin",
         "heading": "Where it was built",
         "view_all_label": "",
         "view_all_link": "",
@@ -370,7 +385,7 @@
         "row_5"
       ],
       "settings": {
-        "eyebrow": "04 — The studio",
+        "eyebrow": "05 — The studio",
         "heading": "The spec",
         "text": "<p>Car culture, framed for your wall. Every print is designed in our Bristol studio and made to order in the UK.</p>",
         "padding-block-start": 156,
@@ -413,6 +428,7 @@
   },
   "order": [
     "sgs_hero",
+    "sgs_gift_band",
     "sgs_best_sellers",
     "sgs_culture",
     "sgs_collections",

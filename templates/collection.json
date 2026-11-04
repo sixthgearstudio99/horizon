@@ -149,6 +149,8 @@
         "overlay_opacity": 70,
         "show_breadcrumb": true,
         "show_count": true,
+        "description_below": "gifts-for-car-lovers",
+        "description_label": "The gift guide",
         "alignment": "left",
         "padding-block-start": 124,
         "padding-block-end": 64

@@ -1,0 +1,344 @@
+{%- liquid
+  assign s = section.settings
+  assign band_collection = s.collection
+
+  # Background: uploaded image > the collection's image > its first product's image
+  assign band_image = s.image
+  if band_image == blank and band_collection != blank
+    assign band_image = band_collection.image
+    if band_image == blank
+      assign band_image = band_collection.products.first.featured_image
+    endif
+  endif
+
+  assign band_link = s.button_link
+  if band_link == blank and band_collection != blank
+    assign band_link = band_collection.url
+  endif
+
+  # Switches itself off after the last day (YYYY-MM-DD). Checked here and again in the
+  # visitor's browser, so a cached page can't keep showing it.
+  assign hide_after = s.hide_after | strip
+  assign today = 'now' | date: '%Y-%m-%d'
+  assign expired = false
+  if hide_after != blank and today > hide_after
+    assign expired = true
+  endif
+-%}
+
+{%- if expired -%}
+  {%- if request.design_mode -%}
+    <div class="sgs-band-note">Gift band: hidden on the live store after {{ hide_after | escape }}. Change "Hide after" to show it again.</div>
+  {%- else -%}
+    <span hidden data-sgs-band-expired></span>
+  {%- endif -%}
+{%- else -%}
+  <section
+    class="sgs-band"
+    id="SgsBand-{{ section.id }}"
+    data-hide-after="{{ hide_after | escape }}"
+    style="
+      --sgs-band-overlay: {{ s.overlay_opacity | divided_by: 100.0 }};
+      --sgs-band-min-h: {{ s.min_height }}px;
+      --sgs-band-min-h-mobile: {{ s.min_height_mobile }}px;
+    "
+  >
+    <div class="sgs-band__media" aria-hidden="true">
+      {%- if band_image != blank -%}
+        {{
+          band_image
+          | image_url: width: 3000
+          | image_tag:
+            widths: '750, 1100, 1500, 1920, 2400, 3000',
+            sizes: '100vw',
+            loading: 'lazy',
+            class: 'sgs-band__img',
+            alt: ''
+        }}
+      {%- else -%}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'sgs-band__img sgs-band__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="sgs-band__inner" data-sgs-reveal-group>
+      {%- if s.eyebrow != blank -%}
+        <p class="sgs-band__eyebrow sgs-label" data-sgs-reveal>{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      {%- if s.heading != blank -%}
+        <h2 class="sgs-band__heading" data-sgs-reveal>{{ s.heading }}</h2>
+      {%- endif -%}
+      {%- if s.subline != blank -%}
+        <p class="sgs-band__subline" data-sgs-reveal>{{ s.subline | escape }}</p>
+      {%- endif -%}
+      {%- if s.button_label != blank -%}
+        <a
+          class="button sgs-band__button"
+          {% if band_link != blank %}
+            href="{{ band_link }}"
+          {% else %}
+            role="link" aria-disabled="true"
+          {% endif %}
+          data-sgs-reveal
+        >
+          {{- s.button_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </section>
+
+  {%- if hide_after != blank -%}
+    <script>
+      (function () {
+        var band = document.getElementById({{ 'SgsBand-' | append: section.id | json }});
+        if (!band) return;
+        var d = new Date();
+        var ymd = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        if (ymd > band.dataset.hideAfter) {
+          var wrap = band.closest('.shopify-section') || band;
+          wrap.hidden = true;
+        }
+      })();
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .shopify-section:has(> [data-sgs-band-expired]) {
+    display: none !important;
+  }
+
+  .shopify-section[hidden]:has(> .sgs-band) {
+    display: none !important;
+  }
+
+  .sgs-band {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: var(--sgs-band-min-h-mobile);
+    overflow: hidden;
+    background: var(--sgs-bg, #0b0b0b);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-band {
+      min-height: var(--sgs-band-min-h);
+    }
+  }
+
+  /* Two classes: sgs-studio.css gives .sgs-band__media position: relative for its grain layer */
+  .sgs-band .sgs-band__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  .sgs-band__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .sgs-band__placeholder {
+    background: var(--sgs-raised, #141414);
+    fill: rgb(255 255 255 / 0.08);
+  }
+
+  /* Even dark wash, a little heavier on the text side so the copy always reads */
+  .sgs-band__media::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(90deg, rgb(11 11 11 / 0.55) 0%, rgb(11 11 11 / 0) 70%),
+      rgb(11 11 11 / var(--sgs-band-overlay));
+  }
+
+  .sgs-band__inner {
+    position: relative;
+    width: 100%;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding: 64px var(--page-margin, 16px);
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-band__inner {
+      padding-block: 96px;
+    }
+  }
+
+  .sgs-band__eyebrow {
+    margin: 0 0 20px;
+    color: var(--sgs-text, #f2f0eb) !important;
+    opacity: 0.8;
+  }
+
+  .sgs-band .sgs-band__heading {
+    max-width: 14ch;
+    margin: 0;
+    color: var(--sgs-text, #f2f0eb);
+    font-size: var(--sgs-h1) !important;
+    line-height: 1.02 !important;
+    text-wrap: balance;
+  }
+
+  .sgs-band__subline {
+    max-width: 44ch;
+    margin: 24px 0 0;
+    font-family: var(--sgs-font-mono);
+    font-size: 12px;
+    line-height: 1.7;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-band .sgs-band__button,
+  .sgs-band .sgs-band__button:hover {
+    --button-padding-block: 18px;
+    --button-padding-inline: 36px;
+    --button-color: var(--sgs-bg, #0b0b0b);
+    --button-background-color: var(--sgs-text, #f2f0eb);
+    --button-border-color: var(--sgs-text, #f2f0eb);
+
+    margin-top: 36px;
+    border-radius: 0;
+    min-height: 52px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .sgs-band .sgs-band__button:is(:hover, :focus-visible) {
+    --button-color: var(--sgs-text, #f2f0eb);
+    --button-background-color: transparent;
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-band .sgs-band__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .sgs-band-note {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding: 16px var(--page-margin, 16px);
+    font-size: 13px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear gift band",
+  "tag": "div",
+  "class": "sgs-band-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "A full-width seasonal band. The background is the collection's image unless you upload one."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image",
+      "info": "Optional. Replaces the collection's image."
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Dark overlay",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label",
+      "default": "01 — Christmas"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The gift for the car lover",
+      "info": "Wrap a word in <em></em> to show it in red."
+    },
+    {
+      "type": "text",
+      "id": "subline",
+      "label": "Subline",
+      "default": "From £25 · Free UK delivery · Order by Wed 9 Dec for Christmas"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop gifts"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Leave empty to link to the collection."
+    },
+    {
+      "type": "header",
+      "content": "Schedule"
+    },
+    {
+      "type": "text",
+      "id": "hide_after",
+      "label": "Hide after (YYYY-MM-DD)",
+      "default": "2026-12-24",
+      "info": "The band stops showing after this day. Leave empty to always show it."
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Height on desktop",
+      "min": 320,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Height on mobile",
+      "min": 300,
+      "max": 700,
+      "step": 20,
+      "unit": "px",
+      "default": 460
+    }
+  ],
+  "presets": [
+    {
+      "name": "SixthGear gift band"
+    }
+  ]
+}
+{% endschema %}

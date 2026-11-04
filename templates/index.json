@@ -9,21 +9,6 @@
  */
 {
   "sections": {
-    "sgs_gift_band": {
-      "type": "sgs-gift-band",
-      "settings": {
-        "collection": "gifts-for-car-lovers",
-        "overlay_opacity": 55,
-        "eyebrow": "01 — Christmas",
-        "heading": "The gift for the car lover",
-        "subline": "From £25 · Free UK delivery · Order by Wed 9 Dec for Christmas",
-        "button_label": "Shop gifts",
-        "button_link": "/collections/gifts-for-car-lovers",
-        "hide_after": "2026-12-24",
-        "min_height": 560,
-        "min_height_mobile": 460
-      }
-    },
     "sgs_hero": {
       "type": "sgs-hero",
       "settings": {
@@ -34,6 +19,7 @@
         "video_mobile_url": "",
         "dim_opacity": 50,
         "min_height": 50,
+        "image": "shopify://shop_images/20261031105327-1f1d5194-d44d-632c-a7b9-225128c18ab9.png",
         "product": "",
         "art_ratio": "natural",
         "art_style": "shadow",
@@ -57,12 +43,29 @@
         "padding-block-end": 128
       }
     },
+    "sgs_gift_band": {
+      "type": "sgs-gift-band",
+      "settings": {
+        "collection": "gifts-for-car-lovers",
+        "overlay_opacity": 55,
+        "eyebrow": "01 — Christmas",
+        "heading": "The gift for the car lover",
+        "subline": "From £25 · Free UK delivery · Order by Wed 9 Dec for Christmas",
+        "button_label": "Shop gifts",
+        "button_link": "/collections/gifts-for-car-lovers",
+        "hide_after": "2026-12-24",
+        "min_height": 560,
+        "min_height_mobile": 460
+      }
+    },
     "sgs_best_sellers": {
       "type": "sgs-product-grid",
       "settings": {
         "collection": "best-sellers",
         "products_to_show": 8,
         "columns": "4",
+        "preferred_collection": "featured",
+        "desktop_layout": "carousel",
         "mobile_layout": "carousel",
         "show_secondary_image": true,
         "show_option_count": true,
@@ -72,9 +75,18 @@
         "view_all_link": "",
         "background_color": "",
         "padding-block-start": 156,
-        "padding-block-end": 156,
-        "preferred_collection": "featured",
-        "desktop_layout": "carousel"
+        "padding-block-end": 156
+      }
+    },
+    "sgs_culture": {
+      "type": "sgs-statement",
+      "settings": {
+        "eyebrow": "",
+        "text": "Car culture isn't decoration. It's who you are. <em>Put it on the wall.</em>",
+        "caption": "",
+        "background_color": "",
+        "padding-block-start": 168,
+        "padding-block-end": 168
       }
     },
     "sgs_collections": {
@@ -130,166 +142,6 @@
         "secondary_label": "",
         "padding-block-start": 156,
         "padding-block-end": 156
-      }
-    },
-    "sgs_feature": {
-      "type": "sgs-feature",
-      "blocks": {},
-      "block_order": [],
-      "settings": {
-        "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-        "image_position": "right",
-        "eyebrow": "Custom poster",
-        "heading": "Your car. <em>Your wall.</em>",
-        "text": "<p>Send us a photo of your car and the words you want on it. We design the poster around them and print it in the UK.</p>",
-        "link_label": "Design yours",
-        "link": "/products/custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-        "background_color": "",
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
-    "sgs_gallery": {
-      "type": "sgs-gallery",
-      "blocks": {
-        "image_1": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/download.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        },
-        "image_2": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/20261016110909-1f1c9520-28bc-6750-8101-9e60e19fe692_5e5defc5-f08f-4417-966f-e82d5ab8dd24.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        },
-        "image_3": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/11751085743962704082_2048.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        },
-        "image_4": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/20261016110904-1f1c951f-f9b8-662a-8a4e-badafe601b0d.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        },
-        "image_5": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/3904930222023306051_2048.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        },
-        "image_6": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/20261016110920-1f1c9520-9280-67a4-9497-5ac66732e5be.png",
-            "caption": "",
-            "product": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "image_1",
-        "image_2",
-        "image_3",
-        "image_4",
-        "image_5",
-        "image_6"
-      ],
-      "settings": {
-        "eyebrow": "06 — On the wall",
-        "heading": "Made for your space",
-        "text": "In the living room, the study or the garage. See how the prints look at home.",
-        "link_label": "Shop the print",
-        "mobile_layout": "carousel",
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
-    "sgs_trust": {
-      "type": "sgs-trust",
-      "blocks": {
-        "item_1": {
-          "type": "item",
-          "settings": {
-            "icon": "print",
-            "title": "Printed to order",
-            "text": "Each print is made for you, the moment you order."
-          }
-        },
-        "item_2": {
-          "type": "item",
-          "settings": {
-            "icon": "package",
-            "title": "Free UK delivery",
-            "text": "Printed in the UK and delivered free to your door."
-          }
-        },
-        "item_3": {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "title": "Secure checkout",
-            "text": "Encrypted payments through Shopify Checkout."
-          }
-        }
-      },
-      "block_order": [
-        "item_1",
-        "item_2",
-        "item_3"
-      ],
-      "settings": {
-        "padding-block-start": 0,
-        "padding-block-end": 64
-      },
-      "disabled": true
-    },
-    "sgs_newsletter": {
-      "type": "sgs-newsletter",
-      "settings": {
-        "eyebrow": "",
-        "heading": "Join the paddock",
-        "text": "Early access to new prints, member-only drops and 10% off your first order.",
-        "placeholder": "Your email address",
-        "button_label": "Subscribe",
-        "fine_print": "By subscribing you agree to receive marketing emails. Unsubscribe at any time.",
-        "success_heading": "Welcome to the paddock",
-        "discount_code": "WELCOME10",
-        "success_text": "Use this code at checkout for 10% off your first order.",
-        "background_color": "#0b0b0b",
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
-    "sgs_culture": {
-      "type": "sgs-statement",
-      "settings": {
-        "eyebrow": "",
-        "text": "Car culture isn't decoration. It's who you are. <em>Put it on the wall.</em>",
-        "caption": "",
-        "background_color": "",
-        "padding-block-start": 168,
-        "padding-block-end": 168
       }
     },
     "sgs_origins": {
@@ -392,10 +244,100 @@
         "padding-block-end": 156
       }
     },
+    "sgs_gallery": {
+      "type": "sgs-gallery",
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/download.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110909-1f1c9520-28bc-6750-8101-9e60e19fe692_5e5defc5-f08f-4417-966f-e82d5ab8dd24.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/11751085743962704082_2048.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110904-1f1c951f-f9b8-662a-8a4e-badafe601b0d.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/3904930222023306051_2048.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "image_6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/20261016110920-1f1c9520-9280-67a4-9497-5ac66732e5be.png",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5",
+        "image_6"
+      ],
+      "settings": {
+        "eyebrow": "06 — On the wall",
+        "heading": "Made for your space",
+        "text": "In the living room, the study or the garage. See how the prints look at home.",
+        "link_label": "Shop the print",
+        "mobile_layout": "carousel",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_feature": {
+      "type": "sgs-feature",
+      "settings": {
+        "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+        "image_ratio": "4 / 5",
+        "image_position": "right",
+        "eyebrow": "Custom poster",
+        "heading": "Your car. <em>Your wall.</em>",
+        "text": "<p>Send us a photo of your car and the words you want on it. We design the poster around them and print it in the UK.</p>",
+        "link_label": "Design yours",
+        "link": "/products/custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+        "background_color": "",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
     "sgs_reviews": {
       "type": "sgs-reviews",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "min_reviews": 5,
         "eyebrow": "From the paddock",
@@ -423,6 +365,62 @@
         "answer_6": "",
         "padding-block-start": 156,
         "padding-block-end": 156
+      }
+    },
+    "sgs_newsletter": {
+      "type": "sgs-newsletter",
+      "settings": {
+        "eyebrow": "",
+        "heading": "Join the paddock",
+        "text": "Early access to new prints, member-only drops and 10% off your first order.",
+        "placeholder": "Your email address",
+        "button_label": "Subscribe",
+        "fine_print": "By subscribing you agree to receive marketing emails. Unsubscribe at any time.",
+        "success_heading": "Welcome to the paddock",
+        "discount_code": "WELCOME10",
+        "success_text": "Use this code at checkout for 10% off your first order.",
+        "background_color": "#0b0b0b",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_trust": {
+      "type": "sgs-trust",
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "icon": "print",
+            "title": "Printed to order",
+            "text": "Each print is made for you, the moment you order."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "icon": "package",
+            "title": "Free UK delivery",
+            "text": "Printed in the UK and delivered free to your door."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "text": "Encrypted payments through Shopify Checkout."
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ],
+      "disabled": true,
+      "settings": {
+        "padding-block-start": 0,
+        "padding-block-end": 64
       }
     }
   },

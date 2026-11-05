@@ -379,7 +379,7 @@
         "enable_sticky_add_to_cart": true,
         "background_color": "",
         "padding-block-start": 32,
-        "padding-block-end": 96
+        "padding-block-end": 48
       }
     },
     "sgs_proof": {
@@ -515,46 +515,8 @@
         "hidden_products": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
         "hidden_products_collections": "custom-car-posters, custom-posters, custom",
         "products_to_show": 4,
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
-    "sgs_trust": {
-      "type": "sgs-trust",
-      "blocks": {
-        "item_1": {
-          "type": "item",
-          "settings": {
-            "icon": "print",
-            "title": "Printed to order",
-            "text": "Each print is made for you, the moment you order."
-          }
-        },
-        "item_2": {
-          "type": "item",
-          "settings": {
-            "icon": "package",
-            "title": "Free UK delivery",
-            "text": "Printed in the UK and delivered free to your door."
-          }
-        },
-        "item_3": {
-          "type": "item",
-          "settings": {
-            "icon": "lock",
-            "title": "Secure checkout",
-            "text": "Encrypted payments through Shopify Checkout."
-          }
-        }
-      },
-      "block_order": [
-        "item_1",
-        "item_2",
-        "item_3"
-      ],
-      "settings": {
-        "padding-block-start": 0,
-        "padding-block-end": 156
+        "padding-block-start": 96,
+        "padding-block-end": 120
       }
     }
   },
@@ -564,7 +526,6 @@
     "17937299023bbff9d5",
     "sgs_timeline",
     "sgs_bundle",
-    "sgs_recs",
-    "sgs_trust"
+    "sgs_recs"
   ]
 }

@@ -743,3 +743,33 @@ html.sgs-lb-open {
   min-height: 44px;
   padding-block: 0;
 }
+
+/* ---------- Conditional sections that render nothing take no space ----------
+   A section whose only output is scripts, styles or hidden markers (lineage timeline without
+   generations, proof photos without images, Complete the set when it doesn't apply...) is
+   removed from the layout, so it adds no padding, divider or empty band. */
+.content-for-layout > .shopify-section:not(:has(> :not(script, style, link, template, [hidden]))) {
+  display: none !important;
+}
+
+/* An app block (e.g. Judge.me) that has rendered nothing visible */
+.content-for-layout > .shopify-section:has(.shopify-app-block):not(:has(.shopify-app-block > :not(script, style, link, template, [hidden]))) {
+  display: none !important;
+}
+
+/* Judge.me with no reviews, newer widget markup included */
+.content-for-layout > .shopify-section:has(:is(.jdgm-widget, .jdgm-rev-widg, [class*='jdgm'])[data-number-of-reviews='0']):not(:has(.jdgm-prev-badge)) {
+  display: none !important;
+}
+
+/* ---------- Product page: tighter gap from "Which size?" to Add to cart on phones ---------- */
+@media screen and (max-width: 749px) {
+  .sgs-sg {
+    margin-bottom: -20px;
+  }
+}
+
+/* One hairline between sections: the recommendations' own top rule doubled the shared one */
+.content-for-layout .sgs-recs {
+  border-top: 0;
+}

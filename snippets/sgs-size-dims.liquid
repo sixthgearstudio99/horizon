@@ -1,0 +1,45 @@
+{%- doc -%}
+  SixthGear Studios: a size option value as hanging width and height in centimetres, for the
+  size guide drawing. "16″ x 24″ (Vertical)" -> "40.6|61"; "(Horizontal)/(Landscape)" puts the
+  long side across; otherwise the first number is the width. Outputs nothing if the value isn't
+  a size such as "16x24" or "30 x 40 cm".
+
+  @param {string} value - The option value
+
+  @example
+  {%- capture dims -%}{% render 'sgs-size-dims', value: value.name %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign raw = value | append: '' | strip
+  assign lower = raw | downcase
+  assign base = raw | replace: '″', '' | replace: '”', '' | replace: '“', '' | replace: '"', '' | split: '(' | first | strip
+  assign compact = base | downcase | replace: '×', 'x' | replace: ' ', ''
+  assign factor = 2.54
+  if compact contains 'cm'
+    assign factor = 1.0
+  endif
+  assign numbers = compact | remove: 'inches' | remove: 'inch' | remove: 'in' | remove: 'cm' | split: 'x'
+  if numbers.size == 2
+    assign a = numbers[0] | plus: 0
+    assign b = numbers[1] | plus: 0
+    if a > 0 and b > 0
+      assign a = a | times: factor | round: 1
+      assign b = b | times: factor | round: 1
+      assign w = a
+      assign h = b
+      if lower contains 'vertical' or lower contains 'portrait'
+        if a > b
+          assign w = b
+          assign h = a
+        endif
+      elsif lower contains 'horizontal' or lower contains 'landscape'
+        if b > a
+          assign w = b
+          assign h = a
+        endif
+      endif
+      echo w | append: '|' | append: h
+    endif
+  endif
+-%}

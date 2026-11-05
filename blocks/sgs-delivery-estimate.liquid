@@ -73,8 +73,10 @@
   (function () {
     var root = document.getElementById({{ uid | json }});
     if (!root) return;
-    var minDays = {{ bs.min_working_days | default: 4 }};
-    var maxDays = {{ bs.max_working_days | default: 9 }};
+    // Earliest = shortest production + shortest delivery; latest = longest of each
+    var minDays = {{ bs.production_min | default: 2 }} + {{ bs.delivery_min | default: 2 }};
+    var maxDays = {{ bs.production_max | default: 4 }} + {{ bs.delivery_max | default: 3 }};
+    if (maxDays < minDays) maxDays = minDays;
     var start = {{ bs.christmas_from | default: '12-10' | json }};
     var end = {{ bs.christmas_to | default: '12-24' | json }};
 
@@ -197,7 +199,7 @@
       "type": "text",
       "id": "text_before",
       "label": "Text before the dates",
-      "default": "Order today, arrives"
+      "default": "Order today · arrives"
     },
     {
       "type": "text",
@@ -208,23 +210,40 @@
     },
     {
       "type": "range",
-      "id": "min_working_days",
-      "label": "Earliest arrival (working days)",
-      "min": 1,
-      "max": 20,
+      "id": "production_min",
+      "label": "Production: fewest working days",
+      "min": 0,
+      "max": 15,
       "step": 1,
-      "default": 4,
-      "info": "Counted from today, Monday to Friday only"
+      "default": 2
     },
     {
       "type": "range",
-      "id": "max_working_days",
-      "label": "Latest arrival (working days)",
-      "min": 1,
-      "max": 30,
+      "id": "production_max",
+      "label": "Production: most working days",
+      "min": 0,
+      "max": 15,
       "step": 1,
-      "default": 9,
-      "info": "Counted from today, Monday to Friday only"
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "delivery_min",
+      "label": "Delivery: fewest working days",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "delivery_max",
+      "label": "Delivery: most working days",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "default": 3,
+      "info": "Arrival dates are counted from today, Monday to Friday only."
     },
     {
       "type": "header",

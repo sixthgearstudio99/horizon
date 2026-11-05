@@ -1,0 +1,233 @@
+{%- liquid
+  assign s = section.settings
+  assign image_count = 0
+  for block in section.blocks
+    if block.settings.image != blank
+      assign image_count = image_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if image_count > 0 -%}
+  <section
+    class="sgs-proof"
+    style="--sgs-proof-pad-top: {{ s['padding-block-start'] }}px; --sgs-proof-pad-bottom: {{ s['padding-block-end'] }}px;"
+    {% if s.heading != blank %}aria-labelledby="SgsProofHeading-{{ section.id }}"{% endif %}
+  >
+    <div class="sgs-proof__inner">
+      <div class="sgs-proof__head">
+        {%- if s.label != blank -%}
+          <p class="sgs-proof__label sgs-label">{{ s.label | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="sgs-proof__heading" id="SgsProofHeading-{{ section.id }}">{{ s.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+
+      <ul class="sgs-proof__row" role="list" tabindex="0" aria-label="{{ s.heading | default: 'Customer photos' | escape }}, scroll sideways for more">
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            <li class="sgs-proof__card" {{ block.shopify_attributes }}>
+              <figure class="sgs-proof__figure">
+                <div class="sgs-proof__media">
+                  {{
+                    block.settings.image
+                    | image_url: width: 900
+                    | image_tag:
+                      widths: '300, 450, 600, 900',
+                      sizes: '(min-width: 990px) 22vw, 72vw',
+                      loading: 'lazy',
+                      class: 'sgs-proof__img',
+                      alt: block.settings.image.alt | default: block.settings.caption
+                  }}
+                </div>
+                {%- if block.settings.caption != blank -%}
+                  <figcaption class="sgs-proof__caption">{{ block.settings.caption | escape }}</figcaption>
+                {%- endif -%}
+              </figure>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- elsif request.design_mode -%}
+  <div class="sgs-proof-note">Real prints. Real walls.: add photos (blocks) to show this section. It's hidden on the store until then.</div>
+{%- endif -%}
+
+{% stylesheet %}
+  /* No photos: no empty band or extra divider on the page */
+  .sgs-proof-section:not(:has(.sgs-proof, .sgs-proof-note)) {
+    display: none;
+  }
+
+  .sgs-proof {
+    padding-block: var(--sgs-proof-pad-top) var(--sgs-proof-pad-bottom);
+    background: var(--sgs-bg, #0b0b0b);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-proof__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 16px);
+  }
+
+  .sgs-proof__head {
+    margin-bottom: 24px;
+  }
+
+  .sgs-proof__label {
+    margin: 0 0 12px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-proof .sgs-proof__heading {
+    margin: 0;
+    font-size: var(--sgs-h2) !important;
+    line-height: 1.08 !important;
+  }
+
+  .sgs-proof__row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 72%;
+    gap: 12px;
+    margin: 0 calc(var(--page-margin, 16px) * -1);
+    padding: 0 var(--page-margin, 16px) 12px;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-margin, 16px);
+    scrollbar-width: thin;
+    scrollbar-color: var(--sgs-line, #282828) transparent;
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-proof__row {
+      grid-auto-columns: calc((100% - 36px) / 3.4);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .sgs-proof__row {
+      grid-auto-columns: calc((100% - 36px) / 4);
+    }
+  }
+
+  .sgs-proof__row:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 4px;
+  }
+
+  .sgs-proof__card {
+    scroll-snap-align: start;
+  }
+
+  .sgs-proof__figure {
+    margin: 0;
+  }
+
+  .sgs-proof__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--sgs-raised, #141414);
+  }
+
+  .sgs-proof__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-proof__caption {
+    margin-top: 10px;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-proof-note {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding: 16px var(--page-margin, 16px);
+    font-size: 13px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Real proof photos",
+  "tag": "div",
+  "class": "sgs-proof-section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Photos of real printed, framed posters on walls. Hidden on the store until at least one photo is added."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Proof"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Real prints. Real walls."
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption",
+          "info": "Optional, short. For example the print and the room."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Real proof photos"
+    }
+  ]
+}
+{% endschema %}

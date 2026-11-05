@@ -71,7 +71,7 @@
           <span class="buy-buttons-block__bar">
         {%- endif -%}
         <div
-          class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
+          class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}{% if block_settings.sgs_hide_quantity %} sgs-buy--no-qty{% endif %}"
           style="{% render 'spacing-style', settings: block_settings %}"
           ref="productFormButtons"
         >
@@ -391,6 +391,13 @@
   "name": "t:names.product_buy_buttons",
   "tag": null,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "sgs_hide_quantity",
+      "label": "Hide quantity selector",
+      "default": false,
+      "info": "Add to cart then fills the width. One print is added each time."
+    },
     {
       "type": "checkbox",
       "id": "stacking",

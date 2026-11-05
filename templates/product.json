@@ -40,7 +40,7 @@
             "large_first_image": false,
             "icons_style": "arrow",
             "slideshow_controls_style": "counter",
-            "slideshow_mobile_controls_style": "counter",
+            "slideshow_mobile_controls_style": "thumbnails",
             "thumbnail_position": "right",
             "thumbnail_width": 44,
             "thumbnail_radius": 0,
@@ -49,13 +49,14 @@
             "media_fit": "contain",
             "media_radius": 0,
             "extend_media": true,
-            "zoom": true,
+            "zoom": false,
             "video_loop": false,
             "hide_variants": true,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "sgs_lightbox": true
           },
           "blocks": {}
         },
@@ -171,7 +172,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish"
               },
               "blocks": {}
             },
@@ -207,7 +209,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "sgs_hide_quantity": true
               },
               "blocks": {
                 "quantity": {
@@ -246,10 +249,12 @@
             "sgs_delivery": {
               "type": "sgs-delivery-estimate",
               "settings": {
-                "text_before": "Order today, arrives",
-                "footnote": "Print only – frame not included",
-                "min_working_days": 4,
-                "max_working_days": 9,
+                "text_before": "Order today · arrives",
+                "production_min": 2,
+                "production_max": 4,
+                "delivery_min": 2,
+                "delivery_max": 3,
+                "footnote": "",
                 "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
                 "christmas_line_until": "2026-12-09",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
@@ -265,62 +270,81 @@
             "sgs_ptrust": {
               "type": "sgs-product-trust",
               "settings": {
+                "layout": "line",
                 "item_1_text": "Free UK delivery",
                 "item_1_link": "",
-                "item_2_text": "Printed in the UK",
+                "item_1_icon": "truck",
+                "item_2_text": "Damaged in transit? Free replacement",
                 "item_2_link": "",
+                "item_2_icon": "shield",
                 "item_3_text": "14-day returns",
                 "item_3_link": "/policies/refund-policy",
-                "item_4_text": "Secure checkout",
-                "item_4_link": ""
+                "item_3_icon": "return",
+                "item_4_text": "",
+                "item_4_link": "",
+                "item_4_icon": "lock",
+                "footnote": "Print only – frame not included"
               },
               "blocks": {}
             },
-            "sgs_pspec": {
-              "type": "sgs-print-spec",
+            "sgs_size_guide": {
+              "type": "sgs-size-guide",
               "settings": {
-                "heading": "Print specification",
-                "paper": "Premium semi-gloss paper, rich colour and deep blacks",
-                "production": "Made to order in the UK in 2 to 5 working days",
-                "delivery": "Free UK delivery, 2 to 4 working days",
-                "framing": "Supplied unframed",
-                "returns": "14 days on standard prints. Faulty prints replaced free"
+                "link_label": "Which size?",
+                "heading": "Which size?",
+                "sofa_label": "Above a sofa",
+                "desk_label": "Above a desk",
+                "line_small": "Desk or shelf",
+                "line_middle": "Above a desk or bed",
+                "line_large": "Statement wall",
+                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
+                "wall_label": "See it on your wall"
               },
               "blocks": {}
             },
-            "sgs_details": {
-              "type": "sgs-print-details",
+            "sgs_highlights": {
+              "type": "sgs-highlights",
               "settings": {
-                "show_description": true,
-                "description_heading": "About this print",
-                "open_first": true,
-                "paper_heading": "Paper",
-                "paper": "Premium semi-gloss art paper",
-                "finish_heading": "Finish",
-                "finish": "Semi-gloss, printed with fade-resistant, gallery-quality inks",
+                "item_1_text": "Premium semi-gloss paper, fade-resistant inks",
+                "item_1_icon": "paper",
+                "item_2_text": "Printed to order in the UK",
+                "item_2_icon": "printer",
+                "item_3_text": "Ships rolled in a protective tube",
+                "item_3_icon": "tube",
+                "item_4_text": "",
+                "item_4_icon": "check"
+              },
+              "blocks": {}
+            },
+            "sgs_desc": {
+              "type": "sgs-description",
+              "settings": {
+                "heading": "About this print",
+                "collapse_after": 350,
+                "more_label": "Read more",
+                "less_label": "Read less"
+              },
+              "blocks": {}
+            },
+            "sgs_info": {
+              "type": "sgs-product-info",
+              "settings": {
+                "open_first": false,
+                "delivery_heading": "Delivery & returns",
+                "delivery_text": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 4 working days, then delivered in 2 to 3 working days.</p><p>Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>",
                 "framing_heading": "Framing",
-                "framing": "Supplied unframed, ready for the frame of your choice.",
-                "shipping_heading": "Shipping & delivery",
-                "shipping": "Each print is made to order, then dispatched from our print partner. Delivery options and costs are shown at checkout."
-              },
-              "blocks": {}
-            },
-            "sgs_faq": {
-              "type": "sgs-faq",
-              "settings": {
-                "heading": "Questions",
-                "question_1": "How long does delivery take?",
-                "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
-                "question_2": "Is it framed?",
-                "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
-                "question_3": "What paper is it printed on?",
-                "answer_3": "Premium semi-gloss paper with rich colour and deep blacks.",
-                "question_4": "Can I return it?",
-                "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty.",
-                "question_5": "",
-                "answer_5": "",
-                "question_6": "",
-                "answer_6": ""
+                "framing_text": "<p>Supplied unframed, ready to fit a standard frame in these sizes:</p>",
+                "list_sizes": true,
+                "questions_heading": "Questions?",
+                "questions_text": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>",
+                "question_1": "",
+                "answer_1": "",
+                "question_2": "",
+                "answer_2": "",
+                "question_3": "",
+                "answer_3": "",
+                "question_4": "",
+                "answer_4": ""
               },
               "blocks": {}
             }
@@ -329,15 +353,16 @@
             "sgs_header",
             "price_tVjtKg",
             "divider_VJhene",
-            "sgs_personalise",
             "variant_picker_R3rGDr",
+            "sgs_size_guide",
+            "sgs_personalise",
             "buy_buttons_eYQEYi",
             "sgs_delivery",
-            "sgs_wall",
             "sgs_ptrust",
-            "sgs_pspec",
-            "sgs_details",
-            "sgs_faq"
+            "sgs_wall",
+            "sgs_highlights",
+            "sgs_desc",
+            "sgs_info"
           ]
         }
       },
@@ -354,6 +379,17 @@
         "background_color": "",
         "padding-block-start": 32,
         "padding-block-end": 96
+      }
+    },
+    "sgs_proof": {
+      "type": "sgs-proof",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "label": "Proof",
+        "heading": "Real prints. Real walls.",
+        "padding-block-start": 72,
+        "padding-block-end": 72
       }
     },
     "17937299023bbff9d5": {
@@ -522,6 +558,7 @@
   },
   "order": [
     "main",
+    "sgs_proof",
     "17937299023bbff9d5",
     "sgs_timeline",
     "sgs_bundle",

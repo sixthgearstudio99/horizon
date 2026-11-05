@@ -1,0 +1,341 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+
+  # Per-product metafields (namespace "custom") still override the shared text
+  assign delivery_text = product_resource.metafields.custom.shipping.value | default: bs.delivery_text
+  assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text
+
+  # The product's Size option, listed under Framing
+  assign size_option = nil
+  for option in product_resource.options_with_values
+    assign option_name = option.name | downcase
+    if option_name contains 'size'
+      assign size_option = option
+      break
+    endif
+  endfor
+
+  assign has_faq = false
+  for i in (1..4)
+    assign q_key = 'question_' | append: i
+    assign a_key = 'answer_' | append: i
+    if bs[q_key] != blank and bs[a_key] != blank
+      assign has_faq = true
+      break
+    endif
+  endfor
+-%}
+
+{%- unless product_resource.gift_card? -%}
+<div class="sgs-info" {{ block.shopify_attributes }}>
+  {%- if delivery_text != blank -%}
+    <details class="sgs-info__item"{% if bs.open_first %} open{% endif %}>
+      <summary class="sgs-info__summary">
+        <span class="sgs-label">{{ bs.delivery_heading | escape }}</span>
+        <span class="sgs-info__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-info__body rte">{{ delivery_text }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if framing_text != blank or size_option != nil -%}
+    <details class="sgs-info__item">
+      <summary class="sgs-info__summary">
+        <span class="sgs-label">{{ bs.framing_heading | escape }}</span>
+        <span class="sgs-info__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-info__body rte">
+        {{ framing_text }}
+        {%- if size_option != nil and bs.list_sizes -%}
+          <ul class="sgs-info__sizes" role="list">
+            {%- for value in size_option.values -%}
+              <li>{% render 'sgs-size-label', value: value.name %}</li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </details>
+  {%- endif -%}
+
+  {%- if bs.questions_text != blank or has_faq -%}
+    <details class="sgs-info__item">
+      <summary class="sgs-info__summary">
+        <span class="sgs-label">{{ bs.questions_heading | escape }}</span>
+        <span class="sgs-info__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-info__body rte">
+        {%- if has_faq -%}
+          <dl class="sgs-info__faq">
+            {%- for i in (1..4) -%}
+              {%- assign q_key = 'question_' | append: i -%}
+              {%- assign a_key = 'answer_' | append: i -%}
+              {%- if bs[q_key] != blank and bs[a_key] != blank -%}
+                <dt>{{ bs[q_key] | escape }}</dt>
+                <dd>{{ bs[a_key] | escape | newline_to_br }}</dd>
+              {%- endif -%}
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+        {{ bs.questions_text }}
+      </div>
+    </details>
+  {%- endif -%}
+</div>
+
+{%- if has_faq -%}
+  {%- comment -%} FAQ structured data for the questions shown above {%- endcomment -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- assign first = true -%}
+        {%- for i in (1..4) -%}
+          {%- assign q_key = 'question_' | append: i -%}
+          {%- assign a_key = 'answer_' | append: i -%}
+          {%- if bs[q_key] != blank and bs[a_key] != blank -%}
+            {%- unless first %},{% endunless -%}
+            {"@type": "Question", "name": {{ bs[q_key] | json }}, "acceptedAnswer": {"@type": "Answer", "text": {{ bs[a_key] | json }}}}
+            {%- assign first = false -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
+{%- endunless -%}
+
+{% stylesheet %}
+  .sgs-info {
+    width: 100%;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-info__item {
+    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-info__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 56px;
+    cursor: pointer;
+    list-style: none;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-info__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .sgs-info__summary:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 2px;
+  }
+
+  .sgs-info__icon {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+  }
+
+  .sgs-info__icon::before,
+  .sgs-info__icon::after {
+    content: '';
+    position: absolute;
+    inset: 5px 0 auto;
+    height: 1px;
+    background: currentColor;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sgs-info__icon::after {
+    transform: rotate(90deg);
+  }
+
+  .sgs-info__item[open] .sgs-info__icon::after {
+    transform: rotate(0deg);
+  }
+
+  .sgs-info__body {
+    max-width: 65ch;
+    padding-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-info__body > :first-child {
+    margin-top: 0;
+  }
+
+  .sgs-info__body > :last-child {
+    margin-bottom: 0;
+  }
+
+  .sgs-info__body :is(p, ul) {
+    margin: 0 0 0.9em;
+  }
+
+  .sgs-info__body :is(strong, b) {
+    color: var(--sgs-text, #f2f0eb);
+    font-weight: 400;
+  }
+
+  .sgs-info__body a {
+    color: var(--sgs-text, #f2f0eb);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sgs-info__sizes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-info__sizes li {
+    padding: 8px 0;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-info__faq {
+    margin: 0 0 1em;
+  }
+
+  .sgs-info__faq dt {
+    margin-top: 1em;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-info__faq dt:first-child {
+    margin-top: 0;
+  }
+
+  .sgs-info__faq dd {
+    margin: 4px 0 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product info accordions",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Delivery and returns, framing and questions. A product's custom.shipping or custom.framing metafield replaces the shared text for that product."
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open the first panel",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "delivery_heading",
+      "label": "Delivery heading",
+      "default": "Delivery & returns"
+    },
+    {
+      "type": "richtext",
+      "id": "delivery_text",
+      "label": "Delivery and returns",
+      "default": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 4 working days, then delivered in 2 to 3 working days.</p><p>Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>"
+    },
+    {
+      "type": "text",
+      "id": "framing_heading",
+      "label": "Framing heading",
+      "default": "Framing"
+    },
+    {
+      "type": "richtext",
+      "id": "framing_text",
+      "label": "Framing",
+      "default": "<p>Supplied unframed, ready to fit a standard frame in these sizes:</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "list_sizes",
+      "label": "List the product's sizes under the framing text",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "questions_heading",
+      "label": "Questions heading",
+      "default": "Questions?"
+    },
+    {
+      "type": "richtext",
+      "id": "questions_text",
+      "label": "Questions text",
+      "default": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Extra questions"
+    },
+    {
+      "type": "paragraph",
+      "content": "Optional. Shown inside Questions? and added to the page's FAQ structured data. Avoid repeating what the panels above already say."
+    },
+    {
+      "type": "text",
+      "id": "question_1",
+      "label": "Question 1"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_1",
+      "label": "Answer 1"
+    },
+    {
+      "type": "text",
+      "id": "question_2",
+      "label": "Question 2"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_2",
+      "label": "Answer 2"
+    },
+    {
+      "type": "text",
+      "id": "question_3",
+      "label": "Question 3"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_3",
+      "label": "Answer 3"
+    },
+    {
+      "type": "text",
+      "id": "question_4",
+      "label": "Question 4"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_4",
+      "label": "Answer 4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product info accordions"
+    }
+  ]
+}
+{% endschema %}

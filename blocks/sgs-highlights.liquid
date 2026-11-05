@@ -1,0 +1,156 @@
+{%- liquid
+  assign bs = block.settings
+-%}
+
+{%- unless closest.product.gift_card? -%}
+  <ul class="sgs-hl" role="list" {{ block.shopify_attributes }}>
+    {%- for i in (1..4) -%}
+      {%- liquid
+        assign text_key = 'item_' | append: i | append: '_text'
+        assign icon_key = 'item_' | append: i | append: '_icon'
+        assign text = bs[text_key]
+        assign icon = bs[icon_key] | default: 'paper'
+      -%}
+      {%- if text != blank -%}
+        <li class="sgs-hl__item">
+          {%- case icon -%}
+            {%- when 'paper' -%}
+              <svg class="sgs-hl__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M4.5 2.5h8l3 3v12h-11z"/><path d="M12.5 2.5v3h3M7 9.5h6M7 12.5h6M7 15.5h4" stroke-linecap="round"/></svg>
+            {%- when 'printer' -%}
+              <svg class="sgs-hl__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M5.5 7.5V2.5h9v5M5.5 14.5h-3v-7h15v7h-3"/><path d="M5.5 11.5h9v6h-9z"/></svg>
+            {%- when 'tube' -%}
+              <svg class="sgs-hl__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><ellipse cx="4.5" cy="10" rx="2" ry="4.5"/><path d="M4.5 5.5h11c1.1 0 2 2 2 4.5s-.9 4.5-2 4.5h-11"/><path d="M8.5 5.5v9M12.5 5.5v9" stroke-dasharray="1 2"/></svg>
+            {%- when 'drop' -%}
+              <svg class="sgs-hl__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M10 2.5s5.5 6 5.5 9.5a5.5 5.5 0 0 1-11 0c0-3.5 5.5-9.5 5.5-9.5z"/></svg>
+            {%- else -%}
+              <svg class="sgs-hl__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9" stroke-linecap="round"/></svg>
+          {%- endcase -%}
+          <span class="sgs-hl__text">{{ text | escape }}</span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endunless -%}
+
+{% stylesheet %}
+  .sgs-hl {
+    display: grid;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-hl__item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-hl__icon {
+    flex-shrink: 0;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-hl__text {
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--sgs-text, #f2f0eb);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product highlights",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Short highlight rows with thin icons. Leave a row empty to hide it."
+    },
+    {
+      "type": "text",
+      "id": "item_1_text",
+      "label": "Row 1",
+      "default": "Premium semi-gloss paper, fade-resistant inks"
+    },
+    {
+      "type": "select",
+      "id": "item_1_icon",
+      "label": "Row 1 icon",
+      "options": [
+        { "value": "paper", "label": "Paper" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "tube", "label": "Tube" },
+        { "value": "drop", "label": "Ink drop" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "paper"
+    },
+    {
+      "type": "text",
+      "id": "item_2_text",
+      "label": "Row 2",
+      "default": "Printed to order in the UK"
+    },
+    {
+      "type": "select",
+      "id": "item_2_icon",
+      "label": "Row 2 icon",
+      "options": [
+        { "value": "paper", "label": "Paper" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "tube", "label": "Tube" },
+        { "value": "drop", "label": "Ink drop" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "printer"
+    },
+    {
+      "type": "text",
+      "id": "item_3_text",
+      "label": "Row 3",
+      "default": "Ships rolled in a protective tube"
+    },
+    {
+      "type": "select",
+      "id": "item_3_icon",
+      "label": "Row 3 icon",
+      "options": [
+        { "value": "paper", "label": "Paper" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "tube", "label": "Tube" },
+        { "value": "drop", "label": "Ink drop" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "tube"
+    },
+    {
+      "type": "text",
+      "id": "item_4_text",
+      "label": "Row 4"
+    },
+    {
+      "type": "select",
+      "id": "item_4_icon",
+      "label": "Row 4 icon",
+      "options": [
+        { "value": "paper", "label": "Paper" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "tube", "label": "Tube" },
+        { "value": "drop", "label": "Ink drop" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "check"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product highlights"
+    }
+  ]
+}
+{% endschema %}

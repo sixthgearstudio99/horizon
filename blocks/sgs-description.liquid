@@ -1,0 +1,154 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+  assign uid = 'SgsDesc-' | append: block.id
+
+  # Long descriptions start collapsed to about five lines. Decided here from the text length,
+  # so the toggle is there from the first paint and nothing shifts.
+  assign plain_length = product_resource.description | strip_html | strip | size
+  assign collapsible = false
+  if plain_length > bs.collapse_after
+    assign collapsible = true
+  endif
+-%}
+
+{%- if product_resource.description != blank -%}
+  <div class="sgs-desc{% if collapsible %} sgs-desc--collapsible{% endif %}" {{ block.shopify_attributes }}>
+    {%- if bs.heading != blank -%}
+      <h2 class="sgs-desc__heading sgs-label">{{ bs.heading | escape }}</h2>
+    {%- endif -%}
+    <div class="sgs-desc__body rte" id="{{ uid }}">{{ product_resource.description }}</div>
+    {%- if collapsible -%}
+      <button
+        type="button"
+        class="sgs-desc__toggle"
+        aria-expanded="false"
+        aria-controls="{{ uid }}"
+        data-more="{{ bs.more_label | escape }}"
+        data-less="{{ bs.less_label | escape }}"
+        onclick="var o=this.getAttribute('aria-expanded')==='true';this.setAttribute('aria-expanded',String(!o));this.textContent=o?this.dataset.more:this.dataset.less;"
+      >
+        {{- bs.more_label | escape -}}
+      </button>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-desc {
+    width: 100%;
+  }
+
+  .sgs-desc__heading {
+    margin: 0 0 14px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-desc__body {
+    max-width: 65ch;
+    font-family: var(--sgs-font-body);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-desc__body > :first-child {
+    margin-top: 0;
+  }
+
+  .sgs-desc__body > :last-child {
+    margin-bottom: 0;
+  }
+
+  .sgs-desc__body :is(p, ul, ol) {
+    margin: 0 0 1em;
+  }
+
+  .sgs-desc__body a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Five lines of 16px / 1.6 */
+  .sgs-desc--collapsible .sgs-desc__body {
+    max-height: 8em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
+    mask-image: linear-gradient(to bottom, #000 60%, transparent);
+  }
+
+  .sgs-desc--collapsible:has(.sgs-desc__toggle[aria-expanded='true']) .sgs-desc__body {
+    max-height: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .sgs-desc__toggle {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--sgs-text, #f2f0eb);
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.35);
+    text-underline-offset: 4px;
+    cursor: pointer;
+  }
+
+  .sgs-desc__toggle:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 3px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Label",
+      "default": "About this print"
+    },
+    {
+      "type": "range",
+      "id": "collapse_after",
+      "label": "Collapse descriptions longer than",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "unit": "chr",
+      "default": 350,
+      "info": "Longer descriptions show about five lines with a Read more link."
+    },
+    {
+      "type": "text",
+      "id": "more_label",
+      "label": "Read more label",
+      "default": "Read more"
+    },
+    {
+      "type": "text",
+      "id": "less_label",
+      "label": "Read less label",
+      "default": "Read less"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product description"
+    }
+  ]
+}
+{% endschema %}

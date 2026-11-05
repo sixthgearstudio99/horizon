@@ -211,14 +211,14 @@
           "type": "row",
           "settings": {
             "label": "Production",
-            "value": "Made to order in the UK in 2 to 5 working days"
+            "value": "Made to order in the UK in 2 to 4 working days"
           }
         },
         "row_4": {
           "type": "row",
           "settings": {
             "label": "Delivery",
-            "value": "Free UK delivery in 2 to 4 working days"
+            "value": "Free UK delivery in 2 to 3 working days"
           }
         },
         "row_5": {
@@ -352,7 +352,7 @@
         "eyebrow": "FAQ",
         "heading": "Questions",
         "question_1": "How long does delivery take?",
-        "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
+        "answer_1": "Every print is made to order in the UK within 2 to 4 working days, then delivered in 2 to 3 working days. UK delivery is free.",
         "question_2": "Is it framed?",
         "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
         "question_3": "What paper is it printed on?",

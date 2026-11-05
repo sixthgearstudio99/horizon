@@ -415,8 +415,8 @@ html[data-sgs-sale='2'] .sgs-sale-note[data-sgs-sale-win='2'] {
   display: block !important;
 }
 
-html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal),
-html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal) {
+html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal),
+html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal) {
   display: none !important;
 }
 
@@ -452,7 +452,7 @@ html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price,
   font-weight: 400;
   font-size: 11px;
   line-height: 1.5;
-  letter-spacing: var(--sgs-mono-tracking);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-wrap: balance;
   color: var(--sgs-text);
@@ -460,4 +460,60 @@ html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price,
 
 html[data-sgs-sale-hide-wall] .sgs-wallprog {
   display: none !important;
+}
+
+/* ---------- Product page buy area ---------- */
+/* Size tiles: size on the left, price on the right */
+/* Horizon's selected-tile highlight is positioned from the tile's centring, so keep that and
+   let the size text take the spare width instead */
+.variant-option__button-label.sgs-tile--priced {
+  gap: 16px;
+}
+
+.variant-option .sgs-tile--priced .variant-option__button-label__text {
+  flex: 1 1 auto;
+  text-align: start;
+}
+
+.sgs-tile-price {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  pointer-events: none;
+  font-family: var(--sgs-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Prices follow the tile's own text colour, so they stay readable on the selected tile */
+.sgs-tile-price .sgs-sale {
+  gap: 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+
+.sgs-tile-price :is(.sgs-sale__now, .sgs-sale__was) {
+  color: inherit;
+}
+
+.sgs-tile-price .sgs-sale__was {
+  opacity: 0.55;
+}
+
+/* See it on your wall: a small text link under the delivery estimate */
+/* Two classes: the shared mono rule above carries element-level weight through :is() */
+.sgs-wall .sgs-wall__open {
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+  color: var(--sgs-text-2);
+}
+
+.sgs-wall .sgs-wall__open:hover {
+  color: var(--sgs-text);
+}
+
+.sgs-wall .sgs-wall__open svg {
+  width: 14px;
+  height: 14px;
 }

@@ -8,6 +8,13 @@
 {%- enddoc -%}
 
 {% assign block_settings = block.settings %}
+{%- liquid
+  # SixthGear sale display: tile prices show the sale price too while a window is open
+  capture sgs_sale_win
+    render 'sgs-sale-window'
+  endcapture
+  assign sgs_sale_win = sgs_sale_win | strip
+-%}
 
 {% liquid
   # Custom styling applies to:
@@ -80,7 +87,9 @@
           endif
         -%}
 
-        {%- if product_option.values.size == 1 and variant_style != 'swatch' -%}
+        {%- if product_option.values.size == 1 and variant_style != 'swatch' and block_settings.hide_single_choice -%}
+          {%- comment -%} SixthGear: an option with only one choice (e.g. one paper) is not shown; it has no input to send {%- endcomment -%}
+        {%- elsif product_option.values.size == 1 and variant_style != 'swatch' -%}
           <div
             class="variant-option"
             data-testid="variant-option-single"
@@ -107,20 +116,28 @@
                 <span class="variant-option__swatch-value">{% render 'sgs-size-label', value: product_option.selected_value %}</span>
               {%- endif %}
             </legend>
+            {%- liquid
+              # SixthGear: each size tile shows its price (for the other options currently chosen)
+              assign show_tile_price = false
+              if block_settings.show_size_prices and variant_style != 'swatch' and option_name_lower contains 'size'
+                assign show_tile_price = true
+              endif
+            -%}
             {%- for product_option_value in product_option.values -%}
               {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
+              {%- assign tile_variant = product_option_value.variant -%}
               {%- assign value_label_length = value_label | size -%}
               {% if value_label_length > longest_value and option_id_attribute %}
                 {% assign longest_value = value_label_length %}
               {% endif %}
               <label
-                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}{% if show_tile_price and tile_variant != blank %} sgs-tile--priced{% endif %}"
               >
                 <input
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ value_label }}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  aria-label="{{ value_label }}{% if show_tile_price and tile_variant != blank %}, {{ tile_variant.price | money_without_trailing_zeros }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
                   {% if product_option_value.available == false %}
                     aria-disabled="true"
                   {% endif %}
@@ -171,6 +188,18 @@
                   >
                     {{- value_label -}}
                   </span>
+                  {%- if show_tile_price and tile_variant != blank -%}
+                    <span class="sgs-tile-price" aria-hidden="true">
+                      {%- if sgs_sale_win != blank -%}
+                        {% render 'sgs-sale-price',
+                          product_resource: product_resource,
+                          window: sgs_sale_win,
+                          amount: tile_variant.price
+                        %}
+                      {%- endif -%}
+                      <span class="sgs-tile-price__normal">{{ tile_variant.price | money_without_trailing_zeros }}</span>
+                    </span>
+                  {%- endif -%}
                 {% endif %}
                 {% render 'strikethrough-variant', product_option: product_option_value %}
               </label>

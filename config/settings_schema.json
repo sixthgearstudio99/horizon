@@ -2211,19 +2211,13 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Display only. Shows the sale price on product pages and product cards, and the message first in the announcement bar, while a window is open (UK time). The discount itself must be an automatic discount in Shopify with the same percentage and dates. Prices, compare-at prices and search-engine data are not changed."
+        "content": "Display only. Shows the sale price on product pages, size buttons and product cards, a short line on product pages, and the message first in the announcement bar, while a window is open (UK time). The discount itself must be an automatic discount in Shopify with the same percentage and dates. Prices, compare-at prices and search-engine data are not changed."
       },
       {
         "type": "checkbox",
         "id": "sgs_sale_enabled",
         "label": "Show sale display",
         "default": true
-      },
-      {
-        "type": "text",
-        "id": "sgs_sale_checkout_note",
-        "label": "Text after the message on product pages",
-        "default": "Applied at checkout"
       },
       {
         "type": "textarea",
@@ -2261,7 +2255,14 @@
         "type": "text",
         "id": "sgs_sale1_message",
         "label": "Message",
-        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV"
+        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV",
+        "info": "Announcement bar."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_short",
+        "label": "Product page line",
+        "default": "15% OFF · ENDS SUN 15 NOV"
       },
       {
         "type": "checkbox",
@@ -2299,7 +2300,14 @@
         "type": "text",
         "id": "sgs_sale2_message",
         "label": "Message",
-        "default": "BLACK FRIDAY · 25% OFF EVERYTHING · ENDS MON 30 NOV"
+        "default": "BLACK FRIDAY · 25% OFF EVERYTHING · ENDS MON 30 NOV",
+        "info": "Announcement bar."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_short",
+        "label": "Product page line",
+        "default": "BLACK FRIDAY · 25% OFF · ENDS MON 30 NOV"
       },
       {
         "type": "checkbox",

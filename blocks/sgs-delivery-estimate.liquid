@@ -59,6 +59,9 @@
   {%- if gift_line != blank -%}
     <p class="sgs-delivery__xmas" id="{{ uid }}-xmas" hidden>{{ gift_line | escape }}</p>
   {%- endif -%}
+  {%- if bs.footnote != blank -%}
+    <p class="sgs-delivery__foot">{{ bs.footnote | escape }}</p>
+  {%- endif -%}
   </div>
 </div>
 
@@ -152,10 +155,20 @@
     font-family: var(--sgs-font-mono, monospace);
     font-size: 11px;
     line-height: 1.5;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     text-wrap: balance;
     color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-delivery__foot {
+    margin: 6px 0 0;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--sgs-text-2, #9a968e);
   }
 
   .sgs-delivery__text strong {
@@ -185,6 +198,13 @@
       "id": "text_before",
       "label": "Text before the dates",
       "default": "Order today, arrives"
+    },
+    {
+      "type": "text",
+      "id": "footnote",
+      "label": "Small line under the estimate",
+      "default": "Print only – frame not included",
+      "info": "Leave empty to hide."
     },
     {
       "type": "range",

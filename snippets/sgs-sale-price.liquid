@@ -17,6 +17,7 @@
   assign part = part | default: 'price'
   assign percent_key = 'sgs_sale' | append: window | append: '_percent'
   assign message_key = 'sgs_sale' | append: window | append: '_message'
+  assign short_key = 'sgs_sale' | append: window | append: '_short'
   assign percent = settings[percent_key] | plus: 0
 
   assign in_sale = true
@@ -31,12 +32,9 @@
 
 {%- if in_sale -%}
   {%- if part == 'note' -%}
-    {%- assign message = settings[message_key] | strip -%}
+    {%- assign message = settings[short_key] | strip | default: settings[message_key] -%}
     {%- if message != blank -%}
-      <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">
-        {{- message | escape -}}
-        {%- if settings.sgs_sale_checkout_note != blank %} · {{ settings.sgs_sale_checkout_note | escape }}{% endif -%}
-      </p>
+      <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">{{ message | escape }}</p>
     {%- endif -%}
   {%- elsif amount != blank -%}
     {%- liquid

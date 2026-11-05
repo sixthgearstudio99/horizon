@@ -26,7 +26,8 @@
     show_icon: can_add_to_cart,
     product: closest.product,
     add_to_cart_text: add_to_cart_text,
-    data_testid: 'standalone-add-to-cart'
+    data_testid: 'standalone-add-to-cart',
+    sgs_price: block.settings.sgs_show_price
   %}
 </span>
 
@@ -35,6 +36,13 @@
   "name": "t:names.add_to_cart",
   "tag": null,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "sgs_show_price",
+      "label": "Show the price in the button",
+      "default": true,
+      "info": "SixthGear: \"Add to cart — £25\", with the sale price during a sale."
+    },
     {
       "type": "select",
       "id": "style_class",

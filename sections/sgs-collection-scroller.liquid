@@ -1,0 +1,283 @@
+{%- liquid
+  assign s = section.settings
+  assign tile_count = 0
+  for block in section.blocks
+    if block.settings.collection != blank or block.settings.product != blank or block.settings.link != blank
+      assign tile_count = tile_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if tile_count > 0 -%}
+  <section
+    class="sgs-cscroll"
+    style="--sgs-cscroll-pad-top: {{ s['padding-block-start'] }}px; --sgs-cscroll-pad-bottom: {{ s['padding-block-end'] }}px;"
+    {% if s.heading != blank %}aria-labelledby="SgsCscroll-{{ section.id }}"{% endif %}
+  >
+    <div class="sgs-cscroll__inner">
+      {%- if s.label != blank or s.heading != blank -%}
+        <div class="sgs-cscroll__head">
+          {%- if s.label != blank -%}
+            <p class="sgs-cscroll__label sgs-label">{{ s.label | escape }}</p>
+          {%- endif -%}
+          {%- if s.heading != blank -%}
+            <h2 class="sgs-cscroll__heading" id="SgsCscroll-{{ section.id }}">{{ s.heading | escape }}</h2>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <ul class="sgs-cscroll__row" role="list" tabindex="0" aria-label="{{ s.heading | default: 'Collections' | escape }}, scroll sideways for more">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign c = b.collection
+            assign p = b.product
+            if c == blank and p == blank and b.link == blank
+              continue
+            endif
+            assign url = b.link
+            if url == blank and c != blank
+              assign url = c.url
+            elsif url == blank and p != blank
+              assign url = p.url
+            endif
+            assign title = b.title
+            if title == blank and c != blank
+              assign title = c.title
+            elsif title == blank and p != blank
+              assign title = p.title
+            endif
+            assign image = b.image
+            if image == blank and c != blank
+              assign image = c.image | default: c.products.first.featured_image
+            elsif image == blank and p != blank
+              assign image = p.featured_image
+            endif
+          -%}
+          <li class="sgs-cscroll__item" {{ block.shopify_attributes }}>
+            <a class="sgs-cscroll__tile" href="{{ url }}">
+              <span class="sgs-cscroll__media">
+                {%- if image != blank -%}
+                  {{
+                    image
+                    | image_url: width: 700
+                    | image_tag:
+                      widths: '240, 360, 500, 700',
+                      sizes: '(min-width: 990px) 16vw, 42vw',
+                      loading: 'lazy',
+                      class: 'sgs-cscroll__img',
+                      alt: ''
+                  }}
+                {%- endif -%}
+              </span>
+              <span class="sgs-cscroll__title">{{ title | escape }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-cscroll {
+    padding-block: var(--sgs-cscroll-pad-top) var(--sgs-cscroll-pad-bottom);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-cscroll {
+      padding-block: calc(var(--sgs-cscroll-pad-top) * 0.6) calc(var(--sgs-cscroll-pad-bottom) * 0.6);
+    }
+  }
+
+  .sgs-cscroll__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 16px);
+  }
+
+  .sgs-cscroll__head {
+    margin-bottom: 24px;
+  }
+
+  .sgs-cscroll__label {
+    margin: 0 0 12px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-cscroll .sgs-cscroll__heading {
+    margin: 0;
+    font-size: var(--sgs-h2) !important;
+    line-height: 1.08 !important;
+  }
+
+  .sgs-cscroll__row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 42%;
+    gap: 12px;
+    margin: 0 calc(var(--page-margin, 16px) * -1);
+    padding: 0 var(--page-margin, 16px) 12px;
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--page-margin, 16px);
+    scrollbar-width: thin;
+    scrollbar-color: var(--sgs-line, #282828) transparent;
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-cscroll__row {
+      grid-auto-columns: calc((100% - 48px) / 4.5);
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .sgs-cscroll__row {
+      grid-auto-columns: calc((100% - 60px) / 6);
+    }
+  }
+
+  .sgs-cscroll__row:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 4px;
+  }
+
+  .sgs-cscroll__item {
+    scroll-snap-align: start;
+  }
+
+  .sgs-cscroll__tile {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .sgs-cscroll__tile:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 3px;
+  }
+
+  .sgs-cscroll__media {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--sgs-raised, #141414);
+    border: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-cscroll__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .sgs-cscroll__tile:hover .sgs-cscroll__img {
+    transform: scale(1.04);
+  }
+
+  .sgs-cscroll__title {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-cscroll__img {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shop by collection",
+  "tag": "div",
+  "class": "sgs-cscroll-section",
+  "max_blocks": 16,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Shop by collection"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find your print"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Collection tile",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Or a product",
+          "info": "For example the Custom Car Poster."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Leave empty to use the collection or product title."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image",
+          "info": "Leave empty to use the collection's image."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Leave empty to link to the collection or product."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by collection"
+    }
+  ]
+}
+{% endschema %}

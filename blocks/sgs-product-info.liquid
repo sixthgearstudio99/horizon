@@ -46,6 +46,16 @@
     </details>
   {%- endif -%}
 
+  {%- if bs.guarantee_text != blank -%}
+    <details class="sgs-info__item">
+      <summary class="sgs-info__summary">
+        <span class="sgs-label">{{ bs.guarantee_heading | escape }}</span>
+        <span class="sgs-info__icon" aria-hidden="true"></span>
+      </summary>
+      <div class="sgs-info__body rte">{{ bs.guarantee_text }}</div>
+    </details>
+  {%- endif -%}
+
   {%- if framing_text != blank or size_option != nil -%}
     <details class="sgs-info__item">
       <summary class="sgs-info__summary">
@@ -259,6 +269,18 @@
       "id": "delivery_text",
       "label": "Delivery and returns",
       "default": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Standard prints can be returned within 14 days. Faulty or damaged prints replaced free. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>"
+    },
+    {
+      "type": "text",
+      "id": "guarantee_heading",
+      "label": "Guarantee heading",
+      "default": "Satisfaction guarantee"
+    },
+    {
+      "type": "richtext",
+      "id": "guarantee_text",
+      "label": "Guarantee",
+      "default": "<p>If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. <a href=\"/policies/refund-policy\">Read our returns policy</a></p>"
     },
     {
       "type": "text",

@@ -1,0 +1,92 @@
+{%- liquid
+  # The open offer window's message (Theme settings > SixthGear: offers), on Shopify's clock;
+  # CSS shows it only while the visitor's clock agrees (html[data-sgs-sale]).
+  capture sgs_sale_win
+    render 'sgs-sale-window'
+  endcapture
+  assign sgs_sale_win = sgs_sale_win | strip
+  assign message = ''
+  if sgs_sale_win != blank
+    assign message_key = 'sgs_sale' | append: sgs_sale_win | append: '_message'
+    assign message = settings[message_key] | strip
+  endif
+  assign note = block.settings.note | default: settings.sgs_offer_note
+-%}
+
+{%- if message != blank and closest.product.gift_card? != true -%}
+  <div class="sgs-offer" data-sgs-offer-win="{{ sgs_sale_win }}" role="note" {{ block.shopify_attributes }}>
+    <p class="sgs-offer__title">{{ message | escape }}</p>
+    {%- if note != blank -%}
+      <p class="sgs-offer__note">{{ note | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-offer {
+    display: none;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  html[data-sgs-sale='1'] .sgs-offer[data-sgs-offer-win='1'],
+  html[data-sgs-sale='2'] .sgs-offer[data-sgs-offer-win='2'],
+  html[data-sgs-sale='3'] .sgs-offer[data-sgs-offer-win='3'],
+  html[data-sgs-sale='4'] .sgs-offer[data-sgs-offer-win='4'] {
+    display: block;
+  }
+
+  .sgs-offer__title {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sgs-offer__title::before {
+    content: '';
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    background: var(--sgs-red, #e10600);
+    translate: 0 -1px;
+  }
+
+  .sgs-offer__note {
+    margin: 4px 0 0 16px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #9a968e);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Offer box",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The current offer from Theme settings > SixthGear: offers. Hidden when no offer is running."
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "Line under the offer",
+      "info": "Leave empty to use the line from Theme settings (Applied automatically at checkout.)."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer box"
+    }
+  ]
+}
+{% endschema %}

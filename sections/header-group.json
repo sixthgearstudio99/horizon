@@ -57,21 +57,6 @@
           },
           "blocks": {}
         },
-        "announcement_multibuy": {
-          "type": "_announcement",
-          "settings": {
-            "text": "BUY 2 SAVE 15% · BUY 3+ SAVE 25%",
-            "link": "",
-            "font": "var(--font-body--family)",
-            "font_size": "0.625rem",
-            "weight": "500",
-            "letter_spacing": "loose",
-            "case": "uppercase",
-            "text_color": "#f5f3ef",
-            "sgs_wall_message": true
-          },
-          "blocks": {}
-        },
         "announcement_christmas": {
           "type": "_announcement",
           "settings": {
@@ -91,7 +76,6 @@
       "block_order": [
         "announcement_BxgCk9",
         "announcement_gifts",
-        "announcement_multibuy",
         "announcement_christmas"
       ],
       "name": "t:names.announcement_bar",

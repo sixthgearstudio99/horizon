@@ -1,6 +1,6 @@
 {%- doc -%}
-  SixthGear Studios: "Build your wall" progress in the cart drawer and cart page.
-  Display only: the multi-buy discounts themselves are automatic discounts in Shopify.
+  SixthGear Studios: Buy 2, Get 1 Free progress in the cart drawer and cart page.
+  Display only: the offer itself is an automatic discount in Shopify.
   Counts print quantities, leaving out the handles listed in Theme settings (the custom
   poster) and gift cards. Rendered by Liquid inside the cart contents, so it refreshes
   whenever Horizon re-renders the cart after an add, remove or quantity change.
@@ -45,21 +45,17 @@
 -%}
 
 {%- liquid
-  # During a sale window the wording changes or the progress is hidden (Theme settings > sale display)
+  # Hidden while an offer window that ticks "Hide Buy 2, Get 1 Free progress" is open
+  # (Theme settings > SixthGear: offers); the visitor's clock also hides it via
+  # html[data-sgs-sale-hide-wall] (assets/sgs-studio.css).
   capture sgs_sale_win
     render 'sgs-sale-window'
   endcapture
   assign sgs_sale_win = sgs_sale_win | strip
-  assign sale_message = ''
   if sgs_sale_win != blank
     assign hide_wall_key = 'sgs_sale' | append: sgs_sale_win | append: '_hide_wall'
-    assign wall_message_key = 'sgs_sale' | append: sgs_sale_win | append: '_wall_message'
     if settings[hide_wall_key]
       assign message = ''
-    elsif settings[wall_message_key] != blank and prints > 0 and prints < 3
-      # The sale replaces the 2-print saving (discounts don't stack); 3+ still says "You're saving 25%".
-      # Both wordings are in the page; CSS shows the sale one only while the visitor's clock agrees.
-      assign sale_message = settings[wall_message_key]
     endif
   endif
 -%}
@@ -67,12 +63,7 @@
 {%- if settings.sgs_wall_progress and prints > 0 and message != blank -%}
   <div class="sgs-wallprog" data-prints="{{ prints }}">
     <div class="sgs-wallprog__row">
-      <p class="sgs-wallprog__message">
-        {%- if sale_message != blank -%}
-          <span class="sgs-wallprog__sale-msg" data-sgs-sale-win="{{ sgs_sale_win }}">{{ sale_message | escape }}</span>
-        {%- endif -%}
-        <span class="sgs-wallprog__normal-msg">{{ message | escape }}</span>
-      </p>
+      <p class="sgs-wallprog__message">{{ message | escape }}</p>
       {%- if settings.sgs_wall_link_label != blank -%}
         <a class="sgs-wallprog__link" href="{{ settings.sgs_wall_link_url | default: routes.all_products_collection_url | escape }}">
           {{- settings.sgs_wall_link_label | escape -}}

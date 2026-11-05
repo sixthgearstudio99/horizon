@@ -1,6 +1,6 @@
 {%- doc -%}
-  SixthGear Studios: which sale window is open right now on Shopify's clock (shop time zone,
-  set to UK time). Outputs 1, 2 or nothing. The visitor's device is checked separately by
+  SixthGear Studios: which offer window is open right now on Shopify's clock (shop time zone,
+  set to UK time). Outputs 1 to 4, or nothing. Theme settings > SixthGear: offers. The visitor's device is checked separately by
   snippets/sgs-sale-head.liquid, and the sale only shows when both agree.
 
   @example
@@ -10,15 +10,24 @@
 {%- liquid
   if settings.sgs_sale_enabled
     assign sgs_now = 'now' | date: '%Y-%m-%d %H:%M'
-    for i in (1..2)
+    for i in (1..4)
       assign key = 'sgs_sale' | append: i
       assign start_key = key | append: '_start'
       assign end_key = key | append: '_end'
+      assign message_key = key | append: '_message'
       assign percent_key = key | append: '_percent'
       assign window_start = settings[start_key] | strip
       assign window_end = settings[end_key] | strip
+      # No end date: open-ended
+      if window_end == blank
+        assign window_end = '9999-12-31 23:59'
+      endif
       assign window_percent = settings[percent_key] | plus: 0
-      if window_start.size == 16 and window_end.size == 16 and window_percent > 0
+      assign window_message = settings[message_key] | strip
+      if window_start.size == 16 and window_end.size == 16
+        if window_percent <= 0 and window_message == blank
+          continue
+        endif
         if sgs_now >= window_start and sgs_now <= window_end
           echo i
           break

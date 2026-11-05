@@ -199,14 +199,22 @@
           var section = root.closest('.shopify-section') || document;
           return section.querySelector('.sgs-wall__open') || document.querySelector('.sgs-wall__open');
         };
-        opener.addEventListener('click', function () {
+        var lastOpener = opener;
+        var open = function (from) {
+          lastOpener = from || opener;
           var w = wallOpen();
           if (wallBtn) wallBtn.hidden = !w || w.hidden;
           dialog.showModal();
+        };
+        opener.addEventListener('click', function () { open(opener); });
+        // The variant picker can show its own "Which size?" link right under the size tiles
+        (root.closest('.shopify-section') || document).addEventListener('click', function (e) {
+          var trigger = e.target instanceof Element ? e.target.closest('[data-sgs-sg-trigger]') : null;
+          if (trigger) open(trigger);
         });
         root.querySelector('[data-sg-close]').addEventListener('click', function () { dialog.close(); });
         dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
-        dialog.addEventListener('close', function () { opener.focus({ preventScroll: true }); });
+        dialog.addEventListener('close', function () { lastOpener.focus({ preventScroll: true }); });
         if (wallBtn) {
           wallBtn.addEventListener('click', function () {
             var w = wallOpen();

@@ -8,6 +8,7 @@
   @param {string} [class] - Additional CSS classes to apply to the button.
   @param {string} [id] - The ID attribute for the button.
   @param {string} [data_testid] - The data-testid attribute for testing.
+  @param {boolean} [sgs_price] - SixthGear: show the selected variant's price in the label
 {%- enddoc -%}
 
 {%- liquid
@@ -48,6 +49,26 @@
       </span>
     {% endif %}
     {{- add_to_cart_text | default: default_add_to_cart_text -}}
+    {%- comment -%}
+      SixthGear: "Add to cart — £25". Horizon re-renders this button for each variant, so the
+      price follows the size and paper; the sale price shows while an offer window is open.
+    {%- endcomment -%}
+    {%- if sgs_price and can_add_to_cart and product != blank -%}
+      {%- liquid
+        assign sgs_variant = product.selected_or_first_available_variant
+        capture sgs_sale_win
+          render 'sgs-sale-window'
+        endcapture
+        assign sgs_sale_win = sgs_sale_win | strip
+      -%}
+      <span class="sgs-atc-price">
+        <span aria-hidden="true">&nbsp;—&nbsp;</span>
+        {%- if sgs_sale_win != blank -%}
+          {%- render 'sgs-sale-price', product_resource: product, window: sgs_sale_win, amount: sgs_variant.price, part: 'now' -%}
+        {%- endif -%}
+        <span class="sgs-atc-price__normal">{{ sgs_variant.price | money_without_trailing_zeros }}</span>
+      </span>
+    {%- endif -%}
     {% comment %} checkmark burst markup {% endcomment %}
     <span class="add-to-cart__added">
       <span class="svg-wrapper add-to-cart__added-icon">

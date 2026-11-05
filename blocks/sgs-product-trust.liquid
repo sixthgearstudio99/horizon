@@ -1,5 +1,14 @@
 {%- liquid
   assign bs = block.settings
+  # The frame note is for unframed prints: hidden when the chosen variant is framed
+  assign variant_title = closest.product.selected_or_first_available_variant.title | downcase
+  assign is_framed = false
+  if variant_title contains 'frame'
+    assign is_framed = true
+    if variant_title contains 'unframe'
+      assign is_framed = false
+    endif
+  endif
 -%}
 
 {%- unless closest.product.gift_card? -%}
@@ -40,7 +49,26 @@
   {%- endfor -%}
 </ul>
 {%- if bs.footnote != blank -%}
-  <p class="sgs-ptrust__foot">{{ bs.footnote | escape }}</p>
+  <p class="sgs-ptrust__foot" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ bs.footnote | escape }}</p>
+  <script>
+    (function () {
+      // Follows the chosen options: hidden for a framed choice (e.g. "Black frame"), shown otherwise
+      var note = document.currentScript.previousElementSibling;
+      var root = note && (note.closest('.shopify-section') || document);
+      if (!root || root.dataset.sgsFrameNote) return;
+      root.dataset.sgsFrameNote = '1';
+      root.addEventListener('change', function (e) {
+        if (!(e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement)) return;
+        if (!e.target.closest('variant-picker, .variant-picker')) return;
+        var picked = Array.prototype.map.call(
+          root.querySelectorAll('variant-picker input:checked, variant-picker select'),
+          function (el) { return (el.value || '').toLowerCase(); }
+        ).join(' ');
+        var framed = /frame/.test(picked) && !/unframe/.test(picked);
+        root.querySelectorAll('[data-sgs-frame-note]').forEach(function (n) { n.hidden = framed; });
+      });
+    })();
+  </script>
 {%- endif -%}
 </div>
 {%- endunless -%}
@@ -121,6 +149,34 @@
     }
   }
 
+  /* Columns: one row of short reassurances, icon above text */
+  .sgs-ptrust-wrap--columns .sgs-ptrust {
+    display: grid;
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
+    gap: 8px;
+  }
+
+  .sgs-ptrust-wrap--columns .sgs-ptrust__item {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px 4px;
+    text-align: center;
+  }
+
+  .sgs-ptrust-wrap--columns .sgs-ptrust__text {
+    line-height: 1.35;
+  }
+
+  .sgs-ptrust-wrap--columns .sgs-ptrust__foot {
+    text-align: center;
+  }
+
+  .sgs-ptrust__foot[hidden] {
+    display: none;
+  }
+
   .sgs-ptrust__foot {
     margin: 10px 0 0;
     font-family: var(--sgs-font-mono, monospace);
@@ -147,6 +203,7 @@
       "label": "Layout",
       "options": [
         { "value": "line", "label": "Compact rows" },
+        { "value": "columns", "label": "One row of columns" },
         { "value": "grid", "label": "Grid" }
       ],
       "default": "line"
@@ -256,7 +313,7 @@
       "id": "footnote",
       "label": "Small line underneath",
       "default": "Print only – frame not included",
-      "info": "Leave empty to hide."
+      "info": "Hidden while a framed variant is chosen. Leave empty to hide."
     }
   ],
   "presets": [

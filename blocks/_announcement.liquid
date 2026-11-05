@@ -15,39 +15,20 @@
     endif
   endif
 
-  # SixthGear: the build-your-wall (multi-buy) message changes during a sale window, set in
-  # Theme settings > sale display. Shopify's clock picks the text here; the visitor's clock
-  # settles it in sections/header-announcements.liquid before the slides start.
+  # SixthGear: an announcement marked as the Buy 2, Get 1 Free message is hidden during offer
+  # windows that hide that progress (Theme settings > SixthGear: offers). Shopify's clock decides
+  # here; the visitor's clock settles it in sections/header-announcements.liquid.
   assign display_text = block.settings.text
-  assign wall_text_1 = nil
-  assign wall_text_2 = nil
   if block_settings.sgs_wall_message
-    for w in (1..2)
-      assign hide_key = 'sgs_sale' | append: w | append: '_hide_wall'
-      assign msg_key = 'sgs_sale' | append: w | append: '_wall_message'
-      assign window_text = block.settings.text
-      if settings[hide_key]
-        assign window_text = ''
-      elsif settings[msg_key] != blank
-        assign window_text = settings[msg_key] | escape
-      endif
-      if w == 1
-        assign wall_text_1 = window_text
-      else
-        assign wall_text_2 = window_text
-      endif
-    endfor
     capture sgs_sale_win
       render 'sgs-sale-window'
     endcapture
     assign sgs_sale_win = sgs_sale_win | strip
-    if sgs_sale_win == '1'
-      assign display_text = wall_text_1
-    elsif sgs_sale_win == '2'
-      assign display_text = wall_text_2
-    endif
-    if display_text == blank
-      assign expired = true
+    if sgs_sale_win != blank
+      assign hide_key = 'sgs_sale' | append: sgs_sale_win | append: '_hide_wall'
+      if settings[hide_key]
+        assign expired = true
+      endif
     endif
   endif
 -%}
@@ -77,8 +58,10 @@
     {% if block_settings.sgs_wall_message %}
       data-sgs-wall-slide
       data-text-0="{{ block.settings.text | escape }}"
-      data-text-1="{{ wall_text_1 | escape }}"
-      data-text-2="{{ wall_text_2 | escape }}"
+      {%- for w in (1..4) -%}
+        {%- assign hide_key = 'sgs_sale' | append: w | append: '_hide_wall' -%}
+        {%- if settings[hide_key] %} data-text-{{ w }}=""{% endif -%}
+      {%- endfor %}
     {% endif %}
   >
     <p class="announcement-bar__text">
@@ -123,9 +106,9 @@
     {
       "type": "checkbox",
       "id": "sgs_wall_message",
-      "label": "This is the build your wall / multi-buy message",
+      "label": "This is the Buy 2, Get 1 Free message",
       "default": false,
-      "info": "Changed or hidden during sale windows, as set in Theme settings > SixthGear: sale display."
+      "info": "Hidden during offer windows that hide Buy 2, Get 1 Free progress (Theme settings > SixthGear: offers)."
     },
     {
       "type": "header",

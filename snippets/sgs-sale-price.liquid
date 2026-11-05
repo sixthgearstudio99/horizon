@@ -5,7 +5,7 @@
 
   @param {product} product_resource - The product
   @param {string} window - The open window, 1 or 2 (from sgs-sale-window)
-  @param {string} [part] - 'price' (default) or 'note'
+  @param {string} [part] - 'price' (default), 'now' (sale price only) or 'note'
   @param {number} [amount] - Price in pence that the discount applies to (part 'price')
   @param {boolean} [from] - Show "From" before the prices (part 'price')
 
@@ -36,6 +36,12 @@
     {%- if message != blank -%}
       <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">{{ message | escape }}</p>
     {%- endif -%}
+  {%- elsif part == 'now' and amount != blank -%}
+    {%- liquid
+      assign discount = amount | times: percent | plus: 50 | divided_by: 100 | floor
+      assign sale_amount = amount | minus: discount
+    -%}
+    <span class="sgs-sale-now" data-sgs-sale-win="{{ window }}">{{ sale_amount | money_without_trailing_zeros }}</span>
   {%- elsif amount != blank -%}
     {%- liquid
       # Discount rounded to the nearest penny, then taken off, as a percentage discount does

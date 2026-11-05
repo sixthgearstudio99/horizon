@@ -1,0 +1,131 @@
+{%- liquid
+  assign bs = block.settings
+  assign product_resource = closest.product
+
+  # Real Judge.me data only: Shopify's review metafields (reviews.rating / reviews.rating_count,
+  # which Judge.me keeps in sync), else the count and average in Judge.me's own badge metafield.
+  assign rating = product_resource.metafields.reviews.rating.value.rating | plus: 0
+  assign scale = product_resource.metafields.reviews.rating.value.scale_max | default: 5 | plus: 0
+  assign count = product_resource.metafields.reviews.rating_count.value | default: product_resource.metafields.reviews.rating_count | plus: 0
+  if count == 0
+    assign badge = product_resource.metafields.judgeme.badge.value | default: product_resource.metafields.judgeme.badge | append: '' | replace: '"', "'"
+    if badge contains 'data-number-of-reviews'
+      assign count = badge | split: "data-number-of-reviews='" | last | split: "'" | first | plus: 0
+      assign rating = badge | split: "data-average-rating='" | last | split: "'" | first | plus: 0
+      assign scale = 5
+    endif
+  endif
+  if scale <= 0
+    assign scale = 5
+  endif
+  assign percent = rating | times: 100.0 | divided_by: scale | round: 1
+  assign rating_text = rating | round: 1
+-%}
+
+{%- if count > 0 and rating > 0 -%}
+  <a
+    class="sgs-rating"
+    href="#{{ bs.target_id | default: 'reviews' | escape }}"
+    data-sgs-rating-target="{{ bs.target_id | escape }}"
+    aria-label="Rated {{ rating_text }} out of {{ scale }}, {{ count }} {% if count == 1 %}review{% else %}reviews{% endif %}. Go to reviews"
+    {{ block.shopify_attributes }}
+  >
+    <span class="sgs-rating__stars" style="--sgs-rating: {{ percent }}%;" aria-hidden="true">
+      <span class="sgs-rating__row sgs-rating__row--off">★★★★★</span>
+      <span class="sgs-rating__row sgs-rating__row--on">★★★★★</span>
+    </span>
+    <span class="sgs-rating__text">{{ rating_text }} · {{ count }} {% if count == 1 %}review{% else %}reviews{% endif %}</span>
+  </a>
+  <script>
+    (function () {
+      var link = document.currentScript.previousElementSibling;
+      if (!link || link.dataset.ready) return;
+      link.dataset.ready = '1';
+      link.addEventListener('click', function (e) {
+        var id = link.getAttribute('data-sgs-rating-target');
+        var target = (id && (document.getElementById(id) || document.querySelector('[id$="__' + id + '"]'))) ||
+          document.querySelector('.jdgm-review-widget, .jdgm-rev-widg, .jdgm-widget:not(.jdgm-preview-badge)');
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: -10px 0 -14px;
+    color: var(--sgs-text, #f2f0eb);
+    text-decoration: none;
+  }
+
+  .sgs-rating:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 2px;
+  }
+
+  .sgs-rating__stars {
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .sgs-rating__row--off {
+    color: rgb(242 240 235 / 0.25);
+  }
+
+  .sgs-rating__row--on {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: var(--sgs-rating);
+    overflow: hidden;
+    white-space: nowrap;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-rating__text {
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .sgs-rating:hover .sgs-rating__text {
+    text-decoration-color: currentColor;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Review stars",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Stars and review count from Judge.me, linking down to the reviews. Hidden until the product has a review."
+    },
+    {
+      "type": "text",
+      "id": "target_id",
+      "label": "Reviews section ID",
+      "default": "17937299023bbff9d5",
+      "info": "The ID of the section holding the Judge.me reviews, as in the product template."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Review stars"
+    }
+  ]
+}
+{% endschema %}

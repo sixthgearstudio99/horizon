@@ -1,0 +1,276 @@
+{%- liquid
+  assign s = section.settings
+  assign stat_count = 0
+  for i in (1..3)
+    assign key = 'stat_' | append: i
+    if s[key] != blank
+      assign stat_count = stat_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if s.heading != blank or s.text != blank or s.image != blank -%}
+  <section
+    class="sgs-story{% if s.image != blank %} sgs-story--image{% endif %}"
+    style="--sgs-story-pad-top: {{ s['padding-block-start'] }}px; --sgs-story-pad-bottom: {{ s['padding-block-end'] }}px;"
+    {% if s.heading != blank %}aria-labelledby="SgsStory-{{ section.id }}"{% endif %}
+  >
+    <div class="sgs-story__inner">
+      {%- if s.image != blank -%}
+        <div class="sgs-story__media">
+          {{
+            s.image
+            | image_url: width: 1600
+            | image_tag:
+              widths: '450, 700, 1000, 1400, 1600',
+              sizes: '(min-width: 990px) 50vw, 100vw',
+              loading: 'lazy',
+              class: 'sgs-story__img',
+              alt: s.image.alt | default: s.heading
+          }}
+        </div>
+      {%- endif -%}
+      <div class="sgs-story__body">
+        {%- if s.label != blank -%}
+          <p class="sgs-story__label sgs-label">{{ s.label | escape }}</p>
+        {%- endif -%}
+        {%- if s.heading != blank -%}
+          <h2 class="sgs-story__heading" id="SgsStory-{{ section.id }}">{{ s.heading }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="sgs-story__text">{{ s.text }}</div>
+        {%- endif -%}
+        {%- if stat_count > 0 -%}
+          <ul class="sgs-story__stats" role="list">
+            {%- for i in (1..3) -%}
+              {%- assign key = 'stat_' | append: i -%}
+              {%- assign icon_key = 'stat_' | append: i | append: '_icon' -%}
+              {%- if s[key] != blank -%}
+                <li class="sgs-story__stat">
+                  {%- case s[icon_key] -%}
+                    {%- when 'pin' -%}
+                      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M10 18s5.5-5.6 5.5-9.5a5.5 5.5 0 0 0-11 0C4.5 12.4 10 18 10 18z"/><circle cx="10" cy="8.5" r="2"/></svg>
+                    {%- when 'printer' -%}
+                      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M5.5 7.5V2.5h9v5M5.5 14.5h-3v-7h15v7h-3"/><path d="M5.5 11.5h9v6h-9z"/></svg>
+                    {%- when 'gear' -%}
+                      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"><path d="M5 3v14M10 3v14M15 3v7M5 10h10"/></svg>
+                    {%- else -%}
+                      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>
+                  {%- endcase -%}
+                  <span>{{ s[key] | escape }}</span>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-story {
+    padding-block: var(--sgs-story-pad-top) var(--sgs-story-pad-bottom);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  @media screen and (max-width: 749px) {
+    .sgs-story {
+      padding-block: calc(var(--sgs-story-pad-top) * 0.6) calc(var(--sgs-story-pad-bottom) * 0.6);
+    }
+  }
+
+  .sgs-story__inner {
+    display: grid;
+    gap: 32px;
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin, 16px);
+  }
+
+  @media screen and (min-width: 990px) {
+    .sgs-story--image .sgs-story__inner {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 72px;
+    }
+  }
+
+  .sgs-story__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: var(--sgs-raised, #141414);
+  }
+
+  .sgs-story__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sgs-story__label {
+    margin: 0 0 12px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-story .sgs-story__heading {
+    margin: 0;
+    font-size: var(--sgs-h2) !important;
+    line-height: 1.08 !important;
+  }
+
+  .sgs-story__text {
+    max-width: 52ch;
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  .sgs-story__text p {
+    margin: 0;
+  }
+
+  .sgs-story__stats {
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+  }
+
+  .sgs-story__stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 52px;
+    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .sgs-story__stat svg {
+    flex-shrink: 0;
+    color: var(--sgs-text-2, #9a968e);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "The studio",
+  "tag": "div",
+  "class": "sgs-story-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "For example the studio, or you at work."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "The studio"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Designed in Bristol. Printed in the UK."
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>Every SixthGear print is designed in Bristol by a car enthusiast and printed to order in the UK – made for people who live and breathe cars.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Fact rows"
+    },
+    {
+      "type": "paragraph",
+      "content": "Up to three short, true facts. Hidden when empty."
+    },
+    {
+      "type": "text",
+      "id": "stat_1",
+      "label": "Row 1"
+    },
+    {
+      "type": "select",
+      "id": "stat_1_icon",
+      "label": "Row 1 icon",
+      "options": [
+        { "value": "pin", "label": "Location" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "gear", "label": "Gear shift" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "pin"
+    },
+    {
+      "type": "text",
+      "id": "stat_2",
+      "label": "Row 2"
+    },
+    {
+      "type": "select",
+      "id": "stat_2_icon",
+      "label": "Row 2 icon",
+      "options": [
+        { "value": "pin", "label": "Location" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "gear", "label": "Gear shift" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "printer"
+    },
+    {
+      "type": "text",
+      "id": "stat_3",
+      "label": "Row 3"
+    },
+    {
+      "type": "select",
+      "id": "stat_3_icon",
+      "label": "Row 3 icon",
+      "options": [
+        { "value": "pin", "label": "Location" },
+        { "value": "printer", "label": "Printer" },
+        { "value": "gear", "label": "Gear shift" },
+        { "value": "check", "label": "Tick" }
+      ],
+      "default": "gear"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "presets": [
+    {
+      "name": "The studio"
+    }
+  ]
+}
+{% endschema %}

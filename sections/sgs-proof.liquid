@@ -1,58 +1,131 @@
 {%- liquid
   assign s = section.settings
-  assign image_count = 0
+  assign item_count = 0
   for block in section.blocks
-    if block.settings.image != blank
-      assign image_count = image_count | plus: 1
+    if block.settings.image != blank or block.settings.video != blank
+      assign item_count = item_count | plus: 1
     endif
   endfor
+  assign expand = false
+  if s.tap_action == 'expand'
+    assign expand = true
+  endif
 -%}
 
-{%- if image_count > 0 -%}
+{%- if item_count > 0 -%}
   <section
-    class="sgs-proof"
+    class="sgs-proof sgs-proof--{{ s.tile_ratio }}"
     style="--sgs-proof-pad-top: {{ s['padding-block-start'] }}px; --sgs-proof-pad-bottom: {{ s['padding-block-end'] }}px;"
     {% if s.heading != blank %}aria-labelledby="SgsProofHeading-{{ section.id }}"{% endif %}
   >
     <div class="sgs-proof__inner">
-      <div class="sgs-proof__head">
-        {%- if s.label != blank -%}
-          <p class="sgs-proof__label sgs-label">{{ s.label | escape }}</p>
-        {%- endif -%}
-        {%- if s.heading != blank -%}
-          <h2 class="sgs-proof__heading" id="SgsProofHeading-{{ section.id }}">{{ s.heading | escape }}</h2>
-        {%- endif -%}
-      </div>
+      {%- if s.label != blank or s.heading != blank or s.link_label != blank -%}
+        <div class="sgs-proof__head">
+          <div>
+            {%- if s.label != blank -%}
+              <p class="sgs-proof__label sgs-label">{{ s.label | escape }}</p>
+            {%- endif -%}
+            {%- if s.heading != blank -%}
+              <h2 class="sgs-proof__heading" id="SgsProofHeading-{{ section.id }}">{{ s.heading | escape }}</h2>
+            {%- endif -%}
+          </div>
+          {%- if s.link_label != blank and s.link_url != blank -%}
+            <a class="sgs-link sgs-proof__more" href="{{ s.link_url }}"{% if s.link_url contains 'http' %} target="_blank" rel="noopener"{% endif %}>
+              {{- s.link_label | escape -}}
+              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14"><path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
 
-      <ul class="sgs-proof__row" role="list" tabindex="0" aria-label="{{ s.heading | default: 'Customer photos' | escape }}, scroll sideways for more">
-        {%- for block in section.blocks -%}
-          {%- if block.settings.image != blank -%}
+      <sgs-media-row class="sgs-proof__wrap">
+        <ul class="sgs-proof__row" role="list" tabindex="0" aria-label="{{ s.heading | default: s.label | default: 'Photos' | escape }}, scroll sideways for more">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign b = block.settings
+              if b.image == blank and b.video == blank
+                continue
+              endif
+              assign link = b.link
+              if b.product != blank
+                assign link = b.product.url
+              endif
+              assign tile_link = link | default: s.default_link
+              assign alt = b.image.alt | default: b.caption | default: b.product.title | default: s.heading
+              if alt == blank
+                assign alt = 'Photo ' | append: forloop.index
+              endif
+            -%}
             <li class="sgs-proof__card" {{ block.shopify_attributes }}>
               <figure class="sgs-proof__figure">
-                <div class="sgs-proof__media">
-                  {{
-                    block.settings.image
-                    | image_url: width: 900
-                    | image_tag:
-                      widths: '300, 450, 600, 900',
-                      sizes: '(min-width: 990px) 22vw, 72vw',
-                      loading: 'lazy',
-                      class: 'sgs-proof__img',
-                      alt: block.settings.image.alt | default: block.settings.caption
-                  }}
-                </div>
-                {%- if block.settings.caption != blank -%}
-                  <figcaption class="sgs-proof__caption">{{ block.settings.caption | escape }}</figcaption>
+                {%- capture media -%}
+                  {%- if b.video != blank -%}
+                    {{
+                      b.video
+                      | video_tag:
+                        muted: true,
+                        loop: true,
+                        playsinline: true,
+                        controls: false,
+                        preload: 'none',
+                        class: 'sgs-proof__video',
+                        image_size: '900x'
+                    }}
+                  {%- else -%}
+                    {{
+                      b.image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '300, 450, 600, 900',
+                        sizes: '(min-width: 990px) 22vw, 72vw',
+                        loading: 'lazy',
+                        class: 'sgs-proof__img',
+                        alt: alt
+                    }}
+                  {%- endif -%}
+                {%- endcapture -%}
+
+                {%- if expand -%}
+                  <button
+                    type="button"
+                    class="sgs-proof__media"
+                    data-expand
+                    {% if b.video != blank %}data-video{% else %}data-full="{{ b.image | image_url: width: 1800 }}" data-alt="{{ alt | escape }}"{% endif %}
+                    aria-label="Open {% if b.video != blank %}video{% else %}photo{% endif %} {{ forloop.index }} full screen{% if b.video != blank %} with sound{% endif %}"
+                  >
+                    {{ media }}
+                    {%- if b.video != blank -%}
+                      <span class="sgs-proof__sound" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 5h2.5L8 2v10L4.5 9H2z" fill="currentColor"/><path d="M10 4.5a3.5 3.5 0 0 1 0 5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                      </span>
+                    {%- endif -%}
+                  </button>
+                {%- elsif tile_link != blank -%}
+                  <a class="sgs-proof__media" href="{{ tile_link }}"{% if tile_link contains 'http' %} target="_blank" rel="noopener"{% endif %} aria-label="{{ alt | escape }}{% if b.product != blank %}: shop the print{% endif %}">
+                    {{ media }}
+                  </a>
+                {%- else -%}
+                  <div class="sgs-proof__media">{{ media }}</div>
+                {%- endif -%}
+
+                {%- if b.caption != blank or b.product != blank and expand -%}
+                  <figcaption class="sgs-proof__caption">
+                    {%- if b.caption != blank -%}<span>{{ b.caption | escape }}</span>{%- endif -%}
+                    {%- if expand and link != blank -%}
+                      <a class="sgs-proof__shop" href="{{ link }}">{{ b.product.title | default: s.shop_label | escape }} →</a>
+                    {%- endif -%}
+                  </figcaption>
                 {%- endif -%}
               </figure>
             </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
+          {%- endfor -%}
+        </ul>
+      </sgs-media-row>
     </div>
   </section>
+  <script src="{{ 'sgs-media-row.js' | asset_url }}" defer></script>
 {%- elsif request.design_mode -%}
-  <div class="sgs-proof-note">Real prints. Real walls.: add photos (blocks) to show this section. It's hidden on the store until then.</div>
+  <div class="sgs-proof-note">{{ s.heading | default: s.label | default: 'Media row' | escape }}: add photos or videos (blocks) to show this section. It's hidden on the store until then.</div>
 {%- endif -%}
 
 {% stylesheet %}
@@ -67,6 +140,12 @@
     color: var(--sgs-text, #f2f0eb);
   }
 
+  @media screen and (max-width: 749px) {
+    .sgs-proof {
+      padding-block: calc(var(--sgs-proof-pad-top) * 0.6) calc(var(--sgs-proof-pad-bottom) * 0.6);
+    }
+  }
+
   .sgs-proof__inner {
     max-width: var(--page-width);
     margin-inline: auto;
@@ -74,6 +153,11 @@
   }
 
   .sgs-proof__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
     margin-bottom: 24px;
   }
 
@@ -86,6 +170,10 @@
     margin: 0;
     font-size: var(--sgs-h2) !important;
     line-height: 1.08 !important;
+  }
+
+  .sgs-proof__more {
+    min-height: 44px;
   }
 
   .sgs-proof__row {
@@ -104,15 +192,27 @@
     scrollbar-color: var(--sgs-line, #282828) transparent;
   }
 
+  .sgs-proof--tall .sgs-proof__row {
+    grid-auto-columns: 58%;
+  }
+
   @media screen and (min-width: 750px) {
     .sgs-proof__row {
       grid-auto-columns: calc((100% - 36px) / 3.4);
+    }
+
+    .sgs-proof--tall .sgs-proof__row {
+      grid-auto-columns: calc((100% - 48px) / 4.4);
     }
   }
 
   @media screen and (min-width: 1200px) {
     .sgs-proof__row {
       grid-auto-columns: calc((100% - 36px) / 4);
+    }
+
+    .sgs-proof--tall .sgs-proof__row {
+      grid-auto-columns: calc((100% - 60px) / 5);
     }
   }
 
@@ -130,19 +230,62 @@
   }
 
   .sgs-proof__media {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     background: var(--sgs-raised, #141414);
+    color: inherit;
+    cursor: pointer;
   }
 
-  .sgs-proof__img {
+  .sgs-proof--square .sgs-proof__media {
+    aspect-ratio: 1;
+  }
+
+  .sgs-proof--tall .sgs-proof__media {
+    aspect-ratio: 9 / 16;
+  }
+
+  .sgs-proof__media:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: -3px;
+  }
+
+  div.sgs-proof__media {
+    cursor: default;
+  }
+
+  .sgs-proof__img,
+  .sgs-proof__video,
+  .sgs-proof__media img,
+  .sgs-proof__media video {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
+  .sgs-proof__sound {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    background: rgb(11 11 11 / 0.7);
+    color: var(--sgs-text, #f2f0eb);
+  }
+
   .sgs-proof__caption {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
     margin-top: 10px;
     font-family: var(--sgs-font-mono, monospace);
     font-size: 11px;
@@ -152,6 +295,17 @@
     color: var(--sgs-text-2, #9a968e);
   }
 
+  .sgs-proof__shop {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+    color: var(--sgs-text, #f2f0eb);
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.3);
+    text-underline-offset: 3px;
+  }
+
   .sgs-proof-note {
     max-width: var(--page-width);
     margin-inline: auto;
@@ -159,18 +313,69 @@
     font-size: 13px;
     color: var(--sgs-text-2, #9a968e);
   }
+
+  /* Full-screen view (assets/sgs-media-row.js) */
+  .sgs-mr-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #000;
+    color: var(--sgs-text, #f2f0eb);
+  }
+
+  .sgs-mr-dialog::backdrop {
+    background: #000;
+  }
+
+  .sgs-mr-dialog__stage {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .sgs-mr-dialog__stage :is(video, img) {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .sgs-mr-dialog__close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--sgs-line, #282828);
+    background: rgb(11 11 11 / 0.7);
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .sgs-mr-dialog__close:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline-offset: 2px;
+  }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Real proof photos",
+  "name": "SixthGear media row",
   "tag": "div",
   "class": "sgs-proof-section",
-  "max_blocks": 8,
+  "max_blocks": 12,
   "settings": [
     {
       "type": "paragraph",
-      "content": "Photos of real printed, framed posters on walls. Hidden on the store until at least one photo is added."
+      "content": "A sideways-scrolling row of real photos or Shopify videos. Hidden on the store until at least one is added. Videos play muted while on screen."
     },
     {
       "type": "text",
@@ -183,6 +388,51 @@
       "id": "heading",
       "label": "Heading",
       "default": "Real prints. Real walls."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "info": "Optional link beside the heading, e.g. Follow @sixthgearstudio."
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "tile_ratio",
+      "label": "Tile shape",
+      "options": [
+        { "value": "portrait", "label": "Portrait 4:5" },
+        { "value": "square", "label": "Square" },
+        { "value": "tall", "label": "Tall 9:16 (phone video)" }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "select",
+      "id": "tap_action",
+      "label": "Tapping a tile",
+      "options": [
+        { "value": "link", "label": "Opens its link" },
+        { "value": "expand", "label": "Opens it full screen (videos with sound)" }
+      ],
+      "default": "link"
+    },
+    {
+      "type": "url",
+      "id": "default_link",
+      "label": "Link for tiles without their own",
+      "info": "For example your Instagram profile."
+    },
+    {
+      "type": "text",
+      "id": "shop_label",
+      "label": "Shop link label",
+      "default": "Shop the print",
+      "info": "Shown under full-screen tiles that have a link."
     },
     {
       "type": "range",
@@ -208,7 +458,7 @@
   "blocks": [
     {
       "type": "photo",
-      "name": "Photo",
+      "name": "Photo or video",
       "settings": [
         {
           "type": "image_picker",
@@ -216,17 +466,35 @@
           "label": "Photo"
         },
         {
+          "type": "video",
+          "id": "video",
+          "label": "Video",
+          "info": "Optional. Upload in Shopify; used instead of the photo."
+        },
+        {
           "type": "text",
           "id": "caption",
           "label": "Caption",
-          "info": "Optional, short. For example the print and the room."
+          "info": "Optional, short."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product shown",
+          "info": "Optional. Links the tile to the product."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link",
+          "info": "Optional, used when no product is picked."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Real proof photos"
+      "name": "SixthGear media row"
     }
   ]
 }

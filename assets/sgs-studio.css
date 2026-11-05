@@ -406,8 +406,17 @@ product-price s,
 }
 
 html[data-sgs-sale='1'] .sgs-sale[data-sgs-sale-win='1'],
-html[data-sgs-sale='2'] .sgs-sale[data-sgs-sale-win='2'] {
+html[data-sgs-sale='2'] .sgs-sale[data-sgs-sale-win='2'],
+html[data-sgs-sale='3'] .sgs-sale[data-sgs-sale-win='3'],
+html[data-sgs-sale='4'] .sgs-sale[data-sgs-sale-win='4'] {
   display: inline-flex !important;
+}
+
+html[data-sgs-sale='1'] .sgs-sale-now[data-sgs-sale-win='1'],
+html[data-sgs-sale='2'] .sgs-sale-now[data-sgs-sale-win='2'],
+html[data-sgs-sale='3'] .sgs-sale-now[data-sgs-sale-win='3'],
+html[data-sgs-sale='4'] .sgs-sale-now[data-sgs-sale-win='4'] {
+  display: inline !important;
 }
 
 html[data-sgs-sale='1'] .sgs-sale-note[data-sgs-sale-win='1'],
@@ -420,8 +429,10 @@ html[data-sgs-sale='2'] .sgs-wallprog__sale-msg[data-sgs-sale-win='2'] {
   display: inline !important;
 }
 
-html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg),
-html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg) {
+html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal),
+html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal),
+html[data-sgs-sale='3'] [data-sgs-sale-win='3'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal),
+html[data-sgs-sale='4'] [data-sgs-sale-win='4'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal) {
   display: none !important;
 }
 
@@ -764,12 +775,94 @@ html.sgs-lb-open {
 
 /* ---------- Product page: tighter gap from "Which size?" to Add to cart on phones ---------- */
 @media screen and (max-width: 749px) {
-  .sgs-sg {
+  .sgs-sg,
+  .variant-picker__form:not(:has(> fieldset:not(.sgs-opt--size))) > .sgs-sg__link--picker {
     margin-bottom: -20px;
   }
+}
+
+/* "Which size?" under the size tiles (variant picker); the Size guide block then only holds the
+   drawer, and takes no space. Without a Size guide block on the page the link isn't shown. */
+.product-details:has(.sgs-sg__link--picker) .sgs-sg {
+  display: contents;
+}
+
+.product-details:has(.sgs-sg__link--picker) .sgs-sg > .sgs-sg__link {
+  display: none;
+}
+
+.product-details:not(:has(.sgs-sg)) .sgs-sg__link--picker {
+  display: none;
+}
+
+.variant-picker__form > .sgs-sg__link--picker {
+  align-self: flex-start;
+  margin-top: -8px;
+}
+
+.variant-picker__form.sgs-steps > .sgs-sg__link--picker {
+  order: -1;
+  margin-top: -18px;
+}
+
+.variant-picker__form.sgs-steps > .sgs-opt--size {
+  order: -2;
 }
 
 /* One hairline between sections: the recommendations' own top rule doubled the shared one */
 .content-for-layout .sgs-recs {
   border-top: 0;
+}
+
+/* ---------- Buy box: numbered steps, size first ---------- */
+.variant-picker__form.sgs-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Size is step 1, so it shows first; the DOM order Horizon reads is unchanged */
+.variant-picker__form.sgs-steps > .sgs-opt--size {
+  order: -1;
+}
+
+.variant-picker__form.sgs-steps > .sgs-opt-explainer {
+  margin: -12px 0 0;
+}
+
+.sgs-step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid var(--sgs-text);
+  font-family: var(--sgs-font-mono);
+  font-size: 10px;
+  letter-spacing: 0;
+  vertical-align: 1px;
+}
+
+/* Optional tag on one option (Theme settings > SixthGear: product page) */
+.sgs-popular {
+  display: block;
+  width: max-content;
+  margin-top: 5px;
+  padding: 1px 6px;
+  border: 1px solid currentColor;
+  font-family: var(--sgs-font-mono);
+  font-size: 9px;
+  line-height: 1.5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sgs-tile--priced:has(.sgs-popular) {
+  padding-block: 8px;
+}
+
+/* Add to cart — £25 */
+.sgs-atc-price {
+  display: inline;
+  font-variant-numeric: tabular-nums;
 }

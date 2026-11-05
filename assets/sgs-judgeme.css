@@ -408,3 +408,46 @@
 .jdgm-rev-widg .jdgm-rev-widg__sort-wrapper {
   margin-block: 16px 0;
 }
+
+/* ---------- Photo reviews: the photo sits on the right of the review ---------- */
+.jdgm-rev-widg .jdgm-rev__content:has(.jdgm-rev__pics) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  column-gap: 16px;
+  align-items: start;
+}
+
+.jdgm-rev-widg .jdgm-rev__content:has(.jdgm-rev__pics) > * {
+  grid-column: 1;
+}
+
+.jdgm-rev-widg .jdgm-rev__content > .jdgm-rev__pics {
+  grid-column: 2;
+  grid-row: 1 / span 6;
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.jdgm-rev-widg .jdgm-rev__content > .jdgm-rev__pics :is(img, .jdgm-rev__pic-img) {
+  width: 96px !important;
+  height: 120px !important;
+}
+
+/* ---------- "Write a review": the main action, filled ---------- */
+:is(.jdgm-widget, .jdgm-rev-widg) .jdgm-write-rev-link {
+  min-height: 52px;
+  background: var(--sgs-jdgm-text) !important;
+  color: var(--sgs-jdgm-bg) !important;
+}
+
+:is(.jdgm-widget, .jdgm-rev-widg) .jdgm-write-rev-link:is(:hover, :focus-visible) {
+  background: transparent !important;
+  color: var(--sgs-jdgm-text) !important;
+}
+
+@media screen and (max-width: 749px) {
+  :is(.jdgm-widget, .jdgm-rev-widg) .jdgm-write-rev-link {
+    width: 100%;
+  }
+}

@@ -12,14 +12,25 @@
   <script>
     (function () {
       var windows = [
-        {%- for i in (1..2) -%}
+        {%- for i in (1..4) -%}
           {%- liquid
             assign key = 'sgs_sale' | append: i
             assign start_key = key | append: '_start'
             assign end_key = key | append: '_end'
             assign wall_key = key | append: '_hide_wall'
+            assign percent_key = key | append: '_percent'
+            assign message_key = key | append: '_message'
+            assign window_end = settings[end_key] | strip
+            if window_end == blank
+              assign window_end = '9999-12-31 23:59'
+            endif
+            assign window_live = true
+            assign window_percent = settings[percent_key] | plus: 0
+            if window_percent <= 0 and settings[message_key] == blank
+              assign window_live = false
+            endif
           -%}
-          { start: {{ settings[start_key] | strip | json }}, end: {{ settings[end_key] | strip | json }}, hideWall: {{ settings[wall_key] | json }} }{% unless forloop.last %},{% endunless %}
+          { start: {{ settings[start_key] | strip | json }}, end: {{ window_end | json }}, hideWall: {{ settings[wall_key] | json }}, live: {{ window_live }} }{% unless forloop.last %},{% endunless %}
         {%- endfor -%}
       ];
       var now;
@@ -35,7 +46,7 @@
       }
       for (var i = 0; i < windows.length; i++) {
         var w = windows[i];
-        if (w.start.length === 16 && w.end.length === 16 && now >= w.start && now <= w.end) {
+        if (w.live && w.start.length === 16 && w.end.length === 16 && now >= w.start && now <= w.end) {
           document.documentElement.setAttribute('data-sgs-sale', String(i + 1));
           if (w.hideWall) document.documentElement.setAttribute('data-sgs-sale-hide-wall', '');
           break;

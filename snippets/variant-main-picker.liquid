@@ -59,7 +59,23 @@
       data-shopify-visual-preview
     {% endif %}
   >
-    <form class="variant-picker__form">
+    {%- liquid
+      # SixthGear: numbered steps. Size is step 1 (shown first); each other option that is shown
+      # (paper or frame) follows as "Choose your finish".
+      assign sgs_has_size = false
+      for product_option in product_resource.options_with_values
+        assign probe_name = product_option.name | downcase
+        if probe_name contains 'size'
+          assign sgs_has_size = true
+        endif
+      endfor
+      assign sgs_step = 1
+      if sgs_has_size
+        assign sgs_step = 2
+      endif
+      assign sgs_popular = settings.sgs_popular_value | strip | downcase
+    -%}
+    <form class="variant-picker__form{% if block_settings.sgs_steps %} sgs-steps{% endif %}">
       {%- for product_option in product_resource.options_with_values -%}
         {%- liquid
           # SixthGear: display heading for the option, e.g. "Size (unframed)"; the option itself is unchanged
@@ -67,6 +83,26 @@
           assign option_name_lower = product_option.name | downcase
           if option_name_lower contains 'size' and block_settings.size_label_suffix != blank
             assign option_label = option_label | append: ' ' | append: block_settings.size_label_suffix | escape
+          endif
+          assign option_step = ''
+          if block_settings.sgs_steps
+            if option_name_lower contains 'size'
+              assign option_step = 1
+              assign option_label = block_settings.size_step_label | default: option_label | escape
+              if block_settings.size_label_suffix != blank
+                assign option_label = option_label | append: ' ' | append: block_settings.size_label_suffix | escape
+              endif
+            else
+              assign shown = true
+              if product_option.values.size == 1 and block_settings.hide_single_choice
+                assign shown = false
+              endif
+              if shown
+                assign option_step = sgs_step
+                assign sgs_step = sgs_step | plus: 1
+                assign option_label = block_settings.finish_step_label | default: option_label | escape
+              endif
+            endif
           endif
 
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
@@ -111,6 +147,7 @@
             {{ option_id_attribute }}
           >
             <legend>
+              {%- if option_step != blank -%}<span class="sgs-step-num" aria-hidden="true">{{ option_step }}</span>{%- endif -%}
               {{ option_label -}}
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value">{% render 'sgs-size-label', value: product_option.selected_value %}</span>
@@ -182,11 +219,15 @@
                       data-key="variant-option-pill"
                     ></span>
                   {% endif %}
+                  {%- assign value_lower = product_option_value.name | downcase | strip -%}
                   <span
                     class="variant-option__button-label__text"
                     data-key="variant-option-text"
                   >
                     {{- value_label -}}
+                    {%- if sgs_popular != blank and value_lower == sgs_popular -%}
+                      <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Popular' | escape }}</span>
+                    {%- endif -%}
                   </span>
                   {%- if show_tile_price and tile_variant != blank -%}
                     <span class="sgs-tile-price" aria-hidden="true">
@@ -212,6 +253,12 @@
               {% endstyle %}
             {% endif %}
           </fieldset>
+          {%- if option_name_lower contains 'size' and block_settings.size_guide_label != blank -%}
+            {%- comment -%} Opens the Size guide block's drawer, right under the size tiles {%- endcomment -%}
+            <button type="button" class="sgs-sg__link sgs-sg__link--picker" data-sgs-sg-trigger aria-haspopup="dialog">
+              {{- block_settings.size_guide_label | escape -}}
+            </button>
+          {%- endif -%}
           {%- if option_name_lower contains 'paper' and block_settings.paper_explainer != blank -%}
             <p class="sgs-opt-explainer">{{ block_settings.paper_explainer | escape }}</p>
           {%- endif -%}

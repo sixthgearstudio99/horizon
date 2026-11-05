@@ -69,8 +69,8 @@
         "mobile_layout": "carousel",
         "show_secondary_image": true,
         "show_option_count": true,
-        "eyebrow": "02 — Start your wall",
-        "heading": "Most wanted",
+        "eyebrow": "03 — Best sellers",
+        "heading": "Best sellers",
         "view_all_label": "Shop all prints",
         "view_all_link": "",
         "background_color": "",
@@ -132,7 +132,7 @@
         "feature_4"
       ],
       "settings": {
-        "eyebrow": "03 — Shop by style",
+        "eyebrow": "05 — Shop by style",
         "heading": "Pick your discipline",
         "view_all_label": "All collections",
         "view_all_link": "",
@@ -178,7 +178,7 @@
         "compact_7"
       ],
       "settings": {
-        "eyebrow": "04 — By origin",
+        "eyebrow": "06 — By origin",
         "heading": "Where it was built",
         "view_all_label": "",
         "view_all_link": "",
@@ -245,7 +245,7 @@
         "row_6"
       ],
       "settings": {
-        "eyebrow": "05 — The studio",
+        "eyebrow": "07 — The spec",
         "heading": "The spec",
         "text": "<p>Car culture, framed for your wall. Every print is designed in our Bristol studio and made to order in the UK.</p>",
         "padding-block-start": 156,
@@ -319,7 +319,7 @@
         "image_6"
       ],
       "settings": {
-        "eyebrow": "06 — On the wall",
+        "eyebrow": "08 — On the wall",
         "heading": "Made for your space",
         "text": "In the living room, the study or the garage. See how the prints look at home.",
         "link_label": "Shop the print",
@@ -430,20 +430,153 @@
         "padding-block-start": 0,
         "padding-block-end": 64
       }
+    },
+    "sgs_shop_collections": {
+      "type": "sgs-collection-scroller",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "collection": "gifts-for-car-lovers",
+            "title": "Gifts"
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "collection": "mindset"
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "collection": "grand-prix"
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "collection": "lineage"
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "collection": "portraits"
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "collection": "german-engineering"
+          }
+        },
+        "tile_7": {
+          "type": "tile",
+          "settings": {
+            "collection": "jdm",
+            "title": "JDM"
+          }
+        },
+        "tile_8": {
+          "type": "tile",
+          "settings": {
+            "collection": "super-hypercars"
+          }
+        },
+        "tile_9": {
+          "type": "tile",
+          "settings": {
+            "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+            "title": "Custom Poster"
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6",
+        "tile_7",
+        "tile_8",
+        "tile_9"
+      ],
+      "settings": {
+        "label": "02 — Shop by collection",
+        "heading": "Find your print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "sgs_walls": {
+      "type": "sgs-proof",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "label": "04 — Real walls",
+        "heading": "See it on your walls",
+        "link_label": "",
+        "link_url": "",
+        "tile_ratio": "portrait",
+        "tap_action": "link",
+        "default_link": "",
+        "shop_label": "Shop the print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "sgs_studio_story": {
+      "type": "sgs-studio-story",
+      "settings": {
+        "label": "09 — The studio",
+        "heading": "Designed in Bristol. Printed in the UK.",
+        "text": "<p>Every SixthGear print is designed in Bristol by a car enthusiast and printed to order in the UK – made for people who live and breathe cars.</p>",
+        "stat_1": "",
+        "stat_1_icon": "pin",
+        "stat_2": "",
+        "stat_2_icon": "printer",
+        "stat_3": "",
+        "stat_3_icon": "gear",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "sgs_instagram": {
+      "type": "sgs-proof",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "label": "10 — @sixthgearstudio",
+        "heading": "See it on Instagram",
+        "link_label": "Follow @sixthgearstudio",
+        "link_url": "https://www.instagram.com/sixthgearstudio",
+        "tile_ratio": "square",
+        "tap_action": "link",
+        "default_link": "https://www.instagram.com/sixthgearstudio",
+        "shop_label": "Shop the print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
     }
   },
   "order": [
     "sgs_hero",
     "sgs_gift_band",
+    "sgs_shop_collections",
     "sgs_best_sellers",
+    "sgs_reviews",
+    "sgs_walls",
     "sgs_culture",
     "sgs_collections",
     "sgs_origins",
     "sgs_spec",
     "sgs_gallery",
     "sgs_feature",
-    "sgs_reviews",
     "sgs_faqs",
+    "sgs_studio_story",
+    "sgs_instagram",
     "sgs_newsletter",
     "sgs_trust"
   ]

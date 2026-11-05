@@ -173,7 +173,11 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
-                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish"
+                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "sgs_steps": true,
+                "size_step_label": "Choose your size",
+                "size_guide_label": "Which size?",
+                "finish_step_label": "Choose your finish"
               },
               "blocks": {}
             },
@@ -233,7 +237,8 @@
                     "style_class": "button",
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
-                    "custom_button_border": "{{ settings.color_palette.background }}"
+                    "custom_button_border": "{{ settings.color_palette.background }}",
+                    "sgs_show_price": true
                   },
                   "blocks": {}
                 },
@@ -271,16 +276,16 @@
             "sgs_ptrust": {
               "type": "sgs-product-trust",
               "settings": {
-                "layout": "line",
-                "item_1_text": "Free UK delivery",
+                "layout": "columns",
+                "item_1_text": "Printed in the UK",
                 "item_1_link": "",
-                "item_1_icon": "truck",
-                "item_2_text": "Damaged in transit? Free replacement",
+                "item_1_icon": "printer",
+                "item_2_text": "Free UK delivery",
                 "item_2_link": "",
-                "item_2_icon": "shield",
-                "item_3_text": "14-day returns",
-                "item_3_link": "/policies/refund-policy",
-                "item_3_icon": "return",
+                "item_2_icon": "truck",
+                "item_3_text": "Free replacement if damaged",
+                "item_3_link": "",
+                "item_3_icon": "shield",
                 "item_4_text": "",
                 "item_4_link": "",
                 "item_4_icon": "lock",
@@ -333,6 +338,8 @@
                 "open_first": false,
                 "delivery_heading": "Delivery & returns",
                 "delivery_text": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Standard prints can be returned within 14 days. Faulty or damaged prints replaced free. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>",
+                "guarantee_heading": "Satisfaction guarantee",
+                "guarantee_text": "<p>If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. <a href=\"/policies/refund-policy\">Read our returns policy</a></p>",
                 "framing_heading": "Framing",
                 "framing_text": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>",
                 "list_sizes": true,
@@ -348,18 +355,34 @@
                 "answer_4": ""
               },
               "blocks": {}
+            },
+            "sgs_rating": {
+              "type": "sgs-rating",
+              "settings": {
+                "target_id": "17937299023bbff9d5"
+              },
+              "blocks": {}
+            },
+            "sgs_offer": {
+              "type": "sgs-offer-box",
+              "settings": {
+                "note": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
             "sgs_header",
+            "sgs_rating",
             "price_tVjtKg",
+            "sgs_offer",
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "sgs_size_guide",
             "sgs_personalise",
             "buy_buttons_eYQEYi",
-            "sgs_delivery",
             "sgs_ptrust",
+            "sgs_delivery",
             "sgs_wall",
             "sgs_highlights",
             "sgs_desc",
@@ -380,6 +403,38 @@
         "background_color": "",
         "padding-block-start": 32,
         "padding-block-end": 48
+      }
+    },
+    "sgs_wall_videos": {
+      "type": "sgs-proof",
+      "blocks": {},
+      "block_order": [],
+      "settings": {
+        "label": "Video",
+        "heading": "On your wall",
+        "link_label": "",
+        "link_url": "",
+        "tile_ratio": "tall",
+        "tap_action": "expand",
+        "default_link": "",
+        "shop_label": "Shop the print",
+        "padding-block-start": 72,
+        "padding-block-end": 48
+      }
+    },
+    "sgs_arrival": {
+      "type": "sgs-arrival",
+      "settings": {
+        "label": "How it arrives",
+        "heading": "Packed to arrive perfect",
+        "item_1": "Printed to order in the UK",
+        "item_2": "Rolled in a protective tube",
+        "item_3": "Dispatched in 2–5 working days",
+        "item_4": "Free UK delivery",
+        "item_5": "",
+        "item_6": "",
+        "padding-block-start": 72,
+        "padding-block-end": 72
       }
     },
     "sgs_proof": {
@@ -522,6 +577,8 @@
   },
   "order": [
     "main",
+    "sgs_wall_videos",
+    "sgs_arrival",
     "sgs_proof",
     "17937299023bbff9d5",
     "sgs_timeline",

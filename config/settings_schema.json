@@ -2159,12 +2159,12 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "A multi-buy progress message and bar at the top of the cart drawer and cart page. Display only: the 15% and 25% discounts are your automatic discounts in Shopify."
+        "content": "Progress towards the Buy 2, Get 1 Free offer at the top of the cart drawer and cart page. Display only: the offer itself is an automatic discount in Shopify. Hidden during sale windows that tick 'Hide build your wall' (Theme settings > SixthGear: offers)."
       },
       {
         "type": "checkbox",
         "id": "sgs_wall_progress",
-        "label": "Show build your wall progress",
+        "label": "Show Buy 2, Get 1 Free progress",
         "default": true
       },
       {
@@ -2178,19 +2178,19 @@
         "type": "text",
         "id": "sgs_wall_message_1",
         "label": "1 print",
-        "default": "Add 1 more print to save 15%"
+        "default": "Add 2 more – your 3rd print is free"
       },
       {
         "type": "text",
         "id": "sgs_wall_message_2",
         "label": "2 prints",
-        "default": "You're saving 15%. Add 1 more to save 25%"
+        "default": "Add 1 more – it's free"
       },
       {
         "type": "text",
         "id": "sgs_wall_message_3",
         "label": "3 or more prints",
-        "default": "You're saving 25%"
+        "default": "Your cheapest print is free"
       },
       {
         "type": "text",
@@ -2207,27 +2207,33 @@
     ]
   },
   {
-    "name": "SixthGear: sale display",
+    "name": "SixthGear: offers",
     "settings": [
       {
         "type": "paragraph",
-        "content": "Display only. Shows the sale price on product pages, size buttons and product cards, a short line on product pages, and the message first in the announcement bar, while a window is open (UK time). The discount itself must be an automatic discount in Shopify with the same percentage and dates. Prices, compare-at prices and search-engine data are not changed."
+        "content": "Date-switched offer messaging, UK time, checked on Shopify's clock and the visitor's device. The open window's message is the first announcement and the offer box on product pages. A window with a discount above 0% also shows sale prices (struck-through normal price) on product pages, size buttons and product cards. Display only: each offer must be an automatic discount in Shopify with the same dates. Prices, compare-at prices and search-engine data are never changed."
       },
       {
         "type": "checkbox",
         "id": "sgs_sale_enabled",
-        "label": "Show sale display",
+        "label": "Show offers",
         "default": true
+      },
+      {
+        "type": "text",
+        "id": "sgs_offer_note",
+        "label": "Offer box line",
+        "default": "Applied automatically at checkout."
       },
       {
         "type": "textarea",
         "id": "sgs_sale_excluded_handles",
-        "label": "Products not in the sale",
+        "label": "Products not in percentage sales",
         "info": "Product handles, separated by commas. Gift cards are never shown as discounted."
       },
       {
         "type": "header",
-        "content": "Window 1: sale"
+        "content": "Window 1: 15% sale"
       },
       {
         "type": "text",
@@ -2239,43 +2245,31 @@
         "type": "text",
         "id": "sgs_sale1_end",
         "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "info": "Leave empty for no end date.",
         "default": "2026-11-15 23:59"
       },
       {
         "type": "range",
         "id": "sgs_sale1_percent",
-        "label": "Discount",
-        "min": 1,
+        "label": "Discount shown on prices",
+        "min": 0,
         "max": 90,
         "step": 1,
         "unit": "%",
-        "default": 15
+        "default": 15,
+        "info": "0% for message-only offers such as Buy 2, Get 1 Free."
       },
       {
         "type": "text",
         "id": "sgs_sale1_message",
         "label": "Message",
-        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV",
-        "info": "Announcement bar."
-      },
-      {
-        "type": "text",
-        "id": "sgs_sale1_short",
-        "label": "Product page line",
-        "default": "15% OFF · ENDS SUN 15 NOV"
-      },
-      {
-        "type": "text",
-        "id": "sgs_sale1_wall_message",
-        "label": "Build your wall message during this window",
-        "default": "15% OFF EVERYTHING · 25% OFF WHEN YOU BUY 3+",
-        "info": "Replaces the multi-buy announcement and the cart progress message while the window is open (discounts don't stack). Leave empty to keep the normal wording."
+        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV"
       },
       {
         "type": "checkbox",
         "id": "sgs_sale1_hide_wall",
-        "label": "Hide build your wall messaging during this window",
-        "default": false
+        "label": "Hide Buy 2, Get 1 Free progress during this window",
+        "default": true
       },
       {
         "type": "header",
@@ -2291,43 +2285,131 @@
         "type": "text",
         "id": "sgs_sale2_end",
         "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "info": "Leave empty for no end date.",
         "default": "2026-11-30 23:59"
       },
       {
         "type": "range",
         "id": "sgs_sale2_percent",
-        "label": "Discount",
-        "min": 1,
+        "label": "Discount shown on prices",
+        "min": 0,
         "max": 90,
         "step": 1,
         "unit": "%",
-        "default": 25
+        "default": 25,
+        "info": "0% for message-only offers such as Buy 2, Get 1 Free."
       },
       {
         "type": "text",
         "id": "sgs_sale2_message",
         "label": "Message",
-        "default": "BLACK FRIDAY · 25% OFF EVERYTHING · ENDS MON 30 NOV",
-        "info": "Announcement bar."
-      },
-      {
-        "type": "text",
-        "id": "sgs_sale2_short",
-        "label": "Product page line",
-        "default": "BLACK FRIDAY · 25% OFF · ENDS MON 30 NOV"
-      },
-      {
-        "type": "text",
-        "id": "sgs_sale2_wall_message",
-        "label": "Build your wall message during this window",
-        "info": "Only used when the messaging isn't hidden below."
+        "default": "BLACK FRIDAY · 25% OFF EVERYTHING · ENDS MON 30 NOV"
       },
       {
         "type": "checkbox",
         "id": "sgs_sale2_hide_wall",
-        "label": "Hide build your wall messaging during this window",
-        "default": true,
-        "info": "Hides the multi-buy announcement and the cart progress."
+        "label": "Hide Buy 2, Get 1 Free progress during this window",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Window 3: Buy 2, Get 1 Free"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_start",
+        "label": "Starts (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-16 00:00"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_end",
+        "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "info": "Leave empty for no end date.",
+        "default": "2026-11-26 23:59"
+      },
+      {
+        "type": "range",
+        "id": "sgs_sale3_percent",
+        "label": "Discount shown on prices",
+        "min": 0,
+        "max": 90,
+        "step": 1,
+        "unit": "%",
+        "default": 0,
+        "info": "0% for message-only offers such as Buy 2, Get 1 Free."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_message",
+        "label": "Message",
+        "default": "BUY 2, GET 1 FREE · MIX ANY DESIGNS AND SIZES"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_sale3_hide_wall",
+        "label": "Hide Buy 2, Get 1 Free progress during this window",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Window 4: Buy 2, Get 1 Free"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_start",
+        "label": "Starts (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-12-01 00:00"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_end",
+        "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "info": "Leave empty for no end date."
+      },
+      {
+        "type": "range",
+        "id": "sgs_sale4_percent",
+        "label": "Discount shown on prices",
+        "min": 0,
+        "max": 90,
+        "step": 1,
+        "unit": "%",
+        "default": 0,
+        "info": "0% for message-only offers such as Buy 2, Get 1 Free."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_message",
+        "label": "Message",
+        "default": "BUY 2, GET 1 FREE · MIX ANY DESIGNS AND SIZES"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_sale4_hide_wall",
+        "label": "Hide Buy 2, Get 1 Free progress during this window",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: product page",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Optional tag on one size or finish button. Use it only for a choice that genuinely sells the most."
+      },
+      {
+        "type": "text",
+        "id": "sgs_popular_value",
+        "label": "Tag this option value",
+        "info": "Exact value name as in Shopify, e.g. 16x24 (Vertical). Leave empty for no tag."
+      },
+      {
+        "type": "text",
+        "id": "sgs_popular_label",
+        "label": "Tag text",
+        "default": "Popular"
       }
     ]
   }

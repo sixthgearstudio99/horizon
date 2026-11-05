@@ -6,6 +6,13 @@
   assign delivery_text = product_resource.metafields.custom.shipping.value | default: bs.delivery_text
   assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text
 
+  # "[sizes]" in the framing text becomes this product's sizes, e.g. "16×24, 24×36"
+  capture sizes_text
+    render 'sgs-product-sizes', product_resource: product_resource, fallback: '12×18, 16×24, 24×36'
+  endcapture
+  assign sizes_text = sizes_text | strip
+  assign framing_text = framing_text | replace: '[sizes]', sizes_text
+
   # The product's Size option, listed under Framing
   assign size_option = nil
   for option in product_resource.options_with_values
@@ -251,7 +258,7 @@
       "type": "richtext",
       "id": "delivery_text",
       "label": "Delivery and returns",
-      "default": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 4 working days, then delivered in 2 to 3 working days.</p><p>Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>"
+      "default": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Standard prints can be returned within 14 days. Faulty or damaged prints replaced free. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>"
     },
     {
       "type": "text",
@@ -263,7 +270,8 @@
       "type": "richtext",
       "id": "framing_text",
       "label": "Framing",
-      "default": "<p>Supplied unframed, ready to fit a standard frame in these sizes:</p>"
+      "info": "[sizes] is replaced by the product's sizes, e.g. 16×24, 24×36.",
+      "default": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>"
     },
     {
       "type": "checkbox",

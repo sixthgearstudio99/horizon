@@ -18,7 +18,7 @@
       <h2 class="sgs-faq__heading sgs-label">{{ bs.heading | escape }}</h2>
     {%- endif -%}
 
-    {% render 'sgs-faq-list', settings: bs %}
+    {% render 'sgs-faq-list', settings: bs, product_resource: closest.product %}
   </div>
 {%- endif -%}
 
@@ -47,7 +47,7 @@
       "type": "textarea",
       "id": "answer_1",
       "label": "Answer 1",
-      "default": "Every print is made to order in the UK within 2 to 4 working days, then delivered in 2 to 3 working days. UK delivery is free."
+      "default": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free."
     },
     {
       "type": "text",
@@ -59,7 +59,7 @@
       "type": "textarea",
       "id": "answer_2",
       "label": "Answer 2",
-      "default": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches)."
+      "default": "Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents)."
     },
     {
       "type": "text",
@@ -83,7 +83,7 @@
       "type": "textarea",
       "id": "answer_4",
       "label": "Answer 4",
-      "default": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty."
+      "default": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints replaced free. Custom posters can't be returned unless faulty."
     },
     {
       "type": "text",

@@ -31,6 +31,7 @@
       for media in product.media
         if media.position > 1 and media.media_type == 'image'
           assign secondary_image = media.preview_image
+          assign secondary_position = media.position
           break
         endif
       endfor
@@ -72,7 +73,14 @@
         style="--sgs-card-ratio: {{ card_ratio }};"
       >
         {%- if primary_image != blank -%}
-          {%- assign primary_alt = primary_image.alt | default: product.title | escape -%}
+          {%- liquid
+            # Never an empty alt: "[Product title] – image 1 of 4" when the image has none
+            assign primary_alt = primary_image.alt | strip
+            if primary_alt == blank
+              assign primary_alt = product.title | append: ' – image 1 of ' | append: product.media.size
+            endif
+            assign primary_alt = primary_alt | escape
+          -%}
           {{
             primary_image
             | image_url: width: 1400
@@ -88,6 +96,13 @@
         {%- endif -%}
 
         {%- if secondary_image -%}
+          {%- liquid
+            assign secondary_alt = secondary_image.alt | strip
+            if secondary_alt == blank
+              assign secondary_alt = product.title | append: ' – image ' | append: secondary_position | append: ' of ' | append: product.media.size
+            endif
+            assign secondary_alt = secondary_alt | escape
+          -%}
           {{
             secondary_image
             | image_url: width: 1400
@@ -96,7 +111,7 @@
               sizes: card_sizes,
               loading: 'lazy',
               class: secondary_class,
-              alt: ''
+              alt: secondary_alt
           }}
         {%- endif -%}
 

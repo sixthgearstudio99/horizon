@@ -1,31 +1,58 @@
 {%- liquid
   assign s = section.settings
 
-  # Visibility: the products picked below; or, if none are picked, any print in the chosen collection
-  assign show = false
+  # Steps for this print: its own metafields first (custom.lineage_models with optional
+  # custom.lineage_years, custom.lineage_notes and custom.lineage_images, all lists in the same
+  # order), else the steps added below, for prints picked here or whose title contains
+  # "Use the steps below for titles containing".
+  assign mf_models = product.metafields.custom.lineage_models.value
+  assign mf_years = product.metafields.custom.lineage_years.value
+  assign mf_notes = product.metafields.custom.lineage_notes.value
+  assign mf_images = product.metafields.custom.lineage_images.value
+  assign use_metafields = false
+  if mf_models != blank and mf_models.size > 0
+    assign use_metafields = true
+  endif
+
+  assign picked = false
+  assign in_collection = false
+  assign blocks_apply = false
   if product != blank
-    if s.products.size > 0
-      for p in s.products
-        if p.id == product.id
-          assign show = true
-          break
-        endif
-      endfor
-    else
+    for p in s.products
+      if p.id == product.id
+        assign picked = true
+        break
+      endif
+    endfor
+    if s.collection_handle != blank
       for c in product.collections
         if c.handle == s.collection_handle
-          assign show = true
+          assign in_collection = true
           break
         endif
       endfor
     endif
+    if picked
+      assign blocks_apply = true
+    elsif s.blocks_match != blank and product.title contains s.blocks_match
+      assign blocks_apply = true
+    endif
   endif
-  if request.design_mode
-    assign show = true
+
+  assign has_steps = use_metafields
+  if blocks_apply and section.blocks.size > 0
+    assign has_steps = true
+  endif
+
+  assign show = false
+  if picked or in_collection
+    if has_steps
+      assign show = true
+    endif
   endif
 -%}
 
-{%- if show and section.blocks.size > 0 -%}
+{%- if show -%}
   <section
     class="sgs-tl"
     style="--sgs-tl-pad-top: {{ s['padding-block-start'] }}px; --sgs-tl-pad-bottom: {{ s['padding-block-end'] }}px;"
@@ -51,40 +78,96 @@
 
       <sgs-timeline class="sgs-tl__track-wrap">
         <ol class="sgs-tl__track" data-tl-track data-sgs-reveal-group>
-          {%- for block in section.blocks -%}
-            {%- assign b = block.settings -%}
-            <li class="sgs-tl__step{% if b.image != blank %} sgs-tl__step--image{% endif %}" data-sgs-reveal {{ block.shopify_attributes }}>
-              <div class="sgs-tl__media">
-                {%- if b.image != blank -%}
-                  {%- assign step_alt = b.image.alt | default: b.model | escape -%}
-                  {{
-                    b.image
-                    | image_url: width: 900
-                    | image_tag:
-                      widths: '300, 450, 600, 900',
-                      sizes: '(min-width: 990px) 22vw, 70vw',
-                      loading: 'lazy',
-                      class: 'sgs-tl__img',
-                      alt: step_alt
-                  }}
+          {%- if use_metafields -%}
+            {%- for model in mf_models -%}
+              {%- liquid
+                assign i = forloop.index0
+                assign step_years = mf_years[i]
+                assign step_text = mf_notes[i]
+                assign step_image = mf_images[i]
+              -%}
+              <li class="sgs-tl__step{% if step_image != blank %} sgs-tl__step--image{% endif %}" data-sgs-reveal>
+                <div class="sgs-tl__media">
+                  {%- if step_image != blank -%}
+                    {{
+                      step_image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '300, 450, 600, 900',
+                        sizes: '(min-width: 990px) 22vw, 70vw',
+                        loading: 'lazy',
+                        class: 'sgs-tl__img',
+                        alt: model
+                    }}
+                  {%- endif -%}
+                </div>
+                <span class="sgs-tl__dot" aria-hidden="true"></span>
+                {%- if step_years != blank -%}
+                  <p class="sgs-tl__years">{{ step_years | escape }}</p>
                 {%- endif -%}
-              </div>
-              <span class="sgs-tl__dot" aria-hidden="true"></span>
-              <p class="sgs-tl__years">{{ b.years | escape }}</p>
-              <h3 class="sgs-tl__model">{{ b.model | escape }}</h3>
-              {%- if b.text != blank -%}
-                <p class="sgs-tl__text">{{ b.text }}</p>
-              {%- endif -%}
-            </li>
-          {%- endfor -%}
+                <h3 class="sgs-tl__model">{{ model | escape }}</h3>
+                {%- if step_text != blank -%}
+                  <p class="sgs-tl__text">{{ step_text | escape }}</p>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for block in section.blocks -%}
+              {%- assign b = block.settings -%}
+              <li class="sgs-tl__step{% if b.image != blank %} sgs-tl__step--image{% endif %}" data-sgs-reveal {{ block.shopify_attributes }}>
+                <div class="sgs-tl__media">
+                  {%- if b.image != blank -%}
+                    {%- assign step_alt = b.image.alt | default: b.model | escape -%}
+                    {{
+                      b.image
+                      | image_url: width: 900
+                      | image_tag:
+                        widths: '300, 450, 600, 900',
+                        sizes: '(min-width: 990px) 22vw, 70vw',
+                        loading: 'lazy',
+                        class: 'sgs-tl__img',
+                        alt: step_alt
+                    }}
+                  {%- endif -%}
+                </div>
+                <span class="sgs-tl__dot" aria-hidden="true"></span>
+                <p class="sgs-tl__years">{{ b.years | escape }}</p>
+                <h3 class="sgs-tl__model">{{ b.model | escape }}</h3>
+                {%- if b.text != blank -%}
+                  <p class="sgs-tl__text">{{ b.text }}</p>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
         </ol>
       </sgs-timeline>
     </div>
   </section>
   <script src="{{ 'sgs-timeline.js' | asset_url }}" defer></script>
+{%- elsif request.design_mode and in_collection -%}
+  <div class="sgs-tl-note">
+    Lineage timeline: hidden on this print until its generations are added. Fill the product
+    metafields custom.lineage_models (list of text, e.g. "F1", "P1", "Senna"), and optionally
+    custom.lineage_years, custom.lineage_notes (lists of text) and custom.lineage_images (list of images), in the same order.
+  </div>
+{%- else -%}
+  <span class="sgs-tl-hidden" hidden></span>
 {%- endif -%}
 
 {% stylesheet %}
+  .sgs-tl-note {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding: 16px var(--page-margin, 16px);
+    font-size: 13px;
+    color: var(--sgs-text-2, #9a968e);
+  }
+
+  /* No timeline for this print: no empty band or extra divider */
+  .shopify-section:has(> .sgs-tl-hidden) {
+    display: none;
+  }
+
   .sgs-tl {
     padding-block: var(--sgs-tl-pad-top) var(--sgs-tl-pad-bottom);
     color: var(--sgs-text);
@@ -330,7 +413,15 @@
       "type": "text",
       "id": "collection_handle",
       "label": "Otherwise show on collection",
-      "default": "lineage"
+      "default": "lineage",
+      "info": "Shows on every print in this collection that has generations in its metafields: custom.lineage_models, plus optional custom.lineage_years, custom.lineage_notes and custom.lineage_images (lists, same order)."
+    },
+    {
+      "type": "text",
+      "id": "blocks_match",
+      "label": "Use the steps below for titles containing",
+      "default": "911",
+      "info": "Prints without lineage metafields use the steps below only if picked above or their title contains this text."
     },
     {
       "type": "text",

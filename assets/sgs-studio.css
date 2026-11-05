@@ -415,8 +415,13 @@ html[data-sgs-sale='2'] .sgs-sale-note[data-sgs-sale-win='2'] {
   display: block !important;
 }
 
-html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal),
-html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal) {
+html[data-sgs-sale='1'] .sgs-wallprog__sale-msg[data-sgs-sale-win='1'],
+html[data-sgs-sale='2'] .sgs-wallprog__sale-msg[data-sgs-sale-win='2'] {
+  display: inline !important;
+}
+
+html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg),
+html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg) {
   display: none !important;
 }
 

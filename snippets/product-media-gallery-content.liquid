@@ -396,10 +396,10 @@
           {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
             <div
               class="product-media-constraint-wrapper">
-              {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: media_loading -%}
+              {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: media_loading, alt_title: selected_product.title, alt_total: selected_product.media.size -%}
             </div>
           {% else %}
-            {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: media_loading -%}
+            {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: media_loading, alt_title: selected_product.title, alt_total: selected_product.media.size -%}
           {% endif %}
         {% endcapture %}
         {% capture class %}
@@ -508,13 +508,18 @@
               else
                 assign media_sizes = sizes
               endif
+              # SixthGear: first image straight away, the rest lazily
+              assign grid_loading = 'lazy'
+              if forloop.first
+                assign grid_loading = 'eager'
+              endif
             -%}
             {% if block_settings.aspect_ratio != 'adapt' and block_settings.constrain_to_viewport %}
               <div class="product-media-constraint-wrapper">
-                {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first -%}
+                {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: grid_loading, alt_title: selected_product.title, alt_total: selected_product.media.size -%}
               </div>
             {% else %}
-              {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first -%}
+              {%- render 'product-media', media: media, sizes: media_sizes, is_main_product_media: forloop.first, loading: grid_loading, alt_title: selected_product.title, alt_total: selected_product.media.size -%}
             {% endif %}
           </li>
         {% endfor %}
@@ -578,7 +583,7 @@
                         loading: 'lazy',
                         sizes: 'auto, 110, (min-width: 750px) 160',
                         widths: '240, 352, 832, 1200',
-                        alt: media.alt,
+                        alt: media.alt | default: 'Image',
                         style: focal_point_style
                       | escape
                     }}
@@ -607,7 +612,9 @@
                       sizes: '100vw',
                       loading: 'lazy',
                       is_main_product_media: forloop.first,
-                      image_ref: 'image'
+                      image_ref: 'image',
+                      alt_title: selected_product.title,
+                      alt_total: selected_product.media.size
                     -%}
                   </drag-zoom-wrapper>
                 {% else %}
@@ -615,7 +622,9 @@
                     media: media,
                     sizes: '100vw',
                     loading: 'lazy',
-                    is_main_product_media: forloop.first
+                    is_main_product_media: forloop.first,
+                    alt_title: selected_product.title,
+                    alt_total: selected_product.media.size
                   -%}
                 {% endif %}
               </li>

@@ -67,7 +67,8 @@
             "weight": "500",
             "letter_spacing": "loose",
             "case": "uppercase",
-            "text_color": "#f5f3ef"
+            "text_color": "#f5f3ef",
+            "sgs_wall_message": true
           },
           "blocks": {}
         },

@@ -34,6 +34,67 @@
     assign christmas_link_text = christmas_rest.first
     assign christmas_after = christmas_rest | slice: 1, 99 | join: ']'
   endif
+
+  # Delivery window, worked out here so the dates are always in the page: earliest = shortest
+  # production + shortest delivery, latest = longest of each, counted in working days after today
+  # (weekends and the bank holidays listed in the settings don't count). The browser repeats the
+  # sum from the visitor's own UK date, in case this page was cached on an earlier day.
+  assign min_days = bs.production_min | plus: bs.delivery_min
+  assign max_days = bs.production_max | plus: bs.delivery_max
+  if max_days < min_days
+    assign max_days = min_days
+  endif
+  assign holidays = bs.bank_holidays | newline_to_br | replace: '<br />', ',' | strip_newlines | remove: ' ' | split: ','
+  assign today_ymd = 'now' | date: '%Y-%m-%d'
+  # Count from midday, so adding whole days never trips over a clock change
+  assign day_s = today_ymd | append: ' 12:00' | date: '%s' | plus: 0
+  assign counted = 0
+  assign found_first = false
+  assign first_s = day_s
+  assign last_s = day_s
+  for i in (1..90)
+    assign day_s = day_s | plus: 86400
+    assign weekday = day_s | date: '%u' | plus: 0
+    assign day_ymd = day_s | date: '%Y-%m-%d'
+    if weekday < 6
+      unless holidays contains day_ymd
+        assign counted = counted | plus: 1
+      endunless
+    endif
+    if counted >= min_days and found_first == false
+      assign first_s = day_s
+      assign found_first = true
+    endif
+    if counted >= max_days
+      assign last_s = day_s
+      break
+    endif
+  endfor
+  assign first_month = first_s | date: '%b'
+  assign last_month = last_s | date: '%b'
+  assign last_text = last_s | date: '%a %-d %b'
+  if first_month == last_month
+    assign first_text = first_s | date: '%a %-d'
+  else
+    assign first_text = first_s | date: '%a %-d %b'
+  endif
+  assign range_text = first_text | append: ' – ' | append: last_text
+  if min_days == max_days
+    assign range_text = last_text
+  endif
+
+  # Christmas: after the last delivery date the estimate gives way to the gift card message
+  assign today_mmdd = 'now' | date: '%m-%d'
+  assign christmas_from = bs.christmas_from | default: '12-10'
+  assign christmas_to = bs.christmas_to | default: '12-24'
+  assign in_christmas = false
+  if today_mmdd >= christmas_from and today_mmdd <= christmas_to
+    assign in_christmas = true
+  endif
+  assign show_gift_line = false
+  if gift_line_until != blank and today_ymd <= gift_line_until
+    assign show_gift_line = true
+  endif
 -%}
 
 {%- unless closest.product.gift_card? -%}
@@ -41,11 +102,11 @@
   <svg class="sgs-delivery__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
 
   <div class="sgs-delivery__body">
-  <p class="sgs-delivery__text" data-standard>
-    {{ bs.text_before | escape }} <strong data-range></strong>
+  <p class="sgs-delivery__text" data-standard{% if in_christmas %} hidden{% endif %}>
+    {{ bs.text_before | escape }} <strong data-range>{{ range_text }}</strong>
   </p>
 
-  <p class="sgs-delivery__text" data-christmas hidden>
+  <p class="sgs-delivery__text" data-christmas{% unless in_christmas %} hidden{% endunless %}>
     {{- christmas_before | escape -}}
     {%- if christmas_link_text != blank -%}
       {%- if gift_card -%}
@@ -57,7 +118,7 @@
     {{- christmas_after | escape -}}
   </p>
   {%- if gift_line != blank -%}
-    <p class="sgs-delivery__xmas" id="{{ uid }}-xmas" hidden>{{ gift_line | escape }}</p>
+    <p class="sgs-delivery__xmas" id="{{ uid }}-xmas"{% unless show_gift_line %} hidden{% endunless %}>{{ gift_line | escape }}</p>
   {%- endif -%}
   {%- if bs.footnote != blank -%}
     <p class="sgs-delivery__foot">{{ bs.footnote | escape }}</p>
@@ -71,50 +132,60 @@
 {%- endcomment -%}
 <script>
   (function () {
+    // Repeats the Liquid sum from the visitor's UK date, in case the page was cached on an
+    // earlier day. If anything here fails, the dates already in the page stay as they are.
     var root = document.getElementById({{ uid | json }});
     if (!root) return;
-    // Earliest = shortest production + shortest delivery; latest = longest of each
-    var minDays = {{ bs.production_min | default: 2 }} + {{ bs.delivery_min | default: 2 }};
-    var maxDays = {{ bs.production_max | default: 4 }} + {{ bs.delivery_max | default: 3 }};
-    if (maxDays < minDays) maxDays = minDays;
-    var start = {{ bs.christmas_from | default: '12-10' | json }};
-    var end = {{ bs.christmas_to | default: '12-24' | json }};
+    try {
+      var minDays = {{ min_days }};
+      var maxDays = {{ max_days }};
+      var holidays = {{ holidays | json }};
+      var start = {{ christmas_from | json }};
+      var end = {{ christmas_to | json }};
 
-    var addWorkingDays = function (from, days) {
-      var d = new Date(from.getFullYear(), from.getMonth(), from.getDate());
-      var added = 0;
-      while (added < days) {
-        d.setDate(d.getDate() + 1);
-        var day = d.getDay();
-        if (day !== 0 && day !== 6) added++;
-      }
-      return d;
-    };
-    var part = function (d, opts) { return d.toLocaleDateString('en-GB', opts); };
-    var weekdayDay = function (d) { return part(d, { weekday: 'short' }) + ' ' + d.getDate(); };
-    var month = function (d) { return part(d, { month: 'short' }); };
+      var parts = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+      var ymd = parts.year + '-' + parts.month + '-' + parts.day;
+      var mmdd = parts.month + '-' + parts.day;
+      // Midday UTC on the UK date: whole-day steps from here never change the calendar date
+      var today = new Date(Date.UTC(+parts.year, +parts.month - 1, +parts.day, 12));
+      var iso = function (d) { return d.toISOString().slice(0, 10); };
 
-    var today = new Date();
-    var mmdd = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
-    var ymd = today.getFullYear() + '-' + mmdd;
+      var addWorkingDays = function (days) {
+        var d = new Date(today.getTime());
+        var added = 0;
+        while (added < days) {
+          d.setUTCDate(d.getUTCDate() + 1);
+          var dow = d.getUTCDay();
+          if (dow !== 0 && dow !== 6 && holidays.indexOf(iso(d)) === -1) added++;
+        }
+        return d;
+      };
+      var fmt = function (d, opts) { return d.toLocaleDateString('en-GB', Object.assign({ timeZone: 'UTC' }, opts)); };
+      var dayText = function (d) { return fmt(d, { weekday: 'short' }) + ' ' + d.getUTCDate(); };
+      var monthText = function (d) { return fmt(d, { month: 'short' }); };
 
-    // Christmas order-by line: shown up to and including its last day
-    var xmas = document.getElementById({{ uid | append: '-xmas' | json }});
-    var xmasUntil = {{ gift_line_until | json }};
-    if (xmas && xmasUntil && ymd <= xmasUntil) xmas.hidden = false;
+      // Gift line: shown up to and including its last day
+      var xmas = document.getElementById({{ uid | append: '-xmas' | json }});
+      var xmasUntil = {{ gift_line_until | json }};
+      if (xmas) xmas.hidden = !(xmasUntil && ymd <= xmasUntil);
 
-    if (mmdd >= start && mmdd <= end) {
-      root.querySelector('[data-standard]').hidden = true;
-      root.querySelector('[data-christmas]').hidden = false;
-      return;
+      var christmas = mmdd >= start && mmdd <= end;
+      root.querySelector('[data-standard]').hidden = christmas;
+      root.querySelector('[data-christmas]').hidden = !christmas;
+      if (christmas) return;
+
+      var first = addWorkingDays(minDays);
+      var last = addWorkingDays(maxDays);
+      var lastText = dayText(last) + ' ' + monthText(last);
+      var range = minDays === maxDays
+        ? lastText
+        : (first.getUTCMonth() === last.getUTCMonth() ? dayText(first) : dayText(first) + ' ' + monthText(first)) + ' – ' + lastText;
+      root.querySelector('[data-range]').textContent = range;
+    } catch (e) {
+      // keep the server-rendered dates
     }
-
-    var first = addWorkingDays(today, minDays);
-    var last = addWorkingDays(today, maxDays);
-    var range = first.getMonth() === last.getMonth()
-      ? weekdayDay(first) + ' – ' + weekdayDay(last) + ' ' + month(last)
-      : weekdayDay(first) + ' ' + month(first) + ' – ' + weekdayDay(last) + ' ' + month(last);
-    root.querySelector('[data-range]').textContent = range;
   })();
 </script>
 {%- endunless -%}
@@ -209,6 +280,13 @@
       "info": "Leave empty to hide."
     },
     {
+      "type": "textarea",
+      "id": "bank_holidays",
+      "label": "Bank holidays (no production or delivery)",
+      "default": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+      "info": "England and Wales, as YYYY-MM-DD separated by commas. Weekends are always skipped."
+    },
+    {
       "type": "range",
       "id": "production_min",
       "label": "Production: fewest working days",
@@ -224,7 +302,7 @@
       "min": 0,
       "max": 15,
       "step": 1,
-      "default": 4
+      "default": 5
     },
     {
       "type": "range",
@@ -242,7 +320,7 @@
       "min": 0,
       "max": 15,
       "step": 1,
-      "default": 3,
+      "default": 4,
       "info": "Arrival dates are counted from today, Monday to Friday only."
     },
     {

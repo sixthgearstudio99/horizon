@@ -107,8 +107,41 @@
       >
         {{ header }}
         <ul class="sgs-grid__list" role="list" data-sgs-recs-list data-sgs-reveal-group>
-          {%- if source -%}
-            {%- for rec in source.products limit: 30 -%}
+          {%- comment -%}
+            1) Prints from the print's own collections, most specific first: the preferred style
+               collections in the order listed (e.g. Lineage, Grand Prix), then any other
+               specific collection it's in. Shopify's related prints only fill what's left.
+          {%- endcomment -%}
+          {%- liquid
+            assign ordered = ''
+            for wanted in preferred
+              assign wanted_handle = wanted | strip
+              for c in product.collections
+                if c.handle == wanted_handle and c.products_count > 1
+                  assign ordered = ordered | append: ',' | append: c.handle
+                endif
+              endfor
+            endfor
+            assign preferred_key = ',' | append: s.preferred_collections | remove: ' ' | append: ','
+            for c in product.collections
+              assign c_key = ',' | append: c.handle | append: ','
+              assign generic = false
+              if c.handle == 'all' or c.handle == 'frontpage' or c.handle contains 'best-seller' or c.handle contains 'bestseller' or c.handle contains 'gift'
+                assign generic = true
+              endif
+              assign is_preferred = false
+              if preferred_key contains c_key
+                assign is_preferred = true
+              endif
+              if generic == false and is_preferred == false and c.products_count > 1
+                assign ordered = ordered | append: ',' | append: c.handle
+              endif
+            endfor
+            assign ordered = ordered | remove_first: ',' | split: ','
+          -%}
+          {%- for source_handle in ordered -%}
+            {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+            {%- for rec in collections[source_handle].products limit: 30 -%}
               {%- if shown >= limit -%}{%- break -%}{%- endif -%}
               {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
               {%- if shown_handles contains rec_key -%}{%- continue -%}{%- endif -%}
@@ -119,7 +152,7 @@
                 {% render 'sgs-product-card', product: rec, show_secondary: true, show_options: true, sizes: card_sizes %}
               </li>
             {%- endfor -%}
-          {%- endif -%}
+          {%- endfor -%}
 
           {%- comment -%} 2) Placeholders from the whole shop; Shopify's related prints replace these when they load {%- endcomment -%}
           {%- for rec in collections.all.products limit: 30 -%}
@@ -181,8 +214,8 @@
       "type": "text",
       "id": "preferred_collections",
       "label": "Preferred collections",
-      "default": "lineage,portraits,grand-prix,mindset",
-      "info": "Prints from the viewed print's own collection come first. Collection handles, in order of preference."
+      "default": "lineage,grand-prix,german-engineering,jdm,super-hypercars,portraits,mindset",
+      "info": "Prints from the viewed print's own collections come first, in this order, then its other collections, then Shopify's related prints. Collection handles."
     },
     {
       "type": "text",

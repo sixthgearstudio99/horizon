@@ -64,23 +64,32 @@
       {%- endif -%}
       {% content_for 'blocks' %}
     </div>
-    {%- if sgs_sale_message != blank -%}
-      <script>
-        (function () {
-          // Keep the sale message only if the visitor's device agrees the window is open; it must
-          // be settled before the slideshow starts, which happens later in a module script.
-          var slide = document.getElementById({{ 'SgsSaleSlide-' | append: section.id | json }});
-          if (!slide) return;
-          if (document.documentElement.getAttribute('data-sgs-sale') !== slide.getAttribute('data-sgs-sale-slide')) {
+    <script>
+      (function () {
+        // Settled from the visitor's clock (html[data-sgs-sale], set in the head) before the
+        // slideshow starts, which happens later in a module script:
+        // - the sale message stays only while its window is open
+        // - the build-your-wall message takes that window's wording, or is removed
+        var slides = document.currentScript.closest('announcement-bar-component')?.querySelector('.announcement-bar__slides');
+        if (!slides) return;
+        var win = document.documentElement.getAttribute('data-sgs-sale') || '0';
+        var sale = slides.querySelector('[data-sgs-sale-slide]');
+        if (sale && sale.getAttribute('data-sgs-sale-slide') !== win) sale.remove();
+        slides.querySelectorAll('[data-sgs-wall-slide]').forEach(function (slide) {
+          var text = slide.getAttribute('data-text-' + win);
+          if (text === null) text = slide.getAttribute('data-text-0');
+          if (!text) {
             slide.remove();
             return;
           }
-          Array.prototype.forEach.call(slide.parentElement.children, function (el) {
-            if (el !== slide && el.matches('.announcement-bar__slide')) el.setAttribute('aria-hidden', 'true');
-          });
-        })();
-      </script>
-    {%- endif -%}
+          var p = slide.querySelector('.announcement-bar__text');
+          if (p && p.innerHTML.trim() !== text.trim()) p.innerHTML = text;
+        });
+        slides.querySelectorAll('.announcement-bar__slide').forEach(function (el, i) {
+          el.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
+        });
+      })();
+    </script>
   </announcement-bar-component>
 </aside>
 

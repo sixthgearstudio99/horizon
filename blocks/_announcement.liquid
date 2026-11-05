@@ -14,6 +14,42 @@
       assign expired = true
     endif
   endif
+
+  # SixthGear: the build-your-wall (multi-buy) message changes during a sale window, set in
+  # Theme settings > sale display. Shopify's clock picks the text here; the visitor's clock
+  # settles it in sections/header-announcements.liquid before the slides start.
+  assign display_text = block.settings.text
+  assign wall_text_1 = nil
+  assign wall_text_2 = nil
+  if block_settings.sgs_wall_message
+    for w in (1..2)
+      assign hide_key = 'sgs_sale' | append: w | append: '_hide_wall'
+      assign msg_key = 'sgs_sale' | append: w | append: '_wall_message'
+      assign window_text = block.settings.text
+      if settings[hide_key]
+        assign window_text = ''
+      elsif settings[msg_key] != blank
+        assign window_text = settings[msg_key] | escape
+      endif
+      if w == 1
+        assign wall_text_1 = window_text
+      else
+        assign wall_text_2 = window_text
+      endif
+    endfor
+    capture sgs_sale_win
+      render 'sgs-sale-window'
+    endcapture
+    assign sgs_sale_win = sgs_sale_win | strip
+    if sgs_sale_win == '1'
+      assign display_text = wall_text_1
+    elsif sgs_sale_win == '2'
+      assign display_text = wall_text_2
+    endif
+    if display_text == blank
+      assign expired = true
+    endif
+  endif
 -%}
 
 {%- unless plain_text == '' or expired -%}
@@ -38,9 +74,15 @@
     "
     {{ block.shopify_attributes }}
     aria-hidden="{% if block_index == 0 %}false{% else %}true{% endif %}"
+    {% if block_settings.sgs_wall_message %}
+      data-sgs-wall-slide
+      data-text-0="{{ block.settings.text | escape }}"
+      data-text-1="{{ wall_text_1 | escape }}"
+      data-text-2="{{ wall_text_2 | escape }}"
+    {% endif %}
   >
     <p class="announcement-bar__text">
-      {{ block.settings.text }}
+      {{ display_text }}
     </p>
 
     {% if block_settings.link != blank %}
@@ -77,6 +119,13 @@
       "id": "hide_after",
       "label": "Hide after date",
       "info": "Optional, YYYY-MM-DD. The announcement stops showing after this day."
+    },
+    {
+      "type": "checkbox",
+      "id": "sgs_wall_message",
+      "label": "This is the build your wall / multi-buy message",
+      "default": false,
+      "info": "Changed or hidden during sale windows, as set in Theme settings > SixthGear: sale display."
     },
     {
       "type": "header",

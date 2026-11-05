@@ -2265,9 +2265,16 @@
         "default": "15% OFF · ENDS SUN 15 NOV"
       },
       {
+        "type": "text",
+        "id": "sgs_sale1_wall_message",
+        "label": "Build your wall message during this window",
+        "default": "15% OFF EVERYTHING · 25% OFF WHEN YOU BUY 3+",
+        "info": "Replaces the multi-buy announcement and the cart progress message while the window is open (discounts don't stack). Leave empty to keep the normal wording."
+      },
+      {
         "type": "checkbox",
         "id": "sgs_sale1_hide_wall",
-        "label": "Hide build your wall progress during this window",
+        "label": "Hide build your wall messaging during this window",
         "default": false
       },
       {
@@ -2310,10 +2317,17 @@
         "default": "BLACK FRIDAY · 25% OFF · ENDS MON 30 NOV"
       },
       {
+        "type": "text",
+        "id": "sgs_sale2_wall_message",
+        "label": "Build your wall message during this window",
+        "info": "Only used when the messaging isn't hidden below."
+      },
+      {
         "type": "checkbox",
         "id": "sgs_sale2_hide_wall",
-        "label": "Hide build your wall progress during this window",
-        "default": true
+        "label": "Hide build your wall messaging during this window",
+        "default": true,
+        "info": "Hides the multi-buy announcement and the cart progress."
       }
     ]
   }

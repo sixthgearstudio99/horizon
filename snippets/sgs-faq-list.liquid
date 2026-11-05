@@ -4,12 +4,16 @@
   answer_1..6 in the settings passed in.
 
   @param {object} settings - Block or section settings holding question_N / answer_N
+  @param {product} [product_resource] - The product, so "[sizes]" in an answer lists its sizes
 
   @example
   {% render 'sgs-faq-list', settings: block.settings %}
 {%- enddoc -%}
 
 {%- assign bs = settings -%}
+{%- comment -%} "[sizes]" in an answer becomes the product's sizes, e.g. "16×24, 24×36" {%- endcomment -%}
+{%- capture sizes_text -%}{% render 'sgs-product-sizes', product_resource: product_resource, fallback: '12×18, 16×24, 24×36' %}{%- endcapture -%}
+{%- assign sizes_text = sizes_text | strip -%}
 {%- for i in (1..6) -%}
       {%- assign q_key = 'question_' | append: i -%}
       {%- assign a_key = 'answer_' | append: i -%}
@@ -19,7 +23,7 @@
             <span class="sgs-faq__question">{{ bs[q_key] | escape }}</span>
             <span class="sgs-faq__icon" aria-hidden="true"></span>
           </summary>
-          <div class="sgs-faq__answer">{{ bs[a_key] | escape | newline_to_br }}</div>
+          <div class="sgs-faq__answer">{{ bs[a_key] | replace: '[sizes]', sizes_text | escape | newline_to_br }}</div>
         </details>
       {%- endif -%}
     {%- endfor -%}
@@ -42,7 +46,7 @@
               "name": {{ bs[q_key] | strip | json }},
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": {{ bs[a_key] | strip_newlines | strip | json }}
+                "text": {{ bs[a_key] | replace: '[sizes]', sizes_text | strip_newlines | strip | json }}
               }
             }
           {%- endif -%}

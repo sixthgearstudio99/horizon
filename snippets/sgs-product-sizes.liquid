@@ -1,0 +1,48 @@
+{%- doc -%}
+  SixthGear Studios: the product's sizes as short text for sentences, e.g. "16×24, 24×36"
+  (inches, from the Size option). Centimetre-only sizes come out as "30×40 cm". Outputs the
+  fallback when there is no product or no Size option.
+
+  @param {product} [product_resource] - The product
+  @param {string} [fallback] - Text to use without a product, e.g. "12×18, 16×24, 24×36"
+
+  @example
+  {%- capture sizes_text -%}{% render 'sgs-product-sizes', product_resource: product, fallback: '12×18, 16×24, 24×36' %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign out = ''
+  if product_resource != blank
+    for option in product_resource.options_with_values
+      assign option_name = option.name | downcase
+      unless option_name contains 'size'
+        continue
+      endunless
+      for value in option.values
+        capture label
+          render 'sgs-size-label', value: value.name
+        endcapture
+        assign label = label | strip
+        if label contains ' IN /'
+          assign short = label | split: ' IN' | first | remove: ' '
+        elsif label contains ' CM'
+          assign short = label | remove: ' CM' | remove: ' ' | append: ' cm'
+        else
+          assign short = ''
+        endif
+        if short != blank
+          if out == blank
+            assign out = short
+          else
+            assign out = out | append: ', ' | append: short
+          endif
+        endif
+      endfor
+      break
+    endfor
+  endif
+  if out == blank
+    assign out = fallback
+  endif
+-%}
+{{- out -}}

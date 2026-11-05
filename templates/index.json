@@ -211,14 +211,14 @@
           "type": "row",
           "settings": {
             "label": "Production",
-            "value": "Made to order in the UK in 2 to 4 working days"
+            "value": "Made to order in the UK in 2 to 5 working days"
           }
         },
         "row_4": {
           "type": "row",
           "settings": {
             "label": "Delivery",
-            "value": "Free UK delivery in 2 to 3 working days"
+            "value": "Free UK delivery in 2 to 4 working days"
           }
         },
         "row_5": {
@@ -227,6 +227,13 @@
             "label": "Framing",
             "value": "Supplied unframed"
           }
+        },
+        "row_6": {
+          "type": "row",
+          "settings": {
+            "label": "Returns",
+            "value": "14 days on standard prints. Faulty or damaged prints replaced free."
+          }
         }
       },
       "block_order": [
@@ -234,7 +241,8 @@
         "row_2",
         "row_3",
         "row_4",
-        "row_5"
+        "row_5",
+        "row_6"
       ],
       "settings": {
         "eyebrow": "05 — The studio",
@@ -352,13 +360,13 @@
         "eyebrow": "FAQ",
         "heading": "Questions",
         "question_1": "How long does delivery take?",
-        "answer_1": "Every print is made to order in the UK within 2 to 4 working days, then delivered in 2 to 3 working days. UK delivery is free.",
+        "answer_1": "Every print is made to order in the UK within 2 to 5 working days, then delivered in 2 to 4 working days. UK delivery is free.",
         "question_2": "Is it framed?",
-        "answer_2": "Prints are supplied unframed and ready to frame in standard sizes (16x24 and 24x36 inches).",
+        "answer_2": "Supplied unframed, ready for standard frames in every size we sell (12×18, 16×24, 24×36 in and their cm equivalents).",
         "question_3": "What paper is it printed on?",
         "answer_3": "Premium semi-gloss paper with rich colour and deep blacks.",
         "question_4": "Can I return it?",
-        "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints are replaced free. Custom posters can't be returned unless faulty.",
+        "answer_4": "Yes, you can return standard prints within 14 days of delivery. Faulty or damaged prints replaced free. Custom posters can't be returned unless faulty.",
         "question_5": "",
         "answer_5": "",
         "question_6": "",

@@ -122,11 +122,16 @@
                   if media.presentation.focal_point != blank
                     assign focal_point_style = 'object-position: ' | append: media.presentation.focal_point | append: ';'
                   endif
+                  # SixthGear: never an empty alt
+                  assign thumb_alt = media.alt | strip
+                  if thumb_alt == blank
+                    assign thumb_alt = 'Image ' | append: forloop.index | append: ' of ' | append: forloop.length
+                  endif
                 %}
                 {{
                   media.preview_image
                   | image_url: width: 144
-                  | image_tag: loading: 'lazy', alt: media.alt, style: focal_point_style
+                  | image_tag: loading: 'lazy', alt: thumb_alt, style: focal_point_style
                   | escape
                 }}
 

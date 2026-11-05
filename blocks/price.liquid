@@ -57,6 +57,15 @@
     show_sale_price_first: block_settings.show_sale_price_first
   %}
 
+  {%- comment -%} SixthGear sale display: the window's message, product page only {%- endcomment -%}
+  {%- if template.name == 'product' and product_resource.id == product.id -%}
+    {%- capture sgs_sale_win -%}{%- render 'sgs-sale-window' -%}{%- endcapture -%}
+    {%- assign sgs_sale_win = sgs_sale_win | strip -%}
+    {%- if sgs_sale_win != blank -%}
+      {% render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, part: 'note' %}
+    {%- endif -%}
+  {%- endif -%}
+
   {%- comment -%} SixthGear: short note under the price (not on gift cards) {%- endcomment -%}
   {%- if block_settings.print_note != blank and product_resource.gift_card? != true -%}
     <p class="sgs-print-note">{{ block_settings.print_note | escape }}</p>

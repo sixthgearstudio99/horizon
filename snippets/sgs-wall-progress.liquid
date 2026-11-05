@@ -44,6 +44,20 @@
   endcase
 -%}
 
+{%- liquid
+  # Hidden while a sale window that already discounts every print is open (Theme settings > sale display)
+  capture sgs_sale_win
+    render 'sgs-sale-window'
+  endcapture
+  assign sgs_sale_win = sgs_sale_win | strip
+  if sgs_sale_win != blank
+    assign hide_wall_key = 'sgs_sale' | append: sgs_sale_win | append: '_hide_wall'
+    if settings[hide_wall_key]
+      assign message = ''
+    endif
+  endif
+-%}
+
 {%- if settings.sgs_wall_progress and prints > 0 and message != blank -%}
   <div class="sgs-wallprog" data-prints="{{ prints }}">
     <div class="sgs-wallprog__row">

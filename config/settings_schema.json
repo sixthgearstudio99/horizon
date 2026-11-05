@@ -2205,5 +2205,108 @@
         "default": "/collections/all"
       }
     ]
+  },
+  {
+    "name": "SixthGear: sale display",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Display only. Shows the sale price on product pages and product cards, and the message first in the announcement bar, while a window is open (UK time). The discount itself must be an automatic discount in Shopify with the same percentage and dates. Prices, compare-at prices and search-engine data are not changed."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_sale_enabled",
+        "label": "Show sale display",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale_checkout_note",
+        "label": "Text after the message on product pages",
+        "default": "Applied at checkout"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_sale_excluded_handles",
+        "label": "Products not in the sale",
+        "info": "Product handles, separated by commas. Gift cards are never shown as discounted."
+      },
+      {
+        "type": "header",
+        "content": "Window 1: sale"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_start",
+        "label": "Starts (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-05 00:00"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_end",
+        "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-15 23:59"
+      },
+      {
+        "type": "range",
+        "id": "sgs_sale1_percent",
+        "label": "Discount",
+        "min": 1,
+        "max": 90,
+        "step": 1,
+        "unit": "%",
+        "default": 15
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_message",
+        "label": "Message",
+        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_sale1_hide_wall",
+        "label": "Hide build your wall progress during this window",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Window 2: Black Friday"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_start",
+        "label": "Starts (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-27 00:00"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_end",
+        "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-30 23:59"
+      },
+      {
+        "type": "range",
+        "id": "sgs_sale2_percent",
+        "label": "Discount",
+        "min": 1,
+        "max": 90,
+        "step": 1,
+        "unit": "%",
+        "default": 25
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_message",
+        "label": "Message",
+        "default": "BLACK FRIDAY · 25% OFF EVERYTHING · ENDS MON 30 NOV"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_sale2_hide_wall",
+        "label": "Hide build your wall progress during this window",
+        "default": true
+      }
+    ]
   }
 ]

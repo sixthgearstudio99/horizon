@@ -397,3 +397,67 @@ product-price s,
     display: none;
   }
 }
+
+/* ---------- Sale display (Theme settings > SixthGear: sale display) ----------
+   Shopify renders the sale price for the open window; it only shows when the visitor's device
+   agrees (html[data-sgs-sale], set in the head). The normal price is hidden only then. */
+[data-sgs-sale-win] {
+  display: none !important;
+}
+
+html[data-sgs-sale='1'] .sgs-sale[data-sgs-sale-win='1'],
+html[data-sgs-sale='2'] .sgs-sale[data-sgs-sale-win='2'] {
+  display: inline-flex !important;
+}
+
+html[data-sgs-sale='1'] .sgs-sale-note[data-sgs-sale-win='1'],
+html[data-sgs-sale='2'] .sgs-sale-note[data-sgs-sale-win='2'] {
+  display: block !important;
+}
+
+html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal),
+html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal) {
+  display: none !important;
+}
+
+.sgs-sale {
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 10px;
+  font-family: var(--sgs-font-mono);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: var(--sgs-mono-tracking);
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.sgs-sale__from,
+.sgs-sale__was {
+  color: var(--sgs-text-2);
+}
+
+.sgs-sale__was {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.sgs-sale__now {
+  color: var(--sgs-text);
+}
+
+.sgs-sale-note {
+  margin: 8px 0 0;
+  font-family: var(--sgs-font-mono);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.5;
+  letter-spacing: var(--sgs-mono-tracking);
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--sgs-text);
+}
+
+html[data-sgs-sale-hide-wall] .sgs-wallprog {
+  display: none !important;
+}

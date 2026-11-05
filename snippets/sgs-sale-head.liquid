@@ -1,0 +1,46 @@
+{%- doc -%}
+  SixthGear Studios: checks the sale windows against the visitor's device clock in UK time and
+  marks <html data-sgs-sale="1|2">, plus data-sgs-sale-hide-wall when that window hides the
+  build your wall progress. Runs in the head, before anything paints, so nothing flickers.
+  Sale prices only show where Shopify's clock (sgs-sale-window) also put them in the page.
+
+  @example
+  {% render 'sgs-sale-head' %}
+{%- enddoc -%}
+
+{%- if settings.sgs_sale_enabled -%}
+  <script>
+    (function () {
+      var windows = [
+        {%- for i in (1..2) -%}
+          {%- liquid
+            assign key = 'sgs_sale' | append: i
+            assign start_key = key | append: '_start'
+            assign end_key = key | append: '_end'
+            assign wall_key = key | append: '_hide_wall'
+          -%}
+          { start: {{ settings[start_key] | strip | json }}, end: {{ settings[end_key] | strip | json }}, hideWall: {{ settings[wall_key] | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ];
+      var now;
+      try {
+        var parts = {};
+        new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+        }).formatToParts(new Date()).forEach(function (p) { parts[p.type] = p.value; });
+        now = parts.year + '-' + parts.month + '-' + parts.day + ' ' + parts.hour + ':' + parts.minute;
+      } catch (e) {
+        return;
+      }
+      for (var i = 0; i < windows.length; i++) {
+        var w = windows[i];
+        if (w.start.length === 16 && w.end.length === 16 && now >= w.start && now <= w.end) {
+          document.documentElement.setAttribute('data-sgs-sale', String(i + 1));
+          if (w.hideWall) document.documentElement.setAttribute('data-sgs-sale-hide-wall', '');
+          break;
+        }
+      }
+    })();
+  </script>
+{%- endif -%}

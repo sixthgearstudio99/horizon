@@ -75,6 +75,30 @@
 -%}
 
 <div ref="priceContainer">
+  {%- comment -%}
+    SixthGear sale display: struck-through price and sale price while a sale window is open.
+    It sits before the normal price, which CSS hides only when the sale shows.
+  {%- endcomment -%}
+  {%- unless has_volume_pricing or product_resource == blank -%}
+    {%- capture sgs_sale_win -%}{%- render 'sgs-sale-window' -%}{%- endcapture -%}
+    {%- assign sgs_sale_win = sgs_sale_win | strip -%}
+    {%- if sgs_sale_win != blank -%}
+      {%- liquid
+        assign sgs_sale_amount = selected_variant.price
+        assign sgs_sale_from = false
+        if is_product_card and product_resource.price_varies
+          assign sgs_sale_amount = product_resource.price_min
+          assign sgs_sale_from = true
+        endif
+      -%}
+      {% render 'sgs-sale-price',
+        product_resource: product_resource,
+        window: sgs_sale_win,
+        amount: sgs_sale_amount,
+        from: sgs_sale_from
+      %}
+    {%- endif -%}
+  {%- endunless -%}
   {% if has_volume_pricing %}
     {% comment %} Volume pricing display {% endcomment %}
     {% if show_compare_price %}

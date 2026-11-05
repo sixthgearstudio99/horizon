@@ -111,15 +111,28 @@
         <span class="sgs-card__title">{{ product.title | escape }}</span>
         <span class="sgs-card__meta">
           <span class="sgs-card__price">
-            {%- if product.price_varies -%}
-              {%- assign from_price = product.price_min | money_without_trailing_zeros -%}
-              {{ 'content.price_from' | t: price: from_price }}
-            {%- else -%}
-              {{ product.price | money_without_trailing_zeros }}
+            {%- comment -%} SixthGear sale display (hidden unless a sale window is open) {%- endcomment -%}
+            {%- capture sgs_sale_win -%}{%- render 'sgs-sale-window' -%}{%- endcapture -%}
+            {%- assign sgs_sale_win = sgs_sale_win | strip -%}
+            {%- if sgs_sale_win != blank -%}
+              {% render 'sgs-sale-price',
+                product_resource: product,
+                window: sgs_sale_win,
+                amount: product.price_min,
+                from: product.price_varies
+              %}
             {%- endif -%}
-            {%- if on_sale -%}
-              <s class="sgs-card__compare">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
-            {%- endif -%}
+            <span class="sgs-card__price-normal">
+              {%- if product.price_varies -%}
+                {%- assign from_price = product.price_min | money_without_trailing_zeros -%}
+                {{ 'content.price_from' | t: price: from_price }}
+              {%- else -%}
+                {{ product.price | money_without_trailing_zeros }}
+              {%- endif -%}
+              {%- if on_sale -%}
+                <s class="sgs-card__compare">{{ product.compare_at_price | money_without_trailing_zeros }}</s>
+              {%- endif -%}
+            </span>
           </span>
           {%- if show_options and option_count > 1 -%}
             <span class="sgs-card__options sgs-label">

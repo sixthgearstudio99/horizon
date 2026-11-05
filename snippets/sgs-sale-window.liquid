@@ -1,0 +1,29 @@
+{%- doc -%}
+  SixthGear Studios: which sale window is open right now on Shopify's clock (shop time zone,
+  set to UK time). Outputs 1, 2 or nothing. The visitor's device is checked separately by
+  snippets/sgs-sale-head.liquid, and the sale only shows when both agree.
+
+  @example
+  {%- capture sgs_sale_win -%}{%- render 'sgs-sale-window' -%}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if settings.sgs_sale_enabled
+    assign sgs_now = 'now' | date: '%Y-%m-%d %H:%M'
+    for i in (1..2)
+      assign key = 'sgs_sale' | append: i
+      assign start_key = key | append: '_start'
+      assign end_key = key | append: '_end'
+      assign percent_key = key | append: '_percent'
+      assign window_start = settings[start_key] | strip
+      assign window_end = settings[end_key] | strip
+      assign window_percent = settings[percent_key] | plus: 0
+      if window_start.size == 16 and window_end.size == 16 and window_percent > 0
+        if sgs_now >= window_start and sgs_now <= window_end
+          echo i
+          break
+        endif
+      endif
+    endfor
+  endif
+-%}

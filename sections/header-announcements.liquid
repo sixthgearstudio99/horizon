@@ -1,4 +1,21 @@
-{% if section.blocks.size > 1 %}
+{%- liquid
+  # SixthGear sale display: the open window's message rotates first
+  capture sgs_sale_win
+    render 'sgs-sale-window'
+  endcapture
+  assign sgs_sale_win = sgs_sale_win | strip
+  assign sgs_sale_message = ''
+  if sgs_sale_win != blank
+    assign sgs_sale_message_key = 'sgs_sale' | append: sgs_sale_win | append: '_message'
+    assign sgs_sale_message = settings[sgs_sale_message_key] | strip
+  endif
+  assign slide_count = section.blocks.size
+  if sgs_sale_message != blank
+    assign slide_count = slide_count | plus: 1
+  endif
+-%}
+
+{% if slide_count > 1 %}
   <script
     src="{{ 'announcement-bar.js' | asset_url }}"
     type="module"
@@ -16,7 +33,7 @@
   {% liquid
     assign autoplay = false
     assign show_arrows = false
-    if section.blocks.size > 1
+    if slide_count > 1
       assign autoplay = true
       assign show_arrows = true
     endif
@@ -33,8 +50,37 @@
     {% endif %}
 
     <div class="announcement-bar__slides">
+      {%- if sgs_sale_message != blank -%}
+        <slideshow-slide
+          ref="slides[]"
+          id="SgsSaleSlide-{{ section.id }}"
+          class="announcement-bar__slide text-block text-block--align-center text-block--full-width"
+          style="--width: 100%; --text-align: center; --line-height: 1; --color: #f5f3ef; --color-rgb: 245 243 239;"
+          data-sgs-sale-slide="{{ sgs_sale_win }}"
+          aria-hidden="false"
+        >
+          <p class="announcement-bar__text">{{ sgs_sale_message | escape }}</p>
+        </slideshow-slide>
+      {%- endif -%}
       {% content_for 'blocks' %}
     </div>
+    {%- if sgs_sale_message != blank -%}
+      <script>
+        (function () {
+          // Keep the sale message only if the visitor's device agrees the window is open; it must
+          // be settled before the slideshow starts, which happens later in a module script.
+          var slide = document.getElementById({{ 'SgsSaleSlide-' | append: section.id | json }});
+          if (!slide) return;
+          if (document.documentElement.getAttribute('data-sgs-sale') !== slide.getAttribute('data-sgs-sale-slide')) {
+            slide.remove();
+            return;
+          }
+          Array.prototype.forEach.call(slide.parentElement.children, function (el) {
+            if (el !== slide && el.matches('.announcement-bar__slide')) el.setAttribute('aria-hidden', 'true');
+          });
+        })();
+      </script>
+    {%- endif -%}
   </announcement-bar-component>
 </aside>
 

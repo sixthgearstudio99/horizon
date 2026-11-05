@@ -1,0 +1,53 @@
+{%- doc -%}
+  SixthGear Studios: display-only sale price for an open sale window. The real discount is an
+  automatic discount applied at checkout; prices and structured data are untouched. Hidden by
+  CSS unless the visitor's device agrees the same window is open (html[data-sgs-sale]).
+
+  @param {product} product_resource - The product
+  @param {string} window - The open window, 1 or 2 (from sgs-sale-window)
+  @param {string} [part] - 'price' (default) or 'note'
+  @param {number} [amount] - Price in pence that the discount applies to (part 'price')
+  @param {boolean} [from] - Show "From" before the prices (part 'price')
+
+  @example
+  {% render 'sgs-sale-price', product_resource: product, window: sgs_sale_win, amount: 2500 %}
+{%- enddoc -%}
+
+{%- liquid
+  assign part = part | default: 'price'
+  assign percent_key = 'sgs_sale' | append: window | append: '_percent'
+  assign message_key = 'sgs_sale' | append: window | append: '_message'
+  assign percent = settings[percent_key] | plus: 0
+
+  assign in_sale = true
+  if product_resource == blank or product_resource.gift_card? or percent <= 0
+    assign in_sale = false
+  endif
+  assign excluded = settings.sgs_sale_excluded_handles | strip_newlines | remove: ' ' | split: ','
+  if excluded contains product_resource.handle
+    assign in_sale = false
+  endif
+-%}
+
+{%- if in_sale -%}
+  {%- if part == 'note' -%}
+    {%- assign message = settings[message_key] | strip -%}
+    {%- if message != blank -%}
+      <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">
+        {{- message | escape -}}
+        {%- if settings.sgs_sale_checkout_note != blank %} · {{ settings.sgs_sale_checkout_note | escape }}{% endif -%}
+      </p>
+    {%- endif -%}
+  {%- elsif amount != blank -%}
+    {%- liquid
+      # Discount rounded to the nearest penny, then taken off, as a percentage discount does
+      assign discount = amount | times: percent | plus: 50 | divided_by: 100 | floor
+      assign sale_amount = amount | minus: discount
+    -%}
+    <span class="sgs-sale" data-sgs-sale-win="{{ window }}">
+      {%- if from -%}<span class="sgs-sale__from">From</span>{%- endif -%}
+      <span class="sgs-sale__was"><span class="visually-hidden">Regular price&nbsp;</span><bdi>{{ amount | money_without_trailing_zeros }}</bdi></span>
+      <span class="sgs-sale__now"><span class="visually-hidden">Sale price&nbsp;</span><bdi>{{ sale_amount | money_without_trailing_zeros }}</bdi></span>
+    </span>
+  {%- endif -%}
+{%- endif -%}

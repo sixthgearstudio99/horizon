@@ -49,14 +49,14 @@
             "media_fit": "contain",
             "media_radius": 0,
             "extend_media": true,
+            "sgs_lightbox": true,
             "zoom": false,
             "video_loop": false,
             "hide_variants": true,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "sgs_lightbox": true
+            "padding-inline-end": 0
           },
           "blocks": {}
         },
@@ -155,10 +155,16 @@
               "type": "variant-picker",
               "settings": {
                 "size_label_suffix": "(unframed)",
+                "show_size_prices": true,
+                "sgs_size_dropdown": true,
+                "sgs_steps": true,
+                "size_step_label": "Choose your size",
+                "finish_step_label": "Choose your finish",
+                "size_guide_label": "Which size?",
+                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "hide_single_choice": true,
                 "variant_style": "buttons",
                 "show_swatches": false,
-                "show_size_prices": true,
-                "hide_single_choice": true,
                 "option_label_text_color": "",
                 "variant_style_class": "default",
                 "custom_variant_background": "{{ settings.color_palette.background }}",
@@ -172,13 +178,7 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
-                "sgs_size_dropdown": true,
-                "sgs_steps": true,
-                "size_step_label": "Choose your size",
-                "size_guide_label": "Which size?",
-                "finish_step_label": "Choose your finish"
+                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -193,6 +193,7 @@
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
+                "sgs_hide_quantity": true,
                 "stacking": true,
                 "text_color": "",
                 "show_pickup_availability": false,
@@ -214,8 +215,7 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "sgs_hide_quantity": true
+                "padding-inline-end": 0
               },
               "blocks": {
                 "quantity": {
@@ -235,11 +235,11 @@
                   "type": "add-to-cart",
                   "static": true,
                   "settings": {
+                    "sgs_show_price": true,
                     "style_class": "button",
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
-                    "custom_button_border": "{{ settings.color_palette.background }}",
-                    "sgs_show_price": true
+                    "custom_button_border": "{{ settings.color_palette.background }}"
                   },
                   "blocks": {}
                 },
@@ -256,12 +256,12 @@
               "type": "sgs-delivery-estimate",
               "settings": {
                 "text_before": "Order today · arrives",
+                "footnote": "",
+                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
                 "production_min": 2,
                 "production_max": 5,
                 "delivery_min": 2,
                 "delivery_max": 4,
-                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
-                "footnote": "",
                 "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
                 "christmas_line_until": "2026-12-09",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
@@ -408,8 +408,6 @@
     },
     "sgs_wall_videos": {
       "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "label": "Video",
         "heading": "On your wall",
@@ -440,8 +438,6 @@
     },
     "sgs_proof": {
       "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "label": "Proof",
         "heading": "Real prints. Real walls.",

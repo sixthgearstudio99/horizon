@@ -36,7 +36,7 @@
         "feature_2": "",
         "feature_3": "",
         "background_color": "#0b0b0b",
-        "accent_color": "#FFFFFF",
+        "accent_color": "#ffffff",
         "show_stripes": false,
         "overlay_opacity": 75,
         "padding-block-start": 128,
@@ -58,6 +58,109 @@
         "min_height_mobile": 460
       }
     },
+    "sgs_shop_collections": {
+      "type": "sgs-collection-scroller",
+      "blocks": {
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "collection": "gifts-for-car-lovers",
+            "product": "",
+            "title": "Gifts",
+            "link": ""
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "collection": "mindset",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "collection": "grand-prix",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "collection": "lineage",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "collection": "portraits",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "collection": "german-engineering",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_7": {
+          "type": "tile",
+          "settings": {
+            "collection": "jdm",
+            "product": "",
+            "title": "JDM",
+            "link": ""
+          }
+        },
+        "tile_8": {
+          "type": "tile",
+          "settings": {
+            "collection": "super-hypercars",
+            "product": "",
+            "title": "",
+            "link": ""
+          }
+        },
+        "tile_9": {
+          "type": "tile",
+          "settings": {
+            "collection": "",
+            "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+            "title": "Custom Poster",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "tile_1",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6",
+        "tile_7",
+        "tile_8",
+        "tile_9"
+      ],
+      "settings": {
+        "label": "",
+        "heading": "Find your print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
     "sgs_best_sellers": {
       "type": "sgs-product-grid",
       "settings": {
@@ -76,6 +179,74 @@
         "background_color": "",
         "padding-block-start": 156,
         "padding-block-end": 156
+      }
+    },
+    "sgs_reviews": {
+      "type": "sgs-reviews",
+      "settings": {
+        "min_reviews": 5,
+        "eyebrow": "From the paddock",
+        "heading": "On their walls",
+        "padding-block-start": 156,
+        "padding-block-end": 156
+      }
+    },
+    "sgs_walls": {
+      "type": "sgs-proof",
+      "blocks": {
+        "photo_KmCmTQ": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Sunlit_Formula_One_Poster_Display.png",
+            "caption": "",
+            "product": "mclaren-f1-generations-poster-m23-mp4-4-mp4-22-mcl38-formula-1-icons-print-mclaren-wall-art-f1-fan-gift-garage-wall-art",
+            "link": ""
+          }
+        },
+        "photo_xtNDdD": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Classic_Supercar_Poster_Display.png",
+            "caption": "",
+            "product": "ferrari-f40-poster",
+            "link": ""
+          }
+        },
+        "photo_mWb6yD": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Framed_Formula_Racing_Prints.png",
+            "caption": "",
+            "product": "ayrton-f1-rain-poster",
+            "link": ""
+          }
+        },
+        "photo_tDNtbh": {
+          "type": "photo",
+          "settings": {
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "photo_KmCmTQ",
+        "photo_xtNDdD",
+        "photo_mWb6yD",
+        "photo_tDNtbh"
+      ],
+      "settings": {
+        "label": "",
+        "heading": "See it on your walls",
+        "link_label": "",
+        "link_url": "",
+        "tile_ratio": "portrait",
+        "tap_action": "link",
+        "default_link": "",
+        "shop_label": "Shop the print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
       }
     },
     "sgs_culture": {
@@ -344,16 +515,6 @@
         "padding-block-end": 156
       }
     },
-    "sgs_reviews": {
-      "type": "sgs-reviews",
-      "settings": {
-        "min_reviews": 5,
-        "eyebrow": "From the paddock",
-        "heading": "On their walls",
-        "padding-block-start": 156,
-        "padding-block-end": 156
-      }
-    },
     "sgs_faqs": {
       "type": "sgs-faqs",
       "settings": {
@@ -375,6 +536,37 @@
         "padding-block-end": 156
       }
     },
+    "sgs_studio_story": {
+      "type": "sgs-studio-story",
+      "settings": {
+        "label": "",
+        "heading": "Designed in Bristol. Printed in the UK.",
+        "text": "<p>Every SixthGear print is designed in Bristol by a car enthusiast and printed to order in the UK – made for people who live and breathe cars.</p>",
+        "stat_1": "",
+        "stat_1_icon": "pin",
+        "stat_2": "",
+        "stat_2_icon": "printer",
+        "stat_3": "",
+        "stat_3_icon": "gear",
+        "padding-block-start": 120,
+        "padding-block-end": 120
+      }
+    },
+    "sgs_instagram": {
+      "type": "sgs-proof",
+      "settings": {
+        "label": "",
+        "heading": "See it on Instagram",
+        "link_label": "Follow @sixthgearstudio",
+        "link_url": "https://www.instagram.com/sixthgearstudio",
+        "tile_ratio": "square",
+        "tap_action": "link",
+        "default_link": "https://www.instagram.com/sixthgearstudio",
+        "shop_label": "Shop the print",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
     "sgs_newsletter": {
       "type": "sgs-newsletter",
       "settings": {
@@ -387,7 +579,7 @@
         "success_heading": "Welcome to the paddock",
         "discount_code": "WELCOME10",
         "success_text": "Use this code at checkout for 10% off your first order.",
-        "background_color": "#ECE9E3",
+        "background_color": "#ece9e3",
         "padding-block-start": 156,
         "padding-block-end": 156
       }
@@ -429,135 +621,6 @@
       "settings": {
         "padding-block-start": 0,
         "padding-block-end": 64
-      }
-    },
-    "sgs_shop_collections": {
-      "type": "sgs-collection-scroller",
-      "blocks": {
-        "tile_1": {
-          "type": "tile",
-          "settings": {
-            "collection": "gifts-for-car-lovers",
-            "title": "Gifts"
-          }
-        },
-        "tile_2": {
-          "type": "tile",
-          "settings": {
-            "collection": "mindset"
-          }
-        },
-        "tile_3": {
-          "type": "tile",
-          "settings": {
-            "collection": "grand-prix"
-          }
-        },
-        "tile_4": {
-          "type": "tile",
-          "settings": {
-            "collection": "lineage"
-          }
-        },
-        "tile_5": {
-          "type": "tile",
-          "settings": {
-            "collection": "portraits"
-          }
-        },
-        "tile_6": {
-          "type": "tile",
-          "settings": {
-            "collection": "german-engineering"
-          }
-        },
-        "tile_7": {
-          "type": "tile",
-          "settings": {
-            "collection": "jdm",
-            "title": "JDM"
-          }
-        },
-        "tile_8": {
-          "type": "tile",
-          "settings": {
-            "collection": "super-hypercars"
-          }
-        },
-        "tile_9": {
-          "type": "tile",
-          "settings": {
-            "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-            "title": "Custom Poster"
-          }
-        }
-      },
-      "block_order": [
-        "tile_1",
-        "tile_2",
-        "tile_3",
-        "tile_4",
-        "tile_5",
-        "tile_6",
-        "tile_7",
-        "tile_8",
-        "tile_9"
-      ],
-      "settings": {
-        "label": "",
-        "heading": "Find your print",
-        "padding-block-start": 96,
-        "padding-block-end": 96
-      }
-    },
-    "sgs_walls": {
-      "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
-      "settings": {
-        "label": "",
-        "heading": "See it on your walls",
-        "link_label": "",
-        "link_url": "",
-        "tile_ratio": "portrait",
-        "tap_action": "link",
-        "default_link": "",
-        "shop_label": "Shop the print",
-        "padding-block-start": 96,
-        "padding-block-end": 96
-      }
-    },
-    "sgs_studio_story": {
-      "type": "sgs-studio-story",
-      "settings": {
-        "label": "",
-        "heading": "Designed in Bristol. Printed in the UK.",
-        "text": "<p>Every SixthGear print is designed in Bristol by a car enthusiast and printed to order in the UK – made for people who live and breathe cars.</p>",
-        "stat_1": "",
-        "stat_1_icon": "pin",
-        "stat_2": "",
-        "stat_2_icon": "printer",
-        "stat_3": "",
-        "stat_3_icon": "gear",
-        "padding-block-start": 120,
-        "padding-block-end": 120
-      }
-    },
-    "sgs_instagram": {
-      "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
-      "settings": {
-        "label": "",
-        "heading": "See it on Instagram",
-        "link_label": "Follow @sixthgearstudio",
-        "link_url": "https://www.instagram.com/sixthgearstudio",
-        "tile_ratio": "square",
-        "tap_action": "link",
-        "default_link": "https://www.instagram.com/sixthgearstudio",
-        "shop_label": "Shop the print",
-        "padding-block-start": 96,
-        "padding-block-end": 96
       }
     }
   },

@@ -1,0 +1,46 @@
+{%- doc -%}
+  SixthGear Studios: one tile on the collections page. The image is the collection's own image,
+  or else its first product's image, so a collection never shows another collection's picture.
+
+  @param {collection} collection - The collection
+  @param {number} [index] - Position on the page; the first row loads straight away
+
+  @example
+  {% render 'sgs-collection-tile', collection: collection, index: forloop.index0 %}
+{%- enddoc -%}
+
+{%- liquid
+  assign image = collection.image
+  if image == blank
+    assign image = collection.featured_image
+  endif
+  if image == blank
+    assign image = collection.products.first.featured_media.preview_image | default: collection.products.first.featured_image
+  endif
+  assign loading = 'lazy'
+  if index < 2
+    assign loading = 'eager'
+  endif
+  assign count = collection.products_count
+-%}
+
+<li class="sgs-ctile">
+  <a class="sgs-ctile__link" href="{{ collection.url }}">
+    <span class="sgs-ctile__media">
+      {%- if image != blank -%}
+        {{
+          image
+          | image_url: width: 900
+          | image_tag:
+            widths: '300, 450, 600, 900',
+            sizes: '(min-width: 990px) 30vw, (min-width: 750px) 31vw, 46vw',
+            loading: loading,
+            class: 'sgs-ctile__img',
+            alt: ''
+        }}
+      {%- endif -%}
+    </span>
+    <span class="sgs-ctile__title">{{ collection.title | escape }}</span>
+    <span class="sgs-ctile__count">{{ count }} {% if count == 1 %}print{% else %}prints{% endif %}</span>
+  </a>
+</li>

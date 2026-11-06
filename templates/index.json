@@ -332,7 +332,7 @@
       "type": "sgs-feature",
       "settings": {
         "product": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-        "image_ratio": "4 / 5",
+        "image_ratio": "natural",
         "image_position": "right",
         "eyebrow": "Custom poster",
         "heading": "Your car. <em>Your wall.</em>",

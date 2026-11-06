@@ -1176,3 +1176,29 @@ media-gallery :is(slideshow-slide, .product-media-container) {
 .sgs-news :is(.sgs-news__fine, .sgs-news__text) {
   color: var(--sgs-text-2) !important;
 }
+
+/* ---------- Add to cart: lime green, white text (4.99:1, AA) ---------- */
+:is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button) {
+  --button-background-color: #4d7c0f;
+  --button-border-color: #4d7c0f;
+  --button-color: #ffffff;
+  background-color: #4d7c0f !important;
+  border-color: #4d7c0f !important;
+  color: #ffffff !important;
+}
+
+:is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):not(:disabled):is(:hover, :focus-visible) {
+  --button-background-color: #3f6212;
+  --button-border-color: #3f6212;
+  background-color: #3f6212 !important;
+  border-color: #3f6212 !important;
+}
+
+:is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):focus-visible {
+  outline: 2px solid #3f6212;
+  outline-offset: 3px;
+}
+
+:is(button[ref='addToCartButton'], .add-to-cart-button) .add-to-cart-icon {
+  color: #ffffff;
+}

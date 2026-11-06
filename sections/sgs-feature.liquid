@@ -29,7 +29,7 @@
   class="sgs-feature sgs-feature--{{ tone }} sgs-feature--image-{{ s.image_position }}"
   style="
     --sgs-feature-bg: {{ bg }};
-    --sgs-feature-ratio: {{ s.image_ratio }};
+    --sgs-feature-ratio: {% if s.image_ratio == 'natural' and feature_image != blank %}{{ feature_image.aspect_ratio }}{% elsif s.image_ratio == 'natural' %}4 / 5{% else %}{{ s.image_ratio }}{% endif %};
     --sgs-feature-pad-top: {{ s['padding-block-start'] }}px;
     --sgs-feature-pad-bottom: {{ s['padding-block-end'] }}px;
   "
@@ -278,6 +278,7 @@
       "id": "image_ratio",
       "label": "Image shape",
       "options": [
+        { "value": "natural", "label": "Image's own shape (never cropped)" },
         { "value": "4 / 5", "label": "Portrait 4:5" },
         { "value": "1 / 1", "label": "Square" },
         { "value": "5 / 4", "label": "Landscape 5:4" }

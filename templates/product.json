@@ -97,6 +97,13 @@
               },
               "blocks": {}
             },
+            "sgs_rating": {
+              "type": "sgs-rating",
+              "settings": {
+                "target_id": "17937299023bbff9d5"
+              },
+              "blocks": {}
+            },
             "price_tVjtKg": {
               "type": "price",
               "settings": {
@@ -121,6 +128,13 @@
               },
               "blocks": {}
             },
+            "sgs_offer": {
+              "type": "sgs-offer-box",
+              "settings": {
+                "note": ""
+              },
+              "blocks": {}
+            },
             "divider_VJhene": {
               "type": "_divider",
               "name": "t:names.divider",
@@ -131,23 +145,6 @@
                 "width_percent": 100,
                 "padding-block-start": 0,
                 "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "sgs_personalise": {
-              "type": "sgs-personalise",
-              "settings": {
-                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-                "how_heading": "How it works",
-                "step_1": "Upload a photo of your car",
-                "step_2": "Add your own headline text",
-                "step_3": "We design it and print it in the UK",
-                "eyebrow": "Personalise your print",
-                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
-                "show_plate_preview": true,
-                "plate_label": "Preview",
-                "proof_note": "We'll email you a proof within 3 working days before printing.",
-                "max_file_mb": 20
               },
               "blocks": {}
             },
@@ -182,11 +179,35 @@
               },
               "blocks": {}
             },
-            "sgs_wall": {
-              "type": "sgs-wall-preview",
+            "sgs_size_guide": {
+              "type": "sgs-size-guide",
               "settings": {
-                "button_label": "See it on your wall",
-                "wall_width_cm": 300
+                "link_label": "Which size?",
+                "heading": "Which size?",
+                "sofa_label": "Above a sofa",
+                "desk_label": "Above a desk",
+                "line_small": "Desk or shelf",
+                "line_middle": "Above a desk or bed",
+                "line_large": "Statement wall",
+                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
+                "wall_label": "See it on your wall"
+              },
+              "blocks": {}
+            },
+            "sgs_personalise": {
+              "type": "sgs-personalise",
+              "settings": {
+                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+                "how_heading": "How it works",
+                "step_1": "Upload a photo of your car",
+                "step_2": "Add your own headline text",
+                "step_3": "We design it and print it in the UK",
+                "eyebrow": "Personalise your print",
+                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "show_plate_preview": true,
+                "plate_label": "Preview",
+                "proof_note": "We'll email you a proof within 3 working days before printing.",
+                "max_file_mb": 20
               },
               "blocks": {}
             },
@@ -252,6 +273,26 @@
               },
               "block_order": []
             },
+            "sgs_ptrust": {
+              "type": "sgs-product-trust",
+              "settings": {
+                "layout": "columns",
+                "item_1_text": "Printed in the UK",
+                "item_1_link": "",
+                "item_1_icon": "printer",
+                "item_2_text": "Free UK delivery",
+                "item_2_link": "",
+                "item_2_icon": "truck",
+                "item_3_text": "Free replacement if damaged",
+                "item_3_link": "",
+                "item_3_icon": "shield",
+                "item_4_text": "",
+                "item_4_link": "",
+                "item_4_icon": "lock",
+                "footnote": "Print only – frame not included"
+              },
+              "blocks": {}
+            },
             "sgs_delivery": {
               "type": "sgs-delivery-estimate",
               "settings": {
@@ -274,38 +315,11 @@
               },
               "blocks": {}
             },
-            "sgs_ptrust": {
-              "type": "sgs-product-trust",
+            "sgs_wall": {
+              "type": "sgs-wall-preview",
               "settings": {
-                "layout": "columns",
-                "item_1_text": "Printed in the UK",
-                "item_1_link": "",
-                "item_1_icon": "printer",
-                "item_2_text": "Free UK delivery",
-                "item_2_link": "",
-                "item_2_icon": "truck",
-                "item_3_text": "Free replacement if damaged",
-                "item_3_link": "",
-                "item_3_icon": "shield",
-                "item_4_text": "",
-                "item_4_link": "",
-                "item_4_icon": "lock",
-                "footnote": "Print only – frame not included"
-              },
-              "blocks": {}
-            },
-            "sgs_size_guide": {
-              "type": "sgs-size-guide",
-              "settings": {
-                "link_label": "Which size?",
-                "heading": "Which size?",
-                "sofa_label": "Above a sofa",
-                "desk_label": "Above a desk",
-                "line_small": "Desk or shelf",
-                "line_middle": "Above a desk or bed",
-                "line_large": "Statement wall",
-                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
-                "wall_label": "See it on your wall"
+                "button_label": "See it on your wall",
+                "wall_width_cm": 300
               },
               "blocks": {}
             },
@@ -356,20 +370,6 @@
                 "answer_4": ""
               },
               "blocks": {}
-            },
-            "sgs_rating": {
-              "type": "sgs-rating",
-              "settings": {
-                "target_id": "17937299023bbff9d5"
-              },
-              "blocks": {}
-            },
-            "sgs_offer": {
-              "type": "sgs-offer-box",
-              "settings": {
-                "note": ""
-              },
-              "blocks": {}
             }
           },
           "block_order": [
@@ -408,6 +408,40 @@
     },
     "sgs_wall_videos": {
       "type": "sgs-proof",
+      "blocks": {
+        "photo_fGNgGH": {
+          "type": "photo",
+          "settings": {
+            "video": "shopify://files/videos/IMG_2047.mov",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "photo_UjFQYt": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2051.jpg",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "photo_y9D7r3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2025.jpg",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "photo_fGNgGH",
+        "photo_UjFQYt",
+        "photo_y9D7r3"
+      ],
       "settings": {
         "label": "Video",
         "heading": "On your wall",
@@ -441,6 +475,12 @@
       "settings": {
         "label": "Proof",
         "heading": "Real prints. Real walls.",
+        "link_label": "",
+        "link_url": "",
+        "tile_ratio": "portrait",
+        "tap_action": "link",
+        "default_link": "",
+        "shop_label": "Shop the print",
         "padding-block-start": 72,
         "padding-block-end": 72
       }

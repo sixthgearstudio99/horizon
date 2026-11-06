@@ -108,6 +108,12 @@
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
 
+          # SixthGear: the size option can be a dropdown while paper/frame stay as tiles
+          assign option_style = block_settings.variant_style
+          if option_name_lower contains 'size' and block_settings.sgs_size_dropdown
+            assign option_style = 'dropdowns'
+          endif
+
           if swatch_count > 0 and block_settings.show_swatches
             if block_settings.variant_style == 'dropdown'
               assign variant_style = 'swatch_dropdown'
@@ -139,7 +145,7 @@
               {%- render 'sgs-size-label', value: product_option.selected_value -%}
             </span>
           </div>
-        {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
+        {%- elsif variant_style == 'swatch' or option_style == 'buttons' -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}{% if option_name_lower contains 'paper' %} sgs-opt--paper{% elsif option_name_lower contains 'size' %} sgs-opt--size{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
@@ -263,7 +269,7 @@
             <p class="sgs-opt-explainer">{{ block_settings.paper_explainer | escape }}</p>
           {%- endif -%}
           {%- assign fieldset_index = fieldset_index | plus: 1 -%}
-        {%- elsif block_settings.variant_style == 'dropdowns' -%}
+        {%- elsif option_style == 'dropdowns' -%}
           {%
             # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
             # It's too bad as it mean rebuilding baked in behaviours but I think we've already done that for the locale selectors
@@ -278,8 +284,19 @@
             endif
           %}
 
-          <div class="variant-option variant-option--dropdowns">
-            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">{{ option_label }}</label>
+          {%- liquid
+            # SixthGear: prices in the size dropdown (the sale price while a sale window is open; the
+            # struck-through normal price is in the price row above)
+            assign show_option_price = false
+            if block_settings.show_size_prices and option_name_lower contains 'size'
+              assign show_option_price = true
+            endif
+          -%}
+          <div class="variant-option variant-option--dropdowns{% if option_name_lower contains 'size' %} sgs-opt--size{% elsif option_name_lower contains 'paper' %} sgs-opt--paper{% endif %}">
+            <label for="Option-{{ block.id }}-{{ forloop.index0 }}">
+              {%- if option_step != blank -%}<span class="sgs-step-num" aria-hidden="true">{{ option_step }}</span>{%- endif -%}
+              {{- option_label -}}
+            </label>
             <div
               class="variant-option__select-wrapper"
               style="
@@ -306,11 +323,27 @@
                     {% endif %}
                   >
                     {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
-                    {% if product_option_value.available == false %}
-                      {{ value_label }} - {{ 'content.unavailable' | t }}
-                    {% else %}
-                      {{ value_label }}
-                    {% endif %}
+                    {%- liquid
+                      assign option_price = ''
+                      assign option_variant = product_option_value.variant
+                      if show_option_price and option_variant != blank
+                        assign option_price = option_variant.price | money_without_trailing_zeros
+                        if sgs_sale_win != blank
+                          capture sale_now
+                            render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, amount: option_variant.price, part: 'now'
+                          endcapture
+                          assign sale_now = sale_now | strip_html | strip
+                          if sale_now != blank
+                            assign option_price = sale_now
+                          endif
+                        endif
+                      endif
+                      assign value_lower = product_option_value.name | downcase | strip
+                    -%}
+                    {{ value_label -}}
+                    {%- if option_price != blank %} — {{ option_price }}{% endif -%}
+                    {%- if sgs_popular != blank and value_lower == sgs_popular %} · {{ settings.sgs_popular_label | default: 'Popular' | escape }}{% endif -%}
+                    {%- if product_option_value.available == false %} - {{ 'content.unavailable' | t }}{% endif -%}
                   </option>
                 {%- endfor -%}
               </select>
@@ -324,6 +357,11 @@
               </svg>
             </div>
           </div>
+          {%- if option_name_lower contains 'size' and block_settings.size_guide_label != blank -%}
+            <button type="button" class="sgs-sg__link sgs-sg__link--picker" data-sgs-sg-trigger aria-haspopup="dialog">
+              {{- block_settings.size_guide_label | escape -}}
+            </button>
+          {%- endif -%}
         {%- endif -%}
       {%- endfor -%}
 

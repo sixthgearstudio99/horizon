@@ -174,6 +174,7 @@
                 "padding-inline-start": 0,
                 "padding-inline-end": 0,
                 "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "sgs_size_dropdown": true,
                 "sgs_steps": true,
                 "size_step_label": "Choose your size",
                 "size_guide_label": "Which size?",

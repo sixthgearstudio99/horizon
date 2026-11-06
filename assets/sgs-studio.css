@@ -1202,3 +1202,47 @@ media-gallery :is(slideshow-slide, .product-media-container) {
 :is(button[ref='addToCartButton'], .add-to-cart-button) .add-to-cart-icon {
   color: #ffffff;
 }
+
+/* ---------- Size dropdown (variant picker setting) ---------- */
+.variant-option--dropdowns > label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sgs-text);
+}
+
+.variant-option--dropdowns .variant-option__select-wrapper {
+  min-height: 52px;
+  border: 1.5px solid var(--sgs-text);
+  border-radius: var(--sgs-radius-tile);
+  background: #ffffff;
+  color: var(--sgs-text);
+}
+
+.variant-option--dropdowns .variant-option__select {
+  min-height: 52px;
+  padding-inline: 16px 44px;
+  border: 0;
+  border-radius: var(--sgs-radius-tile);
+  background: transparent;
+  color: var(--sgs-text);
+  font-family: var(--sgs-font-body);
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.variant-option--dropdowns .variant-option__select-wrapper:has(:focus-visible) {
+  outline: 2px solid var(--sgs-text);
+  outline-offset: 2px;
+}
+
+.variant-option--dropdowns .icon-caret {
+  right: 18px;
+  width: 11px;
+  color: var(--sgs-text);
+}

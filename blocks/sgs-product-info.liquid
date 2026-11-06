@@ -126,11 +126,11 @@
 {% stylesheet %}
   .sgs-info {
     width: 100%;
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-info__item {
-    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-info__summary {
@@ -141,7 +141,7 @@
     min-height: 56px;
     cursor: pointer;
     list-style: none;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-info__summary::-webkit-details-marker {
@@ -149,7 +149,7 @@
   }
 
   .sgs-info__summary:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 2px;
   }
 
@@ -183,7 +183,7 @@
     padding-bottom: 24px;
     font-size: 15px;
     line-height: 1.65;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-info__body > :first-child {
@@ -199,12 +199,12 @@
   }
 
   .sgs-info__body :is(strong, b) {
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     font-weight: 400;
   }
 
   .sgs-info__body a {
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
@@ -214,15 +214,15 @@
     padding: 0;
     list-style: none;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--sgs-text, #f2f0eb);
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-info__sizes li {
     padding: 8px 0;
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-info__faq {
@@ -231,7 +231,7 @@
 
   .sgs-info__faq dt {
     margin-top: 1em;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-info__faq dt:first-child {

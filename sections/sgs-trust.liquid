@@ -58,7 +58,7 @@
     margin: 0;
     padding: 0;
     list-style: none;
-    border-block: 1px solid rgb(242 240 235 / 0.12);
+    border-block: 1px solid var(--sgs-line);
   }
 
   .sgs-trust__item {
@@ -71,7 +71,7 @@
   }
 
   .sgs-trust__item + .sgs-trust__item {
-    border-inline-start: 1px solid rgb(242 240 235 / 0.12);
+    border-inline-start: 1px solid var(--sgs-line);
   }
 
   .sgs-trust__icon {
@@ -81,17 +81,17 @@
   }
 
   .sgs-trust__title {
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   .sgs-trust__text {
     max-width: 30ch;
     font-size: 14px;
     line-height: 1.55;
-    color: rgb(242 240 235 / 0.62);
+    color: rgb(17 17 17 / 0.62);
     text-wrap: pretty;
   }
 
@@ -115,7 +115,7 @@
 
     .sgs-trust__item + .sgs-trust__item {
       border-inline-start: 0;
-      border-top: 1px solid rgb(242 240 235 / 0.12);
+      border-top: 1px solid var(--sgs-line);
     }
 
     .sgs-trust__icon {

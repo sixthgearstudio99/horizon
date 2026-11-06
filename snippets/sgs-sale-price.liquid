@@ -8,6 +8,7 @@
   @param {string} [part] - 'price' (default), 'now' (sale price only) or 'note'
   @param {number} [amount] - Price in pence that the discount applies to (part 'price')
   @param {boolean} [from] - Show "From" before the prices (part 'price')
+  @param {boolean} [save] - Show a "Save £X" pill (product cards)
 
   @example
   {% render 'sgs-sale-price', product_resource: product, window: sgs_sale_win, amount: 2500 %}
@@ -52,6 +53,9 @@
       {%- if from -%}<span class="sgs-sale__from">From</span>{%- endif -%}
       <span class="sgs-sale__was"><span class="visually-hidden">Regular price&nbsp;</span><bdi>{{ amount | money_without_trailing_zeros }}</bdi></span>
       <span class="sgs-sale__now"><span class="visually-hidden">Sale price&nbsp;</span><bdi>{{ sale_amount | money_without_trailing_zeros }}</bdi></span>
+      {%- if save and discount > 0 -%}
+        <span class="sgs-sale__save">Save {{ discount | money_without_trailing_zeros }}</span>
+      {%- endif -%}
     </span>
   {%- endif -%}
 {%- endif -%}

@@ -134,7 +134,8 @@
                 product_resource: product,
                 window: sgs_sale_win,
                 amount: product.price_min,
-                from: product.price_varies
+                from: product.price_varies,
+                save: true
               %}
             {%- endif -%}
             <span class="sgs-card__price-normal">
@@ -215,7 +216,7 @@
   }
 
   .sgs-card__placeholder {
-    fill: rgb(242 240 235 / 0.18);
+    fill: rgb(17 17 17 / 0.08);
   }
 
   @media (hover: hover) {
@@ -240,12 +241,12 @@
     padding: 6px 9px 5px;
     background: var(--sgs-bg);
     color: var(--sgs-text);
-    font-size: 10px;
+    font-size: 12px;
     line-height: 1;
   }
 
   .sgs-card__badge--sale {
-    color: #e10600;
+    color: var(--sgs-red);
   }
 
   .sgs-card__info {
@@ -294,7 +295,7 @@
   }
 
   .sgs-card__options {
-    font-size: 10px;
+    font-size: 12px;
     color: rgb(var(--color-foreground-rgb) / 0.5);
   }
 

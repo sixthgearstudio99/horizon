@@ -21,7 +21,7 @@
         "text_after": "for Christmas delivery",
         "show_countdown": true,
         "link": "",
-        "background_color": "#e10600",
+        "background_color": "#111111",
         "text_color": "#ffffff"
       }
     },
@@ -38,7 +38,7 @@
             "weight": "500",
             "letter_spacing": "loose",
             "case": "uppercase",
-            "text_color": "#f5f3ef",
+            "text_color": "#ffffff",
             "hide_after": "2026-12-24"
           },
           "blocks": {}
@@ -53,7 +53,7 @@
             "weight": "500",
             "letter_spacing": "loose",
             "case": "uppercase",
-            "text_color": "#f5f3ef"
+            "text_color": "#ffffff"
           },
           "blocks": {}
         },
@@ -67,7 +67,7 @@
             "weight": "500",
             "letter_spacing": "loose",
             "case": "uppercase",
-            "text_color": "#f5f3ef",
+            "text_color": "#ffffff",
             "hide_after": "2026-12-09"
           },
           "blocks": {}
@@ -82,7 +82,7 @@
       "settings": {
         "speed": 4,
         "section_width": "page-width",
-        "background_color": "#0e0e0e",
+        "background_color": "#111111",
         "divider_width": 0,
         "divider_color": "",
         "padding-block-start": 11,
@@ -159,7 +159,7 @@
         "background_color_bottom": "",
         "text_color_bottom": "",
         "bubble_style": "custom",
-        "bubble_background_color": "#e10600",
+        "bubble_background_color": "#111111",
         "bubble_text_color": "#ffffff",
         "enable_transparent_header_home": true,
         "home_inverse_logo": true,

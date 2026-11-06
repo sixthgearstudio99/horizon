@@ -90,7 +90,7 @@
 
 {% stylesheet %}
   .sgs-news {
-    --sgs-news-fg: 242 240 235;
+    --sgs-news-fg: 17 17 17;
 
     padding-block: var(--sgs-news-pad-top) var(--sgs-news-pad-bottom);
     background: var(--sgs-news-bg);
@@ -123,13 +123,13 @@
     font-size: clamp(2.5rem, 1.6rem + 3.4vw, 5rem);
     line-height: 0.95;
     letter-spacing: -0.03em;
-    text-transform: uppercase;
+    text-transform: none;
     text-wrap: balance;
   }
 
   .sgs-news__heading em {
     font-style: normal;
-    color: #e10600;
+    color: inherit;
   }
 
   .sgs-news__text {
@@ -204,10 +204,10 @@
     background: none;
     color: rgb(var(--sgs-news-fg));
     font-family: var(--font-body--family);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-transform: none;
     cursor: pointer;
   }
 
@@ -233,7 +233,7 @@
 
   .sgs-news__fine {
     margin: 20px 0 0;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.6;
     color: rgb(var(--sgs-news-fg) / 0.45);
   }
@@ -253,7 +253,7 @@
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
     font-size: 20px;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: -0.01em;
   }
 
@@ -279,7 +279,7 @@
   .sgs-news__code strong {
     font-family: var(--font-heading--family);
     font-size: 18px;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.02em;
     user-select: all;
   }
 

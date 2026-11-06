@@ -1,30 +1,30 @@
 {%- doc -%}
-  SixthGear Studios studio redesign: self-hosted fonts (SIL Open Font License 1.1).
-  Archivo Expanded (width 125) 600 for headings, Inter 300/400 for body, JetBrains Mono 400 for
-  labels, prices, sizes and buttons. The two above-the-fold faces are preloaded, and every family
-  has a metric-matched local fallback (size-adjust / ascent / descent overrides), so swapping from
-  the fallback to the web font doesn't shift the layout.
+  SixthGear Studios gallery look: self-hosted fonts (SIL Open Font License 1.1).
+  Inter Tight 600/700 for headings; Inter 400/500/600 for body, labels, buttons and prices.
+  The two above-the-fold faces are preloaded, and each family has a metric-matched local
+  fallback (size-adjust / ascent / descent overrides) so swapping in the web font doesn't shift
+  the layout. The older --sgs-font-mono token now points at Inter, so every label follows.
 
   @example
   {% render 'sgs-fonts' %}
 {%- enddoc -%}
 
-{{ 'sgs-archivo-expanded-600.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
+{{ 'sgs-inter-tight-600.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 {{ 'sgs-inter-400.woff2' | asset_url | preload_tag: as: 'font', type: 'font/woff2', crossorigin: 'anonymous' }}
 
 <style>
   @font-face {
-    font-family: 'SGS Archivo';
-    src: url('{{ 'sgs-archivo-expanded-600.woff2' | asset_url }}') format('woff2');
+    font-family: 'SGS Inter Tight';
+    src: url('{{ 'sgs-inter-tight-600.woff2' | asset_url }}') format('woff2');
     font-weight: 600;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'SGS Inter';
-    src: url('{{ 'sgs-inter-300.woff2' | asset_url }}') format('woff2');
-    font-weight: 300;
+    font-family: 'SGS Inter Tight';
+    src: url('{{ 'sgs-inter-tight-700.woff2' | asset_url }}') format('woff2');
+    font-weight: 700 900;
     font-style: normal;
     font-display: swap;
   }
@@ -32,60 +32,59 @@
   @font-face {
     font-family: 'SGS Inter';
     src: url('{{ 'sgs-inter-400.woff2' | asset_url }}') format('woff2');
-    font-weight: 400 700;
+    font-weight: 100 400;
     font-style: normal;
     font-display: swap;
   }
 
   @font-face {
-    font-family: 'SGS Mono';
-    src: url('{{ 'sgs-jetbrains-mono-400.woff2' | asset_url }}') format('woff2');
-    font-weight: 400 700;
+    font-family: 'SGS Inter';
+    src: url('{{ 'sgs-inter-500.woff2' | asset_url }}') format('woff2');
+    font-weight: 500;
     font-style: normal;
     font-display: swap;
   }
 
-  /* Metric-matched fallbacks (measured from the font files against Arial / Courier New) */
   @font-face {
-    font-family: 'SGS Archivo Fallback';
-    src: local('Arial'), local('Helvetica'), local('Liberation Sans');
-    size-adjust: 129.87%;
-    ascent-override: 67.6%;
-    descent-override: 16.17%;
+    font-family: 'SGS Inter';
+    src: url('{{ 'sgs-inter-600.woff2' | asset_url }}') format('woff2');
+    font-weight: 600 900;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Metric-matched fallbacks (measured from the font files against Arial / Arial Bold) */
+  @font-face {
+    font-family: 'SGS Inter Tight Fallback';
+    src: local('Arial Bold'), local('Arial-BoldMT'), local('Liberation Sans Bold'), local('Arial');
+    size-adjust: 94.68%;
+    ascent-override: 102.32%;
+    descent-override: 25.48%;
     line-gap-override: 0%;
   }
 
   @font-face {
     font-family: 'SGS Inter Fallback';
     src: local('Arial'), local('Helvetica'), local('Liberation Sans');
-    size-adjust: 108.18%;
-    ascent-override: 89.55%;
-    descent-override: 22.3%;
-    line-gap-override: 0%;
-  }
-
-  @font-face {
-    font-family: 'SGS Mono Fallback';
-    src: local('Courier New'), local('Courier'), local('Liberation Mono');
-    size-adjust: 100%;
-    ascent-override: 102%;
-    descent-override: 30%;
+    size-adjust: 105.79%;
+    ascent-override: 91.57%;
+    descent-override: 22.8%;
     line-gap-override: 0%;
   }
 
   :root {
-    --sgs-font-display: 'SGS Archivo', 'SGS Archivo Fallback', sans-serif;
+    --sgs-font-display: 'SGS Inter Tight', 'SGS Inter Tight Fallback', sans-serif;
     --sgs-font-body: 'SGS Inter', 'SGS Inter Fallback', sans-serif;
-    --sgs-font-mono: 'SGS Mono', 'SGS Mono Fallback', monospace;
+    --sgs-font-mono: var(--sgs-font-body);
 
     /* Point Horizon's font variables at the self-hosted families */
     --font-body--family: var(--sgs-font-body);
-    --font-body--weight: 300;
-    --font-subheading--family: var(--sgs-font-mono);
-    --font-subheading--weight: 400;
+    --font-body--weight: 400;
+    --font-subheading--family: var(--sgs-font-body);
+    --font-subheading--weight: 500;
     --font-heading--family: var(--sgs-font-display);
     --font-heading--weight: 600;
-    --font-accent--family: var(--sgs-font-mono);
-    --font-accent--weight: 400;
+    --font-accent--family: var(--sgs-font-body);
+    --font-accent--weight: 500;
   }
 </style>

@@ -85,11 +85,11 @@ if (!customElements.get('sgs-wall-preview')) {
   const fmt = (n) => (Math.round(n * 10) / 10).toString();
   const round5 = (cm) => Math.round(cm / 5) * 5;
 
-  /** Friendly label, matching snippets/sgs-size-label.liquid: "16 × 24 IN / 40 × 60 CM" */
+  /** Friendly label, matching snippets/sgs-size-label.liquid: "16 × 24 in / 40 × 60 cm" */
   const friendly = (size) => {
     if (size.named) return String(size.label).split('(')[0].trim();
-    if (size.unit === 'cm') return `${fmt(size.a)} × ${fmt(size.b)} CM`;
-    return `${fmt(size.a / 2.54)} × ${fmt(size.b / 2.54)} IN / ${round5(size.a)} × ${round5(size.b)} CM`;
+    if (size.unit === 'cm') return `${fmt(size.a)} × ${fmt(size.b)} cm`;
+    return `${fmt(size.a / 2.54)} × ${fmt(size.b / 2.54)} in / ${round5(size.a)} × ${round5(size.b)} cm`;
   };
 
   customElements.define(

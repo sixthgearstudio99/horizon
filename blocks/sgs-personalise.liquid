@@ -260,7 +260,7 @@
     border-radius: 50%;
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
-    font-size: 12px;
+    font-size: 14px;
     font-variant-numeric: tabular-nums;
   }
 
@@ -294,7 +294,7 @@
     line-height: 1.1;
     letter-spacing: 0.02em;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: none;
     white-space: nowrap;
   }
 
@@ -379,7 +379,7 @@
   }
 
   .sgs-pers .sgs-pers__input[aria-invalid='true'] {
-    border-bottom-color: #e10600;
+    border-bottom-color: var(--sgs-red);
   }
 
   .sgs-pers .sgs-pers__input--textarea {
@@ -392,7 +392,7 @@
     justify-content: space-between;
     gap: 12px;
     min-height: 16px;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .sgs-pers__count {
@@ -403,7 +403,7 @@
 
   .sgs-pers__error {
     color: #c00500;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   .sgs-pers__error:empty {
@@ -452,7 +452,7 @@
   }
 
   .sgs-pers__tile[data-invalid] .sgs-pers__tile-label {
-    border-color: #e10600;
+    border-color: var(--sgs-red);
   }
 
   .sgs-pers__tile[data-filled] .sgs-pers__tile-label {
@@ -476,9 +476,9 @@
   }
 
   .sgs-pers__tile-text {
-    font-size: 10px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   .sgs-pers__tile[data-filled] .sgs-pers__tile-empty {
@@ -495,7 +495,7 @@
 
   .sgs-pers__filename {
     padding: 8px;
-    font-size: 11px;
+    font-size: 13px;
     text-align: center;
     word-break: break-all;
     color: rgb(var(--color-foreground-rgb));
@@ -551,7 +551,7 @@
     margin: 0;
     padding: 12px 14px;
     border: 1px dashed rgb(var(--color-foreground-rgb) / 0.3);
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(var(--color-foreground-rgb) / 0.6);
   }
 

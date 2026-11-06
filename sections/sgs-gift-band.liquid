@@ -118,8 +118,8 @@
     align-items: center;
     min-height: var(--sgs-band-min-h-mobile);
     overflow: hidden;
-    background: var(--sgs-bg, #0b0b0b);
-    color: var(--sgs-text, #f2f0eb);
+    background: var(--sgs-bg, #f5f3ef);
+    color: var(--sgs-text, #111111);
   }
 
   @media screen and (min-width: 750px) {
@@ -143,7 +143,7 @@
   }
 
   .sgs-band__placeholder {
-    background: var(--sgs-raised, #141414);
+    background: var(--sgs-raised, #ffffff);
     fill: rgb(255 255 255 / 0.08);
   }
 
@@ -174,14 +174,14 @@
 
   .sgs-band__eyebrow {
     margin: 0 0 20px;
-    color: var(--sgs-text, #f2f0eb) !important;
+    color: var(--sgs-text, #111111) !important;
     opacity: 0.8;
   }
 
   .sgs-band .sgs-band__heading {
     max-width: 14ch;
     margin: 0;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     font-size: var(--sgs-h1) !important;
     line-height: 1.02 !important;
     text-wrap: balance;
@@ -191,20 +191,20 @@
     max-width: 44ch;
     margin: 24px 0 0;
     font-family: var(--sgs-font-mono);
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.7;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--sgs-text, #f2f0eb);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-band .sgs-band__button,
   .sgs-band .sgs-band__button:hover {
     --button-padding-block: 18px;
     --button-padding-inline: 36px;
-    --button-color: var(--sgs-bg, #0b0b0b);
-    --button-background-color: var(--sgs-text, #f2f0eb);
-    --button-border-color: var(--sgs-text, #f2f0eb);
+    --button-color: var(--sgs-bg, #f5f3ef);
+    --button-background-color: var(--sgs-text, #111111);
+    --button-border-color: var(--sgs-text, #111111);
 
     margin-top: 36px;
     border-radius: 0;
@@ -213,7 +213,7 @@
   }
 
   .sgs-band .sgs-band__button:is(:hover, :focus-visible) {
-    --button-color: var(--sgs-text, #f2f0eb);
+    --button-color: var(--sgs-text, #111111);
     --button-background-color: transparent;
   }
 
@@ -229,7 +229,7 @@
     margin-inline: auto;
     padding: 16px var(--page-margin, 16px);
     font-size: 13px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 {% endstylesheet %}
 

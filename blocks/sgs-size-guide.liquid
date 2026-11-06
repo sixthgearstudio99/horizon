@@ -240,13 +240,13 @@
     padding: 0;
     border: 0;
     background: none;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: none;
     text-decoration: underline;
-    text-decoration-color: rgb(255 255 255 / 0.35);
+    text-decoration-color: rgb(17 17 17 / 0.3);
     text-underline-offset: 4px;
     cursor: pointer;
   }
@@ -258,7 +258,7 @@
   .sgs-sg__link:focus-visible,
   .sgs-sg__close:focus-visible,
   .sgs-sg__wall-btn:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 3px;
   }
 
@@ -272,9 +272,9 @@
     margin: 0;
     padding: 0;
     border: 0;
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
-    background: var(--sgs-bg, #0b0b0b);
-    color: var(--sgs-text, #f2f0eb);
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
+    background: var(--sgs-bg, #f5f3ef);
+    color: var(--sgs-text, #111111);
     overflow: auto;
     overscroll-behavior: contain;
   }
@@ -290,7 +290,7 @@
       height: 100%;
       max-height: 100%;
       border-top: 0;
-      border-left: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+      border-left: 1px solid var(--sgs-line, #e4e0d9);
     }
   }
 
@@ -350,7 +350,7 @@
   }
 
   .sgs-sg__wall {
-    fill: var(--sgs-raised, #141414);
+    fill: var(--sgs-raised, #ffffff);
   }
 
   .sgs-sg__floor {
@@ -366,25 +366,25 @@
   }
 
   .sgs-sg__print {
-    fill: rgb(242 240 235 / 0.06);
-    stroke: var(--sgs-text, #f2f0eb);
+    fill: rgb(17 17 17 / 0.08);
+    stroke: var(--sgs-text, #111111);
     stroke-width: 1.25px;
     vector-effect: non-scaling-stroke;
   }
 
   .sgs-sg__num {
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 9px;
-    fill: var(--sgs-text, #f2f0eb);
+    font-size: 11px;
+    fill: var(--sgs-text, #111111);
   }
 
   .sgs-sg__cap {
     margin-top: 8px;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--sgs-text-2, #9a968e);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-sg__list {
@@ -392,7 +392,7 @@
     margin: 24px 0 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-sg__item {
@@ -400,32 +400,32 @@
     grid-template-columns: 24px 1fr;
     gap: 2px 12px;
     padding: 14px 0;
-    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-sg__item-num {
     grid-row: span 2;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    color: var(--sgs-text-2, #9a968e);
+    font-size: 14px;
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-sg__item-size {
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   .sgs-sg__item-use {
     font-size: 14px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-sg__note {
     margin: 16px 0 0;
     font-size: 13px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-sg__wall-btn {
@@ -435,14 +435,14 @@
     width: 100%;
     min-height: 48px;
     margin-top: 24px;
-    border: 1px solid var(--sgs-text, #f2f0eb);
+    border: 1px solid var(--sgs-text, #111111);
     border-radius: 0;
     background: transparent;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: none;
     cursor: pointer;
   }
 
@@ -451,8 +451,8 @@
   }
 
   .sgs-sg__wall-btn:hover {
-    background: var(--sgs-text, #f2f0eb);
-    color: var(--sgs-bg, #0b0b0b);
+    background: var(--sgs-text, #111111);
+    color: var(--sgs-bg, #f5f3ef);
   }
 {% endstylesheet %}
 

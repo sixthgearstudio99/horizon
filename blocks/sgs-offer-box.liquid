@@ -27,8 +27,8 @@
     display: none;
     width: 100%;
     padding: 14px 16px;
-    border: 1px solid var(--sgs-text, #f2f0eb);
-    color: var(--sgs-text, #f2f0eb);
+    border: 1px solid var(--sgs-text, #111111);
+    color: var(--sgs-text, #111111);
   }
 
   html[data-sgs-sale='1'] .sgs-offer[data-sgs-offer-win='1'],
@@ -44,10 +44,10 @@
     gap: 10px;
     margin: 0;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
+    font-size: 14px;
     line-height: 1.5;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   .sgs-offer__title::before {
@@ -55,7 +55,7 @@
     flex-shrink: 0;
     width: 6px;
     height: 6px;
-    background: var(--sgs-red, #e10600);
+    background: var(--sgs-red, #d7261e);
     translate: 0 -1px;
   }
 
@@ -63,7 +63,7 @@
     margin: 4px 0 0 16px;
     font-size: 13px;
     line-height: 1.5;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 {% endstylesheet %}
 

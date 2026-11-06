@@ -136,8 +136,8 @@
 
   .sgs-proof {
     padding-block: var(--sgs-proof-pad-top) var(--sgs-proof-pad-bottom);
-    background: var(--sgs-bg, #0b0b0b);
-    color: var(--sgs-text, #f2f0eb);
+    background: var(--sgs-bg, #f5f3ef);
+    color: var(--sgs-text, #111111);
   }
 
   @media screen and (max-width: 749px) {
@@ -163,7 +163,7 @@
 
   .sgs-proof__label {
     margin: 0 0 12px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-proof .sgs-proof__heading {
@@ -189,7 +189,7 @@
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--page-margin, 16px);
     scrollbar-width: thin;
-    scrollbar-color: var(--sgs-line, #282828) transparent;
+    scrollbar-color: var(--sgs-line, #e4e0d9) transparent;
   }
 
   .sgs-proof--tall .sgs-proof__row {
@@ -217,7 +217,7 @@
   }
 
   .sgs-proof__row:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 4px;
   }
 
@@ -237,7 +237,7 @@
     border: 0;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: var(--sgs-raised, #141414);
+    background: var(--sgs-raised, #ffffff);
     color: inherit;
     cursor: pointer;
   }
@@ -251,7 +251,7 @@
   }
 
   .sgs-proof__media:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: -3px;
   }
 
@@ -278,7 +278,7 @@
     width: 28px;
     height: 28px;
     background: rgb(11 11 11 / 0.7);
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-proof__caption {
@@ -288,11 +288,11 @@
     gap: 4px 12px;
     margin-top: 10px;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.5;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--sgs-text-2, #9a968e);
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-proof__shop {
@@ -300,9 +300,9 @@
     align-items: center;
     min-height: 44px;
     margin-block: -12px;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     text-decoration: underline;
-    text-decoration-color: rgb(255 255 255 / 0.3);
+    text-decoration-color: rgb(17 17 17 / 0.3);
     text-underline-offset: 3px;
   }
 
@@ -311,7 +311,7 @@
     margin-inline: auto;
     padding: 16px var(--page-margin, 16px);
     font-size: 13px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   /* Full-screen view (assets/sgs-media-row.js) */
@@ -326,7 +326,7 @@
     padding: 0;
     border: 0;
     background: #000;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-mr-dialog::backdrop {
@@ -354,14 +354,14 @@
     place-items: center;
     width: 48px;
     height: 48px;
-    border: 1px solid var(--sgs-line, #282828);
+    border: 1px solid var(--sgs-line, #e4e0d9);
     background: rgb(11 11 11 / 0.7);
     color: inherit;
     cursor: pointer;
   }
 
   .sgs-mr-dialog__close:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 2px;
   }
 {% endstylesheet %}

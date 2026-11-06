@@ -9,11 +9,11 @@
  */
 
 :root {
-  --sgs-jdgm-text: #f2f0eb;
-  --sgs-jdgm-text-2: #9a968e;
-  --sgs-jdgm-line: rgb(255 255 255 / 0.12);
-  --sgs-jdgm-bg: #0b0b0b;
-  --sgs-jdgm-raised: #141414;
+  --sgs-jdgm-text: #111111;
+  --sgs-jdgm-text-2: #6b6b6b;
+  --sgs-jdgm-line: #e4e0d9;
+  --sgs-jdgm-bg: #ffffff;
+  --sgs-jdgm-raised: #ffffff;
 }
 
 /* ---------- Hide when there are no reviews ---------- */
@@ -138,7 +138,7 @@
   border-bottom: 1px solid var(--sgs-jdgm-line) !important;
 }
 
-/* ---------- Headings: Archivo Expanded, uppercase ---------- */
+/* ---------- Headings: Inter Tight, sentence case ---------- */
 :is(.jdgm-widget, .jdgm-rev-widg) :is(
     .jdgm-rev-widg__title,
     .jdgm-form__title,
@@ -152,7 +152,7 @@
   font-family: var(--sgs-font-display) !important;
   font-weight: 600 !important;
   font-style: normal !important;
-  text-transform: uppercase !important;
+  text-transform: none !important;
   letter-spacing: 0 !important;
   color: var(--sgs-jdgm-text) !important;
 }
@@ -202,10 +202,10 @@
   font-family: var(--sgs-font-mono) !important;
   font-weight: 400 !important;
   font-style: normal !important;
-  font-size: 11px !important;
+  font-size: 13px !important;
   line-height: 1.5 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
 }
 
 /* Secondary (muted) labels */
@@ -229,7 +229,7 @@
 /* Reviewer name and the average figure stay full strength */
 .jdgm-rev-widg :is(.jdgm-rev__author, .jdgm-rev-widg__summary-average) {
   color: var(--sgs-jdgm-text) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
 }
 
 .jdgm-rev-widg .jdgm-paginate__page.jdgm-curt {
@@ -270,7 +270,7 @@
   border: 1px solid var(--sgs-jdgm-line) !important;
   border-radius: 0 !important;
   padding: 2px 6px !important;
-  font-size: 10px !important;
+  font-size: 12px !important;
 }
 
 /* Reviewer avatar circle and its verified tick */
@@ -308,10 +308,10 @@
   box-shadow: none !important;
   font-family: var(--sgs-font-mono) !important;
   font-weight: 400 !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   line-height: 1 !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
   text-decoration: none !important;
   opacity: 1 !important;
   cursor: pointer;

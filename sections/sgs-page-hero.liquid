@@ -129,7 +129,7 @@
 
 {% stylesheet %}
   .sgs-phero {
-    --sgs-phero-fg: 242 240 235;
+    --sgs-phero-fg: 17 17 17;
 
     position: relative;
     isolation: isolate;
@@ -244,13 +244,13 @@
     font-size: clamp(2.75rem, 1.6rem + 4.2vw, 5.75rem);
     line-height: 0.92;
     letter-spacing: -0.03em;
-    text-transform: uppercase;
+    text-transform: none;
     text-wrap: balance;
   }
 
   .sgs-phero__heading em {
     font-style: normal;
-    color: #e10600;
+    color: inherit;
   }
 
   .sgs-phero__text {
@@ -283,9 +283,9 @@
     --button-padding-block: 18px;
     --button-padding-inline: 36px;
 
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.02em;
   }
 
   .sgs-phero--align-center .sgs-phero__actions {
@@ -314,8 +314,8 @@
 
   /* Collection description under the banner: label on the left, text on the right (desktop) */
   .sgs-phero-intro {
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
-    color: var(--sgs-text, #f2f0eb);
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-phero-intro__inner {
@@ -337,7 +337,7 @@
   .sgs-phero-intro__label {
     align-self: start;
     margin: 0;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-phero-intro__text {
@@ -346,7 +346,7 @@
     font-weight: 300;
     font-size: 16px;
     line-height: 1.7;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-phero-intro__text > :first-child {
@@ -366,7 +366,7 @@
   }
 
   .sgs-phero-intro__text :is(strong, b) {
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     font-weight: 400;
   }
 
@@ -374,13 +374,13 @@
     margin: 1.6em 0 0.6em;
     font-size: var(--sgs-h3, 1.0625rem) !important;
     line-height: 1.25 !important;
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-phero-intro__text a {
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
     text-decoration: underline;
-    text-decoration-color: rgb(255 255 255 / 0.3);
+    text-decoration-color: rgb(17 17 17 / 0.3);
     text-underline-offset: 3px;
   }
 

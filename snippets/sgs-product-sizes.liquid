@@ -23,10 +23,10 @@
           render 'sgs-size-label', value: value.name
         endcapture
         assign label = label | strip
-        if label contains ' IN /'
-          assign short = label | split: ' IN' | first | remove: ' '
-        elsif label contains ' CM'
-          assign short = label | remove: ' CM' | remove: ' ' | append: ' cm'
+        if label contains ' in /'
+          assign short = label | split: ' in /' | first | remove: ' '
+        elsif label contains ' cm'
+          assign short = label | remove: ' cm' | remove: ' ' | append: ' cm'
         else
           assign short = ''
         endif

@@ -82,7 +82,7 @@
 {% stylesheet %}
   .sgs-cscroll {
     padding-block: var(--sgs-cscroll-pad-top) var(--sgs-cscroll-pad-bottom);
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   @media screen and (max-width: 749px) {
@@ -103,7 +103,7 @@
 
   .sgs-cscroll__label {
     margin: 0 0 12px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-cscroll .sgs-cscroll__heading {
@@ -125,7 +125,7 @@
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--page-margin, 16px);
     scrollbar-width: thin;
-    scrollbar-color: var(--sgs-line, #282828) transparent;
+    scrollbar-color: var(--sgs-line, #e4e0d9) transparent;
   }
 
   @media screen and (min-width: 750px) {
@@ -141,7 +141,7 @@
   }
 
   .sgs-cscroll__row:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 4px;
   }
 
@@ -156,7 +156,7 @@
   }
 
   .sgs-cscroll__tile:focus-visible {
-    outline: 1px solid var(--sgs-text, #f2f0eb);
+    outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 3px;
   }
 
@@ -164,8 +164,8 @@
     display: block;
     aspect-ratio: 1;
     overflow: hidden;
-    background: var(--sgs-raised, #141414);
-    border: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    background: var(--sgs-raised, #ffffff);
+    border: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-cscroll__img {
@@ -185,9 +185,9 @@
     align-items: center;
     min-height: 44px;
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

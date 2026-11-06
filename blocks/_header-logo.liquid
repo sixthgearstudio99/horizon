@@ -64,8 +64,9 @@
         style: inverse_logo_style
       %}
     {% else %}
+      {%- comment -%} SixthGear gallery look: the dark logo reads on the light header {%- endcomment -%}
       {% render 'sgs-logo',
-        variant: 'inverse',
+        variant: 'default',
         height: settings.logo_height,
         height_mobile: settings.logo_height_mobile,
         class: 'header-logo__image'

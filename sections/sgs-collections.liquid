@@ -151,7 +151,7 @@
 {% stylesheet %}
   .sgs-cols {
     --sgs-cols-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-    --sgs-cols-line: rgb(242 240 235 / 0.12);
+    --sgs-cols-line: var(--sgs-line);
 
     padding-block: var(--sgs-cols-pad-top) var(--sgs-cols-pad-bottom);
     color: var(--sgs-text);
@@ -175,7 +175,7 @@
 
   .sgs-cols__eyebrow {
     margin: 0 0 16px;
-    color: rgb(242 240 235 / 0.55);
+    color: rgb(17 17 17 / 0.62);
   }
 
   .sgs-cols__heading {
@@ -185,7 +185,7 @@
     font-size: clamp(2.25rem, 1.5rem + 2.6vw, 4rem);
     line-height: 0.95;
     letter-spacing: -0.025em;
-    text-transform: uppercase;
+    text-transform: none;
     text-wrap: balance;
   }
 
@@ -230,7 +230,7 @@
 
   .sgs-tile__placeholder {
     background: var(--sgs-raised);
-    fill: rgb(242 240 235 / 0.2);
+    fill: rgb(17 17 17 / 0.08);
   }
 
   .sgs-tile__overlay {
@@ -257,7 +257,7 @@
     font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.75rem);
     line-height: 0.95;
     letter-spacing: -0.02em;
-    text-transform: uppercase;
+    text-transform: none;
   }
 
   .sgs-tile__text {
@@ -303,7 +303,7 @@
 
   .sgs-cols__secondary-label {
     margin: 0 0 20px;
-    color: rgb(242 240 235 / 0.55);
+    color: rgb(17 17 17 / 0.62);
   }
 
   .sgs-cols__compact {
@@ -365,17 +365,17 @@
     font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
     line-height: 1.1;
     letter-spacing: -0.01em;
-    text-transform: uppercase;
+    text-transform: none;
   }
 
   .sgs-row__text {
     font-size: 13px;
-    color: rgb(242 240 235 / 0.6);
+    color: rgb(17 17 17 / 0.62);
   }
 
   .sgs-row__arrow {
     flex-shrink: 0;
-    color: rgb(242 240 235 / 0.5);
+    color: rgb(17 17 17 / 0.62);
     transition: translate 0.5s var(--sgs-cols-ease), color 0.5s var(--sgs-cols-ease);
   }
 

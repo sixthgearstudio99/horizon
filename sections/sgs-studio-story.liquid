@@ -71,7 +71,7 @@
 {% stylesheet %}
   .sgs-story {
     padding-block: var(--sgs-story-pad-top) var(--sgs-story-pad-bottom);
-    color: var(--sgs-text, #f2f0eb);
+    color: var(--sgs-text, #111111);
   }
 
   @media screen and (max-width: 749px) {
@@ -99,7 +99,7 @@
   .sgs-story__media {
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    background: var(--sgs-raised, #141414);
+    background: var(--sgs-raised, #ffffff);
   }
 
   .sgs-story__img {
@@ -111,7 +111,7 @@
 
   .sgs-story__label {
     margin: 0 0 12px;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-story .sgs-story__heading {
@@ -125,7 +125,7 @@
     margin-top: 20px;
     font-size: 16px;
     line-height: 1.65;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 
   .sgs-story__text p {
@@ -136,7 +136,7 @@
     margin: 28px 0 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
   }
 
   .sgs-story__stat {
@@ -144,16 +144,16 @@
     align-items: center;
     gap: 14px;
     min-height: 52px;
-    border-bottom: 1px solid var(--sgs-line, rgb(255 255 255 / 0.12));
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
     font-family: var(--sgs-font-mono, monospace);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 
   .sgs-story__stat svg {
     flex-shrink: 0;
-    color: var(--sgs-text-2, #9a968e);
+    color: var(--sgs-text-2, #6b6b6b);
   }
 {% endstylesheet %}
 

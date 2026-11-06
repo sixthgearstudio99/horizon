@@ -1,19 +1,19 @@
 /*
- * SixthGear Studios: "studio spec sheet" redesign layer.
+ * SixthGear Studios: gallery layer (light, warm paper; Inter Tight headings, Inter text).
  * Dark, precise, editorial. Loaded after sgs-theme.css; fonts and font variables come from
  * snippets/sgs-fonts.liquid, colours from the theme palette and the --sgs-* tokens.
  *
- * Type system: three heading sizes only (display / section / small), Archivo Expanded 600
- * uppercase; body Inter 300/400; labels, prices, sizes, breadcrumbs, buttons and spec tables in
- * JetBrains Mono 400 uppercase 11-13px, tracked 0.12em.
+ * Type system: three heading sizes (display / section / small) in Inter Tight 600-700, sentence
+ * case; body, labels, prices, sizes, breadcrumbs and buttons in Inter 400-600 (the older
+ * --sgs-font-mono token now points at Inter). Labels never tracked wider than 0.02em.
  */
 
 :root {
   --sgs-h1: clamp(2.25rem, 1.2rem + 4vw, 4.75rem);
   --sgs-h2: clamp(1.5rem, 1.15rem + 1.5vw, 2.5rem);
   --sgs-h3: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
-  --sgs-mono-size: 12px;
-  --sgs-mono-tracking: 0.12em;
+  --sgs-mono-size: 14px;
+  --sgs-mono-tracking: 0.02em;
 
   /* Horizon's own headings collapse onto the same three sizes */
   --font-h1--size: var(--sgs-h1);
@@ -41,7 +41,7 @@ b {
   font-weight: 400;
 }
 
-/* ---------- Headings: Archivo Expanded 600, uppercase, three sizes ---------- */
+/* ---------- Headings: Inter Tight, sentence case, three sizes ---------- */
 :is(h1, h2, h3, h4, h5, h6),
 :is(
     .sgs-hero__heading,
@@ -73,7 +73,7 @@ b {
   font-family: var(--sgs-font-display) !important;
   font-weight: 600 !important;
   font-style: normal;
-  text-transform: uppercase !important;
+  text-transform: none !important;
   letter-spacing: 0 !important;
 }
 
@@ -115,10 +115,10 @@ b {
   line-height: 1.25 !important;
 }
 
-/* The one red word in a heading (e.g. DRIVEN) */
+/* Emphasised words in headings: same colour (red is kept for sale badges and savings) */
 :is(.sgs-hero__heading, .sgs-statement__text, .sgs-feature__heading, .sgs-band__heading) em {
   font-style: normal;
-  color: var(--sgs-red);
+  color: inherit;
 }
 
 /* ---------- Mono: labels, prices, sizes, breadcrumbs, buttons, spec tables ---------- */
@@ -178,11 +178,11 @@ b {
     .sgs-hero__link
   ) {
   font-family: var(--sgs-font-mono) !important;
-  font-weight: 400 !important;
+  font-weight: 500 !important;
   font-style: normal;
   font-size: var(--sgs-mono-size) !important;
-  letter-spacing: var(--sgs-mono-tracking) !important;
-  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
 }
 
 /* Secondary (muted) labels */
@@ -205,7 +205,7 @@ b {
     .sgs-spec__label,
     .tax-note
   ) {
-  font-size: 11px;
+  font-size: 13px;
   color: var(--sgs-text-2);
 }
 
@@ -220,7 +220,8 @@ b {
 
 /* Prices are figures, so a touch larger */
 :is(.price, product-price, .sgs-card__price, .cart-items__price, .cart-totals__total) {
-  font-size: 13px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
   font-variant-numeric: tabular-nums;
 }
 
@@ -230,8 +231,8 @@ b {
 }
 
 /* ---------- Buttons: square, mono, hairline ---------- */
-:is(.button, .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit, .sgs-set__button, .sgs-hero__button) {
-  border-radius: 0;
+:is(.button:not(.button-unstyled), .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit, .sgs-set__button, .sgs-hero__button) {
+  border-radius: 999px;
   min-height: 52px;
 }
 
@@ -319,11 +320,11 @@ product-price s,
 }
 
 .menu-list__link-title {
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 
 .announcement-bar {
-  background: #000;
+  background: #111111;
 }
 
 /* ---------- Product page ---------- */
@@ -333,7 +334,7 @@ product-price s,
   gap: 10px;
   margin-top: 10px;
   color: var(--sgs-text);
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 
 .sgs-print-note::before {
@@ -350,7 +351,7 @@ product-price s,
 }
 
 .variant-option__button-label__text {
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 
 /* ---------- Cards ---------- */
@@ -360,7 +361,7 @@ product-price s,
 
 /* ---------- Footer: hairline columns ---------- */
 .sgs-footer {
-  --sgs-footer-bg: var(--sgs-bg);
+  --sgs-footer-bg: #111111;
 }
 
 @media screen and (min-width: 990px) {
@@ -372,9 +373,9 @@ product-price s,
 
 .sgs-footer :is(.sgs-footer__col-heading) {
   font-family: var(--sgs-font-mono);
-  font-size: 11px;
-  letter-spacing: var(--sgs-mono-tracking);
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--sgs-text-2);
 }
 
@@ -443,8 +444,8 @@ html[data-sgs-sale='4'] [data-sgs-sale-win='4'] ~ :is(.price, .compare-at-price,
   font-family: var(--sgs-font-mono);
   font-weight: 400;
   font-size: 13px;
-  letter-spacing: var(--sgs-mono-tracking);
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   font-variant-numeric: tabular-nums;
 }
 
@@ -466,10 +467,10 @@ html[data-sgs-sale='4'] [data-sgs-sale-win='4'] ~ :is(.price, .compare-at-price,
   margin: 8px 0 0;
   font-family: var(--sgs-font-mono);
   font-weight: 400;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   text-wrap: balance;
   color: var(--sgs-text);
 }
@@ -497,16 +498,16 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   flex-shrink: 0;
   pointer-events: none;
   font-family: var(--sgs-font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 14px;
+  letter-spacing: 0.02em;
   font-variant-numeric: tabular-nums;
 }
 
 /* Prices follow the tile's own text colour, so they stay readable on the selected tile */
 .sgs-tile-price .sgs-sale {
   gap: 0 8px;
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 14px;
+  letter-spacing: 0.02em;
 }
 
 .sgs-tile-price :is(.sgs-sale__now, .sgs-sale__was) {
@@ -514,14 +515,14 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 }
 
 .sgs-tile-price .sgs-sale__was {
-  opacity: 0.55;
+  opacity: 0.78;
 }
 
 /* See it on your wall: a small text link under the delivery estimate */
 /* Two classes: the shared mono rule above carries element-level weight through :is() */
 .sgs-wall .sgs-wall__open {
-  font-size: 11px !important;
-  letter-spacing: 0.06em !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em !important;
   color: var(--sgs-text-2);
 }
 
@@ -558,10 +559,10 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 .sgs-opt-explainer {
   margin: 10px 0 14px;
   font-family: var(--sgs-font-mono);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--sgs-text-2);
 }
 
@@ -572,8 +573,8 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 
 /* Risk-reversal rows: smaller, easier-to-read mono */
 .sgs-ptrust-wrap .sgs-ptrust__text {
-  font-size: 11px !important;
-  letter-spacing: 0.06em !important;
+  font-size: 13px !important;
+  letter-spacing: 0.02em !important;
 }
 
 /* ---------- Product image lightbox (assets/sgs-lightbox.js) ---------- */
@@ -623,8 +624,8 @@ html.sgs-lb-open {
 .sgs-lb__count {
   margin: 0;
   font-family: var(--sgs-font-mono);
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 14px;
+  letter-spacing: 0.02em;
 }
 
 .sgs-lb__close,
@@ -838,7 +839,7 @@ html.sgs-lb-open {
   margin-right: 10px;
   border: 1px solid var(--sgs-text);
   font-family: var(--sgs-font-mono);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
   vertical-align: 1px;
 }
@@ -851,10 +852,10 @@ html.sgs-lb-open {
   padding: 1px 6px;
   border: 1px solid currentColor;
   font-family: var(--sgs-font-mono);
-  font-size: 9px;
+  font-size: 11px;
   line-height: 1.5;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .sgs-tile--priced:has(.sgs-popular) {
@@ -865,4 +866,313 @@ html.sgs-lb-open {
 .sgs-atc-price {
   display: inline;
   font-variant-numeric: tabular-nums;
+}
+
+
+/* =====================================================================================
+   GALLERY LOOK
+   Light paper background, white surfaces, near-black type, 12px rounded media, pill buttons.
+   Red (--sgs-red) is kept for sale badges, savings and errors.
+   ===================================================================================== */
+
+/* ---------- Type: sentence case, normal spacing ---------- */
+:is(h1, h2, h3, h4, h5, h6) {
+  letter-spacing: -0.01em !important;
+}
+
+/* Section headings: simple and bold */
+:is(
+    .sgs-grid__heading,
+    .sgs-cols__heading,
+    .sgs-gallery__heading,
+    .sgs-feature__heading,
+    .sgs-tl__heading,
+    .sgs-set__heading,
+    .sgs-news__heading,
+    .sgs-spec__heading,
+    .sgs-reviews__heading,
+    .sgs-faqs__heading,
+    .sgs-proof__heading,
+    .sgs-cscroll__heading,
+    .sgs-story__heading,
+    .sgs-arrive__heading
+  ) {
+  font-weight: 700 !important;
+}
+
+/* Small labels: quiet, never shouty */
+.sgs-label,
+:is(.sgs-hero__eyebrow, .sgs-grid__eyebrow, .sgs-cols__eyebrow, .sgs-gallery__eyebrow, .sgs-feature__eyebrow,
+  .sgs-statement__eyebrow, .sgs-tl__eyebrow, .sgs-set__eyebrow, .sgs-news__eyebrow, .sgs-proof__label,
+  .sgs-cscroll__label, .sgs-story__label, .sgs-arrive__label) {
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+}
+
+/* ---------- Product cards ---------- */
+.sgs-card__media,
+.product-card .card-gallery {
+  background: var(--sgs-card-bg) !important;
+  border-radius: var(--sgs-radius);
+  overflow: hidden;
+}
+
+html body :is(.sgs-card__title, .product-card a.user-select-text .text-block) {
+  font-family: var(--sgs-font-body) !important;
+  font-weight: 500 !important;
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0 !important;
+}
+
+:is(.sgs-card__price, .product-card .price, .product-card product-price) {
+  color: var(--sgs-text);
+}
+
+/* Save pill: percentage sale windows only (it sits inside the sale price) */
+.sgs-sale {
+  align-items: center;
+  font-weight: 600;
+}
+
+.sgs-sale__save {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--sgs-red);
+  color: #ffffff;
+  font-family: var(--sgs-font-body);
+  font-size: 12px !important;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.sgs-sale__was {
+  font-weight: 400;
+}
+
+/* ---------- Shape: rounded media and tiles ---------- */
+media-gallery,
+.product-information media-gallery {
+  --media-radius: var(--sgs-radius);
+  --gallery-media-border-radius: var(--sgs-radius);
+}
+
+:is(
+    media-gallery .product-media-container,
+    media-gallery .product-media,
+    .sgs-proof__media,
+    .sgs-cscroll__media,
+    .sgs-tile,
+    .sgs-gallery__media,
+    .sgs-feature__media,
+    .sgs-arrive__media,
+    .sgs-story__media,
+    .sgs-tl__media,
+    .sgs-band,
+    .sgs-set__item,
+    .sgs-wall__room,
+    .sgs-sg__scene > svg,
+    .sgs-pers__plate-frame,
+    .slideshow-controls__thumbnail,
+    .card-gallery
+  ) {
+  border-radius: var(--sgs-radius);
+  overflow: hidden;
+}
+
+.sgs-cscroll__media {
+  border-color: transparent;
+}
+
+.sgs-band {
+  margin-inline: var(--page-margin, 16px);
+}
+
+@media screen and (min-width: 750px) {
+  .sgs-band {
+    max-width: calc(var(--page-width) - var(--page-margin, 16px) * 2);
+    margin-inline: auto;
+  }
+}
+
+/* ---------- Buttons: pills; primary black, secondary white ---------- */
+:is(.button:not(.button-unstyled), .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit,
+  .sgs-set__button, .sgs-hero__button, .sgs-band__button, .sgs-sg__wall-btn, .sgs-phero__button,
+  .shopify-payment-button__button, .sgs-wall__size) {
+  border-radius: 999px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+:is(.sgs-sg__wall-btn, .button-secondary) {
+  background: #ffffff;
+  border-color: var(--sgs-text);
+  color: var(--sgs-text);
+}
+
+:is(.sgs-sg__wall-btn, .button-secondary):hover {
+  background: var(--sgs-text);
+  color: #ffffff;
+}
+
+/* ---------- Size and option tiles: white, 10px corners, black outline when chosen ---------- */
+.variant-picker,
+.variant-option {
+  --color-variant-background: #ffffff;
+  --color-variant-border: var(--sgs-line);
+  --color-variant-text: var(--sgs-text);
+  --color-variant-text-rgb: 17 17 17;
+  --color-variant-hover-background: #ffffff;
+  --color-variant-hover-border: var(--sgs-text);
+  --color-variant-hover-text: var(--sgs-text);
+  --color-selected-variant-background: #ffffff;
+  --color-selected-variant-border: var(--sgs-text);
+  --color-selected-variant-text: var(--sgs-text);
+  --color-selected-variant-text-rgb: 17 17 17;
+  --color-selected-variant-hover-background: #ffffff;
+  --color-selected-variant-hover-border: var(--sgs-text);
+  --color-selected-variant-hover-text: var(--sgs-text);
+  --options-border-radius: var(--sgs-radius-tile);
+}
+
+.variant-option__button-label {
+  border-radius: var(--sgs-radius-tile) !important;
+}
+
+.variant-option__button-label:has(:checked) {
+  --options-border-width: 1.5px;
+}
+
+.sgs-step-num {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.sgs-popular {
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* ---------- Text over photos stays white ---------- */
+.sgs-band,
+.sgs-tile__content {
+  --sgs-text: #ffffff;
+  --sgs-text-2: rgb(255 255 255 / 0.82);
+  color: #ffffff;
+}
+
+.sgs-band-section .sgs-band .sgs-band__button,
+.sgs-band-section .sgs-band .sgs-band__button:hover {
+  --button-color: #111111;
+  --button-background-color: #ffffff;
+  --button-border-color: #ffffff;
+}
+
+.sgs-band-section .sgs-band .sgs-band__button:is(:hover, :focus-visible) {
+  --button-color: #ffffff;
+  --button-background-color: transparent;
+}
+
+/* Page header without a photo: dark text on the light page */
+.sgs-phero--text {
+  --sgs-phero-fg: 17 17 17;
+}
+
+/* ---------- Footer: #111111 with white text ---------- */
+.sgs-footer {
+  --sgs-bg: #111111;
+  --sgs-raised: #1c1c1c;
+  --sgs-text: #ffffff;
+  --sgs-text-2: rgb(255 255 255 / 0.72);
+  --sgs-line: rgb(255 255 255 / 0.16);
+  --sgs-footer-fg: 255 255 255;
+  --color-foreground: rgb(255 255 255);
+  --color-foreground-rgb: 255 255 255;
+}
+
+/* ---------- Cards and surfaces ---------- */
+:is(.sgs-offer, .sgs-sg__dialog, .sgs-wall__dialog, .sgs-info__item) {
+  background-color: transparent;
+}
+
+.sgs-offer {
+  border-radius: var(--sgs-radius);
+  border-color: var(--sgs-line);
+  background: #ffffff;
+}
+
+:is(.sgs-sg__dialog, .sgs-wall__dialog) {
+  background: var(--sgs-bg);
+}
+
+.sgs-sg__wall,
+.sgs-sg__floor {
+  fill: #ece9e3;
+}
+
+.sgs-sg__floor {
+  fill: #ddd8cf;
+}
+
+.sgs-sg__furniture {
+  fill: #b9b2a6;
+}
+
+.sgs-sg__furniture .sgs-sg__light {
+  fill: #cdc6ba;
+}
+
+.sgs-sg__print {
+  fill: rgb(255 255 255 / 0.55);
+  stroke: var(--sgs-text);
+}
+
+.sgs-sg__num {
+  fill: var(--sgs-text);
+}
+
+/* Inputs and pills from Horizon follow the light palette; keep focus visible */
+:is(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+  outline-color: var(--sgs-text);
+}
+
+/* No numbered labels in the gallery look */
+.sgs-tile__number {
+  display: none;
+}
+
+/* Announcement strip: dark band above the light header */
+.shopify-section .section.announcement-bar {
+  background-color: #111111;
+}
+
+/* Gallery thumbnails: softly rounded, not capsules */
+.slideshow-controls__thumbnail,
+.slideshow-controls__thumbnail img {
+  border-radius: 8px !important;
+}
+
+/* Product gallery images: rounded on every screen size */
+media-gallery :is(slideshow-slide, .product-media-container) {
+  border-radius: var(--sgs-radius);
+  overflow: hidden;
+}
+
+/* AA contrast for small muted text on the paper background */
+:is(.sgs-hero__eyebrow, .sgs-grid__eyebrow, .sgs-cols__eyebrow, .sgs-gallery__eyebrow, .sgs-feature__eyebrow,
+  .sgs-statement__eyebrow, .sgs-statement__caption, .sgs-tl__eyebrow, .sgs-set__eyebrow, .sgs-news__eyebrow,
+  .sgs-card__options, .sgs-cols__secondary-label, .sgs-row__text) {
+  color: var(--sgs-text-2) !important;
+}
+
+/* The newsletter sits on a beige band: one step darker for its small text */
+.sgs-news {
+  --sgs-text-2: #575757;
+}
+
+.sgs-news :is(.sgs-news__fine, .sgs-news__text) {
+  color: var(--sgs-text-2) !important;
 }

@@ -137,7 +137,13 @@
       {%- if resource.products.size > 0 -%}
         <div class="resource-card__image-wrapper">
           {% assign resource_products = resource.products | where: 'featured_image' %}
-          {% for product in resource_products limit: 4 %}
+          {%- assign sgs_shown = 0 -%}
+          {% for product in resource_products %}
+            {%- if sgs_shown >= 4 -%}{%- break -%}{%- endif -%}
+            {%- comment -%} SixthGear: framed prints (tag "framed") are never shown {%- endcomment -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+            {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+            {%- assign sgs_shown = sgs_shown | plus: 1 -%}
             {{
               product.featured_image
               | image_url: width: image_width
@@ -157,8 +163,15 @@
     {% if resource_type == 'product' %}
       {% render 'price', product_resource: resource, show_unit_price: true %}
     {% elsif resource_type == 'collection' and single_thumbnail_collection == false %}
+      {%- liquid
+        # SixthGear: framed prints (tag "framed") aren't counted
+        capture sgs_framed_count
+          render 'sgs-framed-count', resource: resource
+        endcapture
+        assign sgs_count = resource.all_products_count | minus: sgs_framed_count | at_least: 0
+      -%}
       <p class="resource-card__subtext paragraph">
-        {{- 'content.search_results_resource_products_count' | t: count: resource.all_products_count -}}
+        {{- 'content.search_results_resource_products_count' | t: count: sgs_count -}}
       </p>
     {% else %}
       <p class="resource-card__subtext paragraph">

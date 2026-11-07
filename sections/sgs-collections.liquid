@@ -48,9 +48,20 @@
             if tile_text == blank and c.description != blank
               assign tile_text = c.description | strip_html | truncatewords: 14
             endif
-            assign tile_image = block.settings.image | default: c.featured_image
-            if tile_image == blank and c.products.first != blank
-              assign tile_image = c.products.first.featured_image
+            assign tile_image = block.settings.image | default: c.image
+            if tile_image == blank and c != blank
+              # First product that isn't a framed print (tag "framed")
+              assign c_first = nil
+              for fu_p in c.products
+                capture fu_framed
+                  render 'sgs-framed-tag', product_resource: fu_p
+                endcapture
+                unless fu_framed contains 'true'
+                  assign c_first = fu_p
+                  break
+                endunless
+              endfor
+              assign tile_image = c_first.featured_image
             endif
             assign tile_url = c.url | default: routes.collections_url
             assign tile_number = forloop.index | prepend: '0'
@@ -104,10 +115,26 @@
             {%- liquid
               assign c = block.settings.collection
               assign row_title = block.settings.title | default: c.title
-              assign row_image = block.settings.image | default: c.featured_image
-              if row_image == blank and c.products.first != blank
-                assign row_image = c.products.first.featured_image
+              assign row_image = block.settings.image | default: c.image
+              if row_image == blank and c != blank
+                # First product that isn't a framed print (tag "framed")
+                assign c_first = nil
+                for fu_p in c.products
+                  capture fu_framed
+                    render 'sgs-framed-tag', product_resource: fu_p
+                  endcapture
+                  unless fu_framed contains 'true'
+                    assign c_first = fu_p
+                    break
+                  endunless
+                endfor
+                assign row_image = c_first.featured_image
               endif
+              # The count leaves out framed prints (tag "framed")
+              capture row_framed
+                render 'sgs-framed-count', resource: c
+              endcapture
+              assign row_count = c.products_count | minus: row_framed | at_least: 0
               assign row_url = c.url | default: routes.collections_url
             -%}
             <li data-sgs-reveal {{ block.shopify_attributes }}>
@@ -132,8 +159,8 @@
                   <span class="sgs-row__title">{{ row_title | escape }}</span>
                   {%- if block.settings.text != blank -%}
                     <span class="sgs-row__text">{{ block.settings.text | escape }}</span>
-                  {%- elsif c.products_count > 0 -%}
-                    <span class="sgs-row__text">{{ c.products_count }} prints</span>
+                  {%- elsif row_count > 0 -%}
+                    <span class="sgs-row__text">{{ row_count }} {% if row_count == 1 %}print{% else %}prints{% endif %}</span>
                   {%- endif -%}
                 </span>
                 <svg class="sgs-row__arrow" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 14 14">

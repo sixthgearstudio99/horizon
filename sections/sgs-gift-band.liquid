@@ -7,7 +7,18 @@
   if band_image == blank and band_collection != blank
     assign band_image = band_collection.image
     if band_image == blank
-      assign band_image = band_collection.products.first.featured_image
+      # First product that isn't a framed print (tag "framed")
+      assign band_first = nil
+      for fu_p in band_collection.products
+        capture fu_framed
+          render 'sgs-framed-tag', product_resource: fu_p
+        endcapture
+        unless fu_framed contains 'true'
+          assign band_first = fu_p
+          break
+        endunless
+      endfor
+      assign band_image = band_first.featured_image
     endif
   endif
 

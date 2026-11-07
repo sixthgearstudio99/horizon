@@ -400,3 +400,8 @@ button[ref='addToCartButton'] {
     transition: none;
   }
 }
+
+/* Collection and search grids: page markers left where framed prints were skipped */
+.sgs-page-marker {
+  display: none !important;
+}

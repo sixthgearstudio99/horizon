@@ -1,7 +1,8 @@
 {%- doc -%}
   SixthGear Studios: outputs "true" when the product is a framed print, else nothing.
   Framed means the product has the tag "framed" (any case), or its custom.framed_version
-  metafield points to itself. A custom.unframed_version pointing to itself means unframed.
+  metafield points to itself, or it links to a separate custom.unframed_version and has no
+  framed_version. A custom.unframed_version pointing to itself means unframed.
 
   @param {product} product_resource - The product
 
@@ -21,6 +22,10 @@
       assign framed = true
     endif
     assign unframed_ref = product_resource.metafields.custom.unframed_version.value
+    # Linked to a separate unframed version (and no framed version of its own): this is the framed one
+    if unframed_ref != blank and unframed_ref.id != product_resource.id and framed_ref == blank
+      assign framed = true
+    endif
     if unframed_ref != blank and unframed_ref.id == product_resource.id
       assign framed = false
     endif

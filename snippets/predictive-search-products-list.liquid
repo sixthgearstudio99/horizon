@@ -49,6 +49,8 @@
           {% for _id in order_ids %}
             {% assign int_id = _id | times: 1 %}
             {% assign product = products | find: 'id', int_id %}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+            {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
             <li
               class="predictive-search-results__card predictive-search-results__card--product"
               ref="recentlyViewedItems[]"
@@ -64,7 +66,13 @@
             </li>
           {% endfor %}
         {% else %}
-          {% for product in products limit: limit %}
+          {%- assign sgs_shown = 0 -%}
+          {% for product in products %}
+            {%- if sgs_shown >= limit -%}{%- break -%}{%- endif -%}
+            {%- comment -%} SixthGear: framed prints (tag "framed") are never listed {%- endcomment -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+            {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+            {%- assign sgs_shown = sgs_shown | plus: 1 -%}
             <li
               class="predictive-search-results__card predictive-search-results__card--product"
               ref="recentlyViewedItems[]"
@@ -92,7 +100,13 @@
       {% liquid
         assign limit = limit | default: 8
       %}
-      {% for product in products limit: limit %}
+      {%- assign sgs_shown = 0 -%}
+          {% for product in products %}
+            {%- if sgs_shown >= limit -%}{%- break -%}{%- endif -%}
+            {%- comment -%} SixthGear: framed prints (tag "framed") are never listed {%- endcomment -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+            {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+            {%- assign sgs_shown = sgs_shown | plus: 1 -%}
         <li
           class="predictive-search-results__card predictive-search-results__card--product"
           ref="resultsItems[]"

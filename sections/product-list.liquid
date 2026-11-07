@@ -29,8 +29,18 @@
 
   {% capture list_items %}
     {% if section.settings.collection != blank and shop.products_count != 0 %}
-      {% paginate section.settings.collection.products by max_items %}
-        {% for product in section.settings.collection.products limit: max_items %}
+      {%- comment -%} SixthGear: framed prints (tag "framed") are never listed; a few extra are fetched to keep the row full {%- endcomment -%}
+      {%- assign sgs_fetch = max_items | plus: 8 | at_most: 50 -%}
+      {%- assign sgs_shown = 0 -%}
+      {% paginate section.settings.collection.products by sgs_fetch %}
+        {% for product in section.settings.collection.products %}
+          {%- if sgs_shown >= max_items -%}{%- break -%}{%- endif -%}
+          {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+          {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+          {% if sgs_shown > 0 %}
+            <!--@list/split-->
+          {% endif %}
+          {%- assign sgs_shown = sgs_shown | plus: 1 -%}
         <div
           class="resource-list__item"
         >
@@ -41,10 +51,6 @@
               product_view_context: 'collection'
             %}
           </div>
-
-          {% unless forloop.last %}
-            <!--@list/split-->
-          {% endunless %}
         {% endfor %}
       {% endpaginate %}
     {% else %}

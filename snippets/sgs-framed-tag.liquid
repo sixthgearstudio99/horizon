@@ -1,0 +1,19 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when the product has the tag "framed" (any case). Framed
+  prints are only reached from their print's Finish toggle, so every product listing skips them.
+
+  @param {product} product_resource - The product
+
+  @example
+  {%- capture framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+  {%- if framed contains 'true' -%}{%- continue -%}{%- endif -%}
+{%- enddoc -%}
+
+{%- liquid
+  if product_resource != blank
+    assign tag_list = product_resource.tags | join: '|' | downcase | prepend: '|' | append: '|'
+    if tag_list contains '|framed|'
+      echo 'true'
+    endif
+  endif
+-%}

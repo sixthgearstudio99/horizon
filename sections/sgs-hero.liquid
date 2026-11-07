@@ -3,8 +3,27 @@
 
   # Image source: uploaded image > chosen product's image > first product in the store
   assign featured_product = s.product
+  # A framed print (tag "framed") is never featured: the first other print stands in
+  if featured_product != blank
+    capture hero_framed
+      render 'sgs-framed-tag', product_resource: featured_product
+    endcapture
+    if hero_framed contains 'true'
+      assign featured_product = nil
+    endif
+  endif
   if featured_product == blank and s.image == blank
-    assign featured_product = collections.all.products.first
+    # First product that isn't a framed print (tag "framed")
+    assign featured_product = nil
+    for fu_p in collections.all.products
+      capture fu_framed
+        render 'sgs-framed-tag', product_resource: fu_p
+      endcapture
+      unless fu_framed contains 'true'
+        assign featured_product = fu_p
+        break
+      endunless
+    endfor
   endif
 
   assign hero_image = s.image

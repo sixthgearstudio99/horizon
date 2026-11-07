@@ -35,7 +35,7 @@
 <product-recommendations
   id="product-recommendations-{{ section.id }}"
   class="product-recommendations"
-  data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.max_products }}"
+  data-url="{{ routes.product_recommendations_url }}?limit={{ section.settings.max_products | plus: 4 | at_most: 10 }}"
   data-section-id="{{ section.id }}"
   data-product-id="{{ section.settings.product.id | default: product.id }}"
   data-intent="{{ section.settings.recommendation_type }}"
@@ -95,7 +95,19 @@
         endif
       %}
       {% capture list_items %}
-        {% for product in products limit: section.settings.max_products %}
+        {%- comment -%}
+          SixthGear: framed prints (tag "framed") are never recommended. A few extra are fetched
+          (limit + 4) so the row stays full after they're left out.
+        {%- endcomment -%}
+        {%- assign sgs_shown = 0 -%}
+        {% for product in products %}
+          {%- if sgs_shown >= section.settings.max_products -%}{%- break -%}{%- endif -%}
+          {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+          {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+          {% if sgs_shown > 0 %}
+            <!--@list/split-->
+          {% endif %}
+          {%- assign sgs_shown = sgs_shown | plus: 1 -%}
           <div class="resource-list__item">
             {% content_for 'block',
               type: '_product-card',
@@ -104,9 +116,6 @@
               product_view_context: 'recommendation'
             %}
           </div>
-          {% unless forloop.last %}
-            <!--@list/split-->
-          {% endunless %}
         {% endfor %}
       {% endcapture %}
 
@@ -145,7 +154,7 @@
             {% render 'resource-list-carousel',
               ref: 'resourceListCarousel',
               slides: slides,
-              slide_count: recommendations.products.size,
+              slide_count: sgs_shown,
               settings: section.settings
             %}
         {% endcase %}
@@ -169,7 +178,7 @@
           {% render 'resource-list-carousel',
             ref: 'resourceListCarouselMobile',
             slides: slides,
-            slide_count: recommendations.products.size,
+            slide_count: sgs_shown,
             settings: section.settings
           %}
         </div>

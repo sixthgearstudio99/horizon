@@ -2,7 +2,29 @@
   assign s = section.settings
 
   # Image: uploaded > chosen product's second (on-the-wall) image > its first image > first product in store
-  assign feature_product = s.product | default: collections.all.products.first
+  assign feature_product = s.product
+  # A framed print (tag "framed") is never featured: the first other print stands in
+  if feature_product != blank
+    capture feature_framed
+      render 'sgs-framed-tag', product_resource: feature_product
+    endcapture
+    if feature_framed contains 'true'
+      assign feature_product = nil
+    endif
+  endif
+  if feature_product == blank
+    # First product that isn't a framed print (tag "framed")
+    assign feature_product = nil
+    for fu_p in collections.all.products
+      capture fu_framed
+        render 'sgs-framed-tag', product_resource: fu_p
+      endcapture
+      unless fu_framed contains 'true'
+        assign feature_product = fu_p
+        break
+      endunless
+    endfor
+  endif
   assign feature_image = s.image
   if feature_image == blank and feature_product != blank
     for media in feature_product.media

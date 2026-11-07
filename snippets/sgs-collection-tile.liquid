@@ -1,6 +1,8 @@
 {%- doc -%}
   SixthGear Studios: one tile on the collections page. The image is the collection's own image,
   or else its first product's image, so a collection never shows another collection's picture.
+  Framed prints (tag "framed") are left out of the count and the picture; a collection holding
+  only framed prints shows no tile.
 
   @param {collection} collection - The collection
   @param {number} [index] - Position on the page; the first row loads straight away
@@ -11,19 +13,30 @@
 
 {%- liquid
   assign image = collection.image
+  # Framed prints (tag "framed") are only reached from their print's page: they're left out of
+  # the count and never supply the picture
   if image == blank
-    assign image = collection.featured_image
-  endif
-  if image == blank
-    assign image = collection.products.first.featured_media.preview_image | default: collection.products.first.featured_image
+    for item in collection.products
+      capture item_framed
+        render 'sgs-framed-tag', product_resource: item
+      endcapture
+      unless item_framed contains 'true'
+        assign image = item.featured_media.preview_image | default: item.featured_image
+        break
+      endunless
+    endfor
   endif
   assign loading = 'lazy'
   if index < 2
     assign loading = 'eager'
   endif
-  assign count = collection.products_count
+  capture framed_count
+    render 'sgs-framed-count', resource: collection
+  endcapture
+  assign count = collection.products_count | minus: framed_count | at_least: 0
 -%}
 
+{%- if count > 0 -%}
 <li class="sgs-ctile">
   <a class="sgs-ctile__link" href="{{ collection.url }}">
     <span class="sgs-ctile__media">
@@ -44,3 +57,4 @@
     <span class="sgs-ctile__count">{{ count }} {% if count == 1 %}print{% else %}prints{% endif %}</span>
   </a>
 </li>
+{%- endif -%}

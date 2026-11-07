@@ -1,0 +1,57 @@
+{%- doc -%}
+  SixthGear Studios: how many products tagged "framed" are in a collection (or search results),
+  so the counts shown leave them out. 0 straight away when no product there has the tag. Exact
+  from a Tag filter (Search & Discovery) when there is one; otherwise counted from the products
+  Shopify returns here: the first 50 of a collection, or the current page of search results.
+
+  @param {object} resource - A collection, or the search object
+  @param {object[]} [products] - The products to count when there's no Tag filter (defaults to resource.products)
+
+  @example
+  {%- capture framed_count -%}{% render 'sgs-framed-count', resource: collection %}{%- endcapture -%}
+  {%- assign framed_count = framed_count | strip | plus: 0 -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign framed_total = 0
+  if resource != blank
+    assign has_tag = true
+    if resource.all_tags != blank
+      assign tag_list = resource.all_tags | join: '|' | downcase | prepend: '|' | append: '|'
+      unless tag_list contains '|framed|'
+        assign has_tag = false
+      endunless
+    endif
+
+    if has_tag
+      assign from_filter = false
+      for filter in resource.filters
+        if filter.param_name == 'filter.p.tag'
+          assign from_filter = true
+          for value in filter.values
+            assign value_lower = value.value | downcase
+            if value_lower == 'framed'
+              assign framed_total = framed_total | plus: value.count
+            endif
+          endfor
+        endif
+      endfor
+
+      unless from_filter
+        assign list = products | default: resource.products
+        for item in list
+          if item.object_type == 'article' or item.object_type == 'page'
+            continue
+          endif
+          capture item_framed
+            render 'sgs-framed-tag', product_resource: item
+          endcapture
+          if item_framed contains 'true'
+            assign framed_total = framed_total | plus: 1
+          endif
+        endfor
+      endunless
+    endif
+  endif
+  echo framed_total
+-%}

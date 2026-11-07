@@ -23,7 +23,8 @@
         assign default_title = 'content.search_results_resource_products' | t
         assign title = settings.empty_state_collection.title | default: default_title
       %}
-      {% paginate collection.products by 4 %}
+      {%- comment -%} SixthGear: 12 fetched so 4 remain after framed prints are left out {%- endcomment -%}
+      {% paginate collection.products by 12 %}
         {% assign products = collection.products %}
         {% comment %} Only show products section if there are products to display {% endcomment %}
         {% if products.size > 0 %}

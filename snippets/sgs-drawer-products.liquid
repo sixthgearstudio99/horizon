@@ -1,0 +1,31 @@
+{%- doc -%}
+  SixthGear Studios: the menu drawer's featured products, leaving out framed prints (tag
+  "framed"). A few extra are fetched so the list still has up to `max` products.
+
+  @param {collection} collection_resource - The featured products collection
+  @param {number} max - How many products to show
+  @param {string} [ratio] - Image aspect ratio for the cards
+
+  @example
+  {% render 'sgs-drawer-products', collection_resource: featured_products_collection, max: max_featured_items, ratio: ratio %}
+{%- enddoc -%}
+
+{%- assign fetch = max | plus: 8 | at_most: 50 -%}
+{%- assign shown = 0 -%}
+{% paginate collection_resource.products by fetch %}
+  {%- for product in collection_resource.products -%}
+    {%- if shown >= max -%}{%- break -%}{%- endif -%}
+    {%- capture framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+    {%- if framed contains 'true' -%}{%- continue -%}{%- endif -%}
+    {%- assign shown = shown | plus: 1 -%}
+    <li class="menu-drawer__featured-content-list-item menu-drawer__featured-content-list-item--product">
+      {% render 'resource-card',
+        resource: product,
+        resource_type: 'product',
+        image_aspect_ratio: ratio,
+        image_sizes: 'auto, 400px',
+        product_view_context: 'dialog'
+      %}
+    </li>
+  {%- endfor -%}
+{% endpaginate %}

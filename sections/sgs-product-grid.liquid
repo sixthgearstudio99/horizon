@@ -79,7 +79,13 @@
 
     <ul class="sgs-grid__list" role="list" data-sgs-reveal-group>
       {%- if source.products_count > 0 -%}
-        {%- for product in source.products limit: limit -%}
+        {%- assign shown = 0 -%}
+        {%- for product in source.products -%}
+          {%- if shown >= limit -%}{%- break -%}{%- endif -%}
+          {%- comment -%} Framed prints (tag "framed") are never listed {%- endcomment -%}
+          {%- capture product_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+          {%- if product_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+          {%- assign shown = shown | plus: 1 -%}
           <li class="sgs-grid__item" data-sgs-reveal>
             {% render 'sgs-product-card',
               product: product,

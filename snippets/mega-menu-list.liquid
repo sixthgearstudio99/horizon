@@ -287,9 +287,16 @@
         class="mega-menu__content-list mega-menu__content-list--products list-unstyled"
       >
         {% if eager_loading %}
-          {% paginate collection_object.products by max_featured_products %}
+          {%- comment -%} SixthGear: framed prints (tag "framed") are never listed; a few extra are fetched {%- endcomment -%}
+          {%- assign sgs_fetch = max_featured_products | plus: 8 | at_most: 50 -%}
+          {%- assign sgs_shown = 0 -%}
+          {% paginate collection_object.products by sgs_fetch %}
             {% for item in collection_object.products %}
-              <li class="mega-menu__content-list-item {% if forloop.index > max_featured_products_tablet %} mega-menu__content-list-item--hidden-tablet{% endif %}">
+              {%- if sgs_shown >= max_featured_products -%}{%- break -%}{%- endif -%}
+              {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: item %}{%- endcapture -%}
+              {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
+              {%- assign sgs_shown = sgs_shown | plus: 1 -%}
+              <li class="mega-menu__content-list-item {% if sgs_shown > max_featured_products_tablet %} mega-menu__content-list-item--hidden-tablet{% endif %}">
                 {% render 'resource-card',
                   resource: item,
                   resource_type: 'product',

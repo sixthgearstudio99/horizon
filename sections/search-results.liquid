@@ -35,7 +35,14 @@
 
     {% paginate search.results by products_per_page %}
       {% if search.results_count > 0 %}
-        {% content_for 'block', type: 'filters', id: 'filters', results: search, results_size: search.results_count %}
+        {%- liquid
+          # SixthGear: framed prints (tag "framed") are left out of the results and the count
+          capture sgs_framed_count
+            render 'sgs-framed-count', resource: search, products: search.results
+          endcapture
+          assign sgs_visible_count = search.results_count | minus: sgs_framed_count | at_least: 0
+        -%}
+        {% content_for 'block', type: 'filters', id: 'filters', results: search, results_size: sgs_visible_count %}
         {% assign products = search.results | where: 'object_type', 'product' %}
       {% else %}
         {% assign collection = settings.empty_state_collection | default: collections.all %}
@@ -45,7 +52,13 @@
       {% endif %}
 
       {% capture children %}
+        {% assign sgs_skipped = 0 %}
         {% for product in products %}
+          {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+          {%- if sgs_framed contains 'true' -%}
+            {%- assign sgs_skipped = sgs_skipped | plus: 1 -%}
+            {%- continue -%}
+          {%- endif -%}
           <li
             id="{{ section.id }}-{{ product.id }}"
             class="product-grid__item product-grid__item--{{ forloop.index0 }}"
@@ -61,8 +74,19 @@
             %}
           </li>
         {% endfor %}
+        {%- comment -%} SixthGear: keeps infinite scroll going past a page of only framed prints {%- endcomment -%}
+        {%- if sgs_skipped > 0 -%}
+          <li class="product-grid__item sgs-page-marker" data-page="{{ paginate.current_page }}" ref="cards[]" hidden aria-hidden="true"></li>
+        {%- endif -%}
       {% endcapture %}
 
+      {%- liquid
+        # SixthGear: only framed prints matched, so show the "no products" message
+        assign sgs_page_visible = products.size | minus: sgs_skipped
+        if sgs_page_visible <= 0 and paginate.pages <= 1
+          assign products = '' | split: ','
+        endif
+      -%}
       {% render 'product-grid',
         section: section,
         children: children,

@@ -18,7 +18,13 @@
 %}
 
 {% if block.settings.show_count %}
-  {% assign count = closest.collection.all_products_count %}
+  {%- liquid
+    # SixthGear: framed prints (tag "framed") aren't counted
+    capture sgs_framed_count
+      render 'sgs-framed-count', resource: closest.collection
+    endcapture
+    assign count = closest.collection.all_products_count | minus: sgs_framed_count | at_least: 0
+  -%}
   {%- capture count -%}
     &nbsp;<sup class="collection-links__count">{{ count }}</sup>
   {%- endcapture -%}

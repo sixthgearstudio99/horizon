@@ -32,6 +32,15 @@
             assign b = block.settings
             assign c = b.collection
             assign p = b.product
+            # A framed print (tag "framed") is never listed
+            if p != blank
+              capture p_framed
+                render 'sgs-framed-tag', product_resource: p
+              endcapture
+              if p_framed contains 'true'
+                continue
+              endif
+            endif
             if c == blank and p == blank and b.link == blank
               continue
             endif
@@ -49,7 +58,21 @@
             endif
             assign image = b.image
             if image == blank and c != blank
-              assign image = c.image | default: c.products.first.featured_image
+              assign image = c.image
+              if image == blank
+                # First product that isn't a framed print (tag "framed")
+                assign c_first = nil
+                for fu_p in c.products
+                  capture fu_framed
+                    render 'sgs-framed-tag', product_resource: fu_p
+                  endcapture
+                  unless fu_framed contains 'true'
+                    assign c_first = fu_p
+                    break
+                  endunless
+                endfor
+                assign image = c_first.featured_image
+              endif
             elsif image == blank and p != blank
               assign image = p.featured_image
             endif

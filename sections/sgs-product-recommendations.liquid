@@ -47,6 +47,9 @@
       <ul class="sgs-grid__list" role="list" data-sgs-recs-list>
         {%- for rec in recommendations.products -%}
           {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
+          {%- comment -%} Framed prints (tag "framed") are never suggested {%- endcomment -%}
+          {%- capture rec_framed -%}{% render 'sgs-framed-tag', product_resource: rec %}{%- endcapture -%}
+          {%- if rec_framed contains 'true' -%}{%- continue -%}{%- endif -%}
           {%- unless hidden_handles contains rec_key -%}
             <li class="sgs-grid__item is-revealed" data-sgs-reveal data-handle="{{ rec.handle }}">
               {% render 'sgs-product-card',
@@ -146,6 +149,8 @@
               {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
               {%- if shown_handles contains rec_key -%}{%- continue -%}{%- endif -%}
               {%- if hidden_handles contains rec_key and allow_hidden == false -%}{%- continue -%}{%- endif -%}
+              {%- capture rec_framed -%}{% render 'sgs-framed-tag', product_resource: rec %}{%- endcapture -%}
+              {%- if rec_framed contains 'true' -%}{%- continue -%}{%- endif -%}
               {%- assign shown = shown | plus: 1 -%}
               {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
               <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="collection">
@@ -159,6 +164,8 @@
             {%- if shown >= limit -%}{%- break -%}{%- endif -%}
             {%- assign rec_key = ',' | append: rec.handle | append: ',' -%}
             {%- if shown_handles contains rec_key or hidden_handles contains rec_key -%}{%- continue -%}{%- endif -%}
+            {%- capture rec_framed -%}{% render 'sgs-framed-tag', product_resource: rec %}{%- endcapture -%}
+            {%- if rec_framed contains 'true' -%}{%- continue -%}{%- endif -%}
             {%- assign shown = shown | plus: 1 -%}
             {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
             <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="fill">

@@ -14,8 +14,24 @@
       class="predictive-search-results__inner"
       data-search-results
     >
+      {%- liquid
+        # SixthGear: framed prints (tag "framed") are never listed, so they aren't counted either
+        assign sgs_product_count = 0
+        assign sgs_first_product_url = ''
+        for sgs_p in predictive_search.resources.products
+          capture sgs_framed
+            render 'sgs-framed-tag', product_resource: sgs_p
+          endcapture
+          unless sgs_framed contains 'true'
+            assign sgs_product_count = sgs_product_count | plus: 1
+            if sgs_first_product_url == ''
+              assign sgs_first_product_url = sgs_p.url
+            endif
+          endunless
+        endfor
+      -%}
       {% if predictive_search.performed %}
-        {% assign search_results_count = predictive_search.resources.products.size
+        {% assign search_results_count = sgs_product_count
           | plus: predictive_search.resources.pages.size
           | plus: predictive_search.resources.articles.size
           | plus: predictive_search.resources.collections.size
@@ -63,7 +79,7 @@
         {% endif %}
 
         {%- if search_results_count > 0 -%}
-          {% if predictive_search.resources.products.size > 0 %}
+          {% if sgs_product_count > 0 %}
             {%- liquid
               assign title = 'content.search_results_resource_products' | t
               assign products = predictive_search.resources.products
@@ -123,15 +139,15 @@
 
       {% if predictive_search.performed %}
         {%- if search_results_count > 0 -%}
-          {% assign total_results = predictive_search.resources.products.size
+          {% assign total_results = sgs_product_count
             | plus: predictive_search.resources.collections.size
             | plus: predictive_search.resources.pages.size
             | plus: predictive_search.resources.articles.size
           %}
           {% assign single_result_url = null %}
           {% if total_results == 1 %}
-            {% if predictive_search.resources.products.size == 1 %}
-              {% assign single_result_url = predictive_search.resources.products.first.url %}
+            {% if sgs_product_count == 1 %}
+              {% assign single_result_url = sgs_first_product_url %}
             {% elsif predictive_search.resources.collections.size == 1 %}
               {% assign single_result_url = predictive_search.resources.collections.first.url %}
             {% elsif predictive_search.resources.pages.size == 1 %}

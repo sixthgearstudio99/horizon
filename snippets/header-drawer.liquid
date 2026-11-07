@@ -549,19 +549,7 @@
                                   </li>
                                 {%- endfor -%}
                               {% else %}
-                                {% paginate featured_products_collection.products by max_featured_items %}
-                                  {%- for product in featured_products_collection.products limit: max_featured_items -%}
-                                    <li class="menu-drawer__featured-content-list-item menu-drawer__featured-content-list-item--product">
-                                      {% render 'resource-card',
-                                        resource: product,
-                                        resource_type: 'product',
-                                        image_aspect_ratio: ratio,
-                                        image_sizes: 'auto, 400px',
-                                        product_view_context: 'dialog'
-                                      %}
-                                    </li>
-                                  {%- endfor -%}
-                                {% endpaginate %}
+                                {% render 'sgs-drawer-products', collection_resource: featured_products_collection, max: max_featured_items, ratio: ratio %}
                               {% endif %}
                             </ul>
                           </div>
@@ -759,19 +747,7 @@
                 </li>
               {%- endfor -%}
             {% elsif top_level_featured_products_collection.products_count > 0 %}
-              {% paginate top_level_featured_products_collection.products by max_featured_items %}
-                {%- for product in top_level_featured_products_collection.products limit: max_featured_items -%}
-                  <li class="menu-drawer__featured-content-list-item menu-drawer__featured-content-list-item--product">
-                    {% render 'resource-card',
-                      resource: product,
-                      resource_type: 'product',
-                      image_aspect_ratio: ratio,
-                      image_sizes: 'auto, 400px',
-                      product_view_context: 'dialog'
-                    %}
-                  </li>
-                {%- endfor -%}
-              {% endpaginate %}
+              {% render 'sgs-drawer-products', collection_resource: top_level_featured_products_collection, max: max_featured_items, ratio: ratio %}
             {% endif %}
           </ul>
         </div>

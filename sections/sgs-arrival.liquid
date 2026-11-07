@@ -1,32 +1,53 @@
 {%- liquid
   assign s = section.settings
-  assign item_count = 0
+
+  # On a framed print (tagged framed) the tube line becomes the framed line, and the image
+  # is the framed one (or none, so a tube photo never shows)
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: product
+  endcapture
+  assign sgs_framed = sgs_framed | strip
+  assign image = s.image
+  if sgs_framed == 'true'
+    assign image = s.framed_image
+  endif
+
+  assign items = ''
   for i in (1..6)
     assign key = 'item_' | append: i
-    if s[key] != blank
-      assign item_count = item_count | plus: 1
+    assign item = s[key] | strip
+    if sgs_framed == 'true'
+      assign item_lower = item | downcase
+      if item_lower contains 'tube' or item_lower contains 'rolled'
+        assign item = s.framed_item | strip
+      endif
+    endif
+    if item != blank
+      assign items = items | append: item | append: '~~'
     endif
   endfor
+  assign items = items | split: '~~'
+  assign item_count = items.size
 -%}
 
-{%- if item_count > 0 or s.image != blank -%}
+{%- if item_count > 0 or image != blank -%}
   <section
-    class="sgs-arrive{% if s.image != blank %} sgs-arrive--image{% endif %}"
+    class="sgs-arrive{% if image != blank %} sgs-arrive--image{% endif %}"
     style="--sgs-arrive-pad-top: {{ s['padding-block-start'] }}px; --sgs-arrive-pad-bottom: {{ s['padding-block-end'] }}px;"
     {% if s.heading != blank %}aria-labelledby="SgsArrive-{{ section.id }}"{% endif %}
   >
     <div class="sgs-arrive__inner">
-      {%- if s.image != blank -%}
+      {%- if image != blank -%}
         <div class="sgs-arrive__media">
           {{
-            s.image
+            image
             | image_url: width: 1400
             | image_tag:
               widths: '450, 700, 1000, 1400',
               sizes: '(min-width: 990px) 45vw, 100vw',
               loading: 'lazy',
               class: 'sgs-arrive__img',
-              alt: s.image.alt | default: s.heading
+              alt: image.alt | default: s.heading
           }}
         </div>
       {%- endif -%}
@@ -39,14 +60,11 @@
         {%- endif -%}
         {%- if item_count > 0 -%}
           <ul class="sgs-arrive__list" role="list">
-            {%- for i in (1..6) -%}
-              {%- assign key = 'item_' | append: i -%}
-              {%- if s[key] != blank -%}
-                <li class="sgs-arrive__item">
-                  <svg class="sgs-arrive__tick" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <span>{{ s[key] | escape }}</span>
-                </li>
-              {%- endif -%}
+            {%- for item in items -%}
+              <li class="sgs-arrive__item">
+                <svg class="sgs-arrive__tick" aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>{{ item | escape }}</span>
+              </li>
             {%- endfor -%}
           </ul>
         {%- endif -%}
@@ -186,6 +204,23 @@
       "type": "text",
       "id": "item_6",
       "label": "Checklist item 6"
+    },
+    {
+      "type": "header",
+      "content": "Framed prints"
+    },
+    {
+      "type": "text",
+      "id": "framed_item",
+      "label": "Replaces the tube item",
+      "default": "Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.",
+      "info": "On products tagged framed. Leave empty to drop the tube item."
+    },
+    {
+      "type": "image_picker",
+      "id": "framed_image",
+      "label": "Image on framed prints",
+      "info": "Used instead of the image above, so a tube photo never shows on a framed print."
     },
     {
       "type": "range",

@@ -1,0 +1,314 @@
+{%- liquid
+  # SixthGear: Unframed / Framed switch between two linked products (custom.unframed_version and
+  # custom.framed_version, both product references). Renders nothing unless one is set and the
+  # other version exists. Switching keeps the chosen size where the other product has it.
+  assign bs = block.settings
+  assign p = closest.product
+  assign framed_ref = p.metafields.custom.framed_version.value
+  assign unframed_ref = p.metafields.custom.unframed_version.value
+
+  capture is_framed
+    render 'sgs-is-framed', product_resource: p
+  endcapture
+  assign is_framed = is_framed | strip
+
+  if is_framed == 'true'
+    assign other = unframed_ref
+    assign framed_product = p
+  else
+    assign other = framed_ref
+    assign framed_product = framed_ref
+  endif
+
+  assign show = true
+  if p == blank or p.gift_card?
+    assign show = false
+  elsif framed_ref == blank and unframed_ref == blank
+    assign show = false
+  elsif other == blank or other.id == p.id
+    assign show = false
+  endif
+-%}
+
+{%- if show -%}
+  {%- liquid
+    # The size option on each product (an option whose name contains "size")
+    assign cur_idx = -1
+    for o in p.options_with_values
+      assign oname = o.name | downcase
+      if oname contains 'size'
+        assign cur_opt = o
+        assign cur_idx = forloop.index0
+        break
+      endif
+    endfor
+    assign oth_idx = -1
+    for o in other.options_with_values
+      assign oname = o.name | downcase
+      if oname contains 'size'
+        assign oth_idx = forloop.index0
+        break
+      endif
+    endfor
+
+    # The other product's available variants, as "key=id" by size
+    assign oth_pairs = ''
+    if cur_idx >= 0 and oth_idx >= 0
+      for v in other.variants
+        if v.available
+          capture k
+            render 'sgs-size-key', value: v.options[oth_idx]
+          endcapture
+          assign oth_pairs = oth_pairs | append: '|' | append: k | append: '=' | append: v.id
+        endif
+      endfor
+    endif
+    assign oth_pairs = oth_pairs | append: '|'
+
+    assign fallback_id = other.first_available_variant.id
+
+    # For each of this product's sizes, the matching variant of the other product
+    assign selected_size = ''
+    if cur_idx >= 0
+      assign selected_size = p.selected_or_first_available_variant.options[cur_idx]
+    endif
+    assign href_id = fallback_id
+    capture size_map
+      echo '{'
+      if cur_idx >= 0 and oth_pairs != '|'
+        assign sep = ''
+        for val in cur_opt.values
+          capture k
+            render 'sgs-size-key', value: val.name
+          endcapture
+          assign needle = '|' | append: k | append: '='
+          if k != blank and oth_pairs contains needle
+            assign after = oth_pairs | split: needle
+            assign match_id = after[1] | split: '|' | first
+            echo sep
+            echo val.name | json
+            echo ':'
+            echo match_id
+            assign sep = ','
+            if val.name == selected_size
+              assign href_id = match_id
+            endif
+          endif
+        endfor
+      endif
+      echo '}'
+    endcapture
+
+    assign other_href = other.url
+    if href_id != blank
+      assign other_href = other.url | append: '?variant=' | append: href_id
+    endif
+
+    assign note = bs.framed_note | strip
+    if note contains '[price]'
+      assign from_price = framed_product.price_min | money_without_trailing_zeros
+      assign note = note | replace: '[price]', from_price
+    endif
+    assign label_id = 'SgsFinish-' | append: block.id
+  -%}
+
+  <sgs-finish
+    class="sgs-finish"
+    data-size-option="{% if cur_idx >= 0 %}{{ cur_opt.name | escape }}{% endif %}"
+    data-other-url="{{ other.url }}"
+    data-fallback-id="{{ fallback_id }}"
+    {{ block.shopify_attributes }}
+  >
+    {%- if bs.label != blank -%}
+      <p class="sgs-finish__label" id="{{ label_id }}">{{ bs.label | escape }}</p>
+    {%- endif -%}
+    <div class="sgs-finish__options" role="group"{% if bs.label != blank %} aria-labelledby="{{ label_id }}"{% endif %}>
+      <div class="sgs-finish__col">
+        {%- if is_framed == 'true' -%}
+          <a class="sgs-finish__pill" href="{{ other_href }}" data-sgs-finish-link>{{ bs.unframed_label | escape }}</a>
+        {%- else -%}
+          <span class="sgs-finish__pill sgs-finish__pill--on" aria-current="true">{{ bs.unframed_label | escape }}</span>
+        {%- endif -%}
+      </div>
+      <div class="sgs-finish__col">
+        {%- if is_framed == 'true' -%}
+          <span class="sgs-finish__pill sgs-finish__pill--on" aria-current="true">{{ bs.framed_label | escape }}</span>
+        {%- else -%}
+          <a class="sgs-finish__pill" href="{{ other_href }}" data-sgs-finish-link>{{ bs.framed_label | escape }}</a>
+        {%- endif -%}
+        {%- if note != blank -%}
+          <p class="sgs-finish__note">{{ note | escape | replace: ' · ', '&nbsp;· ' }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+    <script type="application/json" data-sgs-finish-map>{{ size_map | strip }}</script>
+  </sgs-finish>
+
+  <script>
+    if (!customElements.get('sgs-finish')) {
+      customElements.define(
+        'sgs-finish',
+        class extends HTMLElement {
+          connectedCallback() {
+            this.link = this.querySelector('[data-sgs-finish-link]');
+            if (!this.link || !this.dataset.sizeOption) return;
+            try {
+              this.map = JSON.parse(this.querySelector('[data-sgs-finish-map]').textContent || '{}');
+            } catch (e) {
+              this.map = {};
+            }
+            this.root = this.closest('.shopify-section') || document;
+            this.sync = () => this.update();
+            this.root.addEventListener('change', this.sync);
+            this.link.addEventListener('pointerdown', this.sync);
+            this.link.addEventListener('focus', this.sync);
+            this.link.addEventListener('click', this.sync);
+          }
+
+          disconnectedCallback() {
+            if (this.root && this.sync) this.root.removeEventListener('change', this.sync);
+          }
+
+          /* The size chosen in the main variant picker right now */
+          selectedSize() {
+            const picker = this.root.querySelector('variant-picker[ref="mainVariantPicker"]') || this.root.querySelector('variant-picker');
+            if (!picker) return '';
+            const name = this.dataset.sizeOption;
+            for (const select of picker.querySelectorAll('select')) {
+              const option = select.selectedOptions[0];
+              if (option && option.dataset.optionName === name) return option.value;
+            }
+            for (const input of picker.querySelectorAll('input[type="radio"]:checked')) {
+              if (input.dataset.optionName === name) return input.value;
+            }
+            return '';
+          }
+
+          update() {
+            const size = this.selectedSize();
+            const id = (size && this.map[size]) || this.dataset.fallbackId;
+            this.link.href = id ? this.dataset.otherUrl + '?variant=' + id : this.dataset.otherUrl;
+          }
+        }
+      );
+    }
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-finish {
+    display: block;
+    width: 100%;
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    color: var(--sgs-text, #111111);
+  }
+
+  .sgs-finish__label {
+    margin: 0 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-finish__options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    align-items: start;
+  }
+
+  .sgs-finish__pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 6px 14px;
+    border: 1px solid rgb(17 17 17 / 0.3);
+    border-radius: 999px;
+    background: var(--sgs-bg, #f5f3ef);
+    color: var(--sgs-text, #111111);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  a.sgs-finish__pill:hover {
+    border-color: var(--sgs-text, #111111);
+  }
+
+  a.sgs-finish__pill:focus-visible {
+    outline: 2px solid var(--sgs-text, #111111);
+    outline-offset: 2px;
+  }
+
+  .sgs-finish__pill--on {
+    border-color: #111111;
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .sgs-finish__note {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    text-align: center;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-finish__pill {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Finish toggle",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Switches between a print's unframed and framed versions, set in the product's custom.unframed_version and custom.framed_version metafields. Hidden when neither is set."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "Finish"
+    },
+    {
+      "type": "text",
+      "id": "unframed_label",
+      "label": "Unframed button",
+      "default": "Unframed"
+    },
+    {
+      "type": "text",
+      "id": "framed_label",
+      "label": "Framed button",
+      "default": "Framed · Black"
+    },
+    {
+      "type": "text",
+      "id": "framed_note",
+      "label": "Line under the framed button",
+      "default": "From [price] · Ready to hang · Made in the UK",
+      "info": "[price] becomes the framed print's lowest price. Leave empty to hide."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Finish toggle"
+    }
+  ]
+}
+{% endschema %}

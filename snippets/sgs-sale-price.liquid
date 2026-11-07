@@ -29,6 +29,15 @@
   if excluded contains product_resource.handle
     assign in_sale = false
   endif
+  # Framed prints are never discounted
+  if in_sale
+    capture sgs_framed
+      render 'sgs-is-framed', product_resource: product_resource
+    endcapture
+    if sgs_framed contains 'true'
+      assign in_sale = false
+    endif
+  endif
 -%}
 
 {%- if in_sale -%}

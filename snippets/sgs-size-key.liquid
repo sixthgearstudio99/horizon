@@ -1,0 +1,17 @@
+{%- doc -%}
+  SixthGear Studios: a plain key for a size value, so the same size matches across the framed
+  and unframed versions of a print: '16″ x 24″ (Vertical)', '16" x 24"' and '16x24 in' all give
+  "16x24"; '30 x 40 cm' gives "30x40cm". Matching only; never shown.
+
+  @param {string} value - A size option value
+
+  @example
+  {%- capture key -%}{% render 'sgs-size-key', value: variant.option1 %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign key = value | append: '' | downcase | split: '(' | first | append: ''
+  assign key = key | replace: '″', '' | replace: '”', '' | replace: '“', '' | replace: '"', '' | replace: '′', '' | replace: "'", ''
+  assign key = key | replace: '×', 'x' | replace: ' ', '' | remove: 'inches' | remove: 'inch' | remove: 'in' | strip
+  echo key
+-%}

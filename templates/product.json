@@ -367,7 +367,18 @@
             "sgs_offer": {
               "type": "sgs-offer-box",
               "settings": {
-                "note": ""
+                "note": "",
+                "framed_line": "Framed prints are excluded from sales and bundle offers."
+              },
+              "blocks": {}
+            },
+            "sgs_finish": {
+              "type": "sgs-finish-toggle",
+              "settings": {
+                "label": "Finish",
+                "unframed_label": "Unframed",
+                "framed_label": "Framed · Black",
+                "framed_note": "From [price] · Ready to hang · Made in the UK"
               },
               "blocks": {}
             }
@@ -378,6 +389,7 @@
             "price_tVjtKg",
             "sgs_offer",
             "divider_VJhene",
+            "sgs_finish",
             "variant_picker_R3rGDr",
             "sgs_size_guide",
             "sgs_personalise",

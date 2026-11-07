@@ -19,6 +19,15 @@
       endfor
     endunless
   endif
+  # Framed prints are excluded from bundle offers
+  if show
+    capture sgs_framed
+      render 'sgs-is-framed', product_resource: product
+    endcapture
+    if sgs_framed contains 'true'
+      assign show = false
+    endif
+  endif
   if request.design_mode
     assign show = true
   endif

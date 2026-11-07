@@ -5,6 +5,12 @@
   # Per-product metafields (namespace "custom") still override the shared text
   assign delivery_text = product_resource.metafields.custom.shipping.value | default: bs.delivery_text
   assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: product_resource
+  endcapture
+  if sgs_framed contains 'true'
+    assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text_framed
+  endif
 
   # "[sizes]" in the framing text becomes this product's sizes, e.g. "16×24, 24×36"
   capture sizes_text
@@ -294,6 +300,13 @@
       "label": "Framing",
       "info": "[sizes] is replaced by the product's sizes, e.g. 16×24, 24×36.",
       "default": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "framing_text_framed",
+      "label": "Framing, on framed prints",
+      "info": "Used instead on products tagged framed.",
+      "default": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>"
     },
     {
       "type": "checkbox",

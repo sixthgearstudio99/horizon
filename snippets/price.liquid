@@ -19,6 +19,13 @@
   assign show_compare_price = false
   if compare_at_price > price
     assign show_compare_price = true
+    # SixthGear: framed prints are never discounted, so no struck-through price
+    capture sgs_framed
+      render 'sgs-is-framed', product_resource: product_resource
+    endcapture
+    if sgs_framed contains 'true'
+      assign show_compare_price = false
+    endif
   endif
 
   if product_resource == blank

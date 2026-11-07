@@ -11,9 +11,19 @@
     assign message = settings[message_key] | strip
   endif
   assign note = block.settings.note | default: settings.sgs_offer_note
+
+  # Framed prints are never discounted: no offer, just a plain line saying so
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: closest.product
+  endcapture
+  assign sgs_framed = sgs_framed | strip
 -%}
 
-{%- if message != blank and closest.product.gift_card? != true -%}
+{%- if sgs_framed == 'true' -%}
+  {%- if block.settings.framed_line != blank -%}
+    <p class="sgs-offer-framed" {{ block.shopify_attributes }}>{{ block.settings.framed_line | escape }}</p>
+  {%- endif -%}
+{%- elsif message != blank and closest.product.gift_card? != true -%}
   <div class="sgs-offer" data-sgs-offer-win="{{ sgs_sale_win }}" role="note" {{ block.shopify_attributes }}>
     <p class="sgs-offer__title">{{ message | escape }}</p>
     {%- if note != blank -%}
@@ -59,6 +69,14 @@
     translate: 0 -1px;
   }
 
+  .sgs-offer-framed {
+    width: 100%;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
   .sgs-offer__note {
     margin: 4px 0 0 16px;
     font-size: 13px;
@@ -81,6 +99,13 @@
       "id": "note",
       "label": "Line under the offer",
       "info": "Leave empty to use the line from Theme settings (Applied automatically at checkout.)."
+    },
+    {
+      "type": "text",
+      "id": "framed_line",
+      "label": "Line on framed prints",
+      "default": "Framed prints are excluded from sales and bundle offers.",
+      "info": "Shown instead of the offer on products tagged framed. Leave empty to hide."
     }
   ],
   "presets": [

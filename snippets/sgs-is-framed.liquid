@@ -1,0 +1,31 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when the product is a framed print, else nothing.
+  Framed means the product has the tag "framed" (any case), or its custom.framed_version
+  metafield points to itself. A custom.unframed_version pointing to itself means unframed.
+
+  @param {product} product_resource - The product
+
+  @example
+  {%- capture is_framed -%}{% render 'sgs-is-framed', product_resource: product %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if product_resource != blank
+    assign framed = false
+    assign tags_lower = product_resource.tags | join: '|' | downcase | split: '|'
+    if tags_lower contains 'framed'
+      assign framed = true
+    endif
+    assign framed_ref = product_resource.metafields.custom.framed_version.value
+    if framed_ref != blank and framed_ref.id == product_resource.id
+      assign framed = true
+    endif
+    assign unframed_ref = product_resource.metafields.custom.unframed_version.value
+    if unframed_ref != blank and unframed_ref.id == product_resource.id
+      assign framed = false
+    endif
+    if framed
+      echo 'true'
+    endif
+  endif
+-%}

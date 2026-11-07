@@ -1,5 +1,9 @@
 {%- liquid
   assign bs = block.settings
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: closest.product
+  endcapture
+  assign sgs_framed = sgs_framed | strip
 -%}
 
 {%- unless closest.product.gift_card? -%}
@@ -10,6 +14,14 @@
         assign icon_key = 'item_' | append: i | append: '_icon'
         assign text = bs[text_key]
         assign icon = bs[icon_key] | default: 'paper'
+        # Framed prints don't come in a tube
+        if sgs_framed == 'true'
+          assign text_lower = text | downcase
+          if text_lower contains 'tube' or icon == 'tube'
+            assign text = bs.framed_text
+            assign icon = 'check'
+          endif
+        endif
       -%}
       {%- if text != blank -%}
         <li class="sgs-hl__item">
@@ -145,6 +157,13 @@
         { "value": "check", "label": "Tick" }
       ],
       "default": "check"
+    },
+    {
+      "type": "text",
+      "id": "framed_text",
+      "label": "Tube row on framed prints",
+      "default": "Arrives framed, ready to hang",
+      "info": "Replaces any tube row on products tagged framed. Leave empty to hide that row."
     }
   ],
   "presets": [

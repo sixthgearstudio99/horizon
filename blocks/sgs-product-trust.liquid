@@ -9,6 +9,10 @@
       assign is_framed = false
     endif
   endif
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: closest.product
+  endcapture
+  assign sgs_framed = sgs_framed | strip
 -%}
 
 {%- unless closest.product.gift_card? -%}
@@ -48,7 +52,7 @@
     {%- endif -%}
   {%- endfor -%}
 </ul>
-{%- if bs.footnote != blank -%}
+{%- if bs.footnote != blank and sgs_framed != 'true' -%}
   <p class="sgs-ptrust__foot" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ bs.footnote | escape }}</p>
   <script>
     (function () {
@@ -313,7 +317,7 @@
       "id": "footnote",
       "label": "Small line underneath",
       "default": "Print only – frame not included",
-      "info": "Hidden while a framed variant is chosen. Leave empty to hide."
+      "info": "Hidden while a framed variant is chosen, and on products tagged framed. Leave empty to hide."
     }
   ],
   "presets": [

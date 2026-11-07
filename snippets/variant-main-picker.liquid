@@ -74,6 +74,15 @@
         assign sgs_step = 2
       endif
       assign sgs_popular = settings.sgs_popular_value | strip | downcase
+
+      # A framed print isn't "(unframed)": the size suffix is left off
+      capture sgs_framed
+        render 'sgs-is-framed', product_resource: product_resource
+      endcapture
+      assign sgs_size_suffix = block_settings.size_label_suffix
+      if sgs_framed contains 'true'
+        assign sgs_size_suffix = ''
+      endif
     -%}
     <form class="variant-picker__form{% if block_settings.sgs_steps %} sgs-steps{% endif %}">
       {%- for product_option in product_resource.options_with_values -%}
@@ -81,16 +90,16 @@
           # SixthGear: display heading for the option, e.g. "Size (unframed)"; the option itself is unchanged
           assign option_label = product_option.name | escape
           assign option_name_lower = product_option.name | downcase
-          if option_name_lower contains 'size' and block_settings.size_label_suffix != blank
-            assign option_label = option_label | append: ' ' | append: block_settings.size_label_suffix | escape
+          if option_name_lower contains 'size' and sgs_size_suffix != blank
+            assign option_label = option_label | append: ' ' | append: sgs_size_suffix | escape
           endif
           assign option_step = ''
           if block_settings.sgs_steps
             if option_name_lower contains 'size'
               assign option_step = 1
               assign option_label = block_settings.size_step_label | default: option_label | escape
-              if block_settings.size_label_suffix != blank
-                assign option_label = option_label | append: ' ' | append: block_settings.size_label_suffix | escape
+              if sgs_size_suffix != blank
+                assign option_label = option_label | append: ' ' | append: sgs_size_suffix | escape
               endif
             else
               assign shown = true

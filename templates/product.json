@@ -49,14 +49,14 @@
             "media_fit": "contain",
             "media_radius": 0,
             "extend_media": true,
+            "sgs_lightbox": true,
             "zoom": false,
             "video_loop": false,
             "hide_variants": true,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0,
-            "sgs_lightbox": true
+            "padding-inline-end": 0
           },
           "blocks": {}
         },
@@ -97,6 +97,13 @@
               },
               "blocks": {}
             },
+            "sgs_rating": {
+              "type": "sgs-rating",
+              "settings": {
+                "target_id": "17937299023bbff9d5"
+              },
+              "blocks": {}
+            },
             "price_tVjtKg": {
               "type": "price",
               "settings": {
@@ -121,6 +128,14 @@
               },
               "blocks": {}
             },
+            "sgs_offer": {
+              "type": "sgs-offer-box",
+              "settings": {
+                "note": "",
+                "framed_line": "Framed prints are excluded from sales and bundle offers."
+              },
+              "blocks": {}
+            },
             "divider_VJhene": {
               "type": "_divider",
               "name": "t:names.divider",
@@ -131,6 +146,52 @@
                 "width_percent": 100,
                 "padding-block-start": 0,
                 "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "size_label_suffix": "(unframed)",
+                "show_size_prices": true,
+                "sgs_size_dropdown": true,
+                "sgs_steps": true,
+                "size_step_label": "Choose your size",
+                "finish_step_label": "Choose your finish",
+                "size_guide_label": "Which size?",
+                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "hide_single_choice": true,
+                "variant_style": "buttons",
+                "show_swatches": false,
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "sgs_size_guide": {
+              "type": "sgs-size-guide",
+              "settings": {
+                "link_label": "Which size?",
+                "heading": "Which size?",
+                "sofa_label": "Above a sofa",
+                "desk_label": "Above a desk",
+                "line_small": "Desk or shelf",
+                "line_middle": "Above a desk or bed",
+                "line_large": "Statement wall",
+                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
+                "wall_label": "See it on your wall"
               },
               "blocks": {}
             },
@@ -151,48 +212,10 @@
               },
               "blocks": {}
             },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "size_label_suffix": "(unframed)",
-                "variant_style": "buttons",
-                "show_swatches": false,
-                "show_size_prices": true,
-                "hide_single_choice": true,
-                "option_label_text_color": "",
-                "variant_style_class": "default",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
-                "alignment": "left",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
-                "sgs_size_dropdown": true,
-                "sgs_steps": true,
-                "size_step_label": "Choose your size",
-                "size_guide_label": "Which size?",
-                "finish_step_label": "Choose your finish"
-              },
-              "blocks": {}
-            },
-            "sgs_wall": {
-              "type": "sgs-wall-preview",
-              "settings": {
-                "button_label": "See it on your wall",
-                "wall_width_cm": 300
-              },
-              "blocks": {}
-            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
+                "sgs_hide_quantity": true,
                 "stacking": true,
                 "text_color": "",
                 "show_pickup_availability": false,
@@ -214,8 +237,7 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0,
-                "sgs_hide_quantity": true
+                "padding-inline-end": 0
               },
               "blocks": {
                 "quantity": {
@@ -235,11 +257,11 @@
                   "type": "add-to-cart",
                   "static": true,
                   "settings": {
+                    "sgs_show_price": true,
                     "style_class": "button",
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
-                    "custom_button_border": "{{ settings.color_palette.background }}",
-                    "sgs_show_price": true
+                    "custom_button_border": "{{ settings.color_palette.background }}"
                   },
                   "blocks": {}
                 },
@@ -251,28 +273,6 @@
                 }
               },
               "block_order": []
-            },
-            "sgs_delivery": {
-              "type": "sgs-delivery-estimate",
-              "settings": {
-                "text_before": "Order today · arrives",
-                "production_min": 2,
-                "production_max": 5,
-                "delivery_min": 2,
-                "delivery_max": 4,
-                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
-                "footnote": "",
-                "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
-                "christmas_line_until": "2026-12-09",
-                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-                "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
-                "custom_line_until": "2026-12-02",
-                "christmas_from": "12-10",
-                "christmas_to": "12-24",
-                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card"
-              },
-              "blocks": {}
             },
             "sgs_ptrust": {
               "type": "sgs-product-trust",
@@ -294,18 +294,33 @@
               },
               "blocks": {}
             },
-            "sgs_size_guide": {
-              "type": "sgs-size-guide",
+            "sgs_delivery": {
+              "type": "sgs-delivery-estimate",
               "settings": {
-                "link_label": "Which size?",
-                "heading": "Which size?",
-                "sofa_label": "Above a sofa",
-                "desk_label": "Above a desk",
-                "line_small": "Desk or shelf",
-                "line_middle": "Above a desk or bed",
-                "line_large": "Statement wall",
-                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
-                "wall_label": "See it on your wall"
+                "text_before": "Order today · arrives",
+                "footnote": "",
+                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+                "production_min": 2,
+                "production_max": 5,
+                "delivery_min": 2,
+                "delivery_max": 4,
+                "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
+                "christmas_line_until": "2026-12-09",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+                "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
+                "custom_line_until": "2026-12-02",
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card"
+              },
+              "blocks": {}
+            },
+            "sgs_wall": {
+              "type": "sgs-wall-preview",
+              "settings": {
+                "button_label": "See it on your wall",
+                "wall_width_cm": 300
               },
               "blocks": {}
             },
@@ -357,21 +372,6 @@
               },
               "blocks": {}
             },
-            "sgs_rating": {
-              "type": "sgs-rating",
-              "settings": {
-                "target_id": "17937299023bbff9d5"
-              },
-              "blocks": {}
-            },
-            "sgs_offer": {
-              "type": "sgs-offer-box",
-              "settings": {
-                "note": "",
-                "framed_line": "Framed prints are excluded from sales and bundle offers."
-              },
-              "blocks": {}
-            },
             "sgs_finish": {
               "type": "sgs-finish-toggle",
               "settings": {
@@ -420,8 +420,40 @@
     },
     "sgs_wall_videos": {
       "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
+      "blocks": {
+        "photo_fGNgGH": {
+          "type": "photo",
+          "settings": {
+            "video": "shopify://files/videos/SixthGear-McLaren-Reel.mp4",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "photo_UjFQYt": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2051.jpg",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
+        "photo_y9D7r3": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2025.jpg",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "photo_fGNgGH",
+        "photo_UjFQYt",
+        "photo_y9D7r3"
+      ],
       "settings": {
         "label": "Video",
         "heading": "On your wall",
@@ -452,11 +484,15 @@
     },
     "sgs_proof": {
       "type": "sgs-proof",
-      "blocks": {},
-      "block_order": [],
       "settings": {
         "label": "Proof",
         "heading": "Real prints. Real walls.",
+        "link_label": "",
+        "link_url": "",
+        "tile_ratio": "portrait",
+        "tap_action": "link",
+        "default_link": "",
+        "shop_label": "Shop the print",
         "padding-block-start": 72,
         "padding-block-end": 72
       }

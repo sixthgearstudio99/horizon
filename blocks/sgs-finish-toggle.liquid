@@ -51,14 +51,17 @@
       endif
     endfor
 
-    # The other product's available variants, as "key=id" by size
+    # The other product's sizes: every size it has ("|key|"), and its available variants ("key=id")
+    assign oth_keys = '|'
     assign oth_pairs = ''
     if cur_idx >= 0 and oth_idx >= 0
+      assign oth_opt = other.options_with_values[oth_idx]
       for v in other.variants
+        capture k
+          render 'sgs-size-key', value: v.options[oth_idx]
+        endcapture
+        assign oth_keys = oth_keys | append: k | append: '|'
         if v.available
-          capture k
-            render 'sgs-size-key', value: v.options[oth_idx]
-          endcapture
           assign oth_pairs = oth_pairs | append: '|' | append: k | append: '=' | append: v.id
         endif
       endfor
@@ -67,7 +70,11 @@
 
     assign fallback_id = other.first_available_variant.id
 
-    # For each of this product's sizes, the matching variant of the other product
+    # For each of this product's sizes, the variant of the other product to link to:
+    #   1) the same size, when the other product has it (e.g. 16x24 -> 16x24)
+    #   2) when the other product has no such size at all, the size in the same position
+    #      (1st -> 1st, 2nd -> 2nd: 20x10 -> 18x12, 22x11 -> 24x16, 30x15 -> 36x24)
+    #   3) otherwise its first available variant (left out of the map; the link falls back to it)
     assign selected_size = ''
     if cur_idx >= 0
       assign selected_size = p.selected_or_first_available_variant.options[cur_idx]
@@ -78,13 +85,32 @@
       if cur_idx >= 0 and oth_pairs != '|'
         assign sep = ''
         for val in cur_opt.values
+          assign match_id = ''
           capture k
             render 'sgs-size-key', value: val.name
           endcapture
+          assign key_needle = '|' | append: k | append: '|'
           assign needle = '|' | append: k | append: '='
-          if k != blank and oth_pairs contains needle
-            assign after = oth_pairs | split: needle
-            assign match_id = after[1] | split: '|' | first
+          if k != blank and oth_keys contains key_needle
+            # 1) Same size (only if one is available)
+            if oth_pairs contains needle
+              assign after = oth_pairs | split: needle
+              assign match_id = after[1] | split: '|' | first
+            endif
+          else
+            # 2) Same position
+            assign position = forloop.index0
+            assign target = oth_opt.values[position]
+            if target != blank
+              for v in other.variants
+                if v.available and v.options[oth_idx] == target.name
+                  assign match_id = v.id
+                  break
+                endif
+              endfor
+            endif
+          endif
+          if match_id != blank
             echo sep
             echo val.name | json
             echo ':'

@@ -121,6 +121,9 @@
           {%- endfor -%}
         </ul>
       </sgs-media-row>
+      {%- if s.caption != blank -%}
+        <p class="sgs-proof__note">{{ s.caption | escape }}</p>
+      {%- endif -%}
     </div>
   </section>
   <script src="{{ 'sgs-media-row.js' | asset_url }}" defer></script>
@@ -318,6 +321,14 @@
     text-underline-offset: 3px;
   }
 
+  /* Small line under the row, e.g. which print is shown */
+  .sgs-proof__note {
+    margin: 12px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
   .sgs-proof-note {
     max-width: var(--page-width);
     margin-inline: auto;
@@ -401,6 +412,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "Real prints. Real walls."
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "Caption under the photos",
+      "info": "e.g. Shown: McLaren F1 Generations. Leave empty to hide."
     },
     {
       "type": "text",

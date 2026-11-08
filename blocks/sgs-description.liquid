@@ -74,6 +74,12 @@
     {%- if bs.heading != blank -%}
       <h2 class="sgs-desc__heading sgs-label">{{ bs.heading | escape }}</h2>
     {%- endif -%}
+    {%- if bs.spec_line != blank -%}
+      <p class="sgs-desc__spec">
+        <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M4.5 2.5h8l3 3v12h-11z"/><path d="M12.5 2.5v3h3M7 9.5h6M7 12.5h6M7 15.5h4" stroke-linecap="round"/></svg>
+        <span>{{ bs.spec_line | escape }}</span>
+      </p>
+    {%- endif -%}
     <div class="sgs-desc__body rte" id="{{ uid }}">{{ description }}</div>
     {%- if collapsible -%}
       <button
@@ -94,6 +100,21 @@
 {% stylesheet %}
   .sgs-desc {
     width: 100%;
+  }
+
+  /* One line about the print itself (paper and inks), above the description */
+  .sgs-desc__spec {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--sgs-text, #111111);
+  }
+
+  .sgs-desc__spec svg {
+    flex-shrink: 0;
   }
 
   .sgs-desc__heading {
@@ -177,6 +198,12 @@
       "id": "heading",
       "label": "Label",
       "default": "About this print"
+    },
+    {
+      "type": "text",
+      "id": "spec_line",
+      "label": "Line about the print",
+      "info": "Shown above the description, e.g. the paper and inks. Leave empty to hide."
     },
     {
       "type": "range",

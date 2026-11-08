@@ -518,6 +518,110 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   opacity: 0.78;
 }
 
+/* ---------- Size pills: inches, cm and price on each button ---------- */
+.variant-option.sgs-size-pills {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
+}
+
+.variant-option.sgs-size-pills .variant-option__button-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 76px;
+  padding: 10px 6px;
+  border: 1px solid rgb(17 17 17 / 0.25);
+  border-radius: 14px !important;
+  background: var(--sgs-raised, #ffffff);
+  box-shadow: none;
+  color: var(--sgs-text, #111111);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.variant-option.sgs-size-pills .variant-option__button-label:hover {
+  border-color: var(--sgs-text, #111111);
+}
+
+/* Horizon's sliding highlight isn't used: the chosen pill is filled instead */
+.variant-option.sgs-size-pills .variant-option__button-label__pill {
+  display: none;
+}
+
+.variant-option.sgs-size-pills .variant-option__button-label:has(:checked) {
+  border-color: #111111;
+  background: #111111;
+  color: #ffffff;
+}
+
+.variant-option.sgs-size-pills .variant-option__button-label:has(:focus-visible) {
+  outline: 2px solid var(--sgs-text, #111111);
+  outline-offset: 2px;
+}
+
+.variant-option.sgs-size-pills .variant-option__button-label .sgs-pill {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  min-width: 0;
+  color: inherit !important;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sgs-pill__in {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+.sgs-pill__cm {
+  font-size: 12px;
+  line-height: 1.3;
+  opacity: 0.72;
+  font-variant-numeric: tabular-nums;
+}
+
+.sgs-size-pills .sgs-pill__price {
+  margin-top: 4px;
+  font-family: var(--sgs-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: inherit;
+}
+
+/* Sale: the sale price first, the old price small and struck through after it */
+.sgs-size-pills .sgs-pill__price .sgs-sale {
+  gap: 0 5px;
+  align-items: baseline;
+  font-size: 13px;
+}
+
+.sgs-size-pills .sgs-pill__price .sgs-sale__now {
+  order: 1;
+  font-weight: 600;
+}
+
+.sgs-size-pills .sgs-pill__price .sgs-sale__was {
+  order: 2;
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.72;
+}
+
+.sgs-size-pills .sgs-pill .sgs-popular {
+  margin: 4px auto 0;
+}
+
 /* See it on your wall: a small text link under the delivery estimate */
 /* Two classes: the shared mono rule above carries element-level weight through :is() */
 .sgs-wall .sgs-wall__open {

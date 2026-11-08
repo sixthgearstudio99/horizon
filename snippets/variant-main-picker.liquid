@@ -123,6 +123,13 @@
             assign option_style = 'dropdowns'
           endif
 
+          # SixthGear: size pills, one per size with inches, cm and price (buttons, not the dropdown)
+          assign sgs_pills = false
+          if option_name_lower contains 'size' and block_settings.sgs_size_pills and block_settings.sgs_size_dropdown != true
+            assign sgs_pills = true
+            assign option_style = 'buttons'
+          endif
+
           if swatch_count > 0 and block_settings.show_swatches
             if block_settings.variant_style == 'dropdown'
               assign variant_style = 'swatch_dropdown'
@@ -156,7 +163,7 @@
           </div>
         {%- elsif variant_style == 'swatch' or option_style == 'buttons' -%}
           <fieldset
-            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}{% if option_name_lower contains 'paper' %} sgs-opt--paper{% elsif option_name_lower contains 'size' %} sgs-opt--size{% endif %}"
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}{% if option_name_lower contains 'paper' %} sgs-opt--paper{% elsif option_name_lower contains 'size' %} sgs-opt--size{% endif %}{% if sgs_pills %} sgs-size-pills{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
             {{ option_id_attribute }}
@@ -174,10 +181,29 @@
               if block_settings.show_size_prices and variant_style != 'swatch' and option_name_lower contains 'size'
                 assign show_tile_price = true
               endif
+              if sgs_pills
+                assign show_tile_price = true
+              endif
             -%}
             {%- for product_option_value in product_option.values -%}
               {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
               {%- assign tile_variant = product_option_value.variant -%}
+              {%- liquid
+                # SixthGear: the price read out for a size pill is the sale price while an offer is open
+                assign aria_price = ''
+                if show_tile_price and tile_variant != blank
+                  assign aria_price = tile_variant.price | money_without_trailing_zeros
+                  if sgs_pills and sgs_sale_win != blank
+                    capture aria_sale
+                      render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, amount: tile_variant.price, part: 'now'
+                    endcapture
+                    assign aria_sale = aria_sale | strip_html | strip
+                    if aria_sale != blank
+                      assign aria_price = aria_sale | append: ', was ' | append: aria_price
+                    endif
+                  endif
+                endif
+              -%}
               {%- assign value_label_length = value_label | size -%}
               {% if value_label_length > longest_value and option_id_attribute %}
                 {% assign longest_value = value_label_length %}
@@ -189,7 +215,7 @@
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ value_label }}{% if show_tile_price and tile_variant != blank %}, {{ tile_variant.price | money_without_trailing_zeros }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  aria-label="{{ value_label | strip }}{% if aria_price != blank %}, {{ aria_price }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
                   {% if product_option_value.available == false %}
                     aria-disabled="true"
                   {% endif %}
@@ -235,6 +261,25 @@
                     ></span>
                   {% endif %}
                   {%- assign value_lower = product_option_value.name | downcase | strip -%}
+                  {%- if sgs_pills -%}
+                    {%- comment -%} Size pill: inches, cm, then price (sale price first, old price small and struck through) {%- endcomment -%}
+                    {%- assign label_parts = value_label | strip | split: ' / ' -%}
+                    <span class="variant-option__button-label__text sgs-pill" data-key="variant-option-text">
+                      <span class="sgs-pill__in">{{ label_parts[0] }}</span>
+                      {%- if label_parts.size > 1 -%}<span class="sgs-pill__cm">{{ label_parts[1] }}</span>{%- endif -%}
+                      {%- if tile_variant != blank -%}
+                        <span class="sgs-pill__price sgs-tile-price">
+                          {%- if sgs_sale_win != blank -%}
+                            {% render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, amount: tile_variant.price %}
+                          {%- endif -%}
+                          <span class="sgs-tile-price__normal">{{ tile_variant.price | money_without_trailing_zeros }}</span>
+                        </span>
+                      {%- endif -%}
+                      {%- if sgs_popular != blank and value_lower == sgs_popular -%}
+                        <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Popular' | escape }}</span>
+                      {%- endif -%}
+                    </span>
+                  {%- else -%}
                   <span
                     class="variant-option__button-label__text"
                     data-key="variant-option-text"
@@ -244,7 +289,8 @@
                       <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Popular' | escape }}</span>
                     {%- endif -%}
                   </span>
-                  {%- if show_tile_price and tile_variant != blank -%}
+                  {%- endif -%}
+                  {%- if show_tile_price and tile_variant != blank and sgs_pills == false -%}
                     <span class="sgs-tile-price" aria-hidden="true">
                       {%- if sgs_sale_win != blank -%}
                         {% render 'sgs-sale-price',

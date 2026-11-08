@@ -13,6 +13,12 @@
     render 'sgs-is-framed', product_resource: closest.product
   endcapture
   assign sgs_framed = sgs_framed | strip
+
+  # "Choose Framed above": only when this print has a framed version, so the Finish toggle is there
+  assign has_framed_version = false
+  if closest.product.metafields.custom.framed_version.value != blank
+    assign has_framed_version = true
+  endif
 -%}
 
 {%- unless closest.product.gift_card? -%}
@@ -54,6 +60,11 @@
 </ul>
 {%- if bs.footnote != blank and sgs_framed != 'true' -%}
   <p class="sgs-ptrust__foot" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ bs.footnote | escape }}</p>
+  {%- if bs.framed_cta != blank and has_framed_version -%}
+    <p class="sgs-ptrust__cta" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>
+      <a href="#sgs-finish" data-sgs-to-finish>{{ bs.framed_cta | escape }}</a>
+    </p>
+  {%- endif -%}
   <script>
     (function () {
       // Follows the chosen options: hidden for a framed choice (e.g. "Black frame"), shown otherwise
@@ -61,6 +72,17 @@
       var root = note && (note.closest('.shopify-section') || document);
       if (!root || root.dataset.sgsFrameNote) return;
       root.dataset.sgsFrameNote = '1';
+      // "Choose Framed above": scroll to the Finish toggle and put focus on the Framed button
+      root.addEventListener('click', function (e) {
+        var link = e.target instanceof Element ? e.target.closest('[data-sgs-to-finish]') : null;
+        var finish = link && document.getElementById('sgs-finish');
+        if (!finish) return;
+        e.preventDefault();
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        finish.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+        var framed = finish.querySelector('[data-sgs-finish-link]');
+        if (framed) setTimeout(function () { framed.focus({ preventScroll: true }); }, reduce ? 0 : 450);
+      });
       root.addEventListener('change', function (e) {
         if (!(e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement)) return;
         if (!e.target.closest('variant-picker, .variant-picker')) return;
@@ -177,8 +199,35 @@
     text-align: center;
   }
 
-  .sgs-ptrust__foot[hidden] {
+  .sgs-ptrust__foot[hidden],
+  .sgs-ptrust__cta[hidden] {
     display: none;
+  }
+
+  /* "Want it ready to hang? Choose Framed above." under the frame note */
+  .sgs-ptrust__cta {
+    margin: 2px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .sgs-ptrust-wrap--columns .sgs-ptrust__cta {
+    text-align: center;
+  }
+
+  .sgs-ptrust__cta a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-block: -12px;
+    color: var(--sgs-text, #111111);
+    text-decoration: underline;
+    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .sgs-ptrust__cta a:hover {
+    text-decoration-color: currentColor;
   }
 
   .sgs-ptrust__foot {
@@ -318,6 +367,13 @@
       "label": "Small line underneath",
       "default": "Print only – frame not included",
       "info": "Hidden while a framed variant is chosen, and on products tagged framed. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "framed_cta",
+      "label": "Link to the framed version",
+      "default": "Want it ready to hang? Choose Framed above.",
+      "info": "Under the small line, on prints that have a framed version (Finish toggle). Scrolls to the toggle. Hidden on framed prints."
     }
   ],
   "presets": [

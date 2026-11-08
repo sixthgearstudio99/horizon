@@ -156,7 +156,7 @@
               "settings": {
                 "size_label_suffix": "(unframed)",
                 "show_size_prices": true,
-                "sgs_size_dropdown": true,
+                "sgs_size_dropdown": false,
                 "sgs_steps": true,
                 "size_step_label": "Choose your size",
                 "finish_step_label": "Choose your finish",
@@ -178,7 +178,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "sgs_size_pills": true
               },
               "blocks": {}
             },
@@ -292,30 +293,8 @@
                 "item_4_text": "",
                 "item_4_link": "",
                 "item_4_icon": "lock",
-                "footnote": "Print only – frame not included"
-              },
-              "blocks": {}
-            },
-            "sgs_delivery": {
-              "type": "sgs-delivery-estimate",
-              "settings": {
-                "text_before": "Order today · arrives",
-                "footnote": "",
-                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
-                "production_min": 2,
-                "production_max": 5,
-                "delivery_min": 2,
-                "delivery_max": 4,
-                "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
-                "christmas_line_until": "2026-12-09",
-                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-                "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
-                "custom_line_until": "2026-12-02",
-                "christmas_from": "12-10",
-                "christmas_to": "12-24",
-                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card",
-                "layout": "full"
+                "footnote": "Print only – frame not included",
+                "framed_cta": "Want it ready to hang? Choose Framed above."
               },
               "blocks": {}
             },
@@ -327,27 +306,14 @@
               },
               "blocks": {}
             },
-            "sgs_highlights": {
-              "type": "sgs-highlights",
-              "settings": {
-                "item_1_text": "Premium semi-gloss paper, fade-resistant inks",
-                "item_1_icon": "paper",
-                "item_2_text": "Printed to order in the UK",
-                "item_2_icon": "printer",
-                "item_3_text": "Ships rolled in a protective tube",
-                "item_3_icon": "tube",
-                "item_4_text": "",
-                "item_4_icon": "check"
-              },
-              "blocks": {}
-            },
             "sgs_desc": {
               "type": "sgs-description",
               "settings": {
                 "heading": "About this print",
                 "collapse_after": 350,
                 "more_label": "Read more",
-                "less_label": "Read less"
+                "less_label": "Read less",
+                "spec_line": "Premium semi-gloss paper, fade-resistant inks"
               },
               "blocks": {}
             },
@@ -393,7 +359,7 @@
                 "icon_color": "#4d7c0f",
                 "alignment": "center",
                 "link": "",
-                "show_stars": true,
+                "show_stars": false,
                 "stars_color": "#b7821a"
               },
               "blocks": {}
@@ -443,10 +409,8 @@
             "buy_buttons_eYQEYi",
             "sgs_trustline",
             "sgs_ptrust",
-            "sgs_delivery",
             "sgs_wall",
             "sgs_mobile_slot",
-            "sgs_highlights",
             "sgs_desc",
             "sgs_info"
           ]
@@ -504,8 +468,8 @@
         "photo_y9D7r3"
       ],
       "settings": {
-        "label": "Video",
-        "heading": "On your wall",
+        "label": "",
+        "heading": "Real prints, real walls",
         "link_label": "",
         "link_url": "",
         "tile_ratio": "tall",
@@ -514,7 +478,8 @@
         "shop_label": "Shop the print",
         "padding-block-start": 72,
         "padding-block-end": 48,
-        "mobile_under_buy": true
+        "mobile_under_buy": true,
+        "caption": "Shown: McLaren F1 Generations"
       }
     },
     "sgs_arrival": {
@@ -522,16 +487,44 @@
       "settings": {
         "label": "How it arrives",
         "heading": "Packed to arrive perfect",
-        "item_1": "Printed to order in the UK",
+        "item_1": "",
         "item_2": "Rolled in a protective tube",
         "item_3": "Dispatched in 2–5 working days",
-        "item_4": "Free UK delivery",
+        "item_4": "",
         "item_5": "",
         "item_6": "",
         "padding-block-start": 72,
         "padding-block-end": 72,
         "mobile_under_buy": true
-      }
+      },
+      "blocks": {
+        "sgs_delivery": {
+          "type": "sgs-delivery-estimate",
+          "settings": {
+            "text_before": "Order today · arrives",
+            "footnote": "",
+            "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+            "production_min": 2,
+            "production_max": 5,
+            "delivery_min": 2,
+            "delivery_max": 4,
+            "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
+            "christmas_line_until": "2026-12-09",
+            "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+            "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
+            "custom_line_until": "2026-12-02",
+            "christmas_from": "12-10",
+            "christmas_to": "12-24",
+            "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+            "gift_card_handle": "gift-card",
+            "layout": "full"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "sgs_delivery"
+      ]
     },
     "sgs_proof": {
       "type": "sgs-proof",

@@ -30,7 +30,7 @@
   assign item_count = items.size
 -%}
 
-{%- if item_count > 0 or image != blank -%}
+{%- if item_count > 0 or image != blank or section.blocks.size > 0 -%}
   <section
     class="sgs-arrive{% if image != blank %} sgs-arrive--image{% endif %}"
     style="--sgs-arrive-pad-top: {{ s['padding-block-start'] }}px; --sgs-arrive-pad-bottom: {{ s['padding-block-end'] }}px;"
@@ -67,6 +67,12 @@
               </li>
             {%- endfor -%}
           </ul>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          {%- comment -%} e.g. the delivery estimate, as the list's last row {%- endcomment -%}
+          <div class="sgs-arrive__extra">
+            {%- content_for 'blocks' -%}
+          </div>
         {%- endif -%}
       </div>
     </div>
@@ -142,6 +148,20 @@
     font-size: 15px;
   }
 
+  .sgs-arrive__extra {
+    padding-block: 14px;
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
+  }
+
+  .sgs-arrive__list + .sgs-arrive__extra,
+  .sgs-arrive__extra:first-child {
+    border-top: 0;
+  }
+
+  .sgs-arrive__extra .sgs-delivery {
+    margin: 0;
+  }
+
   .sgs-arrive__tick {
     flex-shrink: 0;
     color: var(--sgs-text-2, #6b6b6b);
@@ -153,6 +173,7 @@
   "name": "How it arrives",
   "tag": "div",
   "class": "sgs-arrive-section",
+  "blocks": [{ "type": "sgs-delivery-estimate" }],
   "settings": [
     {
       "type": "image_picker",

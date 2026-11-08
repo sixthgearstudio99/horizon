@@ -24,7 +24,7 @@
 
 {%- if count > 0 and rating > 0 -%}
   <a
-    class="sgs-rating"
+    class="sgs-rating{% if bs.alignment == 'center' %} sgs-rating--center{% endif %}"
     href="#{{ bs.target_id | default: 'reviews' | escape }}"
     data-sgs-rating-target="{{ bs.target_id | escape }}"
     aria-label="Rated {{ rating_text }} out of {{ scale }}, {{ count }} {% if count == 1 %}review{% else %}reviews{% endif %}. Go to reviews"
@@ -62,6 +62,12 @@
     margin: -10px 0 -14px;
     color: var(--sgs-text, #111111);
     text-decoration: none;
+  }
+
+  /* Centred, e.g. under the trust line below Add to cart */
+  .sgs-rating--center {
+    align-self: center;
+    justify-content: center;
   }
 
   .sgs-rating:focus-visible {
@@ -122,6 +128,16 @@
       "label": "Reviews section ID",
       "default": "17937299023bbff9d5",
       "info": "The ID of the section holding the Judge.me reviews, as in the product template."
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Centre" }
+      ],
+      "default": "left"
     },
     {
       "type": "color",

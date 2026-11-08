@@ -33,6 +33,7 @@
     align-items: center;
     gap: 8px;
     width: 100%;
+    container-type: inline-size;
     font-family: var(--sgs-font-body, Inter, sans-serif);
     color: var(--sgs-text, #111111);
   }
@@ -51,11 +52,13 @@
     color: var(--sgs-trustline-color, #4d7c0f);
   }
 
+  /* Capitals, sized to the space so the line stays on one row (13px when there's room) */
   .sgs-trustline__text {
-    font-size: 14px;
+    font-size: clamp(11px, 3.4cqi, 13px);
     font-weight: 500;
     line-height: 1.4;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     color: inherit;
   }
 

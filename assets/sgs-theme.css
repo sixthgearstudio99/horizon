@@ -260,9 +260,10 @@ button[ref='addToCartButton'] {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    /* The image's focal point when set in Shopify, else a little above centre so the top of
-       the poster stays in view (snippets/product-media.liquid sets --sgs-focal) */
-    object-position: var(--sgs-focal, center 35%);
+    /* The image's focal point when set in Shopify, else anchored to the top so the top of the
+       poster is never cut off; any trimming comes off the bottom (snippets/product-media.liquid
+       sets --sgs-focal) */
+    object-position: var(--sgs-focal, center top);
   }
 
   /* Tighter top of the product column, so a two-line title still leaves the price and

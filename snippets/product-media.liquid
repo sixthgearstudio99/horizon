@@ -51,8 +51,8 @@
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
 
     # SixthGear: the image's own focal point (Shopify admin) for the phone gallery's crop, only when
-    # one is set. Unset (or the plain centre Shopify reports by default) leaves CSS to use center 35%,
-    # which keeps the top of a poster in view.
+    # one is set. Unset (or the plain centre Shopify reports by default) leaves CSS to anchor the
+    # crop to the top, so the top of a poster is never cut off.
     assign sgs_focal = media.presentation.focal_point | append: '' | strip
     assign sgs_focal_plain = sgs_focal | remove: '.0' | remove: ' '
     if sgs_focal != blank and sgs_focal_plain != '50%50%'

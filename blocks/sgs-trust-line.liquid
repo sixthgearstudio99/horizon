@@ -11,6 +11,7 @@
     style="--sgs-trustline-color: {{ bs.icon_color | default: '#4d7c0f' }};"
     {{ block.shopify_attributes }}
   >
+    <div class="sgs-trustline__row">
     {%- case bs.icon -%}
       {%- when 'tick' -%}
         <svg class="sgs-trustline__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -24,27 +25,50 @@
     {%- else -%}
       <span class="sgs-trustline__text">{{ text | escape }}</span>
     {%- endif -%}
+    </div>
+    {%- if bs.show_stars -%}
+      {%- comment -%} Decorative only: not a rating, so not read out {%- endcomment -%}
+      <span class="sgs-trustline__stars" style="--sgs-trustline-stars: {{ bs.stars_color | default: '#b7821a' }};" aria-hidden="true">★★★★★</span>
+    {%- endif -%}
   </div>
 {%- endif -%}
 
 {% stylesheet %}
   .sgs-trustline {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
     width: 100%;
     container-type: inline-size;
     font-family: var(--sgs-font-body, Inter, sans-serif);
     color: var(--sgs-text, #111111);
   }
 
+  .sgs-trustline__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .sgs-trustline--center {
-    justify-content: center;
+    align-items: center;
     text-align: center;
   }
 
+  .sgs-trustline--center .sgs-trustline__row {
+    justify-content: center;
+  }
+
   .sgs-trustline--left {
-    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  /* Five stars under the line, in gold */
+  .sgs-trustline__stars {
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 2px;
+    color: var(--sgs-trustline-stars, #b7821a);
   }
 
   .sgs-trustline__icon {
@@ -124,6 +148,19 @@
       "id": "link",
       "label": "Link",
       "info": "Optional, e.g. to your reviews."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars",
+      "label": "Show five stars under the line",
+      "default": true,
+      "info": "Decorative; not linked to Judge.me reviews."
+    },
+    {
+      "type": "color",
+      "id": "stars_color",
+      "label": "Star colour",
+      "default": "#b7821a"
     }
   ],
   "presets": [

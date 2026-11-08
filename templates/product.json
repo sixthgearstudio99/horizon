@@ -101,7 +101,7 @@
               "type": "sgs-rating",
               "settings": {
                 "target_id": "17937299023bbff9d5",
-                "alignment": "center"
+                "alignment": "left"
               },
               "blocks": {}
             },
@@ -392,7 +392,9 @@
                 "icon": "tick_circle",
                 "icon_color": "#4d7c0f",
                 "alignment": "center",
-                "link": ""
+                "link": "",
+                "show_stars": true,
+                "stars_color": "#b7821a"
               },
               "blocks": {}
             },
@@ -429,6 +431,7 @@
           },
           "block_order": [
             "sgs_header",
+            "sgs_rating",
             "price_tVjtKg",
             "sgs_delivery_line",
             "sgs_offer",
@@ -439,7 +442,6 @@
             "sgs_personalise",
             "buy_buttons_eYQEYi",
             "sgs_trustline",
-            "sgs_rating",
             "sgs_ptrust",
             "sgs_delivery",
             "sgs_wall",

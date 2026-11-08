@@ -5,7 +5,7 @@
  * Esc or the close button to close. Built on <dialog>, so focus is trapped and returned.
  * Each image shows the page's copy straight away, then swaps to its 2048px version
  * (data-sgs-full on the gallery media) once that has loaded, for the current image and its
- * neighbours. On phones, a zoom icon sits in the main image's bottom-right corner.
+ * neighbours. On phones, a zoom icon sits in each image's bottom-right corner.
  */
 (() => {
   if (window.SgsLightbox) return;
@@ -313,34 +313,21 @@
     container.click();
   });
 
-  // Phones: a zoom icon in the main image's bottom-right corner (decorative; tapping the image
-  // opens the full-screen view). Hidden while a video or 3D model slide is showing.
-  const hintFor = (gallery) => {
-    const frame = gallery.querySelector('slideshow-container');
-    if (!frame || !gallery.querySelector('.product-media-container--image')) return;
-    let hint = frame.querySelector(':scope > .sgs-zoom-hint');
-    if (!hint) {
-      hint = el('span', 'sgs-zoom-hint', { 'aria-hidden': 'true' });
+  // Phones: a zoom icon in each image's own bottom-right corner (decorative; tapping the image
+  // opens the full-screen view). Only image slides get one, so none shows on a video.
+  const addHints = (gallery) => {
+    gallery.querySelectorAll('slideshow-slide.product-media-container--image .product-media').forEach((media) => {
+      if (media.querySelector(':scope > .sgs-zoom-hint')) return;
+      const hint = el('span', 'sgs-zoom-hint', { 'aria-hidden': 'true' });
       hint.innerHTML = '<svg width="16" height="16" viewBox="0 0 18 18" focusable="false"><circle cx="7.5" cy="7.5" r="5.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11.5 11.5L16 16M7.5 5v5M5 7.5h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-      frame.appendChild(hint);
-    }
-    return hint;
+      media.appendChild(hint);
+    });
   };
-  const syncHint = (gallery, slide) => {
-    const hint = hintFor(gallery);
-    if (!hint) return;
-    const current = slide || gallery.querySelector('slideshow-slide[aria-hidden="false"]') || gallery.querySelector('slideshow-slide');
-    hint.hidden = !!current && !current.classList.contains('product-media-container--image');
-  };
-  document.addEventListener('slideshow:select', (e) => {
-    const gallery = e.target instanceof Element ? e.target.closest('[data-sgs-lightbox]') : null;
-    if (gallery) syncHint(gallery, e.detail?.slide);
-  });
 
   // Make each image slide focusable and labelled; repeated when Horizon re-renders the gallery
   const prepare = () => {
     document.querySelectorAll('[data-sgs-lightbox]').forEach((gallery) => {
-      syncHint(gallery);
+      addHints(gallery);
       const containers = [...gallery.querySelectorAll('.product-media-container--image')];
       containers.forEach((c) => {
         if (c.hasAttribute('data-sgs-lb-ready')) return;

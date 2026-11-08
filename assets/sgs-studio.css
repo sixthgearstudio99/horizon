@@ -593,12 +593,12 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 }
 
 @media screen and (max-width: 749px) {
-  media-gallery slideshow-container {
+  media-gallery slideshow-slide .product-media {
     position: relative;
   }
 
-  /* Bottom-right of the main image; decorative, taps go through to the image */
-  media-gallery .sgs-zoom-hint {
+  /* Bottom-right of each image; decorative, taps go through to the image */
+  media-gallery slideshow-slide .sgs-zoom-hint {
     position: absolute;
     right: 12px;
     bottom: 12px;
@@ -614,9 +614,6 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
     pointer-events: none;
   }
 
-  media-gallery .sgs-zoom-hint[hidden] {
-    display: none;
-  }
 
   /* "1 / 6" under the image, in the page's own type rather than a pill on the photo */
   media-gallery slideshow-controls[controls-on-media]:has(.slideshow-controls__counter) {

@@ -247,23 +247,25 @@ button[ref='addToCartButton'] {
     align-items: flex-start;
   }
 
-  /* First screen: each image at most 58% of the screen's height, filling its frame (cover) around
-     its focal point, so the title, price and delivery line show without scrolling. svh = the height with
-     the browser bars showing. Shorter (landscape) images keep their own height. */
+  /* First screen: every image shown whole, never cropped, at most 58% of the screen's height so
+     the title, price and delivery line show without scrolling. The frame takes the image's own
+     shape (--ratio, from Shopify): full width, or narrower and centred when a tall image would
+     pass 58% of the height. svh = the height with the browser bars showing. */
   media-gallery .product-media-container .product-media {
     width: 100%;
-    max-height: 58vh;
-    max-height: 58svh;
+    width: min(100%, calc(58vh * var(--ratio, 0.8)));
+    width: min(100%, calc(58svh * var(--ratio, 0.8)));
+    max-height: none;
+    aspect-ratio: var(--ratio, 0.8);
+    flex: none;
+    margin-inline: auto;
   }
 
   media-gallery .product-media-container .product-media :is(img, .product-media__image) {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    /* The image's focal point when set in Shopify, else anchored to the top so the top of the
-       poster is never cut off; any trimming comes off the bottom (snippets/product-media.liquid
-       sets --sgs-focal) */
-    object-position: var(--sgs-focal, center top);
+    object-fit: contain;
+    object-position: center;
   }
 
   /* Tighter top of the product column, so a two-line title still leaves the price and

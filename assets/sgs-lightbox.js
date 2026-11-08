@@ -3,6 +3,9 @@
  * Tap or click a gallery image to open it. Swipe (native scroll snap) or use the arrows / arrow
  * keys to move between images; pinch or double-tap to zoom on touch, click to zoom on desktop;
  * Esc or the close button to close. Built on <dialog>, so focus is trapped and returned.
+ * Each image shows the page's copy straight away, then swaps to its 2048px version
+ * (data-sgs-full on the gallery media) once that has loaded, for the current image and its
+ * neighbours. On phones, a zoom icon sits in the main image's bottom-right corner.
  */
 (() => {
   if (window.SgsLightbox) return;
@@ -74,8 +77,9 @@
             image.width = img.w;
             image.height = img.h;
           }
-          if (img.srcset) image.srcset = img.srcset;
+          if (img.srcset && !img.full) image.srcset = img.srcset;
           image.src = img.src;
+          if (img.full) image.dataset.full = img.full;
           slide.appendChild(image);
           return slide;
         })
@@ -104,6 +108,27 @@
       this.index = Math.max(0, Math.min(n - 1, i));
       this.track.scrollTo({ left: this.index * this.track.clientWidth, behavior });
       this.updateCount();
+      this.loadFull(this.index);
+    }
+
+    /** Swap to the 2048px image once loaded, for this image and its neighbours */
+    loadFull(i) {
+      [i, i + 1, i - 1].forEach((k) => {
+        const image = this.track.children[k]?.querySelector('img');
+        const full = image?.dataset.full;
+        if (!full || image.dataset.fullLoading) return;
+        image.dataset.fullLoading = '1';
+        const hi = new Image();
+        hi.decoding = 'async';
+        hi.src = full;
+        const swap = () => {
+          image.removeAttribute('srcset');
+          image.src = full;
+        };
+        (hi.decode ? hi.decode() : Promise.reject()).then(swap, () => {
+          hi.onload = swap;
+        });
+      });
     }
 
     syncIndex() {
@@ -112,6 +137,7 @@
         this.resetZoom();
         this.index = i;
         this.updateCount();
+        this.loadFull(i);
       }
     }
 
@@ -260,7 +286,7 @@
       const img = media.querySelector('img');
       if (!img || seen.has(id)) return;
       seen.add(id);
-      out.push({ id, src: img.currentSrc || img.src, srcset: img.getAttribute('srcset') || '', alt: img.alt, w: img.naturalWidth || img.width, h: img.naturalHeight || img.height });
+      out.push({ id, src: img.currentSrc || img.src, srcset: img.getAttribute('srcset') || '', full: media.getAttribute('data-sgs-full') || '', alt: img.alt, w: img.naturalWidth || img.width, h: img.naturalHeight || img.height });
     });
     return out;
   };
@@ -287,9 +313,34 @@
     container.click();
   });
 
+  // Phones: a zoom icon in the main image's bottom-right corner (decorative; tapping the image
+  // opens the full-screen view). Hidden while a video or 3D model slide is showing.
+  const hintFor = (gallery) => {
+    const frame = gallery.querySelector('slideshow-container');
+    if (!frame || !gallery.querySelector('.product-media-container--image')) return;
+    let hint = frame.querySelector(':scope > .sgs-zoom-hint');
+    if (!hint) {
+      hint = el('span', 'sgs-zoom-hint', { 'aria-hidden': 'true' });
+      hint.innerHTML = '<svg width="16" height="16" viewBox="0 0 18 18" focusable="false"><circle cx="7.5" cy="7.5" r="5.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11.5 11.5L16 16M7.5 5v5M5 7.5h5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+      frame.appendChild(hint);
+    }
+    return hint;
+  };
+  const syncHint = (gallery, slide) => {
+    const hint = hintFor(gallery);
+    if (!hint) return;
+    const current = slide || gallery.querySelector('slideshow-slide[aria-hidden="false"]') || gallery.querySelector('slideshow-slide');
+    hint.hidden = !!current && !current.classList.contains('product-media-container--image');
+  };
+  document.addEventListener('slideshow:select', (e) => {
+    const gallery = e.target instanceof Element ? e.target.closest('[data-sgs-lightbox]') : null;
+    if (gallery) syncHint(gallery, e.detail?.slide);
+  });
+
   // Make each image slide focusable and labelled; repeated when Horizon re-renders the gallery
   const prepare = () => {
     document.querySelectorAll('[data-sgs-lightbox]').forEach((gallery) => {
+      syncHint(gallery);
       const containers = [...gallery.querySelectorAll('.product-media-container--image')];
       containers.forEach((c) => {
         if (c.hasAttribute('data-sgs-lb-ready')) return;

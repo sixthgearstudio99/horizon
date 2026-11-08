@@ -587,6 +587,69 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   outline-offset: -3px;
 }
 
+/* ---------- Product gallery on phones: zoom icon and image counter ---------- */
+.sgs-zoom-hint {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  media-gallery slideshow-container {
+    position: relative;
+  }
+
+  /* Bottom-right of the main image; decorative, taps go through to the image */
+  media-gallery .sgs-zoom-hint {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.9);
+    color: var(--sgs-text, #111111);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.16);
+    pointer-events: none;
+  }
+
+  media-gallery .sgs-zoom-hint[hidden] {
+    display: none;
+  }
+
+  /* "1 / 6" under the image, in the page's own type rather than a pill on the photo */
+  media-gallery slideshow-controls[controls-on-media]:has(.slideshow-controls__counter) {
+    position: static;
+    min-height: 0;
+    padding-block: 10px 2px;
+    --color-foreground: var(--sgs-text, #111111);
+    --color-foreground-rgb: 17 17 17;
+  }
+
+  media-gallery .slideshow-controls__counter {
+    margin-inline: auto;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    backdrop-filter: none;
+    color: var(--sgs-text-2, #6b6b6b);
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    font-size: 13px;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+  }
+
+  media-gallery .slideshow-controls__counter [ref='current'] {
+    font-weight: 500;
+    color: var(--sgs-text, #111111);
+  }
+
+  media-gallery .slideshow-controls__counter .slash {
+    padding-inline: 4px;
+  }
+}
+
 html.sgs-lb-open {
   overflow: hidden;
 }
@@ -602,7 +665,8 @@ html.sgs-lb-open {
   padding: 0;
   border: 0;
   background: #000;
-  color: var(--sgs-text);
+  /* Light text and controls on the black full-screen view */
+  color: #ffffff;
   overflow: hidden;
 }
 
@@ -635,17 +699,17 @@ html.sgs-lb-open {
   width: 48px;
   height: 48px;
   padding: 0;
-  border: 1px solid var(--sgs-line);
-  border-radius: 0;
-  background: rgb(11 11 11 / 0.7);
-  color: var(--sgs-text);
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  color: #ffffff;
   cursor: pointer;
   pointer-events: auto;
 }
 
 .sgs-lb__close:focus-visible,
 .sgs-lb__nav:focus-visible {
-  outline: 1px solid var(--sgs-text);
+  outline: 2px solid #ffffff;
   outline-offset: 2px;
 }
 

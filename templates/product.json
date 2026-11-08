@@ -381,6 +381,17 @@
                 "framed_note": "From [price] · Ready to hang · Made in the UK"
               },
               "blocks": {}
+            },
+            "sgs_trustline": {
+              "type": "sgs-trust-line",
+              "settings": {
+                "text": "Trusted and enjoyed by motorsport lovers",
+                "icon": "tick_circle",
+                "icon_color": "#4d7c0f",
+                "alignment": "center",
+                "link": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -394,6 +405,7 @@
             "sgs_size_guide",
             "sgs_personalise",
             "buy_buttons_eYQEYi",
+            "sgs_trustline",
             "sgs_ptrust",
             "sgs_delivery",
             "sgs_wall",

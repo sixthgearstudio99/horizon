@@ -1,0 +1,132 @@
+{%- liquid
+  # SixthGear: one short reassurance line with a green tick, under the Add to cart button
+  assign bs = block.settings
+  assign text = bs.text | strip
+  assign link = bs.link | strip
+-%}
+
+{%- if text != blank and closest.product.gift_card? != true -%}
+  <div
+    class="sgs-trustline sgs-trustline--{{ bs.alignment | default: 'center' }}"
+    style="--sgs-trustline-color: {{ bs.icon_color | default: '#4d7c0f' }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- case bs.icon -%}
+      {%- when 'tick' -%}
+        <svg class="sgs-trustline__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18"><path d="M3.5 9.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {%- when 'shield' -%}
+        <svg class="sgs-trustline__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18"><path d="M9 1.5l6 2.3v4.6c0 3.7-2.6 6.5-6 8-3.4-1.5-6-4.3-6-8V3.8z" fill="currentColor"/><path d="M6 9.2l2.1 2.1L12.2 7" fill="none" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      {%- else -%}
+        <svg class="sgs-trustline__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="9" fill="currentColor"/><path d="M5.3 9.3l2.4 2.4 5-5.2" fill="none" stroke="#ffffff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    {%- endcase -%}
+    {%- if link != blank -%}
+      <a class="sgs-trustline__text" href="{{ link | escape }}">{{ text | escape }}</a>
+    {%- else -%}
+      <span class="sgs-trustline__text">{{ text | escape }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-trustline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    color: var(--sgs-text, #111111);
+  }
+
+  .sgs-trustline--center {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .sgs-trustline--left {
+    justify-content: flex-start;
+  }
+
+  .sgs-trustline__icon {
+    flex-shrink: 0;
+    color: var(--sgs-trustline-color, #4d7c0f);
+  }
+
+  .sgs-trustline__text {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    color: inherit;
+  }
+
+  a.sgs-trustline__text {
+    text-decoration: underline;
+    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.3s ease;
+  }
+
+  a.sgs-trustline__text:hover {
+    text-decoration-color: currentColor;
+  }
+
+  a.sgs-trustline__text:focus-visible {
+    outline: 1px solid var(--sgs-text, #111111);
+    outline-offset: 2px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Trust line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Trusted and enjoyed by motorsport lovers",
+      "info": "Leave empty to hide."
+    },
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "Icon",
+      "options": [
+        { "value": "tick_circle", "label": "Tick in a circle" },
+        { "value": "tick", "label": "Tick" },
+        { "value": "shield", "label": "Shield with tick" }
+      ],
+      "default": "tick_circle"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon colour",
+      "default": "#4d7c0f",
+      "info": "Matches the Add to cart button."
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Alignment",
+      "options": [
+        { "value": "center", "label": "Centre" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Optional, e.g. to your reviews."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust line"
+    }
+  ]
+}
+{% endschema %}

@@ -95,9 +95,30 @@
   if gift_line_until != blank and today_ymd <= gift_line_until
     assign show_gift_line = true
   endif
+
+  # "Line" layout: one short line under the price, e.g. "Free UK delivery · Arrives by Fri 20 Nov ·
+  # 14-day returns". Custom posters are made to order and can't be returned, so they get their own text.
+  assign is_line = false
+  if bs.layout == 'line'
+    assign is_line = true
+    assign line_text = bs.line_text
+    if custom_handles contains closest.product.handle and bs.line_text_custom != blank
+      assign line_text = bs.line_text_custom
+    endif
+    assign line_parts = line_text | escape | split: '[date]'
+  endif
 -%}
 
 {%- unless closest.product.gift_card? -%}
+{%- if is_line -%}
+<p class="sgs-delivery-line" id="{{ uid }}" {{ block.shopify_attributes }}>
+  {%- for part in line_parts -%}
+    {{- part -}}
+    {%- unless forloop.last -%}<span class="sgs-delivery-line__date" data-last>{{ last_text }}</span>{%- endunless -%}
+  {%- endfor -%}
+  {%- if line_parts.size == 1 and line_text contains '[date]' -%}<span class="sgs-delivery-line__date" data-last>{{ last_text }}</span>{%- endif -%}
+</p>
+{%- else -%}
 <div class="sgs-delivery" id="{{ uid }}" {{ block.shopify_attributes }}>
   <svg class="sgs-delivery__icon" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--color-background, #f5f3ef)"/></svg>
 
@@ -125,6 +146,7 @@
   {%- endif -%}
   </div>
 </div>
+{%- endif -%}
 
 {%- comment -%}
   Inline so the dates are filled in before first paint (no layout shift). The range is worked out
@@ -171,14 +193,20 @@
       var xmasUntil = {{ gift_line_until | json }};
       if (xmas) xmas.hidden = !(xmasUntil && ymd <= xmasUntil);
 
-      var christmas = mmdd >= start && mmdd <= end;
-      root.querySelector('[data-standard]').hidden = christmas;
-      root.querySelector('[data-christmas]').hidden = !christmas;
-      if (christmas) return;
-
       var first = addWorkingDays(minDays);
       var last = addWorkingDays(maxDays);
       var lastText = dayText(last) + ' ' + monthText(last);
+      // Line layout: just the latest date
+      root.querySelectorAll('[data-last]').forEach(function (el) { el.textContent = lastText; });
+
+      var standard = root.querySelector('[data-standard]');
+      var christmasText = root.querySelector('[data-christmas]');
+      if (!standard || !christmasText) return;
+      var christmas = mmdd >= start && mmdd <= end;
+      standard.hidden = christmas;
+      christmasText.hidden = !christmas;
+      if (christmas) return;
+
       var range = minDays === maxDays
         ? lastText
         : (first.getUTCMonth() === last.getUTCMonth() ? dayText(first) : dayText(first) + ' ' + monthText(first)) + ' – ' + lastText;
@@ -255,6 +283,22 @@
     text-decoration: underline;
     text-underline-offset: 3px;
   }
+
+  /* Line layout: one small line tucked under the price */
+  .sgs-delivery-line {
+    width: 100%;
+    margin: -14px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-delivery-line__date {
+    font-weight: 500;
+    color: var(--sgs-text, #111111);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -265,6 +309,32 @@
     {
       "type": "paragraph",
       "content": "Shows the delivery window from the visitor's own date, counting Monday to Friday only."
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "full", "label": "Estimate with icon" },
+        { "value": "line", "label": "One line (under the price)" }
+      ],
+      "default": "full"
+    },
+    {
+      "type": "text",
+      "id": "line_text",
+      "label": "One-line text",
+      "default": "Free UK delivery · Arrives by [date] · 14-day returns",
+      "info": "One-line layout only. [date] becomes the latest delivery date.",
+      "visible_if": "{{ block.settings.layout == 'line' }}"
+    },
+    {
+      "type": "text",
+      "id": "line_text_custom",
+      "label": "One-line text on custom posters",
+      "default": "Free UK delivery · Arrives by [date]",
+      "info": "For the custom poster handles below, which can't be returned.",
+      "visible_if": "{{ block.settings.layout == 'line' }}"
     },
     {
       "type": "text",

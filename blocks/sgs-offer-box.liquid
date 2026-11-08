@@ -1,35 +1,87 @@
 {%- liquid
-  # The open offer window's message (Theme settings > SixthGear: offers), on Shopify's clock;
-  # CSS shows it only while the visitor's clock agrees (html[data-sgs-sale]).
+  # The open offer window (Theme settings > SixthGear: offers), on Shopify's clock; CSS shows it
+  # only while the visitor's clock agrees (html[data-sgs-sale]).
+  assign bs = block.settings
+  assign product_resource = closest.product
   capture sgs_sale_win
     render 'sgs-sale-window'
   endcapture
   assign sgs_sale_win = sgs_sale_win | strip
   assign message = ''
   if sgs_sale_win != blank
-    assign message_key = 'sgs_sale' | append: sgs_sale_win | append: '_message'
+    assign key = 'sgs_sale' | append: sgs_sale_win
+    assign message_key = key | append: '_message'
+    assign percent_key = key | append: '_percent'
+    assign end_key = key | append: '_end'
     assign message = settings[message_key] | strip
+    assign percent = settings[percent_key] | plus: 0
+    assign window_end = settings[end_key] | strip
+
+    # "15% OFF · YOU SAVE £5.25 · ENDS SUN 15 NOV": the saving is the struck-through price minus
+    # the sale price of the chosen size, rounded as the percentage discount is at checkout
+    assign in_sale = true
+    if percent <= 0 or product_resource == blank
+      assign in_sale = false
+    endif
+    assign excluded = settings.sgs_sale_excluded_handles | strip_newlines | remove: ' ' | split: ','
+    if excluded contains product_resource.handle
+      assign in_sale = false
+    endif
+    if in_sale and bs.title_format != blank
+      assign amount = product_resource.selected_or_first_available_variant.price
+      assign saving = amount | times: percent | plus: 50 | divided_by: 100 | floor | money
+      assign title = bs.title_format | strip
+      if window_end.size == 16
+        assign ends = window_end | date: '%a %-d %b' | upcase
+        assign title = title | replace: '[end]', ends
+      else
+        assign title = title | remove: ' · ENDS [end]' | remove: ' · Ends [end]' | remove: '[end]'
+      endif
+      assign message = title | replace: '[percent]', percent | replace: '[saving]', saving
+    endif
   endif
-  assign note = block.settings.note | default: settings.sgs_offer_note
+  assign note = bs.note | strip
 
   # Framed prints are never discounted: no offer, just a plain line saying so
   capture sgs_framed
-    render 'sgs-is-framed', product_resource: closest.product
+    render 'sgs-is-framed', product_resource: product_resource
   endcapture
   assign sgs_framed = sgs_framed | strip
 -%}
 
 {%- if sgs_framed == 'true' -%}
-  {%- if block.settings.framed_line != blank -%}
-    <p class="sgs-offer-framed" {{ block.shopify_attributes }}>{{ block.settings.framed_line | escape }}</p>
+  {%- if bs.framed_line != blank -%}
+    <p class="sgs-offer-framed" {{ block.shopify_attributes }}>{{ bs.framed_line | escape }}</p>
   {%- endif -%}
-{%- elsif message != blank and closest.product.gift_card? != true -%}
-  <div class="sgs-offer" data-sgs-offer-win="{{ sgs_sale_win }}" role="note" {{ block.shopify_attributes }}>
-    <p class="sgs-offer__title">{{ message | escape }}</p>
+{%- elsif message != blank and product_resource.gift_card? != true -%}
+  <div class="sgs-offer" data-sgs-offer-win="{{ sgs_sale_win }}" data-block-id="{{ block.id }}" role="note" {{ block.shopify_attributes }}>
+    <p class="sgs-offer__title" data-sgs-offer-title>{{ message | escape }}</p>
     {%- if note != blank -%}
       <p class="sgs-offer__note">{{ note | escape }}</p>
     {%- endif -%}
   </div>
+  <script>
+    (function () {
+      // The saving follows the chosen size: Horizon re-renders the page for the new variant and
+      // hands the HTML to listeners; the new title is copied across from it
+      var box = document.currentScript.previousElementSibling;
+      var section = box && box.closest('.shopify-section');
+      if (!section || section.dataset.sgsOfferWatch) return;
+      section.dataset.sgsOfferWatch = '1';
+      section.addEventListener('shopify:product:select', function (event) {
+        if (!event.promise) return;
+        event.promise.then(function (result) {
+          var html = result && result.detail && result.detail.html;
+          if (!html) return;
+          section.querySelectorAll('.sgs-offer[data-block-id]').forEach(function (current) {
+            var fresh = html.querySelector('.sgs-offer[data-block-id="' + current.dataset.blockId + '"] [data-sgs-offer-title]');
+            var title = current.querySelector('[data-sgs-offer-title]');
+            if (fresh && title) title.textContent = fresh.textContent;
+          });
+        }).catch(function () {});
+      });
+    })();
+  </script>
 {%- endif -%}
 
 {% stylesheet %}
@@ -96,9 +148,16 @@
     },
     {
       "type": "text",
+      "id": "title_format",
+      "label": "Offer text",
+      "default": "[percent]% OFF · YOU SAVE [saving] · ENDS [end]",
+      "info": "[percent] is the offer's percentage, [saving] what it takes off the chosen size, [end] its end date (left out when it has none). Empty uses the offer's message from Theme settings."
+    },
+    {
+      "type": "text",
       "id": "note",
       "label": "Line under the offer",
-      "info": "Leave empty to use the line from Theme settings (Applied automatically at checkout.)."
+      "info": "Leave empty to hide."
     },
     {
       "type": "text",

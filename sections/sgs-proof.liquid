@@ -124,6 +124,7 @@
     </div>
   </section>
   <script src="{{ 'sgs-media-row.js' | asset_url }}" defer></script>
+  {%- if s.mobile_under_buy -%}{% render 'sgs-mobile-move' %}{%- endif -%}
 {%- elsif request.design_mode -%}
   <div class="sgs-proof-note">{{ s.heading | default: s.label | default: 'Media row' | escape }}: add photos or videos (blocks) to show this section. It's hidden on the store until then.</div>
 {%- endif -%}
@@ -229,8 +230,15 @@
     margin: 0;
   }
 
+  /* Each tile clips and positions its own overlays (the sound badge), so nothing can escape it */
+  .sgs-proof__card {
+    position: relative;
+  }
+
   .sgs-proof__media {
     position: relative;
+    isolation: isolate;
+    contain: paint;
     display: block;
     width: 100%;
     padding: 0;
@@ -269,16 +277,20 @@
     object-fit: cover;
   }
 
-  .sgs-proof__sound {
+  /* Sound badge: only on video tiles, in the tile's own bottom corner */
+  .sgs-proof__media > .sgs-proof__sound {
     position: absolute;
     right: 8px;
     bottom: 8px;
+    z-index: 1;
     display: grid;
     place-items: center;
     width: 28px;
     height: 28px;
-    background: rgb(11 11 11 / 0.7);
-    color: var(--sgs-text, #111111);
+    border-radius: 50%;
+    background: rgb(11 11 11 / 0.6);
+    color: #ffffff;
+    pointer-events: none;
   }
 
   .sgs-proof__caption {
@@ -433,6 +445,13 @@
       "label": "Shop link label",
       "default": "Shop the print",
       "info": "Shown under full-screen tiles that have a link."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_under_buy",
+      "label": "On phones, show under the buy buttons",
+      "default": false,
+      "info": "Product pages: appears in the \"Mobile: sections here\" block instead, under 750px wide."
     },
     {
       "type": "range",

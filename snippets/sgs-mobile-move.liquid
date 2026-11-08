@@ -1,0 +1,29 @@
+{%- doc -%}
+  SixthGear Studios: on phones (under 750px), moves the section this is rendered in to the
+  "Mobile: sections here" block in the product column (blocks/sgs-mobile-slot.liquid), e.g. under
+  the buy buttons. Sections arrive in page order. From 750px up, and in the theme editor, it stays
+  where it is in the template. Render it as the last thing in the section.
+
+  @example
+  {%- if section.settings.mobile_under_buy -%}{% render 'sgs-mobile-move' %}{%- endif -%}
+{%- enddoc -%}
+
+<script>
+  (function () {
+    var section = document.currentScript.closest('.shopify-section');
+    if (!section || (window.Shopify && window.Shopify.designMode)) return;
+    var phones = window.matchMedia('(max-width: 749px)');
+    var home = document.createComment('sgs-mobile-move');
+    section.parentNode.insertBefore(home, section);
+    var place = function () {
+      var slot = document.querySelector('[data-sgs-mobile-slot]');
+      if (phones.matches && slot) {
+        if (section.parentNode !== slot) slot.appendChild(section);
+      } else if (home.parentNode && home.nextSibling !== section) {
+        home.parentNode.insertBefore(section, home.nextSibling);
+      }
+    };
+    place();
+    if (phones.addEventListener) phones.addEventListener('change', place);
+  })();
+</script>

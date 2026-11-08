@@ -52,12 +52,16 @@ if (!customElements.get('sgs-media-row')) {
     'sgs-media-row',
     class extends HTMLElement {
       connectedCallback() {
-        this.addEventListener('click', (e) => {
-          const tile = e.target instanceof Element ? e.target.closest('[data-expand]') : null;
-          if (!tile) return;
-          e.preventDefault();
-          openFull(tile);
-        });
+        // Connected again when the row is moved (e.g. under the buy buttons on phones): one handler only
+        if (!this.clickBound) {
+          this.clickBound = true;
+          this.addEventListener('click', (e) => {
+            const tile = e.target instanceof Element ? e.target.closest('[data-expand]') : null;
+            if (!tile) return;
+            e.preventDefault();
+            openFull(tile);
+          });
+        }
 
         const videos = [...this.querySelectorAll('video')];
         if (!videos.length) return;

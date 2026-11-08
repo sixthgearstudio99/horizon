@@ -44,6 +44,27 @@
     assign has_steps = true
   endif
 
+  # Only shown with pictures: steps without any images would leave a band of empty boxes
+  assign has_images = false
+  if use_metafields
+    for img in mf_images
+      if img != blank
+        assign has_images = true
+        break
+      endif
+    endfor
+  elsif blocks_apply
+    for block in section.blocks
+      if block.settings.image != blank
+        assign has_images = true
+        break
+      endif
+    endfor
+  endif
+  unless has_images
+    assign has_steps = false
+  endunless
+
   assign show = false
   if picked or in_collection
     if has_steps
@@ -146,9 +167,10 @@
   <script src="{{ 'sgs-timeline.js' | asset_url }}" defer></script>
 {%- elsif request.design_mode and in_collection -%}
   <div class="sgs-tl-note">
-    Lineage timeline: hidden on this print until its generations are added. Fill the product
-    metafields custom.lineage_models (list of text, e.g. "F1", "P1", "Senna"), and optionally
-    custom.lineage_years, custom.lineage_notes (lists of text) and custom.lineage_images (list of images), in the same order.
+    Lineage timeline: hidden on this print until its generations are added with pictures. Fill the
+    product metafields custom.lineage_models (list of text, e.g. "F1", "P1", "Senna") and
+    custom.lineage_images (list of images), and optionally custom.lineage_years and
+    custom.lineage_notes (lists of text), in the same order.
   </div>
 {%- else -%}
   <span class="sgs-tl-hidden" hidden></span>
@@ -365,8 +387,9 @@
   }
 
   @media screen and (max-width: 749px) {
+    /* A modest gap above and below on phones, whatever the desktop padding */
     .sgs-tl {
-      padding-block: calc(var(--sgs-tl-pad-top) * 0.6) calc(var(--sgs-tl-pad-bottom) * 0.6);
+      padding-block: min(calc(var(--sgs-tl-pad-top) * 0.6), 48px) min(calc(var(--sgs-tl-pad-bottom) * 0.6), 64px);
     }
 
     .sgs-tl__track {

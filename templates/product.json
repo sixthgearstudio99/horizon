@@ -132,7 +132,8 @@
               "type": "sgs-offer-box",
               "settings": {
                 "note": "",
-                "framed_line": "Framed prints are excluded from sales and bundle offers."
+                "framed_line": "Framed prints are excluded from sales and bundle offers.",
+                "title_format": "[percent]% OFF · YOU SAVE [saving] · ENDS [end]"
               },
               "blocks": {}
             },
@@ -312,7 +313,8 @@
                 "christmas_from": "12-10",
                 "christmas_to": "12-24",
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card"
+                "gift_card_handle": "gift-card",
+                "layout": "full"
               },
               "blocks": {}
             },
@@ -392,12 +394,43 @@
                 "link": ""
               },
               "blocks": {}
+            },
+            "sgs_delivery_line": {
+              "type": "sgs-delivery-estimate",
+              "settings": {
+                "text_before": "Order today · arrives",
+                "footnote": "",
+                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+                "production_min": 2,
+                "production_max": 5,
+                "delivery_min": 2,
+                "delivery_max": 4,
+                "christmas_line": "",
+                "christmas_line_until": "2026-12-09",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+                "custom_line": "",
+                "custom_line_until": "2026-12-02",
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card",
+                "layout": "line",
+                "line_text": "Free UK delivery · Arrives by [date] · 14-day returns",
+                "line_text_custom": "Free UK delivery · Arrives by [date]"
+              },
+              "blocks": {}
+            },
+            "sgs_mobile_slot": {
+              "type": "sgs-mobile-slot",
+              "settings": {},
+              "blocks": {}
             }
           },
           "block_order": [
             "sgs_header",
             "sgs_rating",
             "price_tVjtKg",
+            "sgs_delivery_line",
             "sgs_offer",
             "divider_VJhene",
             "sgs_finish",
@@ -409,6 +442,7 @@
             "sgs_ptrust",
             "sgs_delivery",
             "sgs_wall",
+            "sgs_mobile_slot",
             "sgs_highlights",
             "sgs_desc",
             "sgs_info"
@@ -476,7 +510,8 @@
         "default_link": "",
         "shop_label": "Shop the print",
         "padding-block-start": 72,
-        "padding-block-end": 48
+        "padding-block-end": 48,
+        "mobile_under_buy": true
       }
     },
     "sgs_arrival": {
@@ -491,7 +526,8 @@
         "item_5": "",
         "item_6": "",
         "padding-block-start": 72,
-        "padding-block-end": 72
+        "padding-block-end": 72,
+        "mobile_under_buy": true
       }
     },
     "sgs_proof": {

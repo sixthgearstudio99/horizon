@@ -76,6 +76,13 @@
     margin: 0 0 20px;
   }
 
+  /* Phones: no breadcrumb, so the title and price fit on the first screen */
+  @media screen and (max-width: 749px) {
+    .sgs-pdp-header__crumbs {
+      display: none;
+    }
+  }
+
   .sgs-pdp-header__crumbs [aria-current] {
     color: var(--sgs-text, currentColor);
     overflow: hidden;

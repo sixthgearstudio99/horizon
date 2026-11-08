@@ -71,6 +71,7 @@
       </div>
     </div>
   </section>
+  {%- if s.mobile_under_buy -%}{% render 'sgs-mobile-move' %}{%- endif -%}
 {%- endif -%}
 
 {% stylesheet %}
@@ -221,6 +222,13 @@
       "id": "framed_image",
       "label": "Image on framed prints",
       "info": "Used instead of the image above, so a tube photo never shows on a framed print."
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_under_buy",
+      "label": "On phones, show under the buy buttons",
+      "default": false,
+      "info": "Product pages: appears in the \"Mobile: sections here\" block instead, under 750px wide."
     },
     {
       "type": "range",

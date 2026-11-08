@@ -1,0 +1,47 @@
+{%- comment -%}
+  SixthGear: where sections set to "On phones, show under the buy buttons" appear on phones
+  (snippets/sgs-mobile-move.liquid moves them here). Empty, and so not shown, from 750px up.
+{%- endcomment -%}
+<div class="sgs-mobile-slot" data-sgs-mobile-slot {{ block.shopify_attributes }}></div>
+
+{% stylesheet %}
+  .sgs-mobile-slot {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sgs-mobile-slot:empty {
+    display: none;
+  }
+
+  /* Sections moved in: the product column already has the page margin */
+  .sgs-mobile-slot .sgs-proof,
+  .sgs-mobile-slot .sgs-arrive {
+    padding-block: 8px;
+  }
+
+  .sgs-mobile-slot .sgs-proof__inner,
+  .sgs-mobile-slot .sgs-arrive__inner {
+    padding-inline: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Mobile: sections here",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "On phones, sections with \"On phones, show under the buy buttons\" turned on appear here. Nothing shows on larger screens or in the editor."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile: sections here"
+    }
+  ]
+}
+{% endschema %}

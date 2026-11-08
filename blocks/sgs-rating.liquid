@@ -30,7 +30,7 @@
     aria-label="Rated {{ rating_text }} out of {{ scale }}, {{ count }} {% if count == 1 %}review{% else %}reviews{% endif %}. Go to reviews"
     {{ block.shopify_attributes }}
   >
-    <span class="sgs-rating__stars" style="--sgs-rating: {{ percent }}%;" aria-hidden="true">
+    <span class="sgs-rating__stars" style="--sgs-rating: {{ percent }}%; --sgs-star: {{ bs.star_color | default: '#b7821a' }};" aria-hidden="true">
       <span class="sgs-rating__row sgs-rating__row--off">★★★★★</span>
       <span class="sgs-rating__row sgs-rating__row--on">★★★★★</span>
     </span>
@@ -69,16 +69,18 @@
     outline-offset: 2px;
   }
 
+  /* Gold stars, filled to the real average (e.g. 4.8 of 5) */
   .sgs-rating__stars {
     position: relative;
     display: inline-block;
-    font-size: 14px;
+    font-size: 16px;
     letter-spacing: 2px;
     line-height: 1;
   }
 
   .sgs-rating__row--off {
-    color: rgb(17 17 17 / 0.3);
+    color: var(--sgs-star, #b7821a);
+    opacity: 0.25;
   }
 
   .sgs-rating__row--on {
@@ -87,7 +89,7 @@
     width: var(--sgs-rating);
     overflow: hidden;
     white-space: nowrap;
-    color: var(--sgs-text, #111111);
+    color: var(--sgs-star, #b7821a);
   }
 
   .sgs-rating__text {
@@ -120,6 +122,13 @@
       "label": "Reviews section ID",
       "default": "17937299023bbff9d5",
       "info": "The ID of the section holding the Judge.me reviews, as in the product template."
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star colour",
+      "default": "#b7821a",
+      "info": "Gold by default (3:1 contrast on the page background)."
     }
   ],
   "presets": [

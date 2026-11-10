@@ -62,6 +62,21 @@
     <p class="sgs-pdp-header__eyebrow sgs-label">{{ eyebrow | escape }}</p>
   {%- endif -%}
   <h1 class="sgs-pdp-header__title">{{ product_resource.title | escape }}</h1>
+  {%- liquid
+    # Line under the title, e.g. "Lineage · SixthGear Studios": [collection] is the print's first
+    # style collection; with none, that part is left out
+    assign subtitle = block_settings.subtitle | strip
+    if subtitle != blank
+      if crumb_collection
+        assign subtitle = subtitle | replace: '[collection]', crumb_collection.title
+      else
+        assign subtitle = subtitle | remove: '[collection] · ' | remove: '[collection] | ' | remove: '[collection]' | strip
+      endif
+    endif
+  -%}
+  {%- if subtitle != blank -%}
+    <p class="sgs-pdp-header__sub">{{ subtitle | escape }}</p>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
@@ -109,12 +124,23 @@
   .sgs-pdp-header__title {
     margin: 0;
     font-family: var(--font-heading--family);
-    font-weight: var(--font-heading--weight);
-    font-size: clamp(2rem, 1.5rem + 1.6vw, 3.25rem);
-    line-height: 0.98;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    font-size: clamp(1.75rem, 1.35rem + 1.5vw, 2.75rem);
+    line-height: 1.04;
+    letter-spacing: -0.02em;
     text-transform: none;
     text-wrap: balance;
+  }
+
+  /* Collection and studio, quietly under the title */
+  .sgs-pdp-header__sub {
+    margin: 8px 0 0;
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    color: var(--sgs-text-2, #6b6b6b);
   }
 {% endstylesheet %}
 
@@ -149,6 +175,13 @@
       "default": "lineage,portraits,grand-prix,mindset",
       "info": "Collection handles, in order. The label shows the first one the print belongs to.",
       "visible_if": "{{ block.settings.eyebrow_source == 'collection' }}"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Line under the title",
+      "default": "[collection] · SixthGear Studios",
+      "info": "[collection] is the print's first style collection (left out when it has none). Leave empty to hide."
     },
     {
       "type": "text",

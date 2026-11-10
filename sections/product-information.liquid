@@ -105,7 +105,7 @@
         >
           {% unless product.has_only_default_variant %}
             {% if current_variant != blank %}
-              {%- capture variant_title -%}{% render 'sgs-variant-label', variant: current_variant %}{%- endcapture -%}
+              {%- capture variant_title -%}{% render 'sgs-variant-label', variant: current_variant, product_resource: product, skip_single: true %}{%- endcapture -%}
             {% endif %}
             {{ variant_title }}
           {% endunless %}

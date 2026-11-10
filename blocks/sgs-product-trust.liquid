@@ -21,8 +21,19 @@
   endif
 -%}
 
+{%- liquid
+  # The icon row is optional: with no items, only the small frame note (and its link) shows
+  assign trust_items = 0
+  for i in (1..4)
+    assign text_key = 'item_' | append: i | append: '_text'
+    if bs[text_key] != blank
+      assign trust_items = trust_items | plus: 1
+    endif
+  endfor
+-%}
 {%- unless closest.product.gift_card? -%}
 <div class="sgs-ptrust-wrap sgs-ptrust-wrap--{{ bs.layout | default: 'line' }}" {{ block.shopify_attributes }}>
+{%- if trust_items > 0 -%}
 <ul class="sgs-ptrust" role="list">
   {%- for i in (1..4) -%}
     {%- liquid
@@ -58,6 +69,7 @@
     {%- endif -%}
   {%- endfor -%}
 </ul>
+{%- endif -%}
 {%- if bs.footnote != blank and sgs_framed != 'true' -%}
   <p class="sgs-ptrust__foot" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ bs.footnote | escape }}</p>
   {%- if bs.framed_cta != blank and has_framed_version -%}

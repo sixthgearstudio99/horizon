@@ -41,19 +41,20 @@
             "text_color": "#ffffff",
             "hide_after": "2026-12-24"
           },
-          "blocks": {}
+          "blocks": {},
+          "disabled": true
         },
         "announcement_BxgCk9": {
           "type": "_announcement",
           "settings": {
-            "text": "FREE UK DELIVERY",
+            "text": "Complimentary UK Delivery",
             "link": "",
             "font": "var(--font-body--family)",
-            "font_size": "0.625rem",
+            "font_size": "0.75rem",
             "weight": "500",
-            "letter_spacing": "loose",
-            "case": "uppercase",
-            "text_color": "#ffffff"
+            "letter_spacing": "normal",
+            "case": "none",
+            "text_color": "#111111"
           },
           "blocks": {}
         },
@@ -70,7 +71,8 @@
             "text_color": "#ffffff",
             "hide_after": "2026-12-09"
           },
-          "blocks": {}
+          "blocks": {},
+          "disabled": true
         }
       },
       "block_order": [
@@ -82,11 +84,12 @@
       "settings": {
         "speed": 4,
         "section_width": "page-width",
-        "background_color": "#111111",
+        "background_color": "#ebe8e2",
         "divider_width": 0,
         "divider_color": "",
-        "padding-block-start": 11,
-        "padding-block-end": 11
+        "padding-block-start": 8,
+        "padding-block-end": 8,
+        "sgs_show_sale": false
       }
     },
     "header_section": {

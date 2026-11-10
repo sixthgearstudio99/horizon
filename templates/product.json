@@ -87,26 +87,14 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "sgs_trustline": {
-              "type": "sgs-trust-line",
-              "settings": {
-                "text": "Trusted and enjoyed by motorsport lovers",
-                "icon": "shield",
-                "icon_color": "#4d7c0f",
-                "alignment": "center",
-                "link": "",
-                "show_stars": false,
-                "stars_color": "#b7821a"
-              },
-              "blocks": {}
-            },
             "sgs_header": {
               "type": "sgs-product-header",
               "settings": {
                 "show_breadcrumb": true,
                 "eyebrow_source": "collection",
                 "preferred_collections": "lineage,portraits,grand-prix,mindset",
-                "eyebrow_text": "Automotive art print"
+                "eyebrow_text": "Automotive art print",
+                "subtitle": "[collection] · SixthGear Studios"
               },
               "blocks": {}
             },
@@ -143,23 +131,10 @@
               },
               "blocks": {}
             },
-            "sgs_trust_line_Da996i": {
-              "type": "sgs-trust-line",
-              "settings": {
-                "text": "Gallery-Grade Prints • Printed in the UK • Free Replacement Guaranteed if Damaged in Transit",
-                "icon": "tick",
-                "icon_color": "#4d7c0f",
-                "alignment": "left",
-                "link": "",
-                "show_stars": false,
-                "stars_color": "#b7821a"
-              },
-              "blocks": {}
-            },
             "sgs_delivery_line": {
               "type": "sgs-delivery-estimate",
               "settings": {
-                "layout": "line",
+                "layout": "details",
                 "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
                 "line_text_custom": "Free UK delivery · Arrives by [date]",
                 "text_before": "Order today · arrives",
@@ -169,15 +144,18 @@
                 "production_max": 5,
                 "delivery_min": 2,
                 "delivery_max": 4,
-                "christmas_line": "",
+                "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
                 "christmas_line_until": "2026-12-09",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-                "custom_line": "",
+                "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
                 "custom_line_until": "2026-12-02",
                 "christmas_from": "12-10",
                 "christmas_to": "12-24",
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card"
+                "gift_card_handle": "gift-card",
+                "details_line_1": "Complimentary UK delivery",
+                "details_estimate_label": "Estimated delivery",
+                "details_line_3": "Free replacement if damaged in transit"
               },
               "blocks": {}
             },
@@ -200,7 +178,10 @@
                 "label": "Finish",
                 "unframed_label": "Unframed",
                 "framed_label": "Framed",
-                "framed_note": "Ready to hang · Made in the UK"
+                "framed_note": "Ready to hang · Made in the UK",
+                "unframed_note": "Premium art print",
+                "show_prices": true,
+                "from_label": "From"
               },
               "blocks": {}
             },
@@ -211,7 +192,7 @@
                 "show_size_prices": true,
                 "sgs_size_dropdown": false,
                 "sgs_size_pills": true,
-                "sgs_steps": true,
+                "sgs_steps": false,
                 "size_step_label": "Choose your size",
                 "finish_step_label": "Choose your finish",
                 "size_guide_label": "Which size?",
@@ -333,14 +314,14 @@
             "sgs_ptrust": {
               "type": "sgs-product-trust",
               "settings": {
-                "layout": "columns",
-                "item_1_text": "Printed in the UK",
+                "layout": "line",
+                "item_1_text": "",
                 "item_1_link": "",
                 "item_1_icon": "printer",
-                "item_2_text": "Free UK delivery",
+                "item_2_text": "",
                 "item_2_link": "",
                 "item_2_icon": "truck",
-                "item_3_text": "Free replacement if damaged",
+                "item_3_text": "",
                 "item_3_link": "",
                 "item_3_icon": "shield",
                 "item_4_text": "",
@@ -356,29 +337,18 @@
               "settings": {},
               "blocks": {}
             },
-            "sgs_desc": {
-              "type": "sgs-description",
-              "settings": {
-                "heading": "About this print",
-                "spec_line": "Premium muesuem grade paper, fade-resistant inks",
-                "collapse_after": 350,
-                "more_label": "Read more",
-                "less_label": "Read less"
-              },
-              "blocks": {}
-            },
             "sgs_info": {
               "type": "sgs-product-info",
               "settings": {
-                "open_first": false,
-                "delivery_heading": "Delivery & returns",
-                "delivery_text": "<p>UK delivery only, and it's free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Standard prints can be returned within 14 days. Faulty or damaged prints replaced free. Custom posters are made for you and can't be returned unless faulty.</p><p>Damaged in transit? Send us a photo within 7 days of delivery and we'll replace it free.</p>",
-                "guarantee_heading": "Satisfaction guarantee",
-                "guarantee_text": "<p>If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. <a href=\"/policies/refund-policy\">Read our returns policy</a></p>",
-                "framing_heading": "Framing",
+                "open_first": true,
+                "delivery_heading": "Delivery & packaging",
+                "delivery_text": "<p>UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Prints are rolled and sent in a protective tube.</p>",
+                "guarantee_heading": "Returns & replacements",
+                "guarantee_text": "<p>If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.</p><p><a href=\"/policies/refund-policy\">Read our returns policy</a></p>",
+                "framing_heading": "Framing options",
                 "framing_text": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>",
                 "framing_text_framed": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>",
-                "list_sizes": true,
+                "list_sizes": false,
                 "questions_heading": "Questions?",
                 "questions_text": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>",
                 "question_1": "",
@@ -388,28 +358,55 @@
                 "question_3": "",
                 "answer_3": "",
                 "question_4": "",
-                "answer_4": ""
+                "answer_4": "",
+                "show_details": true,
+                "details_heading": "Product details",
+                "materials_heading": "Print quality & materials",
+                "materials_text": "<p>Premium semi-gloss paper with fade-resistant inks. Every print is made to order and printed in the UK.</p>",
+                "show_sizes": true,
+                "sizes_heading": "Sizes & dimensions",
+                "sizes_text": "<p>Sizes in inches and centimetres. Each print fits a standard frame of the same size.</p>",
+                "delivery_text_framed": "<p>UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Framed prints arrive in protective packaging, ready to hang.</p>"
+              },
+              "blocks": {}
+            },
+            "sgs_intro": {
+              "type": "sgs-product-intro",
+              "settings": {
+                "max_words": 30
+              },
+              "blocks": {}
+            },
+            "sgs_specs": {
+              "type": "sgs-specs",
+              "settings": {
+                "heading": "Premium automotive wall art",
+                "statement": "Automotive art prints, designed for enthusiasts.",
+                "item_1": "Premium semi-gloss paper",
+                "item_2": "Professionally printed in the UK",
+                "item_3": "Carefully packaged for safe delivery",
+                "item_4": "",
+                "item_5": ""
               },
               "blocks": {}
             }
           },
           "block_order": [
-            "sgs_trustline",
             "sgs_header",
             "sgs_rating",
             "price_tVjtKg",
-            "sgs_trust_line_Da996i",
-            "sgs_delivery_line",
+            "sgs_intro",
             "divider_VJhene",
             "sgs_finish",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "sgs_delivery_line",
+            "sgs_ptrust",
             "sgs_size_guide",
             "sgs_personalise",
-            "sgs_ptrust",
-            "sgs_mobile_slot",
-            "sgs_desc",
-            "sgs_info"
+            "sgs_specs",
+            "sgs_info",
+            "sgs_mobile_slot"
           ]
         }
       },
@@ -484,7 +481,7 @@
         "tap_action": "expand",
         "default_link": "",
         "shop_label": "Shop the print",
-        "mobile_under_buy": true,
+        "mobile_under_buy": false,
         "padding-block-start": 72,
         "padding-block-end": 48
       }
@@ -534,7 +531,8 @@
         "mobile_under_buy": true,
         "padding-block-start": 72,
         "padding-block-end": 72
-      }
+      },
+      "disabled": true
     },
     "sgs_proof": {
       "type": "sgs-proof",

@@ -2,63 +2,10 @@
   assign bs = block.settings
   assign product_resource = closest.product
   assign uid = 'SgsDesc-' | append: block.id
-  assign description = product_resource.description
-
-  # On a framed print, a paragraph or list item saying the frame is only for styling (or not
-  # included) is left out
-  capture sgs_framed
-    render 'sgs-is-framed', product_resource: product_resource
+  capture description
+    render 'sgs-description-html', product_resource: product_resource
   endcapture
-  if sgs_framed contains 'true' and description != blank
-    for tag in (1..2)
-      if tag == 1
-        assign close_tag = '</p>'
-        assign open_tag = '<p'
-      else
-        assign close_tag = '</li>'
-        assign open_tag = '<li'
-      endif
-      assign description = description | strip
-      assign tail_from = close_tag.size | times: -1
-      assign tail = description | slice: tail_from, close_tag.size
-      assign pieces = description | split: close_tag
-      assign kept = ''
-      for piece in pieces
-        assign has_close = true
-        if forloop.last and tail != close_tag
-          assign has_close = false
-        endif
-        # Only the element this close tag ends: the text after its opening tag
-        assign piece_lower = piece | split: open_tag | last | append: '' | strip_html | downcase
-        assign drop = false
-        if has_close
-          if piece_lower contains 'for styling' or piece_lower contains 'styling only' or piece_lower contains 'styling purposes' or piece_lower contains 'frame not included' or piece_lower contains 'frame is not included'
-            assign drop = true
-          endif
-        endif
-        if drop
-          # Keep anything before the dropped element's opening tag (e.g. an opening <ul>)
-          assign parts = piece | split: open_tag
-          assign last_index = parts.size | minus: 1
-          for part in parts
-            if forloop.index0 == last_index
-              break
-            endif
-            unless forloop.first
-              assign kept = kept | append: open_tag
-            endunless
-            assign kept = kept | append: part
-          endfor
-        else
-          assign kept = kept | append: piece
-          if has_close
-            assign kept = kept | append: close_tag
-          endif
-        endif
-      endfor
-      assign description = kept
-    endfor
-  endif
+  assign description = description | strip
 
   # Long descriptions start collapsed to about five lines. Decided here from the text length,
   # so the toggle is there from the first paint and nothing shifts.

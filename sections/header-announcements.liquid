@@ -5,7 +5,8 @@
   endcapture
   assign sgs_sale_win = sgs_sale_win | strip
   assign sgs_sale_message = ''
-  if sgs_sale_win != blank
+  # Can be switched off so the bar keeps to one quiet message
+  if sgs_sale_win != blank and section.settings.sgs_show_sale != false
     assign sgs_sale_message_key = 'sgs_sale' | append: sgs_sale_win | append: '_message'
     assign sgs_sale_message = settings[sgs_sale_message_key] | strip
   endif
@@ -190,6 +191,13 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "sgs_show_sale",
+      "label": "Show the running offer's message",
+      "default": true,
+      "info": "SixthGear: the open offer window's message (Theme settings > SixthGear: offers) as the first slide."
+    },
     {
       "type": "range",
       "id": "speed",

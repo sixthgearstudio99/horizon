@@ -110,7 +110,44 @@
 -%}
 
 {%- unless closest.product.gift_card? -%}
-{%- if is_line -%}
+{%- if bs.layout == 'details' -%}
+{%- comment -%}
+  Details layout: quiet rows after Add to cart. The estimate row keeps the same markup hooks
+  (data-standard / data-christmas / data-range) so the visitor's-date update below still runs.
+{%- endcomment -%}
+<div class="sgs-dinfo" id="{{ uid }}" {{ block.shopify_attributes }}>
+  <ul class="sgs-dinfo__list" role="list">
+    {%- if bs.details_line_1 != blank -%}
+      <li class="sgs-dinfo__row">
+        <svg class="sgs-dinfo__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M1.5 5.5h10v8h-10zM11.5 8.5h3.6l2.4 2.6v2.4h-6z"/><circle cx="5" cy="14.5" r="1.6" fill="var(--sgs-bg, #f5f3ef)"/><circle cx="14.5" cy="14.5" r="1.6" fill="var(--sgs-bg, #f5f3ef)"/></svg>
+        <span>{{ bs.details_line_1 | escape }}</span>
+      </li>
+    {%- endif -%}
+    <li class="sgs-dinfo__row">
+      <svg class="sgs-dinfo__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><rect x="2.5" y="4" width="15" height="13" rx="1"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3" stroke-linecap="round"/></svg>
+      <span class="sgs-dinfo__est">
+        <span data-standard{% if in_christmas %} hidden{% endif %}>{{ bs.details_estimate_label | escape }} <strong data-range>{{ range_text }}</strong></span>
+        <span data-christmas{% unless in_christmas %} hidden{% endunless %}>
+          {{- christmas_before | escape -}}
+          {%- if christmas_link_text != blank -%}
+            {%- if gift_card -%}<a href="{{ gift_card.url }}">{{ christmas_link_text | escape }}</a>{%- else -%}{{ christmas_link_text | escape }}{%- endif -%}
+          {%- endif -%}
+          {{- christmas_after | escape -}}
+        </span>
+        {%- if gift_line != blank -%}
+          <span class="sgs-dinfo__gift" id="{{ uid }}-xmas"{% unless show_gift_line %} hidden{% endunless %}>{{ gift_line | escape }}</span>
+        {%- endif -%}
+      </span>
+    </li>
+    {%- if bs.details_line_3 != blank -%}
+      <li class="sgs-dinfo__row">
+        <svg class="sgs-dinfo__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><path d="M10 2l6.5 2.5v5c0 4-2.8 6.9-6.5 8.5-3.7-1.6-6.5-4.5-6.5-8.5v-5z"/><path d="M7 10l2.2 2.2L13.5 8" stroke-linecap="round"/></svg>
+        <span>{{ bs.details_line_3 | escape }}</span>
+      </li>
+    {%- endif -%}
+  </ul>
+</div>
+{%- elsif is_line -%}
 <p class="sgs-delivery-line" id="{{ uid }}" {{ block.shopify_attributes }}>
   {%- for part in line_parts -%}
     {{- part -}}
@@ -284,6 +321,61 @@
     text-underline-offset: 3px;
   }
 
+  /* Details layout: hairline rows after Add to cart */
+  .sgs-dinfo {
+    width: 100%;
+  }
+
+  .sgs-dinfo__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--sgs-line, #e4e0d9);
+  }
+
+  .sgs-dinfo__row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--sgs-text, #111111);
+  }
+
+  .sgs-dinfo__icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-dinfo__est {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sgs-dinfo__est [hidden] {
+    display: none;
+  }
+
+  .sgs-dinfo__est strong {
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-dinfo__est a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sgs-dinfo__gift {
+    font-size: 13px;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
   /* Line layout: one small line tucked under the price */
   .sgs-delivery-line {
     width: 100%;
@@ -316,9 +408,31 @@
       "label": "Layout",
       "options": [
         { "value": "full", "label": "Estimate with icon" },
-        { "value": "line", "label": "One line (under the price)" }
+        { "value": "line", "label": "One line (under the price)" },
+        { "value": "details", "label": "Delivery details (rows)" }
       ],
       "default": "full"
+    },
+    {
+      "type": "text",
+      "id": "details_line_1",
+      "label": "Details: first row",
+      "default": "Complimentary UK delivery",
+      "visible_if": "{{ block.settings.layout == 'details' }}"
+    },
+    {
+      "type": "text",
+      "id": "details_estimate_label",
+      "label": "Details: before the dates",
+      "default": "Estimated delivery",
+      "visible_if": "{{ block.settings.layout == 'details' }}"
+    },
+    {
+      "type": "text",
+      "id": "details_line_3",
+      "label": "Details: last row",
+      "default": "Free replacement if damaged in transit",
+      "visible_if": "{{ block.settings.layout == 'details' }}"
     },
     {
       "type": "text",

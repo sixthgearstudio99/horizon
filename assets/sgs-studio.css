@@ -230,9 +230,9 @@ b {
   display: none;
 }
 
-/* ---------- Buttons: square, mono, hairline ---------- */
+/* ---------- Buttons: refined rectangles ---------- */
 :is(.button:not(.button-unstyled), .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit, .sgs-set__button, .sgs-hero__button) {
-  border-radius: 999px;
+  border-radius: var(--sgs-radius-btn);
   min-height: 52px;
 }
 
@@ -323,9 +323,7 @@ product-price s,
   font-size: 13px !important;
 }
 
-.announcement-bar {
-  background: #111111;
-}
+/* Announcement strip: colour from its own section setting (Theme editor) */
 
 /* ---------- Product page ---------- */
 .sgs-print-note {
@@ -519,6 +517,15 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 }
 
 /* ---------- Size pills: inches, cm and price on each button ---------- */
+/* Option headings ("Size") in the same quiet style as "Finish" */
+.variant-option.sgs-size-pills legend {
+  margin-block-end: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--sgs-text, #111111);
+}
+
 .variant-option.sgs-size-pills {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -533,8 +540,8 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   min-width: 0;
   min-height: 76px;
   padding: 10px 6px;
-  border: 1px solid rgb(17 17 17 / 0.25);
-  border-radius: 14px !important;
+  border: 1px solid rgb(17 17 17 / 0.22);
+  border-radius: var(--sgs-radius-btn, 4px) !important;
   background: var(--sgs-raised, #ffffff);
   box-shadow: none;
   color: var(--sgs-text, #111111);
@@ -1100,16 +1107,17 @@ html body :is(.sgs-card__title, .product-card a.user-select-text .text-block) {
   font-weight: 600;
 }
 
+/* Understated: small red text, no badge */
 .sgs-sale__save {
   display: inline-flex;
   align-items: center;
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: var(--sgs-red);
-  color: #ffffff;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--sgs-red);
   font-family: var(--sgs-font-body);
   font-size: 12px !important;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5;
   letter-spacing: 0;
 }
@@ -1163,11 +1171,11 @@ media-gallery,
   }
 }
 
-/* ---------- Buttons: pills; primary black, secondary white ---------- */
+/* ---------- Buttons: refined rectangles; primary black, secondary white ---------- */
 :is(.button:not(.button-unstyled), .button-secondary, button[ref='addToCartButton'], .sgs-news__button, .sgs-contact__submit,
   .sgs-set__button, .sgs-hero__button, .sgs-band__button, .sgs-sg__wall-btn, .sgs-phero__button,
   .shopify-payment-button__button, .sgs-wall__size) {
-  border-radius: 999px !important;
+  border-radius: var(--sgs-radius-btn, 4px) !important;
   text-transform: none !important;
   letter-spacing: 0 !important;
 }
@@ -1217,7 +1225,7 @@ media-gallery,
 }
 
 .sgs-popular {
-  border-radius: 999px;
+  border-radius: var(--sgs-radius-btn, 4px);
   font-weight: 600;
 }
 
@@ -1309,15 +1317,10 @@ media-gallery,
   display: none;
 }
 
-/* Announcement strip: dark band above the light header */
-.shopify-section .section.announcement-bar {
-  background-color: #111111;
-}
-
-/* Gallery thumbnails: softly rounded, not capsules */
+/* Gallery thumbnails: crisp corners, like the media */
 .slideshow-controls__thumbnail,
 .slideshow-controls__thumbnail img {
-  border-radius: 8px !important;
+  border-radius: var(--sgs-radius, 4px) !important;
 }
 
 /* Product gallery images: rounded on every screen size */
@@ -1342,30 +1345,67 @@ media-gallery :is(slideshow-slide, .product-media-container) {
   color: var(--sgs-text-2) !important;
 }
 
-/* ---------- Add to cart: lime green, white text (4.99:1, AA) ---------- */
+/* ---------- Add to cart: black, white type, quiet hover and press ---------- */
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button) {
-  --button-background-color: #4d7c0f;
-  --button-border-color: #4d7c0f;
+  --button-background-color: #111111;
+  --button-border-color: #111111;
   --button-color: #ffffff;
-  background-color: #4d7c0f !important;
-  border-color: #4d7c0f !important;
+  background-color: #111111 !important;
+  border-color: #111111 !important;
   color: #ffffff !important;
+  font-weight: 500;
+  letter-spacing: 0.01em !important;
+  transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):not(:disabled):is(:hover, :focus-visible) {
-  --button-background-color: #3f6212;
-  --button-border-color: #3f6212;
-  background-color: #3f6212 !important;
-  border-color: #3f6212 !important;
+  --button-background-color: #2b2b2b;
+  --button-border-color: #2b2b2b;
+  background-color: #2b2b2b !important;
+  border-color: #2b2b2b !important;
+}
+
+:is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):not(:disabled):active {
+  background-color: #000000 !important;
+  transform: translateY(1px);
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):focus-visible {
-  outline: 2px solid #3f6212;
+  outline: 2px solid #111111;
   outline-offset: 3px;
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button) .add-to-cart-icon {
   color: #ffffff;
+}
+
+/* Text-only label on the main button: the bag icon is left out. The sticky bar keeps it,
+   as on phones its button is the icon alone. */
+.product-details button[ref='addToCartButton'] > .svg-wrapper,
+.product-details button[ref='addToCartButton'] .add-to-cart-text > .svg-wrapper {
+  display: none;
+}
+
+/* Sticky bar: one tidy line for the chosen size, square-cornered thumbnail */
+.sticky-add-to-cart__variant {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sticky-add-to-cart__info {
+  min-width: 0;
+}
+
+.sticky-add-to-cart__image,
+.sticky-add-to-cart__image img {
+  border-radius: var(--sgs-radius, 4px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):active {
+    transform: none;
+  }
 }
 
 /* ---------- Size dropdown (variant picker setting) ---------- */

@@ -3,12 +3,26 @@
   Display only; the variant itself is unchanged.
 
   @param {object} variant - The variant to label
+  @param {product} [product_resource] - The variant's product; with skip_single, options it offers only one choice of are left out
+  @param {boolean} [skip_single] - Leave out options with a single choice (e.g. the one paper), so the size leads
 
   @example
   {% render 'sgs-variant-label', variant: current_variant %}
 {%- enddoc -%}
 
-{%- for option_value in variant.options -%}
-  {%- render 'sgs-size-label', value: option_value -%}
-  {%- unless forloop.last %} / {% endunless -%}
-{%- endfor -%}
+{%- liquid
+  assign shown = 0
+  for option_value in variant.options
+    if skip_single and product_resource != blank
+      assign option = product_resource.options_with_values[forloop.index0]
+      if option.values.size == 1 and variant.options.size > 1
+        continue
+      endif
+    endif
+    if shown > 0
+      echo ' / '
+    endif
+    render 'sgs-size-label', value: option_value
+    assign shown = shown | plus: 1
+  endfor
+-%}

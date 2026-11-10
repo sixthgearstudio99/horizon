@@ -37,8 +37,10 @@ html {
   --sgs-text: #111111;
   --sgs-text-2: #6b6b6b;
   --sgs-red: #d7261e;
-  --sgs-radius: 12px;
-  --sgs-radius-tile: 10px;
+  /* Studio look: crisp, near-square corners on media, cards and buttons */
+  --sgs-radius: 4px;
+  --sgs-radius-tile: 4px;
+  --sgs-radius-btn: 4px;
 }
 
 /* Small uppercase label used across sections */
@@ -443,4 +445,36 @@ button[ref='addToCartButton'] {
 /* Collection and search grids: page markers left where framed prints were skipped */
 .sgs-page-marker {
   display: none !important;
+}
+
+/* ---------- Product page price: the price you pay first, the original small after it ---------- */
+.product-details product-price [ref='priceContainer'] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.product-details product-price :is(.price, .sgs-sale__now, .price-item__group.price) {
+  font-family: var(--sgs-font-body, Inter, sans-serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--sgs-text, #111111);
+}
+
+.product-details product-price .sgs-sale {
+  gap: 10px;
+  align-items: baseline;
+}
+
+.product-details product-price .sgs-sale__now {
+  order: 1;
+}
+
+.product-details product-price :is(.sgs-sale__was, .compare-at-price) {
+  order: 2;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--sgs-text-2, #6b6b6b);
 }

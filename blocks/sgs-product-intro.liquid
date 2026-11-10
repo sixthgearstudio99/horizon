@@ -1,0 +1,67 @@
+{%- liquid
+  # SixthGear: a short introduction near the price, from the product's own copy: the
+  # custom.short_description metafield when set, else the description's first proper paragraph
+  # (8+ words), cut at a word boundary. The full description stays in the details accordion.
+  assign bs = block.settings
+  assign product_resource = closest.product
+  assign intro = product_resource.metafields.custom.short_description.value | default: product_resource.metafields.custom.short_description | strip
+  if intro == blank and product_resource.description != blank
+    assign paragraphs = product_resource.description | replace: '<br>', '</p>' | replace: '<br/>', '</p>' | replace: '<br />', '</p>' | replace: '</li>', '</p>' | replace: '</h2>', '</p>' | replace: '</h3>', '</p>' | split: '</p>'
+    for para in paragraphs
+      assign text = para | strip_html | strip | replace: '&nbsp;', ' '
+      assign word_count = text | split: ' ' | size
+      if word_count >= 8
+        assign intro = text
+        break
+      endif
+    endfor
+  endif
+  assign max_words = bs.max_words | default: 30
+  if intro != blank
+    assign intro = intro | truncatewords: max_words, '…'
+  endif
+-%}
+
+{%- if intro != blank and product_resource.gift_card? != true -%}
+  <p class="sgs-intro" {{ block.shopify_attributes }}>{{ intro | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-intro {
+    width: 100%;
+    max-width: 60ch;
+    margin: 0;
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: #3d3d3d;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Short introduction",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "A sentence or two near the price. Uses the product's custom.short_description metafield when set, otherwise the first paragraph of its description."
+    },
+    {
+      "type": "range",
+      "id": "max_words",
+      "label": "Most words",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 30
+    }
+  ],
+  "presets": [
+    {
+      "name": "Short introduction"
+    }
+  ]
+}
+{% endschema %}

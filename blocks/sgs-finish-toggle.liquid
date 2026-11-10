@@ -130,13 +130,48 @@
       assign other_href = other.url | append: '?variant=' | append: href_id
     endif
 
-    assign note = bs.framed_note | strip
-    if note contains '[price]'
-      assign from_price = framed_product.price_min | money_without_trailing_zeros
-      assign note = note | replace: '[price]', from_price
+    # Each card: name, a short description and its starting price (sale-aware, like the size cards).
+    # The price is shown on the card, so "From [price] · " in an older description is dropped.
+    assign framed_desc = bs.framed_note | strip | remove: 'From [price] · ' | remove: 'From [price]' | replace: '[price]', '' | strip
+    assign unframed_desc = bs.unframed_note | strip
+    if is_framed == 'true'
+      assign unframed_product = other
+    else
+      assign unframed_product = p
     endif
+    capture sgs_sale_win
+      render 'sgs-sale-window'
+    endcapture
+    assign sgs_sale_win = sgs_sale_win | strip
     assign label_id = 'SgsFinish-' | append: block.id
   -%}
+
+  {%- capture unframed_price -%}
+    {%- if bs.show_prices -%}
+      <span class="sgs-finish__price">{{ bs.from_label | default: 'From' | escape }} <span class="sgs-tile-price">
+        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: unframed_product, window: sgs_sale_win, amount: unframed_product.price_min %}{%- endif -%}
+        <span class="sgs-tile-price__normal">{{ unframed_product.price_min | money_without_trailing_zeros }}</span>
+      </span></span>
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- capture framed_price -%}
+    {%- if bs.show_prices -%}
+      <span class="sgs-finish__price">{{ bs.from_label | default: 'From' | escape }} <span class="sgs-tile-price">
+        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: framed_product, window: sgs_sale_win, amount: framed_product.price_min %}{%- endif -%}
+        <span class="sgs-tile-price__normal">{{ framed_product.price_min | money_without_trailing_zeros }}</span>
+      </span></span>
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- capture unframed_inner -%}
+    <span class="sgs-finish__name">{{ bs.unframed_label | escape }}</span>
+    {%- if unframed_desc != blank -%}<span class="sgs-finish__desc">{{ unframed_desc | escape }}</span>{%- endif -%}
+    {{- unframed_price -}}
+  {%- endcapture -%}
+  {%- capture framed_inner -%}
+    <span class="sgs-finish__name">{{ bs.framed_label | escape }}</span>
+    {%- if framed_desc != blank -%}<span class="sgs-finish__desc">{{ framed_desc | escape }}</span>{%- endif -%}
+    {{- framed_price -}}
+  {%- endcapture -%}
 
   <sgs-finish
     id="sgs-finish"
@@ -150,23 +185,13 @@
       <p class="sgs-finish__label" id="{{ label_id }}">{{ bs.label | escape }}</p>
     {%- endif -%}
     <div class="sgs-finish__options" role="group"{% if bs.label != blank %} aria-labelledby="{{ label_id }}"{% endif %}>
-      <div class="sgs-finish__col">
-        {%- if is_framed == 'true' -%}
-          <a class="sgs-finish__pill" href="{{ other_href }}" data-sgs-finish-link>{{ bs.unframed_label | escape }}</a>
-        {%- else -%}
-          <span class="sgs-finish__pill sgs-finish__pill--on" aria-current="true">{{ bs.unframed_label | escape }}</span>
-        {%- endif -%}
-      </div>
-      <div class="sgs-finish__col">
-        {%- if is_framed == 'true' -%}
-          <span class="sgs-finish__pill sgs-finish__pill--on" aria-current="true">{{ bs.framed_label | escape }}</span>
-        {%- else -%}
-          <a class="sgs-finish__pill" href="{{ other_href }}" data-sgs-finish-link>{{ bs.framed_label | escape }}</a>
-        {%- endif -%}
-        {%- if note != blank -%}
-          <p class="sgs-finish__note">{{ note | escape | replace: ' · ', '&nbsp;· ' }}</p>
-        {%- endif -%}
-      </div>
+      {%- if is_framed == 'true' -%}
+        <a class="sgs-finish__card" href="{{ other_href }}" data-sgs-finish-link>{{ unframed_inner }}</a>
+        <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ framed_inner }}</span>
+      {%- else -%}
+        <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ unframed_inner }}</span>
+        <a class="sgs-finish__card" href="{{ other_href }}" data-sgs-finish-link>{{ framed_inner }}</a>
+      {%- endif -%}
     </div>
     <script type="application/json" data-sgs-finish-map>{{ size_map | strip }}</script>
   </sgs-finish>
@@ -232,66 +257,102 @@
 
   .sgs-finish__label {
     margin: 0 0 10px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     line-height: 1.4;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--sgs-text-2, #6b6b6b);
+    letter-spacing: 0.01em;
+    color: var(--sgs-text, #111111);
   }
 
+  /* Two cards side by side: name, a short line, the starting price */
   .sgs-finish__options {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
-    align-items: start;
   }
 
-  .sgs-finish__pill {
+  .sgs-finish__card {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 44px;
-    padding: 6px 14px;
-    border: 1px solid rgb(17 17 17 / 0.3);
-    border-radius: 999px;
-    background: var(--sgs-bg, #f5f3ef);
+    gap: 2px;
+    min-width: 0;
+    min-height: 84px;
+    padding: 12px 10px;
+    border: 1px solid rgb(17 17 17 / 0.22);
+    border-radius: var(--sgs-radius-btn, 4px);
+    background: var(--sgs-raised, #ffffff);
     color: var(--sgs-text, #111111);
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: 0.08em;
     text-align: center;
-    text-transform: uppercase;
     text-decoration: none;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   }
 
-  a.sgs-finish__pill:hover {
+  a.sgs-finish__card:hover {
     border-color: var(--sgs-text, #111111);
   }
 
-  a.sgs-finish__pill:focus-visible {
+  a.sgs-finish__card:focus-visible {
     outline: 2px solid var(--sgs-text, #111111);
     outline-offset: 2px;
   }
 
-  .sgs-finish__pill--on {
+  .sgs-finish__card--on {
     border-color: #111111;
     background: #111111;
     color: #ffffff;
   }
 
-  .sgs-finish__note {
-    margin: 8px 0 0;
+  .sgs-finish__name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .sgs-finish__desc {
     font-size: 12px;
-    line-height: 1.45;
-    text-align: center;
-    color: var(--sgs-text-2, #6b6b6b);
+    line-height: 1.35;
+    opacity: 0.75;
+  }
+
+  .sgs-finish__price {
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sgs-finish__price .sgs-tile-price {
+    position: static;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: 0;
+  }
+
+  .sgs-finish__price .sgs-sale {
+    gap: 0 5px;
+    align-items: baseline;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .sgs-finish__price .sgs-sale__now {
+    order: 1;
+    color: inherit;
+  }
+
+  .sgs-finish__price .sgs-sale__was {
+    order: 2;
+    font-size: 11px;
+    font-weight: 400;
+    color: inherit;
+    opacity: 0.72;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .sgs-finish__pill {
+    .sgs-finish__card {
       transition: none;
     }
   }
@@ -320,16 +381,35 @@
     },
     {
       "type": "text",
+      "id": "unframed_note",
+      "label": "Unframed description",
+      "default": "Premium art print",
+      "info": "A short line on the unframed card. Leave empty to hide."
+    },
+    {
+      "type": "text",
       "id": "framed_label",
       "label": "Framed button",
-      "default": "Framed · Black"
+      "default": "Framed"
     },
     {
       "type": "text",
       "id": "framed_note",
-      "label": "Line under the framed button",
-      "default": "From [price] · Ready to hang · Made in the UK",
-      "info": "[price] becomes the framed print's lowest price. Leave empty to hide."
+      "label": "Framed description",
+      "default": "Ready-to-hang framed artwork",
+      "info": "A short line on the framed card. Leave empty to hide."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prices",
+      "label": "Show starting prices",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "from_label",
+      "label": "Word before the price",
+      "default": "From"
     }
   ],
   "presets": [

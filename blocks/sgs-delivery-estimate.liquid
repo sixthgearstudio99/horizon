@@ -91,9 +91,14 @@
   if today_mmdd >= christmas_from and today_mmdd <= christmas_to
     assign in_christmas = true
   endif
+  # Seasonal line only inside its window: from "Show gift line from" (if set) to its last day
+  assign gift_line_from = bs.christmas_line_from | strip
   assign show_gift_line = false
   if gift_line_until != blank and today_ymd <= gift_line_until
     assign show_gift_line = true
+  endif
+  if gift_line_from != blank and today_ymd < gift_line_from
+    assign show_gift_line = false
   endif
 
   # "Line" layout: one short line under the price, e.g. "Free UK delivery · Arrives by Fri 20 Nov ·
@@ -228,7 +233,8 @@
       // Gift line: shown up to and including its last day
       var xmas = document.getElementById({{ uid | append: '-xmas' | json }});
       var xmasUntil = {{ gift_line_until | json }};
-      if (xmas) xmas.hidden = !(xmasUntil && ymd <= xmasUntil);
+      var xmasFrom = {{ gift_line_from | json }};
+      if (xmas) xmas.hidden = !(xmasUntil && ymd <= xmasUntil && (!xmasFrom || ymd >= xmasFrom));
 
       var first = addWorkingDays(minDays);
       var last = addWorkingDays(maxDays);
@@ -517,6 +523,12 @@
       "label": "Gift line",
       "default": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
       "info": "Small line under the delivery estimate. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "christmas_line_from",
+      "label": "Show gift line from (YYYY-MM-DD)",
+      "info": "Empty: shown straight away, until the date below."
     },
     {
       "type": "text",

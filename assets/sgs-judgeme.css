@@ -16,14 +16,24 @@
   --sgs-jdgm-raised: #ffffff;
 }
 
-/* ---------- Hide when there are no reviews ---------- */
-/* Product page: the widget and the page section around it, so no empty band is left behind */
-.jdgm-rev-widg[data-number-of-reviews='0'],
-.jdgm-review-widget[data-number-of-reviews='0'],
-.jdgm-widget:has(> .jdgm-rev-widg[data-number-of-reviews='0']),
-.shopify-app-block:has(.jdgm-rev-widg[data-number-of-reviews='0']),
-.shopify-section:has(.jdgm-rev-widg[data-number-of-reviews='0']),
-.shopify-section:has(.jdgm-review-widget[data-number-of-reviews='0']) {
+/* ---------- No reviews yet ---------- */
+/* The widget stays, so customers can still write the first review, but the empty rating graphics
+   (0.0 stars, the rating distribution bars, sorting) are hidden. Matched from Judge.me's review
+   count attribute, and from .sgs-reviews-empty, which assets/sgs-reviews-empty.js adds when a
+   newer widget doesn't carry that attribute. */
+:is([data-number-of-reviews='0'], .sgs-reviews-empty) :is(
+    .jdgm-histogram,
+    [class*='histogram'],
+    [class*='distribution'],
+    [class*='rating-bar'],
+    [class*='ratings-bar'],
+    .jdgm-rev-widg__summary-stars,
+    .jdgm-rev-widg__summary-average,
+    [class*='summary-average'],
+    [class*='summary-stars'],
+    .jdgm-rev-widg__sort-wrapper,
+    [class*='sort-wrapper']
+  ):not(.jdgm-form *, .jdgm-form, [class*='jdgm-form'] *) {
   display: none !important;
 }
 

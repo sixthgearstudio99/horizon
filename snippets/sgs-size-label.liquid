@@ -1,7 +1,7 @@
 {%- doc -%}
   SixthGear Studios: friendly label for a size option value, for display only.
-  "16″ x 24″ (Vertical)" or '24" x 36" (Vertical)' -> "16 × 24 in / 40 × 60 cm"; "30x40 cm" -> "30 × 40 cm"; "A3 (Landscape)" -> "A3".
-  Centimetres are rounded to the nearest 5, matching standard poster sizes (40 × 60, 60 × 90).
+  "16″ x 24″ (Vertical)" or '24" x 36" (Vertical)' -> "16 × 24 in / 41 × 61 cm"; "30x40 cm" -> "30 × 40 cm"; "A3 (Landscape)" -> "A3".
+  Centimetres are the exact conversion to the nearest whole centimetre (16 × 24 in = 41 × 61 cm).
   Anything that isn't a size (e.g. "Semi Glossy") is returned unchanged. The underlying variant
   values (synced from Printify) are never changed, so use this only for visible text.
 
@@ -44,8 +44,8 @@
       if unit == 'cm'
         assign label = a | append: ' × ' | append: b | append: ' cm'
       else
-        assign a_cm = a | times: 2.54 | divided_by: 5.0 | round | times: 5
-        assign b_cm = b | times: 2.54 | divided_by: 5.0 | round | times: 5
+        assign a_cm = a | times: 2.54 | round
+        assign b_cm = b | times: 2.54 | round
         assign label = a | append: ' × ' | append: b | append: ' in / ' | append: a_cm | append: ' × ' | append: b_cm | append: ' cm'
       endif
     endif

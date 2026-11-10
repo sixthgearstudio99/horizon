@@ -428,10 +428,10 @@ html[data-sgs-sale='2'] .sgs-wallprog__sale-msg[data-sgs-sale-win='2'] {
   display: inline !important;
 }
 
-html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal),
-html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal),
-html[data-sgs-sale='3'] [data-sgs-sale-win='3'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal),
-html[data-sgs-sale='4'] [data-sgs-sale-win='4'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal) {
+html[data-sgs-sale='1'] [data-sgs-sale-win='1'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal, .price-saving),
+html[data-sgs-sale='2'] [data-sgs-sale-win='2'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-wallprog__normal-msg, .sgs-atc-price__normal, .price-saving),
+html[data-sgs-sale='3'] [data-sgs-sale-win='3'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal, .price-saving),
+html[data-sgs-sale='4'] [data-sgs-sale-win='4'] ~ :is(.price, .compare-at-price, .price-item__group, .sgs-card__price-normal, .sgs-tile-price__normal, .sgs-atc-price__normal, .price-saving) {
   display: none !important;
 }
 
@@ -941,10 +941,8 @@ html.sgs-lb-open {
   display: none !important;
 }
 
-/* Judge.me with no reviews, newer widget markup included */
-.content-for-layout > .shopify-section:has(:is(.jdgm-widget, .jdgm-rev-widg, [class*='jdgm'])[data-number-of-reviews='0']):not(:has(.jdgm-prev-badge)) {
-  display: none !important;
-}
+/* Judge.me with no reviews stays on the page (Write a review); its empty graphics are hidden in
+   assets/sgs-judgeme.css */
 
 /* ---------- Product page: tighter gap from "Which size?" to Add to cart on phones ---------- */
 @media screen and (max-width: 749px) {

@@ -5,8 +5,11 @@
   assign bs = block.settings
   assign product_resource = closest.product
   assign intro = product_resource.metafields.custom.short_description.value | default: product_resource.metafields.custom.short_description | strip
-  if intro == blank and product_resource.description != blank
-    assign paragraphs = product_resource.description | replace: '<br>', '</p>' | replace: '<br/>', '</p>' | replace: '<br />', '</p>' | replace: '</li>', '</p>' | replace: '</h2>', '</p>' | replace: '</h3>', '</p>' | split: '</p>'
+  capture cleaned
+    render 'sgs-description-html', product_resource: product_resource
+  endcapture
+  if intro == blank and cleaned != blank
+    assign paragraphs = cleaned | replace: '<br>', '</p>' | replace: '<br/>', '</p>' | replace: '<br />', '</p>' | replace: '</li>', '</p>' | replace: '</h2>', '</p>' | replace: '</h3>', '</p>' | split: '</p>'
     for para in paragraphs
       assign text = para | strip_html | strip | replace: '&nbsp;', ' '
       assign word_count = text | split: ' ' | size

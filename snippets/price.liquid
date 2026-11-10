@@ -5,6 +5,7 @@
   @param {product} product_resource - The product to render
   @param {boolean} [show_unit_price] - Whether to show the unit price
   @param {boolean} [show_sale_price_first] - Whether to show the sale price first
+  @param {boolean} [show_saving] - SixthGear: show what the customer saves, e.g. "Save £5.25 (15%)" (product page price)
 {%- enddoc -%}
 
 {% render 'price-styles' %}
@@ -42,6 +43,10 @@
   assign is_product_card = false
   if template.name != 'product'
     assign is_product_card = true
+  endif
+  assign sgs_save = is_product_card
+  if show_saving
+    assign sgs_save = true
   endif
 
   if is_product_card
@@ -103,7 +108,8 @@
         window: sgs_sale_win,
         amount: sgs_sale_amount,
         from: sgs_sale_from,
-        save: is_product_card
+        save: sgs_save,
+        save_percent: show_saving
       %}
     {%- endif -%}
   {%- endunless -%}
@@ -120,6 +126,15 @@
       <bdi>{{ price_min }} - {{ price_max }}</bdi>
     </span>
   {% else %}
+    {%- liquid
+      # SixthGear: the saving against a compare-at price, e.g. "Save £10 (20%)", on the product page
+      assign sgs_cmp_saving = ''
+      if show_saving and show_compare_price
+        assign cmp_amount = selected_variant.compare_at_price | minus: selected_variant.price
+        assign cmp_percent = cmp_amount | times: 100.0 | divided_by: selected_variant.compare_at_price | round
+        assign sgs_cmp_saving = cmp_amount | money_without_trailing_zeros | prepend: 'Save ' | append: ' (' | append: cmp_percent | append: '%)'
+      endif
+    -%}
     {% comment %} Standard pricing display: render only the active branch (regular or sale) {% endcomment %}
     {% if show_compare_price %}
       {% if show_sale_price_first %}
@@ -146,6 +161,9 @@
         ><bdi>{{ price | default: '&nbsp;' }}</bdi></span
       >
     {% endif %}
+    {%- if sgs_cmp_saving != blank -%}
+      <span class="price-saving">{{ sgs_cmp_saving }}</span>
+    {%- endif -%}
   {% endif %}
   {%- if selected_variant.unit_price and show_unit_price %}
     {%- liquid

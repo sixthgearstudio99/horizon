@@ -5,10 +5,28 @@
   # Per-product metafields (namespace "custom") still override the shared text
   assign delivery_text = product_resource.metafields.custom.shipping.value | default: bs.delivery_text
   assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text
+  # Framed and unframed texts both, for products that offer a frame as an option: the one that
+  # matches the chosen variant shows, and the script below swaps them when the choice changes
+  assign framing_text_framed = product_resource.metafields.custom.framing.value | default: bs.framing_text_framed
+  assign delivery_text_framed = product_resource.metafields.custom.shipping.value | default: bs.delivery_text_framed | default: delivery_text
+  assign has_frame_option = false
+  for v in product_resource.variants
+    capture v_framed
+      render 'sgs-variant-framed', variant: v
+    endcapture
+    if v_framed contains 'true'
+      assign has_frame_option = true
+      break
+    endif
+  endfor
+  capture chosen_framed
+    render 'sgs-variant-framed', variant: product_resource.selected_or_first_available_variant
+  endcapture
   assign materials_text = product_resource.metafields.custom.materials.value | default: bs.materials_text
   capture sgs_framed
     render 'sgs-is-framed', product_resource: product_resource
   endcapture
+  assign sgs_framed = sgs_framed | strip
   if sgs_framed contains 'true'
     assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text_framed
     # A framed print isn't sent in a tube
@@ -24,6 +42,28 @@
       render 'sgs-description-html', product_resource: product_resource
     endcapture
     assign details_html = details_html | strip
+
+    # The short introduction near the price is the description's first proper paragraph (unless
+    # the product has custom.short_description). When it was shown whole, it isn't repeated here.
+    if bs.skip_intro_paragraph and product_resource.metafields.custom.short_description == blank
+      assign paragraphs = details_html | split: '</p>'
+      for para in paragraphs
+        assign text = para | strip_html | strip | replace: '&nbsp;', ' '
+        assign word_count = text | split: ' ' | size
+        if word_count >= 8
+          # Only a plain paragraph (no line breaks), which the introduction shows in full
+          assign plain_para = true
+          if para contains '<br'
+            assign plain_para = false
+          endif
+          if word_count <= bs.intro_words and plain_para
+            assign chunk = para | append: '</p>'
+            assign details_html = details_html | remove_first: chunk | strip
+          endif
+          break
+        endif
+      endfor
+    endif
   endif
 
   # "[sizes]" in the framing text becomes this product's sizes, e.g. "16×24, 24×36"
@@ -32,6 +72,7 @@
   endcapture
   assign sizes_text = sizes_text | strip
   assign framing_text = framing_text | replace: '[sizes]', sizes_text
+  assign framing_text_framed = framing_text_framed | replace: '[sizes]', sizes_text
 
   # The product's Size option, listed under Framing
   assign size_option = nil
@@ -102,7 +143,12 @@
         <span class="sgs-info__icon" aria-hidden="true"></span>
       </summary>
       <div class="sgs-info__body rte">
-        {{ framing_text }}
+        {%- if has_frame_option and sgs_framed != 'true' -%}
+          <div data-sgs-when="unframed"{% if chosen_framed contains 'true' %} hidden{% endif %}>{{ framing_text }}</div>
+          <div data-sgs-when="framed"{% unless chosen_framed contains 'true' %} hidden{% endunless %}>{{ framing_text_framed }}</div>
+        {%- else -%}
+          {{ framing_text }}
+        {%- endif -%}
         {%- if size_option != nil and bs.list_sizes and bs.show_sizes != true -%}
           <ul class="sgs-info__sizes" role="list">
             {%- for value in size_option.values -%}
@@ -120,7 +166,14 @@
         <span class="sgs-label">{{ bs.delivery_heading | escape }}</span>
         <span class="sgs-info__icon" aria-hidden="true"></span>
       </summary>
-      <div class="sgs-info__body rte">{{ delivery_text }}</div>
+      <div class="sgs-info__body rte">
+        {%- if has_frame_option and sgs_framed != 'true' and delivery_text_framed != delivery_text -%}
+          <div data-sgs-when="unframed"{% if chosen_framed contains 'true' %} hidden{% endif %}>{{ delivery_text }}</div>
+          <div data-sgs-when="framed"{% unless chosen_framed contains 'true' %} hidden{% endunless %}>{{ delivery_text_framed }}</div>
+        {%- else -%}
+          {{ delivery_text }}
+        {%- endif -%}
+      </div>
     </details>
   {%- endif -%}
 
@@ -180,6 +233,30 @@
     }
   </script>
 {%- endif -%}
+{%- if has_frame_option and sgs_framed != 'true' -%}
+  <script>
+    (function () {
+      // Framed or unframed text follows the frame option chosen in the variant picker
+      var here = document.currentScript;
+      var root = here.closest('.shopify-section') || document;
+      if (root.dataset.sgsWhenBound) return;
+      root.dataset.sgsWhenBound = '1';
+      var sync = function () {
+        var picked = Array.prototype.map.call(
+          root.querySelectorAll('variant-picker input:checked, variant-picker select'),
+          function (el) { return (el.value || '').toLowerCase(); }
+        ).join(' ').replace(/unframed|no frame|without a? ?frame|frameless/g, '');
+        var framed = /frame/.test(picked);
+        root.querySelectorAll('[data-sgs-when]').forEach(function (el) {
+          el.hidden = (el.getAttribute('data-sgs-when') === 'framed') !== framed;
+        });
+      };
+      root.addEventListener('change', function (e) {
+        if (e.target instanceof Element && e.target.closest('variant-picker')) sync();
+      });
+    })();
+  </script>
+{%- endif -%}
 {%- endunless -%}
 
 {% stylesheet %}
@@ -203,6 +280,10 @@
     cursor: pointer;
     list-style: none;
     color: var(--sgs-text, #111111);
+  }
+
+  .sgs-info__body [data-sgs-when][hidden] {
+    display: none;
   }
 
   .sgs-info__summary .sgs-label {
@@ -331,6 +412,22 @@
       "id": "show_details",
       "label": "Show the product description as the first panel",
       "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "skip_intro_paragraph",
+      "label": "Leave out the paragraph already shown as the short introduction",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "intro_words",
+      "label": "Short introduction length (words)",
+      "min": 12,
+      "max": 60,
+      "step": 2,
+      "default": 30,
+      "info": "Match the Short introduction block's Most words."
     },
     {
       "type": "text",

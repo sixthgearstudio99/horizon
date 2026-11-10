@@ -92,7 +92,7 @@
               "settings": {
                 "show_breadcrumb": true,
                 "eyebrow_source": "collection",
-                "preferred_collections": "lineage,portraits,grand-prix,mindset",
+                "preferred_collections": "lineage,german-engineering,jdm,super-hypercars,grand-prix,portraits,mindset",
                 "eyebrow_text": "Automotive art print",
                 "subtitle": "[collection] · SixthGear Studios"
               },
@@ -144,10 +144,10 @@
                 "production_max": 5,
                 "delivery_min": 2,
                 "delivery_max": 4,
-                "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
+                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
                 "christmas_line_until": "2026-12-09",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-                "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
+                "custom_line": "Custom posters: order by Wed 2 Dec for Christmas delivery",
                 "custom_line_until": "2026-12-02",
                 "christmas_from": "12-10",
                 "christmas_to": "12-24",
@@ -155,7 +155,8 @@
                 "gift_card_handle": "gift-card",
                 "details_line_1": "Complimentary UK delivery",
                 "details_estimate_label": "Estimated delivery",
-                "details_line_3": "Free replacement if damaged in transit"
+                "details_line_3": "Free replacement if damaged in transit",
+                "christmas_line_from": "2026-11-23"
               },
               "blocks": {}
             },
@@ -178,8 +179,8 @@
                 "label": "Finish",
                 "unframed_label": "Unframed",
                 "framed_label": "Framed",
-                "framed_note": "Ready to hang · Made in the UK",
-                "unframed_note": "Premium art print",
+                "framed_note": "Black frame, ready to hang",
+                "unframed_note": "Print only",
                 "show_prices": true,
                 "from_label": "From"
               },
@@ -262,7 +263,7 @@
                   "type": "add-to-cart",
                   "static": true,
                   "settings": {
-                    "sgs_show_price": true,
+                    "sgs_show_price": false,
                     "style_class": "button",
                     "custom_button_background": "{{ settings.color_palette.foreground }}",
                     "custom_button_text": "{{ settings.color_palette.background }}",
@@ -327,7 +328,7 @@
                 "item_4_text": "",
                 "item_4_link": "",
                 "item_4_icon": "lock",
-                "footnote": "Print only – frame not included",
+                "footnote": "Unframed: print only, frame not included.",
                 "framed_cta": "Want it ready to hang? Choose Framed above."
               },
               "blocks": {}
@@ -349,7 +350,7 @@
                 "framing_text": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>",
                 "framing_text_framed": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>",
                 "list_sizes": false,
-                "questions_heading": "Questions?",
+                "questions_heading": "Questions",
                 "questions_text": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>",
                 "question_1": "",
                 "answer_1": "",
@@ -362,7 +363,7 @@
                 "show_details": true,
                 "details_heading": "Product details",
                 "materials_heading": "Print quality & materials",
-                "materials_text": "<p>Premium semi-gloss paper with fade-resistant inks. Every print is made to order and printed in the UK.</p>",
+                "materials_text": "<p>Printed on semi-gloss paper with fade-resistant inks, made to order in the UK.</p>",
                 "show_sizes": true,
                 "sizes_heading": "Sizes & dimensions",
                 "sizes_text": "<p>Sizes in inches and centimetres. Each print fits a standard frame of the same size.</p>",
@@ -382,9 +383,9 @@
               "settings": {
                 "heading": "Premium automotive wall art",
                 "statement": "Automotive art prints, designed for enthusiasts.",
-                "item_1": "Premium semi-gloss paper",
-                "item_2": "Professionally printed in the UK",
-                "item_3": "Carefully packaged for safe delivery",
+                "item_1": "Semi-gloss paper with fade-resistant inks",
+                "item_2": "Printed to order in the UK",
+                "item_3": "Carefully packed for delivery",
                 "item_4": "",
                 "item_5": ""
               },

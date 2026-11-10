@@ -1,6 +1,6 @@
 {%- doc -%}
   SixthGear Studios: a product's description HTML. On a framed print, a paragraph or list item
-  saying the frame is only for styling (or not included) is left out.
+  saying the frame is only for styling, not included, or that the print comes unframed is left out.
 
   @param {product} product_resource - The product
 
@@ -39,7 +39,7 @@
         assign piece_lower = piece | split: open_tag | last | append: '' | strip_html | downcase
         assign drop = false
         if has_close
-          if piece_lower contains 'for styling' or piece_lower contains 'styling only' or piece_lower contains 'styling purposes' or piece_lower contains 'frame not included' or piece_lower contains 'frame is not included'
+          if piece_lower contains 'for styling' or piece_lower contains 'styling only' or piece_lower contains 'styling purposes' or piece_lower contains 'frame not included' or piece_lower contains 'frame is not included' or piece_lower contains 'supplied unframed' or piece_lower contains 'comes unframed' or piece_lower contains 'sold unframed' or piece_lower contains 'print only' or piece_lower contains 'frames not included'
             assign drop = true
           endif
         endif

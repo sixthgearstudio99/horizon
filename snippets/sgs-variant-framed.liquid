@@ -1,0 +1,19 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when a variant is a framed choice, read from its option values
+  (e.g. "Black frame", "Framed"), not counting "Unframed", "No frame", "Without frame" or
+  "Frameless". For products that offer framing as an option rather than a separate product.
+
+  @param {variant} variant - The variant
+
+  @example
+  {%- capture framed_choice -%}{% render 'sgs-variant-framed', variant: variant %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if variant != blank
+    assign title = variant.title | downcase | replace: 'unframed', '' | replace: 'no frame', '' | replace: 'without frame', '' | replace: 'without a frame', '' | replace: 'frameless', ''
+    if title contains 'frame'
+      echo 'true'
+    endif
+  endif
+-%}

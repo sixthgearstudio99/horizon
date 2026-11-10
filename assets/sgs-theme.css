@@ -478,3 +478,32 @@ button[ref='addToCartButton'] {
   font-weight: 400;
   color: var(--sgs-text-2, #6b6b6b);
 }
+
+/* The saving, after the price you pay and the original */
+.product-details product-price :is(.sgs-sale__save, .price-saving) {
+  order: 3;
+  font-family: var(--sgs-font-body, Inter, sans-serif);
+  font-size: 13px !important;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--sgs-red, #d7261e);
+}
+
+/* One full price display: size and finish cards and the sticky bar show the current price only */
+.sgs-size-pills .sgs-pill__price .sgs-sale__was,
+.sgs-finish__price .sgs-sale__was,
+.sticky-add-to-cart__price :is(.sgs-sale__was, .compare-at-price, .sgs-sale__save, .price-saving) {
+  display: none;
+}
+
+/* ---------- One dominant purchase button ---------- */
+/* Express checkout (Apple Pay, Shop Pay) stays, but shorter than Add to cart and set a little apart */
+.product-details .accelerated-checkout-block {
+  --shopify-accelerated-checkout-button-block-size: 44px;
+  --shopify-accelerated-checkout-button-border-radius: 4px;
+  margin-top: 6px;
+}
+
+.product-details button[ref='addToCartButton'] {
+  min-height: 56px;
+}

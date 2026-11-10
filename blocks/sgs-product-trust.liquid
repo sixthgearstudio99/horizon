@@ -1,13 +1,13 @@
 {%- liquid
   assign bs = block.settings
   # The frame note is for unframed prints: hidden when the chosen variant is framed
-  assign variant_title = closest.product.selected_or_first_available_variant.title | downcase
-  assign is_framed = false
-  if variant_title contains 'frame'
+  capture is_framed
+    render 'sgs-variant-framed', variant: closest.product.selected_or_first_available_variant
+  endcapture
+  if is_framed contains 'true'
     assign is_framed = true
-    if variant_title contains 'unframe'
-      assign is_framed = false
-    endif
+  else
+    assign is_framed = false
   endif
   capture sgs_framed
     render 'sgs-is-framed', product_resource: closest.product
@@ -102,7 +102,7 @@
           root.querySelectorAll('variant-picker input:checked, variant-picker select'),
           function (el) { return (el.value || '').toLowerCase(); }
         ).join(' ');
-        var framed = /frame/.test(picked) && !/unframe/.test(picked);
+        var framed = /frame/.test(picked.replace(/unframed|no frame|without a? ?frame|frameless/g, ''));
         root.querySelectorAll('[data-sgs-frame-note]').forEach(function (n) { n.hidden = framed; });
       });
     })();

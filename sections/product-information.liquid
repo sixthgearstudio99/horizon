@@ -22,6 +22,8 @@
   {% content_for 'blocks' %}
 {% endcapture %}
 
+{%- comment -%} SixthGear: Judge.me with no reviews keeps Write a review, without empty rating graphics {%- endcomment -%}
+<script src="{{ 'sgs-reviews-empty.js' | asset_url }}" defer></script>
 {% render 'deferred-media-product-model-styles' %}
 {% render 'deferred-media-video-styles' %}
 

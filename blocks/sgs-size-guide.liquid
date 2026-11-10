@@ -47,6 +47,13 @@
   assign entries = entries | remove_first: '~' | split: '~' | sort
   assign size_count = entries.size
 
+  # The size chosen now, highlighted in the drawings and the list
+  assign current_value = ''
+  if size_option != nil
+    assign size_index = size_option.position | minus: 1
+    assign current_value = product_resource.selected_or_first_available_variant.options[size_index]
+  endif
+
   # Scene, in centimetres: a 260 cm wall with a 210 cm sofa, and a 180 cm wall with a 120 cm desk
   assign sofa_w = 210
   assign sofa_h = 85
@@ -112,7 +119,8 @@
                   assign lx = x | plus: 3
                   assign ly = y | plus: 11 | round: 1
                 -%}
-                <rect x="{{ x }}" y="{{ y }}" width="{{ w }}" height="{{ h }}" class="sgs-sg__print"/>
+                {%- assign rect_value = parts | slice: 3, 99 | join: '|' -%}
+                <rect x="{{ x }}" y="{{ y }}" width="{{ w }}" height="{{ h }}" class="sgs-sg__print{% if rect_value == current_value %} is-current{% endif %}" data-value="{{ rect_value | escape }}"/>
                 <text x="{{ lx }}" y="{{ ly }}" class="sgs-sg__num">{{ number }}</text>
               {%- endfor -%}
             </svg>
@@ -144,7 +152,8 @@
                   assign lx = x | plus: 3
                   assign ly = y | plus: 11 | round: 1
                 -%}
-                <rect x="{{ x }}" y="{{ y }}" width="{{ w }}" height="{{ h }}" class="sgs-sg__print"/>
+                {%- assign rect_value = parts | slice: 3, 99 | join: '|' -%}
+                <rect x="{{ x }}" y="{{ y }}" width="{{ w }}" height="{{ h }}" class="sgs-sg__print{% if rect_value == current_value %} is-current{% endif %}" data-value="{{ rect_value | escape }}"/>
                 <text x="{{ lx }}" y="{{ ly }}" class="sgs-sg__num">{{ number }}</text>
               {%- endfor -%}
             </svg>
@@ -167,11 +176,18 @@
                 assign use_line = bs.line_middle
               endif
             -%}
-            <li class="sgs-sg__item">
+            {%- capture size_text -%}{% render 'sgs-size-label', value: value_name %}{%- endcapture -%}
+            <li class="sgs-sg__item{% if value_name == current_value %} is-current{% endif %}" data-value="{{ value_name | escape }}">
               <span class="sgs-sg__item-num" aria-hidden="true">{{ forloop.index }}</span>
-              <span class="sgs-sg__item-size">{% render 'sgs-size-label', value: value_name %}</span>
+              <span class="sgs-sg__item-size">{{ size_text }}</span>
               {%- if use_line != blank -%}
                 <span class="sgs-sg__item-use">{{ use_line | escape }}</span>
+              {%- endif -%}
+              {%- if bs.choose_label != blank -%}
+                <button type="button" class="sgs-sg__choose" data-sg-choose aria-label="{{ bs.choose_label | escape }} {{ size_text | strip }}">
+                  <span class="sgs-sg__choose-text">{{ bs.choose_label | escape }}</span>
+                  <span class="sgs-sg__chosen-text">{{ bs.chosen_label | default: 'Selected' | escape }}</span>
+                </button>
               {%- endif -%}
             </li>
           {%- endfor -%}
@@ -183,6 +199,10 @@
 
         {%- if bs.wall_label != blank -%}
           <button type="button" class="sgs-sg__wall-btn" data-sg-wall hidden>{{ bs.wall_label | escape }}</button>
+        {%- endif -%}
+
+        {%- if bs.back_label != blank -%}
+          <button type="button" class="sgs-sg__back" data-sg-back>{{ bs.back_label | escape }}</button>
         {%- endif -%}
       </div>
     </dialog>
@@ -200,10 +220,70 @@
           return section.querySelector('.sgs-wall__open') || document.querySelector('.sgs-wall__open');
         };
         var lastOpener = opener;
+        var scope = root.closest('.shopify-section') || document;
+        var picker = function () {
+          return scope.querySelector('variant-picker[ref="mainVariantPicker"]') || scope.querySelector('variant-picker');
+        };
+        // The size input (or select) of the picker that holds this value
+        var sizeControls = function (value) {
+          var p = picker();
+          if (!p) return null;
+          var radios = Array.prototype.filter.call(p.querySelectorAll('input[type="radio"]'), function (i) { return i.value === value; });
+          if (radios.length) return { radio: radios[0] };
+          var selects = Array.prototype.filter.call(p.querySelectorAll('select'), function (sel) {
+            return Array.prototype.some.call(sel.options, function (o) { return o.value === value; });
+          });
+          return selects.length ? { select: selects[0] } : null;
+        };
+        var currentValue = function () {
+          var values = Array.prototype.map.call(root.querySelectorAll('.sgs-sg__item[data-value]'), function (li) { return li.getAttribute('data-value'); });
+          var p = picker();
+          if (!p) return '';
+          var checked = Array.prototype.filter.call(p.querySelectorAll('input[type="radio"]:checked'), function (i) { return values.indexOf(i.value) > -1; })[0];
+          if (checked) return checked.value;
+          var sel = Array.prototype.filter.call(p.querySelectorAll('select'), function (s) { return values.indexOf(s.value) > -1; })[0];
+          return sel ? sel.value : '';
+        };
+        var mark = function () {
+          var value = currentValue();
+          if (!value) return;
+          root.querySelectorAll('[data-value]').forEach(function (el) {
+            el.classList.toggle('is-current', el.getAttribute('data-value') === value);
+          });
+        };
+        // Close and bring the size options back into view, focus on the chosen size
+        var backToOptions = function () {
+          dialog.close();
+          var p = picker();
+          if (!p) return;
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var target = p.querySelector('.sgs-opt--size') || p;
+          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+          var focusTarget = p.querySelector('.sgs-opt--size input:checked') || p.querySelector('.sgs-opt--size select');
+          if (focusTarget) setTimeout(function () { focusTarget.focus({ preventScroll: true }); }, reduce ? 0 : 400);
+        };
+        root.addEventListener('click', function (e) {
+          var choose = e.target instanceof Element ? e.target.closest('[data-sg-choose]') : null;
+          if (choose) {
+            var value = choose.closest('[data-value]').getAttribute('data-value');
+            var c = sizeControls(value);
+            if (c && c.radio && !c.radio.checked) {
+              (c.radio.closest('label') || c.radio).click();
+            } else if (c && c.select && c.select.value !== value) {
+              c.select.value = value;
+              c.select.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            mark();
+            backToOptions();
+            return;
+          }
+          if (e.target instanceof Element && e.target.closest('[data-sg-back]')) backToOptions();
+        });
         var open = function (from) {
           lastOpener = from || opener;
           var w = wallOpen();
           if (wallBtn) wallBtn.hidden = !w || w.hidden;
+          mark();
           dialog.showModal();
         };
         opener.addEventListener('click', function () { open(opener); });
@@ -214,7 +294,9 @@
         });
         root.querySelector('[data-sg-close]').addEventListener('click', function () { dialog.close(); });
         dialog.addEventListener('click', function (e) { if (e.target === dialog) dialog.close(); });
-        dialog.addEventListener('close', function () { lastOpener.focus({ preventScroll: true }); });
+        dialog.addEventListener('close', function () {
+          if (document.activeElement === document.body || !document.activeElement) lastOpener.focus({ preventScroll: true });
+        });
         if (wallBtn) {
           wallBtn.addEventListener('click', function () {
             var w = wallOpen();
@@ -304,12 +386,26 @@
     }
   }
 
+  /* Stays at the top while the sheet scrolls, so Close is always in reach */
   .sgs-sg__head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 20px;
+    margin: -20px -16px 20px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--sgs-line, #e4e0d9);
+    background: var(--sgs-bg, #f5f3ef);
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-sg__head {
+      margin: -28px -32px 24px;
+      padding: 18px 32px;
+    }
   }
 
   .sgs-sg .sgs-sg__title {
@@ -329,9 +425,13 @@
     cursor: pointer;
   }
 
+  /* Both rooms side by side, columns in proportion to their walls (260 cm and 180 cm), so they
+     keep the same scale and the size list stays close on phones */
   .sgs-sg__scenes {
     display: grid;
-    gap: 16px;
+    grid-template-columns: 260fr 180fr;
+    align-items: end;
+    gap: 12px;
   }
 
   .sgs-sg__scene {
@@ -344,9 +444,8 @@
     height: auto;
   }
 
-  /* The desk wall is 180 cm against the sofa's 260 cm: same scale in both drawings */
   .sgs-sg__scene--desk > svg {
-    width: calc(100% * 180 / 260);
+    width: 100%;
   }
 
   .sgs-sg__wall {
@@ -366,10 +465,17 @@
   }
 
   .sgs-sg__print {
-    fill: rgb(17 17 17 / 0.08);
-    stroke: var(--sgs-text, #111111);
-    stroke-width: 1.25px;
+    fill: rgb(17 17 17 / 0.06);
+    stroke: rgb(17 17 17 / 0.55);
+    stroke-width: 1px;
     vector-effect: non-scaling-stroke;
+  }
+
+  /* The size chosen now */
+  .sgs-sg__print.is-current {
+    fill: rgb(17 17 17 / 0.18);
+    stroke: var(--sgs-text, #111111);
+    stroke-width: 2px;
   }
 
   .sgs-sg__num {
@@ -397,10 +503,83 @@
 
   .sgs-sg__item {
     display: grid;
-    grid-template-columns: 24px 1fr;
+    grid-template-columns: 24px 1fr auto;
+    align-items: center;
     gap: 2px 12px;
-    padding: 14px 0;
+    padding: 12px 0;
     border-bottom: 1px solid var(--sgs-line, #e4e0d9);
+  }
+
+  .sgs-sg__item > :is(.sgs-sg__item-size, .sgs-sg__item-use) {
+    grid-column: 2;
+  }
+
+  .sgs-sg__item.is-current .sgs-sg__item-num,
+  .sgs-sg__item.is-current .sgs-sg__item-size {
+    color: var(--sgs-text, #111111);
+    font-weight: 600;
+  }
+
+  /* Choose: picks the size and goes back to the options; shows Selected on the chosen one */
+  .sgs-sg__choose {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    min-width: 88px;
+    min-height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgb(17 17 17 / 0.22);
+    border-radius: var(--sgs-radius-btn, 4px);
+    background: var(--sgs-raised, #ffffff);
+    color: var(--sgs-text, #111111);
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .sgs-sg__choose:hover {
+    border-color: var(--sgs-text, #111111);
+  }
+
+  .sgs-sg__choose:focus-visible,
+  .sgs-sg__back:focus-visible {
+    outline: 2px solid var(--sgs-text, #111111);
+    outline-offset: 2px;
+  }
+
+  .sgs-sg__chosen-text {
+    display: none;
+  }
+
+  .sgs-sg__item.is-current .sgs-sg__choose {
+    border-color: #111111;
+    background: #111111;
+    color: #ffffff;
+  }
+
+  .sgs-sg__item.is-current .sgs-sg__choose-text {
+    display: none;
+  }
+
+  .sgs-sg__item.is-current .sgs-sg__chosen-text {
+    display: inline;
+  }
+
+  .sgs-sg__back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    margin-top: 24px;
+    border: 0;
+    border-radius: var(--sgs-radius-btn, 4px);
+    background: #111111;
+    color: #ffffff;
+    font-family: var(--sgs-font-body, Inter, sans-serif);
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
   }
 
   .sgs-sg__item-num {
@@ -519,6 +698,26 @@
       "label": "See it on your wall button",
       "default": "See it on your wall",
       "info": "Opens the See it on your wall preview, when that block is on the page."
+    },
+    {
+      "type": "text",
+      "id": "choose_label",
+      "label": "Choose button",
+      "default": "Choose",
+      "info": "On each size: picks it and returns to the options. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "chosen_label",
+      "label": "Chosen size button",
+      "default": "Selected"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Return button",
+      "default": "Back to options",
+      "info": "Closes the guide and scrolls back to the sizes. Leave empty to hide."
     }
   ],
   "presets": [

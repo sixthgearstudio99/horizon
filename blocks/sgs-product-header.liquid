@@ -28,7 +28,7 @@
         assign skip_handles = 'all,frontpage,home,home-page' | split: ','
         for c in product_resource.collections
           assign squashed = c.handle | remove: '-' | remove: '_'
-          if skip_handles contains c.handle or squashed contains 'bestseller'
+          if skip_handles contains c.handle or squashed contains 'bestseller' or squashed contains 'gift' or squashed contains 'sale' or squashed contains 'newin' or squashed contains 'featured'
             continue
           endif
           assign eyebrow = c.title

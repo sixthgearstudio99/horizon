@@ -158,7 +158,7 @@
             "sgs_offer": {
               "type": "sgs-offer-box",
               "settings": {
-                "title_format": "[percent]% OFF · YOU SAVE [saving] · ENDS [end]",
+                "title_format": "[percent]% OFF  · ENDS [end]",
                 "note": "",
                 "framed_line": "Framed prints are excluded from sales and bundle offers."
               },
@@ -182,8 +182,8 @@
               "settings": {
                 "label": "Finish",
                 "unframed_label": "Unframed",
-                "framed_label": "Framed · Black",
-                "framed_note": "From [price] · Ready to hang · Made in the UK"
+                "framed_label": "Framed",
+                "framed_note": "Ready to hang · Made in the UK"
               },
               "blocks": {}
             },

@@ -190,7 +190,7 @@
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
-                "size_label_suffix": "(unframed)",
+                "size_label_suffix": "",
                 "show_size_prices": true,
                 "sgs_size_dropdown": false,
                 "sgs_size_pills": true,

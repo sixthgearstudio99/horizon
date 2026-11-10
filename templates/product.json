@@ -181,15 +181,6 @@
               },
               "blocks": {}
             },
-            "sgs_offer": {
-              "type": "sgs-offer-box",
-              "settings": {
-                "title_format": "[percent]% OFF  · ENDS [end]",
-                "note": "",
-                "framed_line": "Framed prints are excluded from sales and bundle offers."
-              },
-              "blocks": {}
-            },
             "divider_VJhene": {
               "type": "_divider",
               "name": "t:names.divider",
@@ -242,38 +233,6 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "sgs_size_guide": {
-              "type": "sgs-size-guide",
-              "settings": {
-                "link_label": "Which size?",
-                "heading": "Which size?",
-                "sofa_label": "Above a sofa",
-                "desk_label": "Above a desk",
-                "line_small": "Desk or shelf",
-                "line_middle": "Above a desk or bed",
-                "line_large": "Statement wall",
-                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
-                "wall_label": "See it on your wall"
-              },
-              "blocks": {}
-            },
-            "sgs_personalise": {
-              "type": "sgs-personalise",
-              "settings": {
-                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-                "how_heading": "How it works",
-                "step_1": "Upload a photo of your car",
-                "step_2": "Add your own headline text",
-                "step_3": "We design it and print it in the UK",
-                "eyebrow": "Personalise your print",
-                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
-                "show_plate_preview": true,
-                "plate_label": "Preview",
-                "proof_note": "We'll email you a proof within 3 working days before printing.",
-                "max_file_mb": 20
               },
               "blocks": {}
             },
@@ -338,6 +297,38 @@
                 }
               },
               "block_order": []
+            },
+            "sgs_size_guide": {
+              "type": "sgs-size-guide",
+              "settings": {
+                "link_label": "Which size?",
+                "heading": "Which size?",
+                "sofa_label": "Above a sofa",
+                "desk_label": "Above a desk",
+                "line_small": "Desk or shelf",
+                "line_middle": "Above a desk or bed",
+                "line_large": "Statement wall",
+                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
+                "wall_label": "See it on your wall"
+              },
+              "blocks": {}
+            },
+            "sgs_personalise": {
+              "type": "sgs-personalise",
+              "settings": {
+                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+                "how_heading": "How it works",
+                "step_1": "Upload a photo of your car",
+                "step_2": "Add your own headline text",
+                "step_3": "We design it and print it in the UK",
+                "eyebrow": "Personalise your print",
+                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "show_plate_preview": true,
+                "plate_label": "Preview",
+                "proof_note": "We'll email you a proof within 3 working days before printing.",
+                "max_file_mb": 20
+              },
+              "blocks": {}
             },
             "sgs_ptrust": {
               "type": "sgs-product-trust",
@@ -409,13 +400,12 @@
             "price_tVjtKg",
             "sgs_trust_line_Da996i",
             "sgs_delivery_line",
-            "sgs_offer",
             "divider_VJhene",
             "sgs_finish",
             "variant_picker_R3rGDr",
+            "buy_buttons_eYQEYi",
             "sgs_size_guide",
             "sgs_personalise",
-            "buy_buttons_eYQEYi",
             "sgs_ptrust",
             "sgs_mobile_slot",
             "sgs_desc",

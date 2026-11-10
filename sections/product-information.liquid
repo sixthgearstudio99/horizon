@@ -170,6 +170,33 @@
       </button>
     </div>
   </sticky-add-to-cart>
+  <script>
+    (function () {
+      // SixthGear: the sticky bar may only slide up once the main Add to cart button has been
+      // scrolled past (above the screen); while that button is on screen, or not yet reached, the
+      // bar is hidden and can't be tapped. Horizon's own rules (footer, chat) still apply on top.
+      var sticky = document.currentScript.previousElementSibling;
+      if (!sticky) return;
+      // The product form comes later in the page than this bar: start once the page is parsed
+      var start = function () {
+        var section = sticky.closest('.shopify-section') || document;
+        var button = section.querySelector('.product-details button[ref="addToCartButton"]') || section.querySelector('product-form-component button[ref="addToCartButton"]');
+        if (!button || !('IntersectionObserver' in window)) {
+          sticky.setAttribute('data-sgs-past', 'true');
+          return;
+        }
+        var observer = new IntersectionObserver(function (entries) {
+          var entry = entries[entries.length - 1];
+          if (!entry) return;
+          var past = !entry.isIntersecting && entry.boundingClientRect.bottom <= 0;
+          sticky.setAttribute('data-sgs-past', past ? 'true' : 'false');
+        });
+        observer.observe(button);
+      };
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
+      else start();
+    })();
+  </script>
 
   {% render 'add-to-cart-button-styles' %}
 {% endif %}

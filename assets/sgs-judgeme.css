@@ -27,14 +27,27 @@
     [class*='distribution'],
     [class*='rating-bar'],
     [class*='ratings-bar'],
+    .jdgm-rev-widg__title,
     .jdgm-rev-widg__summary-stars,
     .jdgm-rev-widg__summary-average,
+    .jdgm-rev-widg__summary-text,
     [class*='summary-average'],
     [class*='summary-stars'],
+    [class*='summary-text'],
+    [class*='review-count'],
+    [class*='reviews-count'],
+    .jdgm-star,
     .jdgm-rev-widg__sort-wrapper,
     [class*='sort-wrapper']
   ):not(.jdgm-form *, .jdgm-form, [class*='jdgm-form'] *) {
   display: none !important;
+}
+
+:is([data-number-of-reviews='0'], .sgs-reviews-empty) :is(.jdgm-rev-widg__summary, .jdgm-rev-widg__header, .jdgm-widget-actions-wrapper) {
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
 }
 
 /* Product cards and other star badges with no reviews */
@@ -460,4 +473,33 @@
   :is(.jdgm-widget, .jdgm-rev-widg) .jdgm-write-rev-link {
     width: 100%;
   }
+}
+
+/* No reviews: only a small "Write a review" link remains (it still opens Judge.me's form).
+   Last in the file and doubled class, so it outranks the review button styles above. */
+:is([data-number-of-reviews='0'], .sgs-reviews-empty) :is(a, button).jdgm-write-rev-link.jdgm-write-rev-link {
+  display: inline-flex !important;
+  align-items: center;
+  min-height: 44px;
+  width: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: none !important;
+  color: var(--sgs-jdgm-text) !important;
+  font-family: var(--sgs-font-body) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-decoration: underline !important;
+  text-decoration-color: rgb(17 17 17 / 0.3) !important;
+  text-underline-offset: 3px;
+  box-shadow: none !important;
+}
+
+:is([data-number-of-reviews='0'], .sgs-reviews-empty) :is(a, button).jdgm-write-rev-link.jdgm-write-rev-link:is(:hover, :focus-visible) {
+  background: none !important;
+  color: var(--sgs-jdgm-text) !important;
+  text-decoration-color: currentColor !important;
 }

@@ -87,6 +87,19 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "sgs_trustline": {
+              "type": "sgs-trust-line",
+              "settings": {
+                "text": "Trusted and enjoyed by motorsport lovers",
+                "icon": "shield",
+                "icon_color": "#4d7c0f",
+                "alignment": "center",
+                "link": "",
+                "show_stars": false,
+                "stars_color": "#b7821a"
+              },
+              "blocks": {}
+            },
             "sgs_header": {
               "type": "sgs-product-header",
               "settings": {
@@ -127,6 +140,19 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "sgs_trust_line_Da996i": {
+              "type": "sgs-trust-line",
+              "settings": {
+                "text": "Gallery-Grade Prints • Printed in the UK • Free Replacement Guaranteed if Damaged in Transit",
+                "icon": "tick",
+                "icon_color": "#4d7c0f",
+                "alignment": "center",
+                "link": "",
+                "show_stars": false,
+                "stars_color": "#b7821a"
               },
               "blocks": {}
             },
@@ -313,19 +339,6 @@
               },
               "block_order": []
             },
-            "sgs_trustline": {
-              "type": "sgs-trust-line",
-              "settings": {
-                "text": "Trusted and enjoyed by motorsport lovers",
-                "icon": "tick_circle",
-                "icon_color": "#4d7c0f",
-                "alignment": "center",
-                "link": "",
-                "show_stars": false,
-                "stars_color": "#b7821a"
-              },
-              "blocks": {}
-            },
             "sgs_ptrust": {
               "type": "sgs-product-trust",
               "settings": {
@@ -347,14 +360,6 @@
               },
               "blocks": {}
             },
-            "sgs_wall": {
-              "type": "sgs-wall-preview",
-              "settings": {
-                "button_label": "See it on your wall",
-                "wall_width_cm": 300
-              },
-              "blocks": {}
-            },
             "sgs_mobile_slot": {
               "type": "sgs-mobile-slot",
               "settings": {},
@@ -364,7 +369,7 @@
               "type": "sgs-description",
               "settings": {
                 "heading": "About this print",
-                "spec_line": "Premium semi-gloss paper, fade-resistant inks",
+                "spec_line": "Premium muesuem grade paper, fade-resistant inks",
                 "collapse_after": 350,
                 "more_label": "Read more",
                 "less_label": "Read less"
@@ -398,9 +403,11 @@
             }
           },
           "block_order": [
+            "sgs_trustline",
             "sgs_header",
             "sgs_rating",
             "price_tVjtKg",
+            "sgs_trust_line_Da996i",
             "sgs_delivery_line",
             "sgs_offer",
             "divider_VJhene",
@@ -409,9 +416,7 @@
             "sgs_size_guide",
             "sgs_personalise",
             "buy_buttons_eYQEYi",
-            "sgs_trustline",
             "sgs_ptrust",
-            "sgs_wall",
             "sgs_mobile_slot",
             "sgs_desc",
             "sgs_info"
@@ -481,8 +486,8 @@
       ],
       "settings": {
         "label": "",
-        "heading": "Real prints, real walls",
-        "caption": "Shown: McLaren F1 Generations",
+        "heading": "",
+        "caption": "",
         "link_label": "",
         "link_url": "",
         "tile_ratio": "tall",

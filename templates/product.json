@@ -149,7 +149,7 @@
                 "text": "Gallery-Grade Prints • Printed in the UK • Free Replacement Guaranteed if Damaged in Transit",
                 "icon": "tick",
                 "icon_color": "#4d7c0f",
-                "alignment": "center",
+                "alignment": "left",
                 "link": "",
                 "show_stars": false,
                 "stars_color": "#b7821a"
@@ -160,7 +160,7 @@
               "type": "sgs-delivery-estimate",
               "settings": {
                 "layout": "line",
-                "line_text": "Free UK delivery · Arrives by [date] · 14-day returns",
+                "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
                 "line_text_custom": "Free UK delivery · Arrives by [date]",
                 "text_before": "Order today · arrives",
                 "footnote": "",

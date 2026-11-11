@@ -168,9 +168,19 @@
             ref="fieldsets[]"
             {{ option_id_attribute }}
           >
-            <legend>
+            <legend{% if sgs_pills and block_settings.size_guide_label != blank %} class="sgs-legend--guide"{% endif %}>
               {%- if option_step != blank -%}<span class="sgs-step-num" aria-hidden="true">{{ option_step }}</span>{%- endif -%}
+              {%- if sgs_pills and block_settings.size_guide_label != blank -%}
+                {%- comment -%} SixthGear: "Which size?" sits on the Size label's row, so the buttons below come sooner {%- endcomment -%}
+                <span class="sgs-legend-row">
+                  <span>{{ option_label }}</span>
+                  <button type="button" class="sgs-sg__link sgs-sg__link--picker sgs-sg__link--legend" data-sgs-sg-trigger aria-haspopup="dialog">
+                    {{- block_settings.size_guide_label | escape -}}
+                  </button>
+                </span>
+              {%- else -%}
               {{ option_label -}}
+              {%- endif -%}
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value">{% render 'sgs-size-label', value: product_option.selected_value %}</span>
               {%- endif %}
@@ -314,7 +324,7 @@
               {% endstyle %}
             {% endif %}
           </fieldset>
-          {%- if option_name_lower contains 'size' and block_settings.size_guide_label != blank -%}
+          {%- if option_name_lower contains 'size' and block_settings.size_guide_label != blank and sgs_pills != true -%}
             {%- comment -%} Opens the Size guide block's drawer, right under the size tiles {%- endcomment -%}
             <button type="button" class="sgs-sg__link sgs-sg__link--picker" data-sgs-sg-trigger aria-haspopup="dialog">
               {{- block_settings.size_guide_label | escape -}}

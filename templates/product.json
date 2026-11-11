@@ -151,7 +151,8 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "sgs_finish": {
               "type": "sgs-finish-toggle",

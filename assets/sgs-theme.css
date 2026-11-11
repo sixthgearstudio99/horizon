@@ -534,3 +534,65 @@ sticky-add-to-cart[data-sgs-past='true'] .sticky-add-to-cart__bar[data-stuck='tr
     transition: none;
   }
 }
+
+/* ---------- Product page: Add to cart sooner (tighter finish and size area) ---------- */
+/* "Which size?" on the Size label's row */
+.variant-option.sgs-size-pills legend.sgs-legend--guide {
+  width: 100%;
+}
+
+.sgs-legend-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Full 44px tap area, without making the label row taller */
+.sgs-legend-row .sgs-sg__link--legend {
+  min-height: 44px;
+  margin-block: -14px;
+  font-size: 13px;
+}
+
+/* Slimmer cards: same content, less padding */
+/* (Scoped to the product column so they outrank the blocks' own styles, which load later) */
+.product-details .sgs-finish .sgs-finish__label {
+  margin-bottom: 8px;
+}
+
+.product-details .sgs-finish .sgs-finish__card {
+  min-height: 0;
+  padding: 9px 8px;
+  gap: 0;
+}
+
+.product-details .sgs-finish .sgs-finish__price {
+  margin-top: 2px;
+}
+
+.product-details .variant-option.sgs-size-pills legend {
+  margin-block-end: 8px;
+}
+
+.product-details .variant-option.sgs-size-pills .variant-option__button-label {
+  min-height: 0;
+  padding: 8px 6px;
+}
+
+.product-details .variant-option.sgs-size-pills .variant-option__button-label .sgs-pill {
+  gap: 0;
+}
+
+.product-details .sgs-size-pills .sgs-pill__price {
+  margin-top: 2px;
+}
+
+/* Phones: the finish, size and Add to cart blocks sit a little closer together */
+@media screen and (max-width: 749px) {
+  .product-details variant-picker,
+  .product-details .buy-buttons-block {
+    margin-top: -8px;
+  }
+}

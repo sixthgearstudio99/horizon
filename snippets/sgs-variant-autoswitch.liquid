@@ -1,0 +1,76 @@
+{%- doc -%}
+  SixthGear Studios: on a product whose options don't all combine (e.g. 20 × 10 in only on Fine Art,
+  22 × 11 in only on Semi Glossy), tapping a value that doesn't come with the current choices switches
+  the other option to one it does come with, instead of landing on a combination that doesn't exist.
+  Outputs every variant's options as JSON (read by the script) and the script itself, bound once.
+  Render it inside the variant picker's form.
+
+  @param {product} product_resource - The product
+
+  @example
+  {% render 'sgs-variant-autoswitch', product_resource: product_resource %}
+{%- enddoc -%}
+
+{%- if product_resource.options.size > 1 -%}
+  {%- comment -%} Every variant's options, so a tap can switch to a combination that exists {%- endcomment -%}
+  <script type="application/json" data-sgs-variant-options>
+    {
+      "names": {{ product_resource.options | json }},
+      "variants": [
+        {%- for v in product_resource.variants -%}
+          { "id": {{ v.id | json }}, "options": {{ v.options | json }}, "available": {{ v.available | json }} }{% unless forloop.last %},{% endunless %}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+  <script>
+  (function () {
+    // A size that doesn't come in the chosen paper (e.g. 22 × 11 in on Fine Art) is still
+    // tappable: before Horizon reads the choice, the other option switches to the one that
+    // size comes in. Runs on window in the capture phase, ahead of Horizon's own listener.
+    if (window.sgsAutoSwitchBound) return;
+    window.sgsAutoSwitchBound = true;
+    window.addEventListener('change', function (event) {
+      var input = event.target;
+      if (!(input instanceof HTMLInputElement) || input.type !== 'radio' || !input.dataset.optionName) return;
+      var picker = input.closest('variant-picker');
+      var source = picker && picker.querySelector('script[data-sgs-variant-options]');
+      if (!source) return;
+      try {
+        var data = JSON.parse(source.textContent);
+        var pos = data.names.indexOf(input.dataset.optionName);
+        if (pos < 0) return;
+        var chosen = {};
+        picker.querySelectorAll('fieldset input:checked').forEach(function (el) {
+          var i = data.names.indexOf(el.dataset.optionName);
+          if (i >= 0) chosen[i] = el.value;
+        });
+        chosen[pos] = input.value;
+        var matches = function (v) {
+          return Object.keys(chosen).every(function (i) { return v.options[i] === chosen[i]; });
+        };
+        if (data.variants.some(matches)) return;
+        // The closest variant with the tapped value: most other choices kept, available first
+        var best = null, bestScore = -1;
+        data.variants.forEach(function (v) {
+          if (v.options[pos] !== input.value) return;
+          var score = (v.available ? 100 : 0);
+          Object.keys(chosen).forEach(function (i) { if (v.options[i] === chosen[i]) score++; });
+          if (score > bestScore) { best = v; bestScore = score; }
+        });
+        if (!best) return;
+        best.options.forEach(function (value, i) {
+          if (i === pos || chosen[i] === undefined || chosen[i] === value) return;
+          picker.querySelectorAll('fieldset input[type="radio"]').forEach(function (el) {
+            if (el.dataset.optionName === data.names[i]) {
+              el.checked = el.value === value;
+              el.dataset.currentChecked = String(el.checked);
+            }
+          });
+        });
+        input.dataset.variantId = String(best.id);
+      } catch (e) {}
+    }, true);
+  })();
+</script>
+{%- endif -%}

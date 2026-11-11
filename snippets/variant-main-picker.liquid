@@ -14,6 +14,16 @@
     render 'sgs-sale-window'
   endcapture
   assign sgs_sale_win = sgs_sale_win | strip
+
+  # Custom posters: a note on which paper each size comes in, a price on every size, and a tap on
+  # a size that doesn't come in the chosen paper switches the paper (script at the end)
+  capture sgs_custom_out
+    render 'sgs-is-custom', product_resource: product_resource, handles: block.settings.custom_handles
+  endcapture
+  assign sgs_custom = false
+  if sgs_custom_out contains 'true'
+    assign sgs_custom = true
+  endif
 -%}
 
 {% liquid
@@ -198,6 +208,11 @@
             {%- for product_option_value in product_option.values -%}
               {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
               {%- assign tile_variant = product_option_value.variant -%}
+              {%- if tile_variant == blank and sgs_custom -%}
+                {%- comment -%} Not made in the chosen paper: price it from the paper it does come in {%- endcomment -%}
+                {%- assign opt_key = 'option' | append: product_option.position -%}
+                {%- assign tile_variant = product_resource.variants | where: opt_key, product_option_value.name | first -%}
+              {%- endif -%}
               {%- liquid
                 # SixthGear: the price read out for a size pill is the sale price while an offer is open
                 assign aria_price = ''
@@ -333,6 +348,9 @@
           {%- if option_name_lower contains 'paper' and block_settings.paper_explainer != blank -%}
             <p class="sgs-opt-explainer">{{ block_settings.paper_explainer | escape }}</p>
           {%- endif -%}
+          {%- if sgs_custom and option_name_lower contains 'paper' and block_settings.paper_note_custom != blank -%}
+            <p class="sgs-opt-explainer sgs-opt-explainer--note">{{ block_settings.paper_note_custom | escape }}</p>
+          {%- endif -%}
           {%- assign fieldset_index = fieldset_index | plus: 1 -%}
         {%- elsif option_style == 'dropdowns' -%}
           {%
@@ -433,6 +451,7 @@
       <script type="application/json">
         {{ product_resource.selected_or_first_available_variant | json }}
       </script>
+      {%- if sgs_custom -%}{% render 'sgs-variant-autoswitch', product_resource: product_resource %}{%- endif -%}
     </form>
   </variant-picker>
 {% endunless %}

@@ -51,6 +51,14 @@
       });
     })();
   </script>
+{%- elsif bs.show_stars_always -%}
+  {%- comment -%} No reviews yet: five gold stars as decoration only (no score, count or link; not read out) {%- endcomment -%}
+  <span class="sgs-rating sgs-rating--decor{% if bs.alignment == 'center' %} sgs-rating--center{% endif %}" aria-hidden="true" {{ block.shopify_attributes }}>
+    <span class="sgs-rating__stars" style="--sgs-rating: 100%; --sgs-star: {{ bs.star_color | default: '#b7821a' }};">
+      <span class="sgs-rating__row sgs-rating__row--off">★★★★★</span>
+      <span class="sgs-rating__row sgs-rating__row--on">★★★★★</span>
+    </span>
+  </span>
 {%- endif -%}
 
 {% stylesheet %}
@@ -120,7 +128,7 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Stars and review count from Judge.me, linking down to the reviews. Hidden until the product has a review."
+      "content": "Stars and review count from Judge.me, linking down to the reviews. Without reviews it shows nothing, unless five decorative stars are turned on below."
     },
     {
       "type": "text",
@@ -138,6 +146,13 @@
         { "value": "center", "label": "Centre" }
       ],
       "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stars_always",
+      "label": "Show five stars when there are no reviews",
+      "default": false,
+      "info": "Decorative gold stars under the title, without a score or count. Products with reviews show their real rating instead."
     },
     {
       "type": "color",

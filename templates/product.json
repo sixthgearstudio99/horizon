@@ -341,7 +341,7 @@
                 "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
                 "show_plate_preview": true,
                 "plate_label": "Preview",
-                "proof_note": "We'll email you a proof within 3 working days before printing.",
+                "proof_note": "We'll email you a digital proof within 3 working days, with one round of changes included.",
                 "max_file_mb": 20
               },
               "blocks": {}

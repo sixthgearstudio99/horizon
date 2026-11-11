@@ -76,6 +76,10 @@
       if bs.framing_text_custom_framed != blank
         assign framing_text = bs.framing_text_custom_framed
       endif
+      # Framed custom prints wait for the proof and aren't sent in a tube
+      if bs.delivery_text_custom_framed != blank
+        assign delivery_text = bs.delivery_text_custom_framed
+      endif
     elsif bs.framing_text_custom != blank
       assign framing_text = bs.framing_text_custom
       assign framing_text_framed = bs.framing_text_custom_framed | default: framing_text_framed
@@ -656,6 +660,13 @@
       "label": "Framing, on framed custom posters",
       "info": "Leave empty to use the framed text above.",
       "default": "<p>Your design is laid out to fit your chosen frame size (18 × 12, 24 × 16 or 36 × 24 in) and arrives in a black wooden frame with a Perspex front, ready to hang.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "delivery_text_custom_framed",
+      "label": "Delivery, on framed custom posters",
+      "info": "Replaces the delivery text (and any custom.shipping metafield) on framed custom posters. Leave empty to use the framed text.",
+      "default": "<p>Your framed print is made after you approve your proof, then usually delivered within 5–7 working days. Shipped in protective packaging, with free UK delivery.</p>"
     },
     {
       "type": "textarea",

@@ -195,7 +195,7 @@
                 <span class="sgs-pers__tile-empty">
                   <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
                   <span class="sgs-pers__tile-text">
-                    {%- if forloop.first -%}Main photo{%- else -%}Optional{%- endif -%}
+                    {%- if forloop.first -%}Main photo<span class="visually-hidden"> (required)</span>{%- else -%}Optional{%- endif -%}
                   </span>
                 </span>
                 <img class="sgs-pers__preview" alt="" width="160" height="120" hidden data-preview>
@@ -719,7 +719,7 @@
       "type": "text",
       "id": "proof_note",
       "label": "Proof note",
-      "default": "We'll email you a proof within 3 working days before printing."
+      "default": "We'll email you a digital proof within 3 working days, with one round of changes included."
     },
     {
       "type": "range",

@@ -240,8 +240,10 @@ if (!customElements.get('sgs-personalise')) {
         this.#syncLock();
       }
 
+      /** The main photo (first slot) is required; the other two are optional */
       #photosValid() {
-        return this.photoInputs.some((input) => input.files && input.files.length > 0);
+        const [main] = this.photoInputs;
+        return !main || !!(main.files && main.files.length > 0);
       }
 
       /* ---------- Lock + submit ---------- */
@@ -251,10 +253,9 @@ if (!customElements.get('sgs-personalise')) {
       }
 
       #syncLock() {
-        // Photo 1 is required only until a photo is added in any tile; keeping the
-        // attribute accurate lets Horizon's checkValidity() gate its add animation
+        // The main photo stays required, so Horizon's checkValidity() also gates its add animation
         const [firstPhoto] = this.photoInputs;
-        if (firstPhoto) firstPhoto.required = !this.#photosValid();
+        if (firstPhoto) firstPhoto.required = true;
 
         document.body.classList.toggle('sgs-pers-locked', !this.#isComplete());
         const status = this.querySelector('[data-status]');
@@ -273,7 +274,7 @@ if (!customElements.get('sgs-personalise')) {
           const first = this.photoInputs[0];
           first.closest('[data-tile]')?.setAttribute('data-invalid', '');
           const errorEl = this.querySelector('[data-photo-error]');
-          if (errorEl) errorEl.textContent = 'Please add at least one photo of your car.';
+          if (errorEl) errorEl.textContent = 'Please add a main photo of your car.';
           if (!firstInvalid) firstInvalid = first;
         }
 

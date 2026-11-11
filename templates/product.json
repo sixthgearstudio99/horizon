@@ -93,8 +93,8 @@
                 "show_breadcrumb": true,
                 "eyebrow_source": "collection",
                 "preferred_collections": "lineage,german-engineering,jdm,super-hypercars,grand-prix,portraits,mindset",
-                "eyebrow_text": "Automotive art print",
-                "subtitle": "[collection] · SixthGear Studios"
+                "subtitle": "[collection]",
+                "eyebrow_text": "Automotive art print"
               },
               "blocks": {}
             },
@@ -131,32 +131,11 @@
               },
               "blocks": {}
             },
-            "sgs_delivery_line": {
-              "type": "sgs-delivery-estimate",
+            "sgs_intro": {
+              "type": "sgs-product-intro",
+              "disabled": true,
               "settings": {
-                "layout": "details",
-                "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
-                "line_text_custom": "Free UK delivery · Arrives by [date]",
-                "text_before": "Order today · arrives",
-                "footnote": "",
-                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
-                "production_min": 2,
-                "production_max": 5,
-                "delivery_min": 2,
-                "delivery_max": 4,
-                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
-                "christmas_line_until": "2026-12-09",
-                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-                "custom_line": "Custom posters: order by Wed 2 Dec for Christmas delivery",
-                "custom_line_until": "2026-12-02",
-                "christmas_from": "12-10",
-                "christmas_to": "12-24",
-                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card",
-                "details_line_1": "Complimentary UK delivery",
-                "details_estimate_label": "Estimated delivery",
-                "details_line_3": "Free replacement if damaged in transit",
-                "christmas_line_from": "2026-11-23"
+                "max_words": 30
               },
               "blocks": {}
             },
@@ -178,9 +157,9 @@
               "settings": {
                 "label": "Finish",
                 "unframed_label": "Unframed",
+                "unframed_note": "Print only",
                 "framed_label": "Framed",
                 "framed_note": "Black frame, ready to hang",
-                "unframed_note": "Print only",
                 "show_prices": true,
                 "from_label": "From"
               },
@@ -280,35 +259,32 @@
               },
               "block_order": []
             },
-            "sgs_size_guide": {
-              "type": "sgs-size-guide",
+            "sgs_delivery_line": {
+              "type": "sgs-delivery-estimate",
               "settings": {
-                "link_label": "Which size?",
-                "heading": "Which size?",
-                "sofa_label": "Above a sofa",
-                "desk_label": "Above a desk",
-                "line_small": "Desk or shelf",
-                "line_middle": "Above a desk or bed",
-                "line_large": "Statement wall",
-                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
-                "wall_label": "See it on your wall"
-              },
-              "blocks": {}
-            },
-            "sgs_personalise": {
-              "type": "sgs-personalise",
-              "settings": {
-                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
-                "how_heading": "How it works",
-                "step_1": "Upload a photo of your car",
-                "step_2": "Add your own headline text",
-                "step_3": "We design it and print it in the UK",
-                "eyebrow": "Personalise your print",
-                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
-                "show_plate_preview": true,
-                "plate_label": "Preview",
-                "proof_note": "We'll email you a proof within 3 working days before printing.",
-                "max_file_mb": 20
+                "layout": "details",
+                "details_line_1": "Complimentary UK delivery",
+                "details_estimate_label": "Estimated delivery",
+                "details_line_3": "Free replacement if damaged in transit",
+                "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
+                "line_text_custom": "Free UK delivery · Arrives by [date]",
+                "text_before": "Order today · arrives",
+                "footnote": "",
+                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+                "production_min": 2,
+                "production_max": 5,
+                "delivery_min": 2,
+                "delivery_max": 4,
+                "christmas_line": "Order by Wed 9 Dec for Christmas delivery",
+                "christmas_line_from": "2026-11-23",
+                "christmas_line_until": "2026-12-09",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+                "custom_line": "Custom posters: order by Wed 2 Dec for Christmas delivery",
+                "custom_line_until": "2026-12-02",
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card"
               },
               "blocks": {}
             },
@@ -333,15 +309,68 @@
               },
               "blocks": {}
             },
-            "sgs_mobile_slot": {
-              "type": "sgs-mobile-slot",
-              "settings": {},
+            "sgs_size_guide": {
+              "type": "sgs-size-guide",
+              "settings": {
+                "link_label": "Which size?",
+                "heading": "Which size?",
+                "sofa_label": "Above a sofa",
+                "desk_label": "Above a desk",
+                "line_small": "Desk or shelf",
+                "line_middle": "Above a desk or bed",
+                "line_large": "Statement wall",
+                "note": "Drawn to scale: sofa 210 cm wide, desk 120 cm wide.",
+                "wall_label": "See it on your wall",
+                "choose_label": "Choose",
+                "chosen_label": "Selected",
+                "back_label": "Back to options"
+              },
+              "blocks": {}
+            },
+            "sgs_personalise": {
+              "type": "sgs-personalise",
+              "settings": {
+                "product_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes",
+                "how_heading": "How it works",
+                "step_1": "Upload a photo of your car",
+                "step_2": "Add your own headline text",
+                "step_3": "We design it and print it in the UK",
+                "eyebrow": "Personalise your print",
+                "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "show_plate_preview": true,
+                "plate_label": "Preview",
+                "proof_note": "We'll email you a proof within 3 working days before printing.",
+                "max_file_mb": 20
+              },
+              "blocks": {}
+            },
+            "sgs_specs": {
+              "type": "sgs-specs",
+              "settings": {
+                "heading": "Premium automotive wall art",
+                "statement": "Automotive art prints, designed for enthusiasts.",
+                "item_1": "Semi-gloss paper with fade-resistant inks",
+                "item_2": "Printed to order in the UK",
+                "item_3": "Carefully packed for delivery",
+                "item_4": "",
+                "item_5": ""
+              },
               "blocks": {}
             },
             "sgs_info": {
               "type": "sgs-product-info",
               "settings": {
                 "open_first": true,
+                "show_details": true,
+                "skip_intro_paragraph": true,
+                "intro_words": 30,
+                "details_heading": "Product details",
+                "materials_heading": "Print quality & materials",
+                "materials_text": "<p>Printed on semi-gloss paper with fade-resistant inks, made to order in the UK.</p>",
+                "show_sizes": true,
+                "sizes_heading": "Sizes & dimensions",
+                "sizes_text": "<p>Sizes in inches and centimetres. Each print fits a standard frame of the same size.</p>",
+                "delivery_text_framed": "<p>UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Framed prints arrive in protective packaging, ready to hang.</p>",
                 "delivery_heading": "Delivery & packaging",
                 "delivery_text": "<p>UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Prints are rolled and sent in a protective tube.</p>",
                 "guarantee_heading": "Returns & replacements",
@@ -359,36 +388,13 @@
                 "question_3": "",
                 "answer_3": "",
                 "question_4": "",
-                "answer_4": "",
-                "show_details": true,
-                "details_heading": "Product details",
-                "materials_heading": "Print quality & materials",
-                "materials_text": "<p>Printed on semi-gloss paper with fade-resistant inks, made to order in the UK.</p>",
-                "show_sizes": true,
-                "sizes_heading": "Sizes & dimensions",
-                "sizes_text": "<p>Sizes in inches and centimetres. Each print fits a standard frame of the same size.</p>",
-                "delivery_text_framed": "<p>UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days.</p><p>Framed prints arrive in protective packaging, ready to hang.</p>"
+                "answer_4": ""
               },
               "blocks": {}
             },
-            "sgs_intro": {
-              "type": "sgs-product-intro",
-              "settings": {
-                "max_words": 30
-              },
-              "blocks": {}
-            },
-            "sgs_specs": {
-              "type": "sgs-specs",
-              "settings": {
-                "heading": "Premium automotive wall art",
-                "statement": "Automotive art prints, designed for enthusiasts.",
-                "item_1": "Semi-gloss paper with fade-resistant inks",
-                "item_2": "Printed to order in the UK",
-                "item_3": "Carefully packed for delivery",
-                "item_4": "",
-                "item_5": ""
-              },
+            "sgs_mobile_slot": {
+              "type": "sgs-mobile-slot",
+              "settings": {},
               "blocks": {}
             }
           },
@@ -494,6 +500,9 @@
           "type": "sgs-delivery-estimate",
           "settings": {
             "layout": "full",
+            "details_line_1": "Complimentary UK delivery",
+            "details_estimate_label": "Estimated delivery",
+            "details_line_3": "Free replacement if damaged in transit",
             "line_text": "Free UK delivery · Arrives by [date] · 14-day returns",
             "line_text_custom": "Free UK delivery · Arrives by [date]",
             "text_before": "Order today · arrives",
@@ -504,6 +513,7 @@
             "delivery_min": 2,
             "delivery_max": 4,
             "christmas_line": "🎁 Gift it · Order by Wed 9 Dec for Christmas",
+            "christmas_line_from": "",
             "christmas_line_until": "2026-12-09",
             "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
             "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
@@ -519,6 +529,7 @@
       "block_order": [
         "sgs_delivery"
       ],
+      "disabled": true,
       "settings": {
         "label": "How it arrives",
         "heading": "Packed to arrive perfect",
@@ -532,8 +543,7 @@
         "mobile_under_buy": true,
         "padding-block-start": 72,
         "padding-block-end": 72
-      },
-      "disabled": true
+      }
     },
     "sgs_proof": {
       "type": "sgs-proof",

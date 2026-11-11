@@ -104,7 +104,7 @@
                 "target_id": "17937299023bbff9d5",
                 "alignment": "left",
                 "star_color": "#b7821a",
-                "show_stars_always": true
+                "show_stars_always": false
               },
               "blocks": {}
             },

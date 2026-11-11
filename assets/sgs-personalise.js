@@ -7,7 +7,7 @@
  *
  * This script:
  *  - validates required fields and photos, and keeps Add to cart locked until valid
- *  - intercepts submit (capture phase, before Horizon) to block incomplete adds
+ *  - intercepts submit (capture phase on window, before Horizon's document listener) to block incomplete adds
  *  - drops empty optional fields from the request
  *  - waits for an in-flight size change, so Horizon never uses its JSON queue
  *    path (which can't carry properties or files)
@@ -55,8 +55,10 @@ if (!customElements.get('sgs-personalise')) {
           { capture: true, signal }
         );
 
-        // Intercept the product form's submit before Horizon's handler sees it
-        document.addEventListener('submit', this.#onSubmit, { capture: true, signal });
+        // Intercept the product form's submit before Horizon's handler sees it. Horizon handles
+        // submit with its own capture listener on document, added before this script runs, so
+        // ours goes on window: the capture phase reaches window before document.
+        window.addEventListener('submit', this.#onSubmit, { capture: true, signal });
 
         // Track size changes so we never submit mid-update
         const section = this.closest('.shopify-section') || document;
@@ -81,7 +83,29 @@ if (!customElements.get('sgs-personalise')) {
           this.#syncPlate();
         }
 
+        // Headline ideas: a tap fills in the Headline (still editable)
+        this.chips = [...this.querySelectorAll('[data-chip]')];
+        if (this.headline && this.chips.length) {
+          for (const chip of this.chips) {
+            chip.addEventListener(
+              'click',
+              () => {
+                this.headline.value = chip.dataset.chip.slice(0, this.headline.maxLength > 0 ? this.headline.maxLength : undefined);
+                this.headline.dispatchEvent(new Event('input', { bubbles: true }));
+              },
+              { signal }
+            );
+          }
+          this.headline.addEventListener('input', () => this.#syncChips(), { signal });
+          this.#syncChips();
+        }
+
         this.#syncLock();
+      }
+
+      #syncChips() {
+        const value = this.headline.value.trim().toLowerCase();
+        for (const chip of this.chips) chip.setAttribute('aria-pressed', String(chip.dataset.chip.toLowerCase() === value));
       }
 
       disconnectedCallback() {

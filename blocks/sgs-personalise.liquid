@@ -2,16 +2,18 @@
   assign bs = block.settings
   assign product_resource = closest.product
 
-  # Only render for the product handle(s) listed in the block settings
+  # Only on custom prints: tagged "custom", listed in the block settings, or the framed/unframed
+  # version of one (linked by custom.framed_version / custom.unframed_version)
+  capture sgs_custom
+    render 'sgs-is-custom', product_resource: product_resource, handles: bs.product_handles
+  endcapture
   assign matched = false
-  assign handles = bs.product_handles | split: ','
-  for raw_handle in handles
-    assign wanted = raw_handle | strip
-    if wanted != blank and wanted == product_resource.handle
-      assign matched = true
-      break
-    endif
-  endfor
+  if sgs_custom contains 'true'
+    assign matched = true
+  endif
+
+  # Headline ideas, one per line in the settings
+  assign chips = bs.headline_chips | newline_to_br | split: '<br />'
 
   # Horizon's buy-buttons form id; fields join that form via the form attribute
   assign form_id = 'BuyButtons-ProductForm-' | append: section.id
@@ -84,6 +86,22 @@
           <span class="sgs-pers__error" id="{{ uid }}-headline-error" data-error></span>
           <span class="sgs-pers__count" data-counter aria-hidden="true">0/30</span>
         </div>
+        {%- capture chip_buttons -%}
+          {%- for chip in chips -%}
+            {%- assign chip_text = chip | strip | slice: 0, 30 -%}
+            {%- if chip_text != blank -%}
+              <button class="sgs-pers__chip" type="button" data-chip="{{ chip_text | escape }}" aria-pressed="false">{{ chip_text | escape }}</button>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- if chip_buttons != blank -%}
+          <div class="sgs-pers__chips" role="group" aria-label="{{ bs.chips_label | default: 'Headline ideas' | escape }}">
+            {%- if bs.chips_label != blank -%}
+              <span class="sgs-pers__chips-label" aria-hidden="true">{{ bs.chips_label | escape }}</span>
+            {%- endif -%}
+            {{ chip_buttons }}
+          </div>
+        {%- endif -%}
         {%- if bs.show_plate_preview -%}
           {%- comment -%} Mirrors the Headline as the customer types; decorative, the input holds the value {%- endcomment -%}
           <div class="sgs-pers__plate" aria-hidden="true">
@@ -98,7 +116,7 @@
       </div>
 
       <div class="sgs-pers__field sgs-pers__field--full" data-field>
-        <label class="sgs-pers__label sgs-label" for="{{ uid }}-subtitle">Subtitle <span aria-hidden="true">*</span></label>
+        <label class="sgs-pers__label sgs-label" for="{{ uid }}-subtitle">Subtitle <span class="sgs-pers__optional">(optional)</span></label>
         <input
           class="sgs-pers__input"
           id="{{ uid }}-subtitle"
@@ -108,7 +126,6 @@
           maxlength="30"
           placeholder="JOSH'S 140I · EST 2020"
           autocomplete="off"
-          required
           data-count
           aria-describedby="{{ uid }}-subtitle-error"
         >
@@ -218,8 +235,8 @@
   </sgs-personalise>
 {%- elsif request.design_mode -%}
   <p class="sgs-pers-editor-note" {{ block.shopify_attributes }}>
-    Personalisation form: shown only on products with handle
-    <strong>{{ bs.product_handles | escape }}</strong>
+    Personalisation form: shown only on custom prints (products tagged <strong>custom</strong>, the handles
+    in this block's settings, and their framed or unframed versions)
   </p>
 {%- endif -%}
 
@@ -401,6 +418,59 @@
     font-variant-numeric: tabular-nums;
   }
 
+  .sgs-pers__optional {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* Headline ideas: tap one to use it, then edit freely */
+  .sgs-pers__chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .sgs-pers__chips-label {
+    flex-basis: 100%;
+    font-size: 13px;
+    color: var(--sgs-pers-muted);
+  }
+
+  .sgs-pers .sgs-pers__chip {
+    min-height: 40px;
+    margin: 0;
+    padding: 8px 12px;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.25);
+    border-radius: 0;
+    background: transparent;
+    color: rgb(var(--color-foreground-rgb));
+    font-family: var(--font-body--family);
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    text-transform: none;
+    cursor: pointer;
+    box-shadow: none;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .sgs-pers .sgs-pers__chip:hover {
+    border-color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-pers .sgs-pers__chip:focus-visible {
+    outline: 2px solid rgb(var(--color-foreground-rgb));
+    outline-offset: 2px;
+  }
+
+  .sgs-pers .sgs-pers__chip[aria-pressed='true'] {
+    border-color: rgb(var(--color-foreground-rgb));
+    background: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb, 245 243 239));
+  }
+
   .sgs-pers__error {
     color: #c00500;
     font-size: 14px;
@@ -573,7 +643,7 @@
       "id": "product_handles",
       "label": "Product handles",
       "default": "custom-car-poster-personalized-car-print-with-your-own-car",
-      "info": "The form only appears on these products (comma-separated handles). Find a handle at the end of the product's URL."
+      "info": "The form appears on products tagged custom, on these products (comma-separated handles), and on their framed or unframed versions. Find a handle at the end of the product's URL."
     },
     {
       "type": "header",
@@ -618,6 +688,20 @@
       "id": "intro",
       "label": "Intro",
       "default": "Tell us about your car and the words you want on it. We'll design the poster around them."
+    },
+    {
+      "type": "textarea",
+      "id": "headline_chips",
+      "label": "Headline ideas",
+      "default": "Built, Not Bought\nWeekend Weapon\nDaily Driven\nFirst of Many\nDream Garage",
+      "info": "One per line, up to 30 characters each. Tapping one fills in the Headline. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "chips_label",
+      "label": "Headline ideas label",
+      "default": "Need an idea? Tap one:",
+      "info": "Leave empty to hide."
     },
     {
       "type": "checkbox",

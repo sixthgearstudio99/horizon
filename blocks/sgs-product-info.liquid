@@ -66,6 +66,22 @@
     endif
   endif
 
+  # Custom prints have their own framing text: panoramic sizes when unframed, laid out to the
+  # frame when framed. These take the place of the shared text and any custom.framing metafield.
+  capture sgs_custom
+    render 'sgs-is-custom', product_resource: product_resource, handles: bs.custom_handles
+  endcapture
+  if sgs_custom contains 'true'
+    if sgs_framed contains 'true'
+      if bs.framing_text_custom_framed != blank
+        assign framing_text = bs.framing_text_custom_framed
+      endif
+    elsif bs.framing_text_custom != blank
+      assign framing_text = bs.framing_text_custom
+      assign framing_text_framed = bs.framing_text_custom_framed | default: framing_text_framed
+    endif
+  endif
+
   # Product details: the full description (the short introduction sits near the price)
   assign details_html = ''
   if bs.show_details
@@ -626,6 +642,27 @@
       "label": "Framing, on framed prints",
       "info": "Used instead on products tagged framed.",
       "default": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "framing_text_custom",
+      "label": "Framing, on custom posters",
+      "info": "Used instead on custom posters (unframed). Leave empty to use the text above.",
+      "default": "<p>Your custom print is supplied unframed in a 2:1 panoramic size (20 × 10, 22 × 11 or 30 × 15 in). Standard 12 × 18 in style frames won't fit — choose a frame made for your print's exact size, or choose Framed above.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "framing_text_custom_framed",
+      "label": "Framing, on framed custom posters",
+      "info": "Leave empty to use the framed text above.",
+      "default": "<p>Your design is laid out to fit your chosen frame size (18 × 12, 24 × 16 or 36 × 24 in) and arrives in a black wooden frame with a Perspex front, ready to hang.</p>"
+    },
+    {
+      "type": "textarea",
+      "id": "custom_handles",
+      "label": "Custom poster products",
+      "default": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+      "info": "Product handles, separated by commas. Products tagged custom, and the framed or unframed versions of these, count too."
     },
     {
       "type": "checkbox",

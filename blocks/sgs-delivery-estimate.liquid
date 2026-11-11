@@ -15,8 +15,15 @@
   # Gift line under the estimate. Custom posters take longer to make, so they get their own line and date.
   assign gift_line = bs.christmas_line
   assign gift_line_until = bs.christmas_line_until | strip
-  assign custom_handles = bs.custom_handles | strip_newlines | remove: ' ' | split: ','
-  if custom_handles contains closest.product.handle
+  # Custom prints: tagged "custom", listed below, or the framed/unframed version of one
+  capture sgs_custom
+    render 'sgs-is-custom', product_resource: closest.product, handles: bs.custom_handles
+  endcapture
+  assign is_custom = false
+  if sgs_custom contains 'true'
+    assign is_custom = true
+  endif
+  if is_custom
     if bs.custom_line != blank
       assign gift_line = bs.custom_line
     endif
@@ -43,6 +50,14 @@
   assign max_days = bs.production_max | plus: bs.delivery_max
   if max_days < min_days
     assign max_days = min_days
+  endif
+  # Custom prints wait for the proof first: its working days come before production
+  assign custom_estimate = ''
+  if is_custom
+    assign proof_days = bs.custom_proof_days | default: 0
+    assign min_days = min_days | plus: proof_days
+    assign max_days = max_days | plus: proof_days
+    assign custom_estimate = bs.custom_estimate_text | strip
   endif
   assign holidays = bs.bank_holidays | newline_to_br | replace: '<br />', ',' | strip_newlines | remove: ' ' | split: ','
   assign today_ymd = 'now' | date: '%Y-%m-%d'
@@ -107,7 +122,7 @@
   if bs.layout == 'line'
     assign is_line = true
     assign line_text = bs.line_text
-    if custom_handles contains closest.product.handle and bs.line_text_custom != blank
+    if is_custom and bs.line_text_custom != blank
       assign line_text = bs.line_text_custom
     endif
     assign line_parts = line_text | escape | split: '[date]'
@@ -131,7 +146,16 @@
     <li class="sgs-dinfo__row">
       <svg class="sgs-dinfo__icon" aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"><rect x="2.5" y="4" width="15" height="13" rx="1"/><path d="M2.5 8h15M6.5 2.5v3M13.5 2.5v3" stroke-linecap="round"/></svg>
       <span class="sgs-dinfo__est">
-        <span data-standard{% if in_christmas %} hidden{% endif %}>{{ bs.details_estimate_label | escape }} <strong data-range>{{ range_text }}</strong></span>
+        {%- if custom_estimate != blank -%}
+          {%- assign estimate_parts = custom_estimate | escape | split: '[range]' -%}
+          <span data-standard{% if in_christmas %} hidden{% endif %}>
+            {{- estimate_parts[0] -}}
+            {%- if custom_estimate contains '[range]' -%}<strong data-range>{{ range_text }}</strong>{%- endif -%}
+            {{- estimate_parts[1] -}}
+          </span>
+        {%- else -%}
+          <span data-standard{% if in_christmas %} hidden{% endif %}>{{ bs.details_estimate_label | escape }} <strong data-range>{{ range_text }}</strong></span>
+        {%- endif -%}
         <span data-christmas{% unless in_christmas %} hidden{% endunless %}>
           {{- christmas_before | escape -}}
           {%- if christmas_link_text != blank -%}
@@ -166,7 +190,14 @@
 
   <div class="sgs-delivery__body">
   <p class="sgs-delivery__text" data-standard{% if in_christmas %} hidden{% endif %}>
-    {{ bs.text_before | escape }} <strong data-range>{{ range_text }}</strong>
+    {%- if custom_estimate != blank -%}
+      {%- assign estimate_parts = custom_estimate | escape | split: '[range]' -%}
+      {{- estimate_parts[0] -}}
+      {%- if custom_estimate contains '[range]' -%}<strong data-range>{{ range_text }}</strong>{%- endif -%}
+      {{- estimate_parts[1] -}}
+    {%- else -%}
+      {{ bs.text_before | escape }} <strong data-range>{{ range_text }}</strong>
+    {%- endif -%}
   </p>
 
   <p class="sgs-delivery__text" data-christmas{% unless in_christmas %} hidden{% endunless %}>
@@ -253,7 +284,8 @@
       var range = minDays === maxDays
         ? lastText
         : (first.getUTCMonth() === last.getUTCMonth() ? dayText(first) : dayText(first) + ' ' + monthText(first)) + ' – ' + lastText;
-      root.querySelector('[data-range]').textContent = range;
+      var rangeEl = root.querySelector('[data-range]');
+      if (rangeEl) rangeEl.textContent = range;
     } catch (e) {
       // keep the server-rendered dates
     }
@@ -541,7 +573,25 @@
       "id": "custom_handles",
       "label": "Custom poster products",
       "default": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
-      "info": "Product handles, separated by commas. These show the custom poster gift line instead."
+      "info": "Product handles, separated by commas. Products tagged custom, and the framed or unframed versions of these, count too."
+    },
+    {
+      "type": "range",
+      "id": "custom_proof_days",
+      "label": "Custom posters: working days for the proof",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "d",
+      "default": 3,
+      "info": "Added to the delivery dates on custom posters."
+    },
+    {
+      "type": "text",
+      "id": "custom_estimate_text",
+      "label": "Custom posters: delivery estimate",
+      "default": "Free proof within 3 working days · Estimated delivery [range] if you approve your proof the day you receive it",
+      "info": "Replaces the estimate on custom posters. [range] becomes the delivery dates. Leave empty to use the standard wording."
     },
     {
       "type": "text",

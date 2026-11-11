@@ -1,0 +1,46 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when the product is a custom (personalised) print, else nothing.
+  Custom means the product has the tag "custom" (any case), or its handle is in the list given,
+  or it is the framed or unframed version (custom.framed_version / custom.unframed_version) of a
+  product that is custom by tag or handle. So the framed custom print counts even before it is tagged.
+
+  @param {product} product_resource - The product
+  @param {string} [handles] - Comma-separated product handles that also count as custom
+
+  @example
+  {%- capture is_custom -%}{% render 'sgs-is-custom', product_resource: product, handles: 'my-custom-print' %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if product_resource != blank
+    assign handle_list = handles | strip_newlines | remove: ' ' | split: ','
+    assign custom = false
+    assign framed_ref = product_resource.metafields.custom.framed_version.value
+    assign unframed_ref = product_resource.metafields.custom.unframed_version.value
+    for item in (1..3)
+      case item
+        when 1
+          assign candidate = product_resource
+        when 2
+          assign candidate = framed_ref
+        when 3
+          assign candidate = unframed_ref
+      endcase
+      if candidate == blank or candidate.handle == blank
+        continue
+      endif
+      assign tags_lower = candidate.tags | join: '|' | downcase | split: '|'
+      if tags_lower contains 'custom'
+        assign custom = true
+        break
+      endif
+      if handle_list contains candidate.handle
+        assign custom = true
+        break
+      endif
+    endfor
+    if custom
+      echo 'true'
+    endif
+  endif
+-%}

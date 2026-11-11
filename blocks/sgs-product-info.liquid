@@ -23,6 +23,37 @@
     render 'sgs-variant-framed', variant: product_resource.selected_or_first_available_variant
   endcapture
   assign materials_text = product_resource.metafields.custom.materials.value | default: bs.materials_text
+
+  # Paper by variant: fine art paper on some sizes (Paper: Fine Art), semi-gloss on the rest
+  assign has_fine = false
+  assign has_semi = false
+  assign fine_first = true
+  assign seen_semi = false
+  for v in product_resource.variants
+    capture v_paper
+      render 'sgs-variant-paper', variant: v
+    endcapture
+    if v_paper contains 'fine'
+      assign has_fine = true
+      if seen_semi
+        assign fine_first = false
+      endif
+    else
+      assign has_semi = true
+      assign seen_semi = true
+    endif
+  endfor
+  capture current_paper
+    render 'sgs-variant-paper', variant: product_resource.selected_or_first_available_variant
+  endcapture
+  assign current_paper = current_paper | strip
+  assign materials_lower = materials_text | downcase | replace: '-', ' '
+  assign materials_by_paper = false
+  if has_fine and bs.materials_text_fine != blank and product_resource.metafields.custom.materials == blank
+    if materials_lower contains 'semi gloss' or materials_lower contains 'semigloss'
+      assign materials_by_paper = true
+    endif
+  endif
   capture sgs_framed
     render 'sgs-is-framed', product_resource: product_resource
   endcapture
@@ -98,13 +129,53 @@
 {%- unless product_resource.gift_card? -%}
 <div class="sgs-info" {{ block.shopify_attributes }}>
   {%- assign opened = false -%}
+  {%- liquid
+    assign paper_note = ''
+    if has_fine and has_semi and details_html != blank and bs.paper_note != blank
+      assign details_lower = details_html | strip_html | downcase
+      if details_lower contains 'gloss' or details_lower contains 'paper'
+        # The fine art sizes, by name, e.g. "20 × 10 in"
+        assign fine_names = ''
+        for v in product_resource.variants
+          capture v_paper
+            render 'sgs-variant-paper', variant: v
+          endcapture
+          if v_paper contains 'fine'
+            for value in v.options
+              assign value_lower = value | downcase
+              unless value_lower contains 'fine'
+                capture size_name
+                  render 'sgs-size-label', value: value
+                endcapture
+                assign size_name = size_name | strip | split: ' / ' | first
+                assign probe = '|' | append: size_name | append: '|'
+                unless fine_names contains probe
+                  assign fine_names = fine_names | append: '|' | append: size_name | append: '|'
+                endunless
+              endunless
+            endfor
+          endif
+        endfor
+        assign fine_list = fine_names | remove_first: '|' | split: '||' | join: ', ' | remove: '|'
+        if fine_first
+          assign rest = bs.paper_note_rest_larger
+        else
+          assign rest = bs.paper_note_rest_other
+        endif
+        assign paper_note = bs.paper_note | replace: '[sizes]', fine_list | replace: '[rest]', rest
+      endif
+    endif
+  -%}
   {%- if details_html != blank -%}
     <details class="sgs-info__item"{% if bs.open_first %} open{% endif %}>
       <summary class="sgs-info__summary">
         <span class="sgs-label">{{ bs.details_heading | escape }}</span>
         <span class="sgs-info__icon" aria-hidden="true"></span>
       </summary>
-      <div class="sgs-info__body rte">{{ details_html }}</div>
+      <div class="sgs-info__body rte">
+        {%- if paper_note != blank -%}<p class="sgs-info__paper-note">{{ paper_note | escape }}</p>{%- endif -%}
+        {{ details_html }}
+      </div>
     </details>
     {%- assign opened = true -%}
   {%- endif -%}
@@ -115,7 +186,16 @@
         <span class="sgs-label">{{ bs.materials_heading | escape }}</span>
         <span class="sgs-info__icon" aria-hidden="true"></span>
       </summary>
-      <div class="sgs-info__body rte">{{ materials_text }}</div>
+      <div class="sgs-info__body rte">
+        {%- if materials_by_paper -%}
+          {%- if has_semi -%}
+            <div data-sgs-paper="semi"{% if current_paper == 'fine' %} hidden{% endif %}>{{ materials_text }}</div>
+          {%- endif -%}
+          <div data-sgs-paper="fine"{% if current_paper != 'fine' %} hidden{% endif %}>{{ bs.materials_text_fine }}</div>
+        {%- else -%}
+          {{ materials_text }}
+        {%- endif -%}
+      </div>
     </details>
   {%- endif -%}
 
@@ -257,6 +337,7 @@
     })();
   </script>
 {%- endif -%}
+{%- if materials_by_paper and has_semi -%}{% render 'sgs-paper-sync' %}{%- endif -%}
 {%- endunless -%}
 
 {% stylesheet %}
@@ -282,8 +363,13 @@
     color: var(--sgs-text, #111111);
   }
 
-  .sgs-info__body [data-sgs-when][hidden] {
+  .sgs-info__body :is([data-sgs-when], [data-sgs-paper])[hidden] {
     display: none;
+  }
+
+  .sgs-info__paper-note {
+    font-weight: 500;
+    color: var(--sgs-text, #111111);
   }
 
   .sgs-info__summary .sgs-label {
@@ -446,6 +532,32 @@
       "id": "materials_text",
       "label": "Materials",
       "info": "A product's custom.materials metafield replaces this. Leave empty to hide the panel."
+    },
+    {
+      "type": "richtext",
+      "id": "materials_text_fine",
+      "label": "Materials, on fine art variants",
+      "default": "<p>Printed on fine art paper, made to order in the UK.</p>",
+      "info": "Shown instead while a fine art variant (Paper: Fine Art) is chosen, when the text above mentions semi-gloss."
+    },
+    {
+      "type": "text",
+      "id": "paper_note",
+      "label": "Paper line in Product details",
+      "default": "[sizes] is printed on fine art paper; [rest] on semi-gloss paper.",
+      "info": "On prints with both papers whose description mentions paper. [sizes] is the fine art sizes, [rest] one of the two phrases below. Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "paper_note_rest_larger",
+      "label": "Paper line: when the fine art sizes are the smallest",
+      "default": "larger sizes"
+    },
+    {
+      "type": "text",
+      "id": "paper_note_rest_other",
+      "label": "Paper line: otherwise",
+      "default": "other sizes"
     },
     {
       "type": "checkbox",

@@ -1,6 +1,26 @@
 {%- liquid
   # SixthGear: what the print is, in a short understated list (no ticks or badges)
   assign bs = block.settings
+  assign product_resource = closest.product
+
+  # Paper: some prints use fine art paper on some sizes (e.g. 20 x 10 in on the Mindset posters).
+  # The item about semi-gloss paper then follows the chosen variant.
+  assign has_fine = false
+  assign has_semi = false
+  for v in product_resource.variants
+    capture v_paper
+      render 'sgs-variant-paper', variant: v
+    endcapture
+    if v_paper contains 'fine'
+      assign has_fine = true
+    else
+      assign has_semi = true
+    endif
+  endfor
+  capture current_paper
+    render 'sgs-variant-paper', variant: product_resource.selected_or_first_available_variant
+  endcapture
+  assign current_paper = current_paper | strip
   assign item_count = 0
   for i in (1..5)
     assign key = 'item_' | append: i
@@ -22,11 +42,26 @@
       {%- for i in (1..5) -%}
         {%- assign key = 'item_' | append: i -%}
         {%- if bs[key] != blank -%}
-          <li class="sgs-specs__item">{{ bs[key] | escape }}</li>
+          {%- liquid
+            assign item_lower = bs[key] | downcase | replace: '-', ' '
+            assign is_paper_item = false
+            if item_lower contains 'semi gloss' or item_lower contains 'semigloss'
+              assign is_paper_item = true
+            endif
+          -%}
+          {%- if is_paper_item and has_fine and bs.paper_fine_text != blank -%}
+            {%- if has_semi -%}
+              <li class="sgs-specs__item" data-sgs-paper="semi"{% if current_paper == 'fine' %} hidden{% endif %}>{{ bs[key] | escape }}</li>
+            {%- endif -%}
+            <li class="sgs-specs__item" data-sgs-paper="fine"{% if current_paper != 'fine' %} hidden{% endif %}>{{ bs.paper_fine_text | escape }}</li>
+          {%- else -%}
+            <li class="sgs-specs__item">{{ bs[key] | escape }}</li>
+          {%- endif -%}
         {%- endif -%}
       {%- endfor -%}
     </ul>
   </div>
+  {%- if has_fine and has_semi -%}{% render 'sgs-paper-sync' %}{%- endif -%}
 {%- endif -%}
 
 {% stylesheet %}
@@ -62,6 +97,10 @@
   }
 
   /* A small square marker in place of ticks */
+  .sgs-specs__item[hidden] {
+    display: none;
+  }
+
   .sgs-specs__item {
     position: relative;
     padding-left: 18px;
@@ -119,6 +158,13 @@
       "type": "text",
       "id": "item_4",
       "label": "Item 4"
+    },
+    {
+      "type": "text",
+      "id": "paper_fine_text",
+      "label": "Paper item on fine art variants",
+      "default": "Printed on fine art paper",
+      "info": "Replaces the item that mentions semi-gloss paper while a fine art variant (Paper: Fine Art) is chosen."
     },
     {
       "type": "text",

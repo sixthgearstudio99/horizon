@@ -1,0 +1,23 @@
+{%- doc -%}
+  SixthGear Studios: outputs "fine" when a variant is printed on fine art paper (an option value
+  such as "Fine Art", e.g. Printify's Paper option), otherwise "semi" (the semi-gloss default).
+
+  @param {variant} variant - The variant
+
+  @example
+  {%- capture paper -%}{% render 'sgs-variant-paper', variant: variant %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign paper = 'semi'
+  if variant != blank
+    for value in variant.options
+      assign v = value | downcase | replace: '-', ' '
+      if v contains 'fine art'
+        assign paper = 'fine'
+        break
+      endif
+    endfor
+  endif
+  echo paper
+-%}

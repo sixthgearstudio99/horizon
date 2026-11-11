@@ -1,0 +1,45 @@
+{%- doc -%}
+  SixthGear Studios: keeps paper wording in step with the chosen variant. Elements marked
+  data-sgs-paper="fine" or "semi" show only for that paper; after a size (or paper) change,
+  Horizon hands over the new variant and the matching wording shows, with no page reload.
+  Render it once in any block that outputs such elements (it binds once per section).
+
+  @example
+  {% render 'sgs-paper-sync' %}
+{%- enddoc -%}
+
+<script>
+  (function () {
+    var root = document.currentScript.closest('.shopify-section') || document;
+    if (root.dataset && root.dataset.sgsPaperBound) return;
+    if (root.dataset) root.dataset.sgsPaperBound = '1';
+    var apply = function (fine) {
+      root.querySelectorAll('[data-sgs-paper]').forEach(function (el) {
+        el.hidden = (el.getAttribute('data-sgs-paper') === 'fine') !== fine;
+      });
+    };
+    var isFine = function (values) {
+      return values.some(function (v) { return /fine[\s-]*art/i.test(String(v || '')); });
+    };
+    var fromPicker = function () {
+      // The picker's own copy of the selected variant (updated with each change)
+      var json = root.querySelector('variant-picker script[type="application/json"]');
+      try {
+        var v = json && JSON.parse(json.textContent);
+        if (v && v.options) return apply(isFine(v.options));
+      } catch (e) {}
+      var picked = Array.prototype.map.call(root.querySelectorAll('variant-picker input:checked, variant-picker select'), function (el) { return el.value; });
+      if (picked.length) apply(isFine(picked));
+    };
+    root.addEventListener('shopify:product:select', function (event) {
+      Promise.resolve(event.promise).then(function (result) {
+        var variant = result && result.detail && result.detail.resource;
+        if (variant && (variant.options || variant.option1)) {
+          apply(isFine(variant.options || [variant.option1, variant.option2, variant.option3]));
+        } else {
+          requestAnimationFrame(fromPicker);
+        }
+      }).catch(function () {});
+    });
+  })();
+</script>

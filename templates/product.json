@@ -143,6 +143,7 @@
             "divider_VJhene": {
               "type": "_divider",
               "name": "t:names.divider",
+              "disabled": true,
               "settings": {
                 "thickness": 1,
                 "corner_radius": "square",
@@ -151,8 +152,7 @@
                 "padding-block-start": 0,
                 "padding-block-end": 0
               },
-              "blocks": {},
-              "disabled": true
+              "blocks": {}
             },
             "sgs_finish": {
               "type": "sgs-finish-toggle",
@@ -179,6 +179,8 @@
                 "finish_step_label": "Choose your finish",
                 "size_guide_label": "Which size?",
                 "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "paper_note_custom": "20 × 10 in is printed on fine art paper; 22 × 11 and 30 × 15 in on semi-gloss.",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
                 "hide_single_choice": true,
                 "variant_style": "buttons",
                 "show_swatches": false,
@@ -281,6 +283,8 @@
                 "christmas_line_from": "2026-11-23",
                 "christmas_line_until": "2026-12-09",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+                "custom_proof_days": 3,
+                "custom_estimate_text": "Free proof within 3 working days · Estimated delivery [range] if you approve your proof the day you receive it",
                 "custom_line": "Custom posters: order by Wed 2 Dec for Christmas delivery",
                 "custom_line_until": "2026-12-02",
                 "christmas_from": "12-10",
@@ -339,6 +343,8 @@
                 "step_3": "We design it and print it in the UK",
                 "eyebrow": "Personalise your print",
                 "intro": "Tell us about your car and the words you want on it. We'll design the poster around them.",
+                "headline_chips": "Built, Not Bought\nWeekend Weapon\nDaily Driven\nFirst of Many\nDream Garage",
+                "chips_label": "Need an idea? Tap one:",
                 "show_plate_preview": true,
                 "plate_label": "Preview",
                 "proof_note": "We'll email you a digital proof within 3 working days, with one round of changes included.",
@@ -355,6 +361,7 @@
                 "item_2": "Printed to order in the UK",
                 "item_3": "Carefully packed for delivery",
                 "item_4": "",
+                "paper_fine_text": "Printed on fine art paper",
                 "item_5": ""
               },
               "blocks": {}
@@ -369,6 +376,10 @@
                 "details_heading": "Product details",
                 "materials_heading": "Print quality & materials",
                 "materials_text": "<p>Printed on semi-gloss paper with fade-resistant inks, made to order in the UK.</p>",
+                "materials_text_fine": "<p>Printed on fine art paper, made to order in the UK.</p>",
+                "paper_note": "[sizes] is printed on fine art paper; [rest] on semi-gloss paper.",
+                "paper_note_rest_larger": "larger sizes",
+                "paper_note_rest_other": "other sizes",
                 "show_sizes": true,
                 "sizes_heading": "Sizes & dimensions",
                 "sizes_text": "<p>Sizes in inches and centimetres. Each print fits a standard frame of the same size.</p>",
@@ -380,6 +391,10 @@
                 "framing_heading": "Framing options",
                 "framing_text": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>",
                 "framing_text_framed": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>",
+                "framing_text_custom": "<p>Your custom print is supplied unframed in a 2:1 panoramic size (20 × 10, 22 × 11 or 30 × 15 in). Standard 12 × 18 in style frames won't fit — choose a frame made for your print's exact size, or choose Framed above.</p>",
+                "framing_text_custom_framed": "<p>Your design is laid out to fit your chosen frame size (18 × 12, 24 × 16 or 36 × 24 in) and arrives in a black wooden frame with a Perspex front, ready to hang.</p>",
+                "delivery_text_custom_framed": "<p>Your framed print is made after you approve your proof, then usually delivered within 5–7 working days. Shipped in protective packaging, with free UK delivery.</p>",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
                 "list_sizes": false,
                 "questions_heading": "Questions",
                 "questions_text": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>",
@@ -437,6 +452,15 @@
     "sgs_wall_videos": {
       "type": "sgs-proof",
       "blocks": {
+        "photo_XqagJ9": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2246.jpg",
+            "caption": "",
+            "product": "",
+            "link": ""
+          }
+        },
         "photo_HAhGWt": {
           "type": "photo",
           "settings": {
@@ -475,6 +499,7 @@
         }
       },
       "block_order": [
+        "photo_XqagJ9",
         "photo_HAhGWt",
         "photo_fGNgGH",
         "photo_UjFQYt",
@@ -518,6 +543,8 @@
             "christmas_line_from": "",
             "christmas_line_until": "2026-12-09",
             "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+            "custom_proof_days": 3,
+            "custom_estimate_text": "Free proof within 3 working days · Estimated delivery [range] if you approve your proof the day you receive it",
             "custom_line": "🎁 Gift it · Order by Wed 2 Dec for Christmas",
             "custom_line_until": "2026-12-02",
             "christmas_from": "12-10",

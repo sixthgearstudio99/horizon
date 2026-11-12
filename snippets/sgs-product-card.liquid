@@ -13,8 +13,10 @@
   {% render 'sgs-product-card', product: product, show_secondary: true %}
 {%- enddoc -%}
 {%- liquid
-  # Every card is the same 4:5 portrait, image filling the frame (cover, centred)
+  # Every card is the same 4:5 portrait. An image the same shape or taller fills the frame (cover,
+  # centred); a wider one (e.g. a 2:1 room mockup) is shown whole (contain) on the page colour.
   assign card_ratio = '4 / 5'
+  assign card_ratio_max = 0.81
   assign card_fit = 'cover'
   assign card_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 80vw'
   if eager
@@ -39,6 +41,12 @@
 
     assign primary_class = 'sgs-card__img sgs-card__img--primary'
     assign secondary_class = 'sgs-card__img sgs-card__img--secondary'
+    if primary_image.aspect_ratio > card_ratio_max
+      assign primary_class = primary_class | append: ' sgs-card__img--contain'
+    endif
+    if secondary_image and secondary_image.aspect_ratio > card_ratio_max
+      assign secondary_class = secondary_class | append: ' sgs-card__img--contain'
+    endif
 
     # Count the sizes (or other options) this product actually offers
     assign option_count = 0
@@ -213,6 +221,12 @@
 
   .sgs-card__img--secondary {
     opacity: 0;
+  }
+
+  /* Wider than the card: the whole image, centred on the page colour */
+  .sgs-card__img--contain {
+    object-fit: contain;
+    background-color: #f5f3ef;
   }
 
   .sgs-card__placeholder {

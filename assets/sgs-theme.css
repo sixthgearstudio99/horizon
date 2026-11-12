@@ -236,6 +236,12 @@ button[ref='addToCartButton'] {
   object-position: center;
 }
 
+/* ...except an image wider than the card, shown whole on the page colour (card-gallery.liquid) */
+.product-card .card-gallery .sgs-media--contain,
+.product-card .card-gallery .sgs-media--contain img {
+  background-color: #f5f3ef;
+}
+
 /* ---------- Product page gallery: natural aspect ratios, never cropped ---------- */
 /* Desktop: one image per row, capped to the viewport height and centred */
 .product-media-container.constrain-height {

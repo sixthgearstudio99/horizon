@@ -67,8 +67,11 @@
     endif
   endif
 
-  # SixthGear: every product card is the same 4:5 portrait, image filling it (cover, centred)
+  # SixthGear: every product card is the same 4:5 portrait. An image the same shape or taller fills
+  # it (cover, centred); a wider one (e.g. a 2:1 room mockup) is shown whole (contain) on the page
+  # colour, so nothing is cut off. Decided per image, so the hover image follows the same rule.
   assign ratio = '4 / 5'
+  assign card_ratio_max = 0.81
   assign constrain_to_viewport = false
   assign media_fit = 'cover'
 %}
@@ -121,8 +124,13 @@
       %}
       {%- if product.media.size == 1 -%}
         {%- assign featured_fit = media_fit | default: 'cover' -%}
+        {%- assign featured_class_fit = '' -%}
+        {%- if featured_media.preview_image.aspect_ratio > card_ratio_max -%}
+          {%- assign featured_fit = 'contain' -%}
+          {%- assign featured_class_fit = ' sgs-media--contain' -%}
+        {%- endif -%}
         <div
-          class="{{ featured_media_class }}"
+          class="{{ featured_media_class }}{{ featured_class_fit }}"
           style="--product-media-fit: {{ featured_fit }};"
         >
           {% render 'product-media',
@@ -188,12 +196,17 @@
               endif
 
               assign class = media_class | replace: '[media_type]', media.media_type | append: media_class_suffix
+              assign slide_fit = media_fit
+              if media.preview_image.aspect_ratio > card_ratio_max
+                assign slide_fit = 'contain'
+                assign class = class | append: ' sgs-media--contain'
+              endif
 
               capture slideshow_children
                 render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true, alt_title: product.title, alt_total: product.media.size
               endcapture
 
-              render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: media_fit
+              render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: slide_fit
             endfor
           endcapture
 

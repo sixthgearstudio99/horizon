@@ -28,7 +28,7 @@
 
 <div class="section-background color-custom-{{ section.id }}"></div>
 <aside
-  class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-custom-{{ section.id }}"
+  class="announcement-bar spacing-style section section--{{ section.settings.section_width }} color-custom-{{ section.id }}{% if section.settings.sgs_bold %} announcement-bar--sgs-bold{% endif %}"
   style="{% render 'spacing-padding', settings: section.settings %}; --border-bottom-width: {{ section.settings.divider_width }}px;{% if section.settings.divider_color != blank %} --color-border: {{ section.settings.divider_color }};{% endif %}"
 >
   {% liquid
@@ -191,6 +191,13 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "sgs_bold",
+      "label": "Bold black bar",
+      "default": false,
+      "info": "SixthGear: near-black bar, capitals in a cream-to-red gradient and a cream-to-red edge, like the Buy 2, Get 1 Free panel on product pages. Overrides the colours below."
+    },
     {
       "type": "checkbox",
       "id": "sgs_show_sale",

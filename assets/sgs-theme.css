@@ -145,6 +145,64 @@ html {
   }
 }
 
+/* Bold black bar (Announcement bar > Bold black bar): the look of the Buy 2, Get 1 Free panel.
+   Near-black, capitals in a cream-to-red gradient (stopping at a red light enough to read at
+   this size), and a thin cream-to-red edge with a soft red glow. */
+.announcement-bar--sgs-bold {
+  position: relative;
+  z-index: 1;
+  background: #111111;
+  box-shadow: 0 4px 16px -8px rgb(215 38 30 / 0.55);
+}
+
+.announcement-bar--sgs-bold + .section-background,
+.section-background:has(+ .announcement-bar--sgs-bold) {
+  background: #111111;
+}
+
+.announcement-bar--sgs-bold::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  height: 1px;
+  background: linear-gradient(90deg, #f5f3ef 0%, #e9675e 55%, #d7261e 100%);
+  pointer-events: none;
+}
+
+/* Same type as the panel's small heading; !important to beat the mono label rule in sgs-studio.css */
+.announcement-bar--sgs-bold .announcement-bar__text {
+  font-family: var(--font-body--family) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: #f5f3ef;
+  /* As wide as the words, centred, so the gradient runs across the text itself */
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto !important;
+}
+
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .announcement-bar--sgs-bold .announcement-bar__text {
+    background: linear-gradient(95deg, #f5f3ef 0%, #ef8a80 55%, #e8483f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@media (forced-colors: active) {
+  .announcement-bar--sgs-bold .announcement-bar__text {
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+.announcement-bar--sgs-bold .slideshow-control {
+  color: #f5f3ef;
+}
+
 /* ---------- Header ---------- */
 .header .menu-list__link-title {
   position: relative;

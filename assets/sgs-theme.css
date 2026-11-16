@@ -151,13 +151,15 @@ html {
 .announcement-bar--sgs-bold {
   position: relative;
   z-index: 1;
-  background: #111111;
   box-shadow: 0 4px 16px -8px rgb(215 38 30 / 0.55);
 }
 
-.announcement-bar--sgs-bold + .section-background,
-.section-background:has(+ .announcement-bar--sgs-bold) {
-  background: #111111;
+/* Black whatever the bar's colour setting: Horizon paints a section's colour on the separate
+   .section-background layer behind it and makes the section itself transparent, both with more
+   specific rules, hence !important */
+.shopify-section .announcement-bar.announcement-bar--sgs-bold,
+.shopify-section .section-background:has(+ .announcement-bar--sgs-bold) {
+  background-color: #111111 !important;
 }
 
 .announcement-bar--sgs-bold::after {

@@ -2,7 +2,7 @@
   SixthGear Studios: Buy 2, Get 1 Free progress in the cart drawer and cart page.
   Display only: the offer itself is an automatic discount in Shopify.
   Counts print quantities, leaving out the handles listed in Theme settings (the custom
-  poster) and gift cards. Rendered by Liquid inside the cart contents, so it refreshes
+  poster), framed prints and gift cards. Rendered by Liquid inside the cart contents, so it refreshes
   whenever Horizon re-renders the cart after an add, remove or quantity change.
 
   @example
@@ -24,6 +24,15 @@
         break
       endif
     endfor
+    # Framed prints aren't part of the offer either
+    unless skip
+      capture item_framed
+        render 'sgs-is-framed', product_resource: item.product
+      endcapture
+      if item_framed contains 'true'
+        assign skip = true
+      endif
+    endunless
     unless skip
       assign prints = prints | plus: item.quantity
     endunless

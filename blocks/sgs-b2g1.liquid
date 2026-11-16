@@ -1,0 +1,178 @@
+{%- liquid
+  # SixthGear: the Buy 2, Get 1 Free offer on the product page. Display only: the offer itself is
+  # an automatic discount in Shopify. Shown on the same terms as the cart's progress bar: while
+  # it's switched on (Theme settings > SixthGear: build your wall), not during an offer window that
+  # hides it (e.g. a % sale), and not on products that don't count (framed prints, custom posters,
+  # gift cards).
+  assign bs = block.settings
+  assign product_resource = closest.product
+
+  assign show = settings.sgs_wall_progress
+  if product_resource == blank or product_resource.gift_card?
+    assign show = false
+  endif
+
+  if show
+    capture sgs_sale_win
+      render 'sgs-sale-window'
+    endcapture
+    assign sgs_sale_win = sgs_sale_win | strip
+    if sgs_sale_win != blank
+      assign hide_key = 'sgs_sale' | append: sgs_sale_win | append: '_hide_wall'
+      if settings[hide_key]
+        assign show = false
+      endif
+    endif
+  endif
+
+  assign excluded = false
+  if show
+    capture sgs_framed
+      render 'sgs-is-framed', product_resource: product_resource
+    endcapture
+    capture sgs_custom
+      render 'sgs-is-custom', product_resource: product_resource, handles: settings.sgs_wall_excluded_handles
+    endcapture
+    if sgs_framed contains 'true' or sgs_custom contains 'true'
+      assign excluded = true
+    endif
+  endif
+-%}
+
+{%- if show and excluded == false and bs.heading != blank -%}
+  <div class="sgs-b2g1" role="note" {{ block.shopify_attributes }}>
+    <svg class="sgs-b2g1__art" aria-hidden="true" focusable="false" width="58" height="30" viewBox="0 0 58 30">
+      <rect x="0.5" y="4.5" width="15" height="21" fill="none" stroke="currentColor"/>
+      <rect x="21.5" y="4.5" width="15" height="21" fill="none" stroke="currentColor"/>
+      <rect x="42" y="4" width="16" height="22" fill="currentColor"/>
+      <path d="M46.5 15.2l2.4 2.4 4.6-4.9" fill="none" stroke="var(--sgs-bg, #f5f3ef)" stroke-width="1.6" stroke-linecap="square"/>
+    </svg>
+    <div class="sgs-b2g1__body">
+      <p class="sgs-b2g1__title">{{ bs.heading | escape }}</p>
+      {%- if bs.text != blank -%}
+        <p class="sgs-b2g1__text">{{ bs.text | escape }}</p>
+      {%- endif -%}
+      {%- if bs.link_label != blank -%}
+        <a class="sgs-b2g1__link" href="{{ bs.link | default: routes.all_products_collection_url }}">{{ bs.link_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+{%- elsif show and excluded and bs.excluded_line != blank -%}
+  <p class="sgs-b2g1-excluded" {{ block.shopify_attributes }}>{{ bs.excluded_line | escape }}</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-b2g1 {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--sgs-text, #111111);
+    color: var(--sgs-text, #111111);
+  }
+
+  /* Same switch as the cart's progress bar, on the visitor's clock */
+  html[data-sgs-sale-hide-wall] .sgs-b2g1,
+  html[data-sgs-sale-hide-wall] .sgs-b2g1-excluded {
+    display: none;
+  }
+
+  .sgs-b2g1__art {
+    flex-shrink: 0;
+  }
+
+  .sgs-b2g1__body {
+    min-width: 0;
+  }
+
+  .sgs-b2g1__title {
+    margin: 0;
+    font-family: var(--sgs-font-mono, monospace);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .sgs-b2g1__text {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-b2g1__link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-underline-offset: 3px;
+  }
+
+  .sgs-b2g1__link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .sgs-b2g1-excluded {
+    width: 100%;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Buy 2, Get 1 Free",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Display only: the offer itself is an automatic discount in Shopify (Discounts). Shown while Buy 2, Get 1 Free progress is on (Theme settings > SixthGear: build your wall), hidden during offer windows that hide it, and not on framed prints, custom posters or gift cards."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Buy 2, get 1 free",
+      "info": "Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Mix any designs and sizes. Add 3 prints to your basket and the cheapest one is free, taken off automatically at checkout."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "info": "Optional, e.g. Shop more prints. Leave empty to hide."
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link",
+      "info": "Defaults to all products."
+    },
+    {
+      "type": "text",
+      "id": "excluded_line",
+      "label": "Line on products that don't count",
+      "info": "Shown instead on framed prints and custom posters, e.g. Not part of Buy 2, Get 1 Free. Leave empty to show nothing."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buy 2, Get 1 Free"
+    }
+  ]
+}
+{% endschema %}

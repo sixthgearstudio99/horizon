@@ -108,6 +108,17 @@
               },
               "blocks": {}
             },
+            "sgs_b2g1": {
+              "type": "sgs-b2g1",
+              "settings": {
+                "heading": "Buy 2, get 1 free",
+                "text": "Mix any designs and sizes. Add 3 prints to your basket and the cheapest one is free, taken off automatically at checkout.",
+                "link_label": "",
+                "link": "",
+                "excluded_line": ""
+              },
+              "blocks": {}
+            },
             "price_tVjtKg": {
               "type": "price",
               "settings": {
@@ -419,6 +430,7 @@
             "sgs_header",
             "sgs_rating",
             "price_tVjtKg",
+            "sgs_b2g1",
             "sgs_intro",
             "divider_VJhene",
             "sgs_finish",

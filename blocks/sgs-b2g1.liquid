@@ -41,36 +41,39 @@
 
 {%- if show and excluded == false and bs.heading != blank -%}
   <div class="sgs-b2g1" role="note" {{ block.shopify_attributes }}>
-    <svg class="sgs-b2g1__art" aria-hidden="true" focusable="false" width="58" height="30" viewBox="0 0 58 30">
-      <rect x="0.5" y="4.5" width="15" height="21" fill="none" stroke="currentColor"/>
-      <rect x="21.5" y="4.5" width="15" height="21" fill="none" stroke="currentColor"/>
-      <rect x="42" y="4" width="16" height="22" fill="currentColor"/>
-      <path d="M46.5 15.2l2.4 2.4 4.6-4.9" fill="none" stroke="var(--sgs-bg, #f5f3ef)" stroke-width="1.6" stroke-linecap="square"/>
-    </svg>
-    <div class="sgs-b2g1__body">
-      <p class="sgs-b2g1__title">{{ bs.heading | escape }}</p>
-      {%- if bs.text != blank -%}
-        <p class="sgs-b2g1__text">{{ bs.text | escape }}</p>
-      {%- endif -%}
-      {%- if bs.link_label != blank -%}
-        <a class="sgs-b2g1__link" href="{{ bs.link | default: routes.all_products_collection_url }}">{{ bs.link_label | escape }}</a>
-      {%- endif -%}
-    </div>
+    {%- if bs.eyebrow != blank -%}
+      <p class="sgs-b2g1__eyebrow">{{ bs.eyebrow | escape }}</p>
+    {%- endif -%}
+    <p class="sgs-b2g1__title">{{ bs.heading | escape }}</p>
+    {%- if bs.text != blank -%}
+      <p class="sgs-b2g1__text">{{ bs.text | escape }}</p>
+    {%- endif -%}
+    {%- if bs.link_label != blank -%}
+      <a class="sgs-b2g1__link" href="{{ bs.link | default: routes.all_products_collection_url }}">{{ bs.link_label | escape }}</a>
+    {%- endif -%}
   </div>
 {%- elsif show and excluded and bs.excluded_line != blank -%}
   <p class="sgs-b2g1-excluded" {{ block.shopify_attributes }}>{{ bs.excluded_line | escape }}</p>
 {%- endif -%}
 
 {% stylesheet %}
+  /* Near-black panel, cream type, a cream-to-red headline and a thin cream-to-red edge with a
+     soft red glow: the brand's own colours (#111111, #f5f3ef, #d7261e) */
   .sgs-b2g1 {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    --sgs-b2g1-ink: #111111;
+    --sgs-b2g1-cream: #f5f3ef;
+    --sgs-b2g1-red: #d7261e;
+
     box-sizing: border-box;
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--sgs-text, #111111);
-    color: var(--sgs-text, #111111);
+    padding: 18px 20px 20px;
+    border: 1px solid transparent;
+    border-radius: var(--sgs-radius, 4px);
+    background:
+      linear-gradient(var(--sgs-b2g1-ink), var(--sgs-b2g1-ink)) padding-box,
+      linear-gradient(100deg, var(--sgs-b2g1-cream) 0%, #e9675e 55%, var(--sgs-b2g1-red) 100%) border-box;
+    box-shadow: 0 0 0 1px rgb(215 38 30 / 0.06), 0 6px 28px -6px rgb(215 38 30 / 0.45);
+    color: var(--sgs-b2g1-cream);
   }
 
   /* Same switch as the cart's progress bar, on the visitor's clock */
@@ -79,44 +82,68 @@
     display: none;
   }
 
-  .sgs-b2g1__art {
-    flex-shrink: 0;
-  }
-
-  .sgs-b2g1__body {
-    min-width: 0;
+  .sgs-b2g1__eyebrow {
+    margin: 0 0 6px;
+    font-family: var(--font-body--family);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sgs-b2g1-cream);
   }
 
   .sgs-b2g1__title {
     margin: 0;
-    font-family: var(--sgs-font-mono, monospace);
-    font-size: 15px;
-    font-weight: 600;
-    line-height: 1.35;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-family: var(--font-heading--family);
+    font-size: clamp(24px, 7vw, 32px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    text-transform: none;
+    color: var(--sgs-b2g1-cream);
+  }
+
+  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+    .sgs-b2g1__title {
+      background: linear-gradient(95deg, var(--sgs-b2g1-cream) 0%, #ef8a80 38%, #e8483f 68%, var(--sgs-b2g1-red) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  @media (forced-colors: active) {
+    .sgs-b2g1__title {
+      -webkit-text-fill-color: currentColor;
+    }
   }
 
   .sgs-b2g1__text {
-    margin: 4px 0 0;
-    font-size: 13px;
+    margin: 8px 0 0;
+    font-size: 15px;
     line-height: 1.5;
-    color: var(--sgs-text-2, #6b6b6b);
+    color: rgb(245 243 239 / 0.78);
   }
 
   .sgs-b2g1__link {
     display: inline-block;
-    margin-top: 6px;
-    font-size: 13px;
+    margin-top: 10px;
+    font-size: 14px;
     font-weight: 500;
-    color: inherit;
+    color: var(--sgs-b2g1-cream);
     text-decoration: underline;
-    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-decoration-color: rgb(245 243 239 / 0.4);
     text-underline-offset: 3px;
   }
 
   .sgs-b2g1__link:hover {
     text-decoration-color: currentColor;
+  }
+
+  .sgs-b2g1__link:focus-visible {
+    outline: 1px solid var(--sgs-b2g1-cream);
+    outline-offset: 2px;
   }
 
   .sgs-b2g1-excluded {
@@ -139,16 +166,23 @@
     },
     {
       "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Build your wall",
+      "info": "Above the offer, in capitals. Leave empty to hide."
+    },
+    {
+      "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Buy 2, get 1 free",
-      "info": "Leave empty to hide."
+      "default": "Buy 2 Prints, Get 1 Free",
+      "info": "Leave empty to hide the box."
     },
     {
       "type": "text",
       "id": "text",
       "label": "Text",
-      "default": "Mix any designs and sizes. Add 3 prints to your basket and the cheapest one is free, taken off automatically at checkout."
+      "default": "Mix any designs and sizes. The cheapest is free, taken off automatically at checkout."
     },
     {
       "type": "text",

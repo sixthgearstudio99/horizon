@@ -111,8 +111,9 @@
             "sgs_b2g1": {
               "type": "sgs-b2g1",
               "settings": {
-                "heading": "Buy 2, get 1 free",
-                "text": "Mix any designs and sizes. Add 3 prints to your basket and the cheapest one is free, taken off automatically at checkout.",
+                "eyebrow": "Build your wall",
+                "heading": "Buy 2 Prints, Get 1 Free",
+                "text": "Mix any designs and sizes. The cheapest is free, taken off automatically at checkout.",
                 "link_label": "",
                 "link": "",
                 "excluded_line": ""

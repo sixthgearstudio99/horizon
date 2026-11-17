@@ -83,7 +83,6 @@
       if sgs_has_size
         assign sgs_step = 2
       endif
-      assign sgs_popular = settings.sgs_popular_value | strip | downcase
 
       # A framed print isn't "(unframed)": the size suffix is left off
       capture sgs_framed
@@ -100,6 +99,11 @@
           # SixthGear: display heading for the option, e.g. "Size (unframed)"; the option itself is unchanged
           assign option_label = product_option.name | escape
           assign option_name_lower = product_option.name | downcase
+          # SixthGear: the value tagged "Most popular" (by default the middle size)
+          capture sgs_popular
+            render 'sgs-popular-value', product_option: product_option
+          endcapture
+          assign sgs_popular = sgs_popular | strip
           if option_name_lower contains 'size' and sgs_size_suffix != blank
             assign option_label = option_label | append: ' ' | append: sgs_size_suffix | escape
           endif
@@ -301,7 +305,7 @@
                         </span>
                       {%- endif -%}
                       {%- if sgs_popular != blank and value_lower == sgs_popular -%}
-                        <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Popular' | escape }}</span>
+                        <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Most popular' | escape }}</span>
                       {%- endif -%}
                     </span>
                   {%- else -%}
@@ -311,7 +315,7 @@
                   >
                     {{- value_label -}}
                     {%- if sgs_popular != blank and value_lower == sgs_popular -%}
-                      <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Popular' | escape }}</span>
+                      <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Most popular' | escape }}</span>
                     {%- endif -%}
                   </span>
                   {%- endif -%}
@@ -425,7 +429,7 @@
                     -%}
                     {{ value_label -}}
                     {%- if option_price != blank %} — {{ option_price }}{% endif -%}
-                    {%- if sgs_popular != blank and value_lower == sgs_popular %} · {{ settings.sgs_popular_label | default: 'Popular' | escape }}{% endif -%}
+                    {%- if sgs_popular != blank and value_lower == sgs_popular %} · {{ settings.sgs_popular_label | default: 'Most popular' | escape }}{% endif -%}
                     {%- if product_option_value.available == false %} - {{ 'content.unavailable' | t }}{% endif -%}
                   </option>
                 {%- endfor -%}

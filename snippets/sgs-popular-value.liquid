@@ -1,0 +1,25 @@
+{%- doc -%}
+  SixthGear Studios: which value of this option gets the "Most popular" tag, lower-cased, or nothing.
+  The value named in Theme settings > SixthGear: product page wins; otherwise, with "Tag the middle
+  size" on, a Size option with 3 or more values tags its middle one (the 2nd of 3; the lower of the
+  two middle ones when the count is even).
+
+  @param {object} product_option - The product option (from options_with_values)
+
+  @example
+  {%- capture sgs_popular -%}{% render 'sgs-popular-value', product_option: product_option %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign named = settings.sgs_popular_value | strip | downcase
+  if named != blank
+    echo named
+  elsif settings.sgs_popular_middle
+    assign option_name = product_option.name | downcase
+    assign count = product_option.values.size
+    if option_name contains 'size' and count >= 3
+      assign middle = count | minus: 1 | divided_by: 2 | floor
+      echo product_option.values[middle].name | downcase | strip
+    endif
+  endif
+-%}

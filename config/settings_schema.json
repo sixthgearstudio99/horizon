@@ -2397,19 +2397,26 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Optional tag on one size or finish button. Use it only for a choice that genuinely sells the most."
+        "content": "A tag on one size button. Use it only for a choice that genuinely sells the most."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_popular_middle",
+        "label": "Tag the middle size",
+        "default": true,
+        "info": "On products with 3 or more sizes, the middle one (e.g. 24 × 16 of 18 × 12, 24 × 16, 36 × 24)."
       },
       {
         "type": "text",
         "id": "sgs_popular_value",
-        "label": "Tag this option value",
-        "info": "Exact value name as in Shopify, e.g. 16x24 (Vertical). Leave empty for no tag."
+        "label": "Tag this option value instead",
+        "info": "Exact value name as in Shopify, e.g. 16x24 (Vertical). Takes the place of the middle size. Leave empty to use the middle size."
       },
       {
         "type": "text",
         "id": "sgs_popular_label",
         "label": "Tag text",
-        "default": "Popular"
+        "default": "Most popular"
       }
     ]
   }

@@ -29,7 +29,8 @@
     assign primary_image = product.featured_media.preview_image
 
     assign secondary_image = nil
-    if show_secondary
+    # Also needs Theme settings > SixthGear: product cards > second image on hover
+    if show_secondary and settings.sgs_card_hover_image
       for media in product.media
         if media.position > 1 and media.media_type == 'image'
           assign secondary_image = media.preview_image

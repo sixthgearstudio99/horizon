@@ -2393,6 +2393,18 @@
     ]
   },
   {
+    "name": "SixthGear: product cards",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "sgs_card_hover_image",
+        "label": "Show the second image on hover",
+        "default": false,
+        "info": "Off: a product card keeps its first image when hovered. Applies to every product card (collections, search, recommendations, product grids)."
+      }
+    ]
+  },
+  {
     "name": "SixthGear: product page",
     "settings": [
       {

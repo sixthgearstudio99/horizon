@@ -2233,20 +2233,20 @@
       },
       {
         "type": "header",
-        "content": "Window 1: 15% sale"
+        "content": "Window 1: pre Black Friday"
       },
       {
         "type": "text",
         "id": "sgs_sale1_start",
         "label": "Starts (YYYY-MM-DD HH:MM, UK time)",
-        "default": "2026-11-05 00:00"
+        "default": "2026-11-24 00:00"
       },
       {
         "type": "text",
         "id": "sgs_sale1_end",
         "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
         "info": "Leave empty for no end date.",
-        "default": "2026-11-15 23:59"
+        "default": "2026-11-26 23:59"
       },
       {
         "type": "range",
@@ -2256,20 +2256,45 @@
         "max": 90,
         "step": 1,
         "unit": "%",
-        "default": 15,
+        "default": 0,
         "info": "0% for message-only offers such as Buy 2, Get 1 Free."
       },
       {
         "type": "text",
         "id": "sgs_sale1_message",
         "label": "Message",
-        "default": "15% OFF EVERYTHING · ENDS SUN 15 NOV"
+        "default": "PRE BLACK FRIDAY · 20% OFF ORDERS OVER £50 · UNFRAMED POSTERS"
       },
       {
         "type": "checkbox",
         "id": "sgs_sale1_hide_wall",
         "label": "Hide Buy 2, Get 1 Free progress during this window",
         "default": true
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_panel_eyebrow",
+        "label": "Product page panel: small heading",
+        "default": "Pre Black Friday sale"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_panel_heading",
+        "label": "Product page panel: heading",
+        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel.",
+        "default": "20% Off Orders Over £50"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_panel_text",
+        "label": "Product page panel: text",
+        "default": "On unframed posters. Mix any designs and sizes; taken off automatically at checkout."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale1_panel_note",
+        "label": "Product page panel: small print",
+        "default": "Framed prints not included."
       },
       {
         "type": "header",
@@ -2312,6 +2337,27 @@
         "default": true
       },
       {
+        "type": "text",
+        "id": "sgs_sale2_panel_eyebrow",
+        "label": "Product page panel: small heading"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_panel_heading",
+        "label": "Product page panel: heading",
+        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_panel_text",
+        "label": "Product page panel: text"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale2_panel_note",
+        "label": "Product page panel: small print"
+      },
+      {
         "type": "header",
         "content": "Window 3: Buy 2, Get 1 Free"
       },
@@ -2342,14 +2388,34 @@
       {
         "type": "text",
         "id": "sgs_sale3_message",
-        "label": "Message",
-        "default": "BUY 2, GET 1 FREE · MIX ANY DESIGNS AND SIZES"
+        "label": "Message"
       },
       {
         "type": "checkbox",
         "id": "sgs_sale3_hide_wall",
         "label": "Hide Buy 2, Get 1 Free progress during this window",
         "default": false
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_panel_eyebrow",
+        "label": "Product page panel: small heading"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_panel_heading",
+        "label": "Product page panel: heading",
+        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_panel_text",
+        "label": "Product page panel: text"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale3_panel_note",
+        "label": "Product page panel: small print"
       },
       {
         "type": "header",
@@ -2389,6 +2455,27 @@
         "id": "sgs_sale4_hide_wall",
         "label": "Hide Buy 2, Get 1 Free progress during this window",
         "default": false
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_panel_eyebrow",
+        "label": "Product page panel: small heading"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_panel_heading",
+        "label": "Product page panel: heading",
+        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel."
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_panel_text",
+        "label": "Product page panel: text"
+      },
+      {
+        "type": "text",
+        "id": "sgs_sale4_panel_note",
+        "label": "Product page panel: small print"
       }
     ]
   },

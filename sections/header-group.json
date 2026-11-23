@@ -89,7 +89,7 @@
         "divider_color": "",
         "padding-block-start": 8,
         "padding-block-end": 8,
-        "sgs_show_sale": false,
+        "sgs_show_sale": true,
         "sgs_bold": true
       }
     },

@@ -59,6 +59,47 @@
   <p class="sgs-b2g1-excluded" {{ block.shopify_attributes }}>{{ bs.excluded_line | escape }}</p>
 {%- endif -%}
 
+{%- liquid
+  # Offer windows (Theme settings > SixthGear: offers) with panel text get the same panel, shown
+  # only while that window is open on the visitor's clock (html[data-sgs-sale], set in the head),
+  # so it switches at the exact minute even on a page served earlier. Not on framed prints or
+  # gift cards (these offers are for unframed posters).
+  assign offer_panels = false
+  if settings.sgs_sale_enabled and product_resource != blank and product_resource.gift_card? != true
+    capture sgs_framed_offer
+      render 'sgs-is-framed', product_resource: product_resource
+    endcapture
+    unless sgs_framed_offer contains 'true'
+      assign offer_panels = true
+    endunless
+  endif
+-%}
+{%- if offer_panels -%}
+  {%- for i in (1..4) -%}
+    {%- liquid
+      assign key = 'sgs_sale' | append: i
+      assign p_eyebrow = key | append: '_panel_eyebrow'
+      assign p_heading = key | append: '_panel_heading'
+      assign p_text = key | append: '_panel_text'
+      assign p_note = key | append: '_panel_note'
+    -%}
+    {%- if settings[p_heading] != blank -%}
+      <div class="sgs-b2g1 sgs-b2g1--offer" data-sgs-offer-win="{{ i }}" role="note">
+        {%- if settings[p_eyebrow] != blank -%}
+          <p class="sgs-b2g1__eyebrow">{{ settings[p_eyebrow] | escape }}</p>
+        {%- endif -%}
+        <p class="sgs-b2g1__title">{{ settings[p_heading] | escape }}</p>
+        {%- if settings[p_text] != blank -%}
+          <p class="sgs-b2g1__text">{{ settings[p_text] | escape }}</p>
+        {%- endif -%}
+        {%- if settings[p_note] != blank -%}
+          <p class="sgs-b2g1__note">{{ settings[p_note] | escape }}</p>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {% stylesheet %}
   /* Near-black panel, cream type, a cream-to-red headline and a thin cream-to-red edge with a
      soft red glow: the brand's own colours (#111111, #f5f3ef, #d7261e) */
@@ -79,8 +120,20 @@
     color: var(--sgs-b2g1-cream);
   }
 
+  /* An offer window's panel: only while that window is open on the visitor's clock */
+  .sgs-b2g1--offer {
+    display: none;
+  }
+
+  html[data-sgs-sale='1'] .sgs-b2g1--offer[data-sgs-offer-win='1'],
+  html[data-sgs-sale='2'] .sgs-b2g1--offer[data-sgs-offer-win='2'],
+  html[data-sgs-sale='3'] .sgs-b2g1--offer[data-sgs-offer-win='3'],
+  html[data-sgs-sale='4'] .sgs-b2g1--offer[data-sgs-offer-win='4'] {
+    display: block;
+  }
+
   /* Same switch as the cart's progress bar, on the visitor's clock */
-  html[data-sgs-sale-hide-wall] .sgs-b2g1,
+  html[data-sgs-sale-hide-wall] .sgs-b2g1:not(.sgs-b2g1--offer),
   html[data-sgs-sale-hide-wall] .sgs-b2g1-excluded {
     display: none;
   }

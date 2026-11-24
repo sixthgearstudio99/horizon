@@ -726,7 +726,8 @@
             "header_text": "What our customers say",
             "reviews_selection": "all",
             "show_product_name": true,
-            "no_image_fallback": "review_text_only"
+            "no_image_fallback": "review_text_only",
+            "hide_arrows_mobile": false
           }
         }
       },

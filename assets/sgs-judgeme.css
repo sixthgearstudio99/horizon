@@ -71,13 +71,15 @@
   display: none !important;
 }
 
-/* Photo and video gallery above the reviews (photos inside each review stay) */
+/* Photo and video gallery above the reviews (photos inside each review stay). Not in the "What
+   our customers say" reviews carousel sections (sgs_reviews_carousel in the product and home
+   templates), whose review cards also carry jdgm-carousel classes. */
 :is(.jdgm-widget, .jdgm-rev-widg) :is(
     [class*='jdgm-gallery'],
     [class*='media-gallery'],
     [class*='jdgm-carousel'],
     .jdgm-rev-widg__media
-  ) {
+  ):not([id*='sgs_reviews_carousel'] *) {
   display: none !important;
 }
 

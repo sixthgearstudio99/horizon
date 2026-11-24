@@ -1,54 +1,77 @@
 {%- liquid
-  # SixthGear: "★★★★★ 5.0 from our customers (2 reviews)" under the buy buttons, linking to the
-  # reviews carousel (#reviews). Store-wide average and review count from Judge.me's shop
-  # metafields (judgeme.all_reviews_rating / judgeme.all_reviews_count, as in Judge.me's own All
-  # Reviews Counter code), read as typed or legacy metafields. Hidden until there's a review.
+  # SixthGear: one small trust line under the buy buttons, e.g.
+  # "★ 5.0 from our customers · Free UK delivery · Printed in the UK". The rating part links to the
+  # reviews carousel (#reviews) and uses the store-wide Judge.me average from its shop metafields
+  # (judgeme.all_reviews_rating / all_reviews_count, as in Judge.me's own All Reviews Counter); it's
+  # left out until there's a review. Display only: nothing here goes into structured data.
   assign bs = block.settings
   assign jm = shop.metafields.judgeme
   assign count = jm.all_reviews_count.value | default: jm.all_reviews_count | plus: 0
+
   # Always one decimal place, e.g. 5.0 or 4.7
   assign rating_x10 = jm.all_reviews_rating.value | default: jm.all_reviews_rating | times: 10 | round
   assign rating_whole = rating_x10 | divided_by: 10 | floor
   assign rating_tenth = rating_x10 | modulo: 10
   assign rating = rating_whole | append: '.' | append: rating_tenth
 
-  if count == 1
-    assign count_text = bs.review_singular | default: '[count] review'
-  else
-    assign count_text = bs.review_plural | default: '[count] reviews'
+  assign rating_text = ''
+  if count > 0 and bs.rating_text != blank
+    assign rating_text = bs.rating_text | replace: '[rating]', rating | replace: '[count]', count
   endif
-  assign count_text = count_text | replace: '[count]', count
-  assign line_text = bs.text | default: '[rating] from our customers ([count])' | replace: '[rating]', rating | replace: '[count]', count_text
+  assign item_2 = bs.item_2 | strip
+  assign item_3 = bs.item_3 | strip
+
+  assign show = false
+  if rating_text != blank or item_2 != blank or item_3 != blank
+    assign show = true
+  endif
+  if closest.product.gift_card?
+    assign show = false
+  endif
 -%}
 
-{%- if count > 0 and closest.product.gift_card? != true -%}
+{%- if show -%}
   <div class="sgs-revline-wrap" {{ block.shopify_attributes }}>
-    <a class="sgs-revline" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
-      <span class="sgs-revline__stars" aria-hidden="true">★★★★★</span>
-      <span class="sgs-revline__text">{{ line_text | escape }}</span>
-    </a>
+    <p class="sgs-revline">
+      {%- if rating_text != blank -%}
+        <a class="sgs-revline__rating" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
+          <span class="sgs-revline__star" aria-hidden="true">★</span>
+          <span class="sgs-revline__link">{{ rating_text | escape }}</span>
+        </a>
+      {%- endif -%}
+      {%- if item_2 != blank -%}
+        {%- if rating_text != blank -%}<span class="sgs-revline__sep" aria-hidden="true">·</span>{%- endif -%}
+        <span class="sgs-revline__item">{{ item_2 | escape }}</span>
+      {%- endif -%}
+      {%- if item_3 != blank -%}
+        {%- if rating_text != blank or item_2 != blank -%}<span class="sgs-revline__sep" aria-hidden="true">·</span>{%- endif -%}
+        <span class="sgs-revline__item">{{ item_3 | escape }}</span>
+      {%- endif -%}
+    </p>
   </div>
-  <script>
-    (function () {
-      // Smooth scroll to the reviews (instant with reduced motion); the link still works without this
-      if (window.sgsRevlineBound) return;
-      window.sgsRevlineBound = true;
-      document.addEventListener('click', function (event) {
-        var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
-        if (!link) return;
-        var target = document.getElementById(link.getAttribute('href').slice(1));
-        if (!target) return;
-        event.preventDefault();
-        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-        if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
-      });
-    })();
-  </script>
+  {%- if rating_text != blank -%}
+    <script>
+      (function () {
+        // Smooth scroll to the reviews (instant with reduced motion); the link still works without this
+        if (window.sgsRevlineBound) return;
+        window.sgsRevlineBound = true;
+        document.addEventListener('click', function (event) {
+          var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
+          if (!link) return;
+          var target = document.getElementById(link.getAttribute('href').slice(1));
+          if (!target) return;
+          event.preventDefault();
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
+        });
+      })();
+    </script>
+  {%- endif -%}
 {%- endif -%}
 
 {% stylesheet %}
-  /* Same type and spacing as the delivery rows below it, gold stars in place of the icon */
+  /* Small, one line: the type of the delivery rows below, scaled down to fit narrow phones */
   .sgs-revline-wrap {
     width: 100%;
     min-width: 0;
@@ -58,39 +81,55 @@
   .sgs-revline {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0 0.5em;
+    margin: 0;
     padding: 4px 0;
-    font-size: clamp(12px, 3.9cqi, 14px);
+    overflow: hidden;
+    font-size: clamp(10px, 3.05cqi, 13px);
     line-height: 1.45;
     white-space: nowrap;
     color: var(--sgs-text, #111111);
+  }
+
+  .sgs-revline__rating {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 0.35em;
+    color: inherit;
     text-decoration: none;
   }
 
-  .sgs-revline__stars {
-    flex-shrink: 0;
-    font-size: 1.05em;
-    letter-spacing: 1px;
+  .sgs-revline__star {
+    font-size: 1.1em;
     color: #b7821a;
   }
 
-  .sgs-revline__text {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .sgs-revline__link {
     text-decoration: underline;
     text-decoration-color: rgb(17 17 17 / 0.3);
     text-underline-offset: 3px;
     transition: text-decoration-color 0.3s ease;
   }
 
-  .sgs-revline:hover .sgs-revline__text {
+  .sgs-revline__rating:hover .sgs-revline__link {
     text-decoration-color: currentColor;
   }
 
-  .sgs-revline:focus-visible {
+  .sgs-revline__rating:focus-visible {
     outline: 1px solid var(--sgs-text, #111111);
     outline-offset: 2px;
+  }
+
+  .sgs-revline__sep {
+    flex-shrink: 0;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-revline__item {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* The reviews anchor lands below the sticky header */
@@ -101,43 +140,43 @@
 
 {% schema %}
 {
-  "name": "Reviews rating line",
+  "name": "Trust line",
   "tag": null,
   "settings": [
     {
       "type": "paragraph",
-      "content": "The store-wide Judge.me rating and review count, linking to the reviews. Hidden until there's at least one review."
+      "content": "One small line under the buy buttons. The rating part uses the store-wide Judge.me rating, links to the reviews, and is left out until there's a review. Empty parts are left out."
     },
     {
       "type": "text",
-      "id": "text",
-      "label": "Text",
-      "default": "[rating] from our customers ([count])",
-      "info": "[rating] is the average (e.g. 5.0), [count] the number of reviews with the word below."
+      "id": "rating_text",
+      "label": "Rating",
+      "default": "[rating] from our customers",
+      "info": "After a gold star. [rating] is the store-wide average (e.g. 5.0), [count] the number of reviews."
     },
     {
       "type": "text",
-      "id": "review_singular",
-      "label": "One review",
-      "default": "[count] review"
+      "id": "item_2",
+      "label": "Second part",
+      "default": "Free UK delivery"
     },
     {
       "type": "text",
-      "id": "review_plural",
-      "label": "More reviews",
-      "default": "[count] reviews"
+      "id": "item_3",
+      "label": "Third part",
+      "default": "Printed in the UK"
     },
     {
       "type": "text",
       "id": "anchor",
-      "label": "Links to",
+      "label": "Rating links to",
       "default": "reviews",
       "info": "The id of the element to scroll to, without #."
     }
   ],
   "presets": [
     {
-      "name": "Reviews rating line"
+      "name": "Trust line"
     }
   ]
 }

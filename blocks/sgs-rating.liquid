@@ -22,6 +22,22 @@
   assign rating_text = rating | round: 1
 -%}
 
+{%- liquid
+  # This product's own reviews: with none, the Judge.me review widget section (and its "Be the first
+  # to write a review" and empty bars) is hidden; the store-wide carousel is a different widget
+  capture own_reviews
+    render 'sgs-product-review-count', product_resource: product_resource
+  endcapture
+  assign own_reviews = own_reviews | strip | plus: 0
+-%}
+{%- if own_reviews == 0 and request.design_mode != true -%}
+  <style>
+    .shopify-section:has(.jdgm-review-widget):not(:has(.jdgm-cards-carousel, [id*='sgs_reviews_carousel'])) {
+      display: none !important;
+    }
+  </style>
+{%- endif -%}
+
 {%- if count > 0 and rating > 0 -%}
   <a
     class="sgs-rating{% if bs.alignment == 'center' %} sgs-rating--center{% endif %}"

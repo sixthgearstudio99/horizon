@@ -1,0 +1,96 @@
+{%- liquid
+  # SixthGear: one question in the product FAQ (blocks/sgs-pdp-faq.liquid). The answer can differ for
+  # framed prints, unframed prints, and unframed prints without a framed version; [bracketed words]
+  # link to the framed version (custom.framed_version), or stay plain text without one.
+  assign bs = block.settings
+  assign product_resource = closest.product
+  assign question = bs.question | strip
+
+  capture sgs_framed
+    render 'sgs-is-framed', product_resource: product_resource
+  endcapture
+  assign framed_version = product_resource.metafields.custom.framed_version.value
+  assign has_version = false
+  if framed_version != blank and framed_version.url != blank and framed_version.id != product_resource.id
+    assign has_version = true
+  endif
+
+  assign answer = bs.answer | strip
+  if sgs_framed contains 'true'
+    if bs.answer_framed != blank
+      assign answer = bs.answer_framed | strip
+    endif
+  elsif has_version == false and bs.answer_unframed_no_version != blank
+    assign answer = bs.answer_unframed_no_version | strip
+  elsif bs.answer_unframed != blank
+    assign answer = bs.answer_unframed | strip
+  endif
+
+  # Shown answer (with the link) and plain answer (for the FAQPage structured data)
+  assign answer_plain = answer | remove: '[' | remove: ']'
+  assign answer_html = ''
+  if has_version and answer contains '['
+    capture answer_html
+      render 'sgs-framed-link', product_resource: product_resource, text: answer
+    endcapture
+  endif
+  if answer_html == blank
+    assign answer_html = answer_plain | escape
+  endif
+-%}
+
+{%- if question != blank and answer != blank -%}
+  <details class="sgs-info__item" {{ block.shopify_attributes }}>
+    <summary class="sgs-info__summary">
+      <span class="sgs-label">{{ question | escape }}</span>
+      <span class="sgs-info__icon" aria-hidden="true"></span>
+    </summary>
+    <div class="sgs-info__body rte">
+      <p>{{ answer_html | newline_to_br }}</p>
+    </div>
+  </details>
+  {%- comment -%} Read by the FAQ block for its structured data {%- endcomment -%}
+  <!--sgs-faq q={{ question | url_encode }} a={{ answer_plain | url_encode }} -->
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Question",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "question",
+      "label": "Question"
+    },
+    {
+      "type": "textarea",
+      "id": "answer",
+      "label": "Answer"
+    },
+    {
+      "type": "textarea",
+      "id": "answer_framed",
+      "label": "Answer on framed prints",
+      "info": "Optional. Used instead on framed prints."
+    },
+    {
+      "type": "textarea",
+      "id": "answer_unframed",
+      "label": "Answer on unframed prints",
+      "info": "Optional. Used instead on unframed prints. [Bracketed words] link to the framed version (custom.framed_version)."
+    },
+    {
+      "type": "textarea",
+      "id": "answer_unframed_no_version",
+      "label": "Answer on unframed prints without a framed version",
+      "info": "Optional. Used instead when an unframed print has no framed version."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Question"
+    }
+  ]
+}
+{% endschema %}

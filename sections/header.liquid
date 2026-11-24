@@ -384,7 +384,8 @@
     class="header__underlay header__underlay-open"
   ></div>
   {%- if request.page_type == 'index' -%}
-    <h1 class="visually-hidden">{{ shop.name }}</h1>
+    {%- comment -%} SixthGear: an H2, so the homepage hero heading is the page's only H1 {%- endcomment -%}
+    <h2 class="visually-hidden">{{ shop.name }}</h2>
   {%- endif -%}
   {% for row in rows %}
     {% liquid

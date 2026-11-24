@@ -153,6 +153,11 @@
             {%- if custom_estimate contains '[range]' -%}<strong data-range>{{ range_text }}</strong>{%- endif -%}
             {{- estimate_parts[1] -}}
           </span>
+        {%- elsif bs.details_estimate_text != blank -%}
+          {%- comment -%} "Order today, arrives between Tue 1 Dec and Fri 11 Dec", kept current in the browser {%- endcomment -%}
+          <span data-standard{% if in_christmas %} hidden{% endif %}>
+            {%- render 'sgs-delivery-dates', min_days: min_days, max_days: max_days, holidays: holidays, text: bs.details_estimate_text -%}
+          </span>
         {%- else -%}
           <span data-standard{% if in_christmas %} hidden{% endif %}>{{ bs.details_estimate_label | escape }} <strong data-range>{{ range_text }}</strong></span>
         {%- endif -%}
@@ -463,6 +468,14 @@
       "id": "details_estimate_label",
       "label": "Details: before the dates",
       "default": "Estimated delivery",
+      "visible_if": "{{ block.settings.layout == 'details' }}"
+    },
+    {
+      "type": "text",
+      "id": "details_estimate_text",
+      "label": "Details: delivery estimate",
+      "default": "Order today, arrives between [start] and [end]",
+      "info": "[start] and [end] become the earliest and latest delivery dates, e.g. Tue 1 Dec, counted in working days from the visitor's date. Leave empty to use the wording above with a date range.",
       "visible_if": "{{ block.settings.layout == 'details' }}"
     },
     {

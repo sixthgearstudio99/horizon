@@ -1,0 +1,117 @@
+{%- doc -%}
+  SixthGear Studios: "Order today, arrives between Tue 1 Dec and Fri 11 Dec". The dates are today
+  plus min_days and max_days working days (Saturdays, Sundays and the listed bank holidays don't
+  count), formatted "Tue 1 Dec". Worked out here on Shopify's clock, then again in the visitor's
+  browser from their own UK date, and again whenever the tab comes back into view, so a page served
+  earlier or left open overnight still shows the right dates.
+
+  @param {number} min_days - Working days to the earliest delivery (production + delivery)
+  @param {number} max_days - Working days to the latest delivery
+  @param {string[]} [holidays] - Dates that don't count, as YYYY-MM-DD
+  @param {string} [text] - Wording with [start] and [end], default "Order today, arrives between [start] and [end]"
+
+  @example
+  {% render 'sgs-delivery-dates', min_days: 4, max_days: 9, holidays: holidays %}
+{%- enddoc -%}
+
+{%- liquid
+  assign min_days = min_days | plus: 0
+  assign max_days = max_days | plus: 0
+  if max_days < min_days
+    assign max_days = min_days
+  endif
+  assign text = text | default: 'Order today, arrives between [start] and [end]'
+
+  # Count from midday, so adding whole days never trips over a clock change
+  assign today_ymd = 'now' | date: '%Y-%m-%d'
+  assign day_s = today_ymd | append: ' 12:00' | date: '%s' | plus: 0
+  assign counted = 0
+  assign start_s = day_s
+  assign end_s = day_s
+  assign found_start = false
+  for i in (1..60)
+    assign day_s = day_s | plus: 86400
+    assign weekday = day_s | date: '%u' | plus: 0
+    assign day_ymd = day_s | date: '%Y-%m-%d'
+    if weekday < 6
+      unless holidays contains day_ymd
+        assign counted = counted | plus: 1
+      endunless
+    endif
+    if counted >= min_days and found_start == false
+      assign start_s = day_s
+      assign found_start = true
+    endif
+    if counted >= max_days
+      assign end_s = day_s
+      break
+    endif
+  endfor
+  assign start_text = start_s | date: '%a %-d %b'
+  assign end_text = end_s | date: '%a %-d %b'
+
+  assign parts_start = text | escape | split: '[start]'
+  assign before_start = parts_start.first
+  assign after_start = parts_start | slice: 1, 99 | join: '[start]'
+  assign parts_end = after_start | split: '[end]'
+  assign between = parts_end.first
+  assign after_end = parts_end | slice: 1, 99 | join: '[end]'
+-%}
+<span
+  class="sgs-ddates"
+  data-sgs-dates
+  data-min="{{ min_days }}"
+  data-max="{{ max_days }}"
+  data-holidays="{{ holidays | join: ',' | escape }}"
+>
+  {{- before_start -}}
+  <strong data-sgs-date="start">{{ start_text }}</strong>
+  {{- between -}}
+  <strong data-sgs-date="end">{{ end_text }}</strong>
+  {{- after_end -}}
+</span>
+<script>
+  (function () {
+    if (window.sgsDeliveryDates) {
+      window.sgsDeliveryDates();
+      return;
+    }
+    var update = function () {
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        // Midday UTC on the UK date: whole-day steps from here never change the calendar date
+        var today = new Date(Date.UTC(+p.year, +p.month - 1, +p.day, 12));
+        var iso = function (d) { return d.toISOString().slice(0, 10); };
+        var label = function (d) {
+          return d.toLocaleDateString('en-GB', { timeZone: 'UTC', weekday: 'short' }) + ' ' + d.getUTCDate() + ' ' +
+            d.toLocaleDateString('en-GB', { timeZone: 'UTC', month: 'short' });
+        };
+        document.querySelectorAll('[data-sgs-dates]').forEach(function (el) {
+          var holidays = (el.getAttribute('data-holidays') || '').split(',');
+          var add = function (days) {
+            var d = new Date(today.getTime()), added = 0;
+            while (added < days) {
+              d.setUTCDate(d.getUTCDate() + 1);
+              var dow = d.getUTCDay();
+              if (dow !== 0 && dow !== 6 && holidays.indexOf(iso(d)) === -1) added++;
+            }
+            return d;
+          };
+          var start = el.querySelector('[data-sgs-date="start"]');
+          var end = el.querySelector('[data-sgs-date="end"]');
+          if (start) start.textContent = label(add(+el.getAttribute('data-min') || 0));
+          if (end) end.textContent = label(add(+el.getAttribute('data-max') || 0));
+        });
+      } catch (e) {
+        // keep the dates already in the page
+      }
+    };
+    window.sgsDeliveryDates = update;
+    update();
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'visible') update();
+    });
+  })();
+</script>

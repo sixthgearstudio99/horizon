@@ -1,0 +1,99 @@
+{%- liquid
+  # SixthGear: a gift line just above Add to cart, e.g. "The gift for the car lover. Order by Wed 9 Dec
+  # for Christmas delivery." Text and last day from Theme settings > SixthGear: gift line. Hidden
+  # after that day (UK), checked on Shopify's clock here and on the visitor's below. Not on custom
+  # posters (they have an earlier cut-off, shown in the delivery estimate) or gift cards.
+  assign text = settings.sgs_gift_line_text | strip
+  assign until = settings.sgs_gift_line_end | strip
+  assign today = 'now' | date: '%Y-%m-%d'
+
+  assign show = true
+  if text == blank or closest.product == blank or closest.product.gift_card?
+    assign show = false
+  endif
+  if until.size == 10 and today > until
+    assign show = false
+  endif
+  if show
+    capture sgs_custom
+      render 'sgs-is-custom', product_resource: closest.product, handles: settings.sgs_wall_excluded_handles
+    endcapture
+    if sgs_custom contains 'true'
+      assign show = false
+    endif
+  endif
+
+  # The first sentence a touch stronger
+  assign first = text | split: '. ' | first
+  assign rest = text | remove_first: first | strip
+  if rest == '.'
+    assign rest = ''
+  endif
+-%}
+
+{%- if show -%}
+  <p class="sgs-giftline" data-sgs-gift-until="{{ until | escape }}" {{ block.shopify_attributes }}>
+    {%- if rest != blank -%}
+      <strong>{{ first | escape }}.</strong> {{ rest | remove_first: '.' | strip | escape }}
+    {%- else -%}
+      {{ text | escape }}
+    {%- endif -%}
+  </p>
+  <script>
+    (function () {
+      // The visitor's own UK date: gone after the last day even on a page served earlier
+      var line = document.currentScript.previousElementSibling;
+      var until = line && line.getAttribute('data-sgs-gift-until');
+      if (!until || until.length !== 10) return;
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        if (p.year + '-' + p.month + '-' + p.day > until) line.hidden = true;
+      } catch (e) {}
+    })();
+  </script>
+{%- elsif request.design_mode -%}
+  <p class="sgs-giftline sgs-giftline--editor" {{ block.shopify_attributes }}>Gift line: set it in Theme settings > SixthGear: gift line (hidden after its last day, and on custom posters).</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-giftline {
+    width: 100%;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text, #111111);
+    text-wrap: balance;
+  }
+
+  .sgs-giftline strong {
+    font-weight: 600;
+  }
+
+  .sgs-giftline[hidden] {
+    display: none;
+  }
+
+  .sgs-giftline--editor {
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gift line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text and last day are in Theme settings > SixthGear: gift line. Hidden after the last day, and on custom posters."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift line"
+    }
+  ]
+}
+{% endschema %}

@@ -2294,7 +2294,7 @@
         "type": "text",
         "id": "sgs_sale1_panel_note",
         "label": "Product page panel: small print",
-        "default": "Framed prints not included."
+        "default": "Framed prints aren't part of this offer."
       },
       {
         "type": "header",
@@ -2476,6 +2476,84 @@
         "type": "text",
         "id": "sgs_sale4_panel_note",
         "label": "Product page panel: small print"
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: cart spend offer",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A line with a thin progress bar in the cart drawer and cart page. Display only: set up the matching discount in Shopify (Discounts)."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_spend_enabled",
+        "label": "Show the spend progress",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "sgs_spend_threshold",
+        "label": "Spend needed (£)",
+        "default": 50
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_discount",
+        "label": "Discount text",
+        "default": "25% off",
+        "info": "Fills [discount] in the messages below."
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_collection",
+        "label": "Collection that counts (handle)",
+        "default": "sale-eligible",
+        "info": "Only cart items from this collection count towards the spend."
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_end",
+        "label": "Ends (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-11-30 23:59",
+        "info": "Hidden after this. Leave empty for no end."
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_text_below",
+        "label": "Message under the spend",
+        "default": "Add [amount] more of unframed prints to get [discount]",
+        "info": "[amount] is what's still needed."
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_text_met",
+        "label": "Message once reached",
+        "default": "You've unlocked [discount]. It's applied at checkout."
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: gift line",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "A line just above Add to cart on product pages (not on custom posters, which have their own cut-off)."
+      },
+      {
+        "type": "text",
+        "id": "sgs_gift_line_text",
+        "label": "Text",
+        "default": "The gift for the car lover. Order by Wed 9 Dec for Christmas delivery.",
+        "info": "The first sentence shows a little bolder. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "sgs_gift_line_end",
+        "label": "Last day to show it (YYYY-MM-DD)",
+        "default": "2026-12-09",
+        "info": "UK date. Hidden automatically from the next day."
       }
     ]
   },

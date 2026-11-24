@@ -17,6 +17,13 @@
 }
 
 /* ---------- No reviews yet ---------- */
+/* A product with no reviews: its review widget section is hidden altogether (the store-wide reviews
+   carousel stays). The rating block does this before the page shows, from the product's own
+   count; this rule follows Judge.me's own empty markers too, in case the count arrives later. */
+.shopify-section:has(.jdgm-review-widget:is([data-number-of-reviews='0'], .sgs-reviews-empty)):not(:has(.jdgm-cards-carousel)) {
+  display: none !important;
+}
+
 /* The widget stays, so customers can still write the first review, but the empty rating graphics
    (0.0 stars, the rating distribution bars, sorting) are hidden. Matched from Judge.me's review
    count attribute, and from .sgs-reviews-empty, which assets/sgs-reviews-empty.js adds when a

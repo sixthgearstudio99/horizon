@@ -1,0 +1,113 @@
+{%- comment -%}
+  SixthGear: product FAQ, an accordion of Question blocks (blocks/_sgs-pdp-faq-item.liquid), styled
+  like the product info dropdowns above it. Its FAQPage structured data is built from the questions
+  and answers shown here (each Question leaves a marker in its output), so it only appears where the
+  FAQ does and always matches it.
+{%- endcomment -%}
+{%- capture faq_items -%}{% content_for 'blocks' %}{%- endcapture -%}
+{%- assign faq_markers = faq_items | split: '<!--sgs-faq q=' -%}
+
+{%- if faq_markers.size > 1 or request.design_mode -%}
+  <div class="sgs-pdp-faq" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="sgs-pdp-faq__heading sgs-label">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    <div class="sgs-info">{{ faq_items }}</div>
+  </div>
+
+  {%- if faq_markers.size > 1 -%}
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {%- for marker in faq_markers offset: 1 -%}
+            {%- liquid
+              assign data = marker | split: ' -->' | first
+              assign q = data | split: ' a=' | first | url_decode
+              assign a = data | split: ' a=' | last | url_decode
+            -%}
+            {"@type": "Question", "name": {{ q | json }}, "acceptedAnswer": {"@type": "Answer", "text": {{ a | json }}}}
+            {%- unless forloop.last %},{% endunless -%}
+          {%- endfor -%}
+        ]
+      }
+    </script>
+  {%- endif -%}
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-pdp-faq {
+    width: 100%;
+  }
+
+  .sgs-pdp-faq__heading {
+    margin: 0 0 12px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Product FAQ",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Questions & answers",
+      "info": "Leave empty to hide."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "_sgs-pdp-faq-item"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQ",
+      "blocks": [
+        {
+          "type": "_sgs-pdp-faq-item",
+          "settings": {
+            "question": "What sizes can I choose?",
+            "answer": "Every print comes in three sizes, shown above in inches and cm. The middle size is the most popular."
+          }
+        },
+        {
+          "type": "_sgs-pdp-faq-item",
+          "settings": {
+            "question": "Is the frame included?",
+            "answer": "No, this is the print only.",
+            "answer_framed": "Yes. This version arrives in a black frame, ready to hang.",
+            "answer_unframed": "No, this is the print only. A [framed version] is available.",
+            "answer_unframed_no_version": "No, this is the print only."
+          }
+        },
+        {
+          "type": "_sgs-pdp-faq-item",
+          "settings": {
+            "question": "What paper do you use?",
+            "answer": "Premium paper with fade-resistant inks, printed in the UK."
+          }
+        },
+        {
+          "type": "_sgs-pdp-faq-item",
+          "settings": {
+            "question": "How long does delivery take?",
+            "answer": "Each print is made to order in 2–5 working days, then delivered in 2–4 working days. UK delivery is free."
+          }
+        },
+        {
+          "type": "_sgs-pdp-faq-item",
+          "settings": {
+            "question": "Can I return it?",
+            "answer": "Standard prints can be returned within 14 days. If a print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Custom posters can't be returned unless faulty."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -70,12 +70,25 @@
   {%- endfor -%}
 </ul>
 {%- endif -%}
-{%- if bs.footnote != blank and sgs_framed != 'true' -%}
+{%- if sgs_framed == 'true' -%}
+  {%- comment -%} Framed prints: how it arrives {%- endcomment -%}
+  {%- if bs.framed_note != blank -%}
+    <p class="sgs-ptrust__foot">{{ bs.framed_note | escape }}</p>
+  {%- endif -%}
+{%- elsif bs.footnote != blank -%}
   <p class="sgs-ptrust__foot" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ bs.footnote | escape }}</p>
-  {%- if bs.framed_cta != blank and has_framed_version -%}
-    <p class="sgs-ptrust__cta" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>
-      <a href="#sgs-finish" data-sgs-to-finish>{{ bs.framed_cta | escape }}</a>
-    </p>
+  {%- liquid
+    # "Want it framed? See the [framed version]": links to custom.framed_version; left out without one
+    assign framed_cta_html = ''
+    if bs.framed_cta != blank and has_framed_version
+      capture framed_cta_html
+        render 'sgs-framed-link', product_resource: closest.product, text: bs.framed_cta
+      endcapture
+      assign framed_cta_html = framed_cta_html | strip
+    endif
+  -%}
+  {%- if framed_cta_html != blank -%}
+    <p class="sgs-ptrust__cta" data-sgs-frame-note{% if is_framed %} hidden{% endif %}>{{ framed_cta_html }}</p>
   {%- endif -%}
   <script>
     (function () {
@@ -376,16 +389,23 @@
     {
       "type": "text",
       "id": "footnote",
-      "label": "Small line underneath",
-      "default": "Print only – frame not included",
-      "info": "Hidden while a framed variant is chosen, and on products tagged framed. Leave empty to hide."
+      "label": "Small line underneath (unframed prints)",
+      "default": "Supplied unframed, rolled in a protective tube.",
+      "info": "Hidden while a framed variant is chosen, and on framed prints. Leave empty to hide."
     },
     {
       "type": "text",
       "id": "framed_cta",
       "label": "Link to the framed version",
-      "default": "Want it ready to hang? Choose Framed above.",
-      "info": "Under the small line, on prints that have a framed version (Finish toggle). Scrolls to the toggle. Hidden on framed prints."
+      "default": "Want it framed? See the [framed version]",
+      "info": "Under the small line on unframed prints with a framed version (custom.framed_version). The [bracketed words] link to it; left out when there's no framed version."
+    },
+    {
+      "type": "text",
+      "id": "framed_note",
+      "label": "Small line underneath (framed prints)",
+      "default": "Supplied in a black frame, ready to hang.",
+      "info": "On framed prints instead. Leave empty to hide."
     }
   ],
   "presets": [

@@ -1,7 +1,6 @@
 /*
  * SixthGear Studios: marks a Judge.me review widget that has no reviews yet with
- * .sgs-reviews-empty, so its empty rating graphics (0.0 stars, distribution bars) can be hidden
- * while "Write a review" stays. Judge.me's classic widget carries data-number-of-reviews, which
+ * .sgs-reviews-empty, so its section can be hidden (assets/sgs-judgeme.css). Judge.me's classic widget carries data-number-of-reviews, which
  * the CSS reads directly; this covers newer markup that doesn't. Judge.me renders after the
  * page loads, so the page is watched for a while.
  */
@@ -14,7 +13,7 @@
     if (holder) return Number(holder.getAttribute('data-number-of-reviews')) === 0;
     if (widget.querySelector(REVIEW_ITEMS)) return false;
     const text = (widget.textContent || '').toLowerCase();
-    return /be the first to (write|leave)|no reviews yet|0 reviews/.test(text);
+    return /be the first to (write|leave)|no reviews yet|(^|[^0-9])0 reviews/.test(text);
   };
 
   const check = () => {

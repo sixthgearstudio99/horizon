@@ -1,0 +1,33 @@
+{%- doc -%}
+  SixthGear Studios: text with its [bracketed words] linked to the product's framed version
+  (custom.framed_version), e.g. "Want it framed? See the [framed version]". Outputs nothing when the
+  product has no framed version, so a sentence that points to one is left out rather than shown
+  without its link. Text outside the brackets is escaped.
+
+  @param {product} product_resource - The unframed product
+  @param {string} text - The sentence; the words in [brackets] become the link
+
+  @example
+  {% render 'sgs-framed-link', product_resource: product, text: 'Want it framed? See the [framed version]' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign framed = product_resource.metafields.custom.framed_version.value
+  if framed != blank and framed.url != blank and framed.id != product_resource.id and text != blank
+    assign parts = text | split: '['
+    assign before = parts.first
+    assign link_text = ''
+    assign after = ''
+    if parts.size > 1
+      assign rest = parts[1] | split: ']'
+      assign link_text = rest.first
+      assign after = rest | slice: 1, 99 | join: ']'
+    endif
+    echo before | escape
+    if link_text != blank
+      assign link_label = link_text | escape
+      echo '<a href="' | append: framed.url | append: '">' | append: link_label | append: '</a>'
+    endif
+    echo after | escape
+  endif
+-%}

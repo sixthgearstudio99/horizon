@@ -60,6 +60,11 @@
   assign sgs_framed = sgs_framed | strip
   if sgs_framed contains 'true'
     assign framing_text = product_resource.metafields.custom.framing.value | default: bs.framing_text_framed
+    # A framing metafield copied over from the unframed print ("Supplied unframed…") doesn't apply
+    assign framing_check = framing_text | strip_html | downcase
+    if framing_check contains 'unframed'
+      assign framing_text = bs.framing_text_framed
+    endif
     # A framed print isn't sent in a tube
     if bs.delivery_text_framed != blank
       assign delivery_text = product_resource.metafields.custom.shipping.value | default: bs.delivery_text_framed
@@ -124,6 +129,22 @@
   assign sizes_text = sizes_text | strip
   assign framing_text = framing_text | replace: '[sizes]', sizes_text
   assign framing_text_framed = framing_text_framed | replace: '[sizes]', sizes_text
+
+  # Unframed prints: "Want it framed? See the [framed version]" after the framing text, linking to
+  # custom.framed_version; left out when there's none (custom posters have their own wording)
+  unless sgs_framed contains 'true' or sgs_custom contains 'true' or bs.framing_link_text == blank
+    capture framing_link
+      render 'sgs-framed-link', product_resource: product_resource, text: bs.framing_link_text
+    endcapture
+    assign framing_link = framing_link | strip
+    if framing_link != blank
+      if framing_text contains '</p>'
+        assign framing_text = framing_text | replace_last: '</p>', '' | append: ' ' | append: framing_link | append: '</p>'
+      else
+        assign framing_text = framing_text | append: ' ' | append: framing_link
+      endif
+    endif
+  endunless
 
   # The product's Size option, listed under Framing
   assign size_option = nil
@@ -638,14 +659,21 @@
       "id": "framing_text",
       "label": "Framing",
       "info": "[sizes] is replaced by the product's sizes, e.g. 16×24, 24×36.",
-      "default": "<p>Supplied unframed, ready for standard frames in every size we sell ([sizes] in and their cm equivalents).</p>"
+      "default": "<p>Supplied unframed, rolled in a protective tube.</p>"
     },
     {
       "type": "richtext",
       "id": "framing_text_framed",
       "label": "Framing, on framed prints",
       "info": "Used instead on products tagged framed.",
-      "default": "<p>Arrives framed in protective packaging, ready to hang. Black wooden frame, clear Perspex front.</p>"
+      "default": "<p>Supplied in a black frame, ready to hang.</p>"
+    },
+    {
+      "type": "text",
+      "id": "framing_link_text",
+      "label": "Link to the framed version",
+      "default": "Want it framed? See the [framed version]",
+      "info": "After the framing text on unframed prints with a framed version (custom.framed_version). The [bracketed words] link to it; left out when there's no framed version."
     },
     {
       "type": "richtext",

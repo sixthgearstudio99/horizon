@@ -1,0 +1,21 @@
+{%- doc -%}
+  SixthGear Studios: this product's own number of reviews (never the store-wide count). From
+  Shopify's reviews.rating_count metafield (which Judge.me keeps in sync), else the count in
+  Judge.me's badge metafield. Outputs a number, 0 when there are none.
+
+  @param {product} product_resource - The product
+
+  @example
+  {%- capture review_count -%}{% render 'sgs-product-review-count', product_resource: product %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign count = product_resource.metafields.reviews.rating_count.value | default: product_resource.metafields.reviews.rating_count | plus: 0
+  if count == 0
+    assign badge = product_resource.metafields.judgeme.badge.value | default: product_resource.metafields.judgeme.badge | append: '' | replace: '"', "'"
+    if badge contains 'data-number-of-reviews'
+      assign count = badge | split: "data-number-of-reviews='" | last | split: "'" | first | plus: 0
+    endif
+  endif
+  echo count
+-%}

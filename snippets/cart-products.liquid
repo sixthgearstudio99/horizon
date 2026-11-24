@@ -75,6 +75,8 @@
   {%- else -%}
     {%- comment -%} SixthGear: Buy 2, Get 1 Free progress (display only) {%- endcomment -%}
     {% render 'sgs-wall-progress' %}
+    {%- comment -%} SixthGear: spend progress towards the cart offer (display only) {%- endcomment -%}
+    {% render 'sgs-spend-progress' %}
     <span
       class="visually-hidden"
       ref="cartItemCount"

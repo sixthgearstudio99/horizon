@@ -1,0 +1,119 @@
+{%- doc -%}
+  SixthGear Studios: spend progress in the cart drawer and cart page, e.g. "Add £12 more of unframed
+  prints to get 25% off", then "You've unlocked 25% off. It's applied at checkout." Counts only cart
+  lines whose product is in the collection set in Theme settings > SixthGear: cart spend offer
+  (default sale-eligible), at their line price. Display only: the discount itself is set up in
+  Shopify. Hidden when switched off, when the cart is empty, and after the end date and time (UK).
+
+  @example
+  {% render 'sgs-spend-progress' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign show = settings.sgs_spend_enabled
+  assign handle = settings.sgs_spend_collection | strip | default: 'sale-eligible'
+  assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
+  assign threshold_pence = threshold | times: 100
+  assign discount_text = settings.sgs_spend_discount | strip | default: '25% off'
+  assign ends = settings.sgs_spend_end | strip
+  assign now = 'now' | date: '%Y-%m-%d %H:%M'
+
+  if cart.item_count == 0 or threshold_pence <= 0
+    assign show = false
+  endif
+  if ends.size == 16 and now > ends
+    assign show = false
+  endif
+
+  if show
+    assign eligible = 0
+    for item in cart.items
+      assign item_handles = item.product.collections | map: 'handle'
+      if item_handles contains handle
+        assign eligible = eligible | plus: item.final_line_price
+      endif
+    endfor
+
+    if eligible >= threshold_pence
+      assign message = settings.sgs_spend_text_met | default: "You've unlocked [discount]. It's applied at checkout."
+      assign fill = 100
+    else
+      assign remaining = threshold_pence | minus: eligible | money_without_trailing_zeros
+      assign message = settings.sgs_spend_text_below | default: 'Add [amount] more of unframed prints to get [discount]'
+      assign message = message | replace: '[amount]', remaining
+      assign fill = eligible | times: 100.0 | divided_by: threshold_pence | round: 1
+    endif
+    assign message = message | replace: '[discount]', discount_text
+  endif
+-%}
+
+{%- if show -%}
+  <div class="sgs-spendprog" data-sgs-spend-ends="{{ ends | escape }}">
+    <p class="sgs-spendprog__message">{{ message | escape }}</p>
+    <div
+      class="sgs-spendprog__bar"
+      role="progressbar"
+      aria-label="{{ message | escape }}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="{{ fill | round }}"
+    >
+      <span class="sgs-spendprog__fill" style="width: {{ fill }}%;"></span>
+    </div>
+  </div>
+  <script>
+    (function () {
+      // Gone after the end time on the visitor's UK clock too (a page served earlier)
+      var box = document.currentScript.previousElementSibling;
+      var ends = box && box.getAttribute('data-sgs-spend-ends');
+      if (!ends || ends.length !== 16) return;
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        if (p.year + '-' + p.month + '-' + p.day + ' ' + p.hour + ':' + p.minute > ends) box.hidden = true;
+      } catch (e) {}
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* One line and a thin bar, like the Buy 2, Get 1 Free progress */
+  .sgs-spendprog {
+    margin: 0 0 20px;
+    padding: 14px 0 16px;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    container-type: inline-size;
+  }
+
+  .sgs-spendprog[hidden] {
+    display: none;
+  }
+
+  .sgs-spendprog__message {
+    margin: 0;
+    overflow: hidden;
+    font-size: clamp(12px, 3.9cqi, 14px);
+    font-weight: 500;
+    line-height: 1.45;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-spendprog__bar {
+    position: relative;
+    height: 3px;
+    margin-top: 12px;
+    overflow: hidden;
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .sgs-spendprog__fill {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    background: var(--sgs-text);
+    transition: width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+{% endstylesheet %}

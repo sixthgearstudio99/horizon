@@ -717,6 +717,50 @@
         "padding-block-end": 156
       }
     },
+    "sgs_reviews_carousel": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_pdp": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "header_text": "What our customers say",
+            "reviews_selection": "all",
+            "show_product_name": true
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_pdp"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
     "sgs_recs": {
       "type": "sgs-product-recommendations",
       "settings": {
@@ -740,6 +784,7 @@
     "17937299023bbff9d5",
     "sgs_timeline",
     "sgs_bundle",
+    "sgs_reviews_carousel",
     "sgs_recs"
   ]
 }

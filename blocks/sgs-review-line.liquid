@@ -1,0 +1,144 @@
+{%- liquid
+  # SixthGear: "★★★★★ 5.0 from our customers (2 reviews)" under the buy buttons, linking to the
+  # reviews carousel (#reviews). Store-wide average and review count from Judge.me's shop
+  # metafields (judgeme.all_reviews_rating / judgeme.all_reviews_count, as in Judge.me's own All
+  # Reviews Counter code), read as typed or legacy metafields. Hidden until there's a review.
+  assign bs = block.settings
+  assign jm = shop.metafields.judgeme
+  assign count = jm.all_reviews_count.value | default: jm.all_reviews_count | plus: 0
+  # Always one decimal place, e.g. 5.0 or 4.7
+  assign rating_x10 = jm.all_reviews_rating.value | default: jm.all_reviews_rating | times: 10 | round
+  assign rating_whole = rating_x10 | divided_by: 10 | floor
+  assign rating_tenth = rating_x10 | modulo: 10
+  assign rating = rating_whole | append: '.' | append: rating_tenth
+
+  if count == 1
+    assign count_text = bs.review_singular | default: '[count] review'
+  else
+    assign count_text = bs.review_plural | default: '[count] reviews'
+  endif
+  assign count_text = count_text | replace: '[count]', count
+  assign line_text = bs.text | default: '[rating] from our customers ([count])' | replace: '[rating]', rating | replace: '[count]', count_text
+-%}
+
+{%- if count > 0 and closest.product.gift_card? != true -%}
+  <div class="sgs-revline-wrap" {{ block.shopify_attributes }}>
+    <a class="sgs-revline" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
+      <span class="sgs-revline__stars" aria-hidden="true">★★★★★</span>
+      <span class="sgs-revline__text">{{ line_text | escape }}</span>
+    </a>
+  </div>
+  <script>
+    (function () {
+      // Smooth scroll to the reviews (instant with reduced motion); the link still works without this
+      if (window.sgsRevlineBound) return;
+      window.sgsRevlineBound = true;
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
+        if (!link) return;
+        var target = document.getElementById(link.getAttribute('href').slice(1));
+        if (!target) return;
+        event.preventDefault();
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Same type and spacing as the delivery rows below it, gold stars in place of the icon */
+  .sgs-revline-wrap {
+    width: 100%;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  .sgs-revline {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+    font-size: clamp(12px, 3.9cqi, 14px);
+    line-height: 1.45;
+    white-space: nowrap;
+    color: var(--sgs-text, #111111);
+    text-decoration: none;
+  }
+
+  .sgs-revline__stars {
+    flex-shrink: 0;
+    font-size: 1.05em;
+    letter-spacing: 1px;
+    color: #b7821a;
+  }
+
+  .sgs-revline__text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: underline;
+    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.3s ease;
+  }
+
+  .sgs-revline:hover .sgs-revline__text {
+    text-decoration-color: currentColor;
+  }
+
+  .sgs-revline:focus-visible {
+    outline: 1px solid var(--sgs-text, #111111);
+    outline-offset: 2px;
+  }
+
+  /* The reviews anchor lands below the sticky header */
+  #reviews {
+    scroll-margin-top: calc(var(--header-height, 64px) + 16px);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Reviews rating line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The store-wide Judge.me rating and review count, linking to the reviews. Hidden until there's at least one review."
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "[rating] from our customers ([count])",
+      "info": "[rating] is the average (e.g. 5.0), [count] the number of reviews with the word below."
+    },
+    {
+      "type": "text",
+      "id": "review_singular",
+      "label": "One review",
+      "default": "[count] review"
+    },
+    {
+      "type": "text",
+      "id": "review_plural",
+      "label": "More reviews",
+      "default": "[count] reviews"
+    },
+    {
+      "type": "text",
+      "id": "anchor",
+      "label": "Links to",
+      "default": "reviews",
+      "info": "The id of the element to scroll to, without #."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews rating line"
+    }
+  ]
+}
+{% endschema %}

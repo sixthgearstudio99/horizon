@@ -276,6 +276,16 @@
               },
               "block_order": []
             },
+            "sgs_review_line": {
+              "type": "sgs-review-line",
+              "settings": {
+                "text": "[rating] from our customers ([count])",
+                "review_singular": "[count] review",
+                "review_plural": "[count] reviews",
+                "anchor": "reviews"
+              },
+              "blocks": {}
+            },
             "sgs_delivery_line": {
               "type": "sgs-delivery-estimate",
               "settings": {
@@ -438,6 +448,7 @@
             "sgs_finish",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "sgs_review_line",
             "sgs_delivery_line",
             "sgs_ptrust",
             "sgs_size_guide",
@@ -717,6 +728,16 @@
         "padding-block-end": 156
       }
     },
+    "sgs_reviews_anchor": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<div id=\"reviews\"></div>",
+        "background_color": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "sgs_reviews_carousel": {
       "type": "_blocks",
       "blocks": {
@@ -780,13 +801,14 @@
   },
   "order": [
     "main",
+    "sgs_reviews_anchor",
+    "sgs_reviews_carousel",
     "sgs_wall_videos",
     "sgs_arrival",
     "sgs_proof",
     "17937299023bbff9d5",
     "sgs_timeline",
     "sgs_bundle",
-    "sgs_reviews_carousel",
     "sgs_recs"
   ]
 }

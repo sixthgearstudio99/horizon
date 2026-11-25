@@ -26,7 +26,17 @@
       assign hero_image = collection.image
     endif
     if s.show_count
-      assign hero_meta = collection.products_count | append: ' prints'
+      # The same count as the product grid: framed prints (tag "framed") aren't counted, except in a
+      # collection meant for them (snippets/sgs-shows-framed.liquid, e.g. framed-prints)
+      capture hero_framed_count
+        render 'sgs-framed-count', resource: collection
+      endcapture
+      assign hero_count = collection.products_count | minus: hero_framed_count | at_least: 0
+      if hero_count == 1
+        assign hero_meta = '1 print'
+      else
+        assign hero_meta = hero_count | append: ' prints'
+      endif
     endif
     assign crumb_label = 'Collections'
     assign crumb_url = routes.collections_url

@@ -1,0 +1,39 @@
+{%- doc -%}
+  SixthGear Studios: which phase the cart spend offer is in, from the visitor's own clock in UK time
+  (Europe/London), as <html data-sgs-spend-phase="1|2|off">. Phase 1 runs until the switch time,
+  phase 2 from the switch time to the end time, and "off" after that (Theme settings > SixthGear:
+  cart spend offer). Set in the head before anything paints, and checked again every minute so an
+  open page changes over by itself. The cart progress line (snippets/sgs-spend-progress.liquid)
+  shows the wording for the current phase.
+
+  @example
+  {% render 'sgs-spend-phase-head' %}
+{%- enddoc -%}
+
+{%- if settings.sgs_spend_enabled -%}
+  <script>
+    (function () {
+      var switchAt = {{ settings.sgs_spend_switch | strip | json }};
+      var endsAt = {{ settings.sgs_spend_end | strip | json }};
+      var root = document.documentElement;
+      var update = function () {
+        var p = {};
+        try {
+          new Intl.DateTimeFormat('en-GB', {
+            timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+          }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        } catch (e) {
+          return;
+        }
+        var now = p.year + '-' + p.month + '-' + p.day + ' ' + p.hour + ':' + p.minute;
+        var phase = '1';
+        if (switchAt && switchAt.length === 16 && now >= switchAt) phase = '2';
+        if (endsAt && endsAt.length === 16 && now > endsAt) phase = 'off';
+        if (root.getAttribute('data-sgs-spend-phase') !== phase) root.setAttribute('data-sgs-spend-phase', phase);
+      };
+      update();
+      setInterval(update, 60000);
+    })();
+  </script>
+{%- endif -%}

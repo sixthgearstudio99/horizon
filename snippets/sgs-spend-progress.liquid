@@ -4,8 +4,11 @@
   at their line price, whose product has the tag set in Theme settings > SixthGear: cart spend offer
   (default "sale eligible"; any case, a hyphen or underscore counts as a space) and not the tag
   "framed". The collection handle there is only a fallback, for products without that tag.
-  Display only: the discount itself is set up in Shopify. Hidden when switched off, when the cart
-  is empty, and after the end date and time (UK).
+  Two phases (Theme settings > SixthGear: cart spend offer): phase 1 until the switch time, phase 2
+  until the end time, each with its own threshold and discount text; hidden after the end. Both
+  phases are in the page and the visitor's UK clock picks one (snippets/sgs-spend-phase-head.liquid),
+  so it changes over by itself. Display only: the discounts themselves are set up in Shopify.
+  Hidden when switched off, when the cart is empty, and after the end.
 
   @example
   {% render 'sgs-spend-progress' %}
@@ -15,17 +18,27 @@
   assign show = settings.sgs_spend_enabled
   assign handle = settings.sgs_spend_collection | strip
   assign want_tag = settings.sgs_spend_tag | default: 'sale eligible' | downcase | replace: '-', ' ' | replace: '_', ' ' | strip
-  assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
-  assign threshold_pence = threshold | times: 100
-  assign discount_text = settings.sgs_spend_discount | strip | default: '25% off'
+  assign switch_at = settings.sgs_spend_switch | strip
   assign ends = settings.sgs_spend_end | strip
   assign now = 'now' | date: '%Y-%m-%d %H:%M'
 
-  if cart.item_count == 0 or threshold_pence <= 0
+  if cart.item_count == 0
     assign show = false
   endif
   if ends.size == 16 and now > ends
     assign show = false
+  endif
+
+  # The phase on Shopify's clock; the visitor's clock decides in the end (html[data-sgs-spend-phase],
+  # set by snippets/sgs-spend-phase-head.liquid), so the wording changes over by itself
+  assign phases = '1'
+  if switch_at.size == 16
+    assign phases = '1,2'
+  endif
+  assign phases = phases | split: ','
+  assign server_phase = '1'
+  if switch_at.size == 16 and now >= switch_at
+    assign server_phase = '2'
   endif
 
   if show
@@ -50,48 +63,50 @@
         assign eligible = eligible | plus: item.final_line_price
       endif
     endfor
-
-    if eligible >= threshold_pence
-      assign message = settings.sgs_spend_text_met | default: "You've unlocked [discount]. It's applied at checkout."
-      assign fill = 100
-    else
-      assign remaining = threshold_pence | minus: eligible | money_without_trailing_zeros
-      assign message = settings.sgs_spend_text_below | default: 'Add [amount] more of unframed prints to get [discount]'
-      assign message = message | replace: '[amount]', remaining
-      assign fill = eligible | times: 100.0 | divided_by: threshold_pence | round: 1
-    endif
-    assign message = message | replace: '[discount]', discount_text
   endif
 -%}
 
 {%- if show -%}
-  <div class="sgs-spendprog" data-sgs-spend-ends="{{ ends | escape }}">
-    <p class="sgs-spendprog__message">{{ message | escape }}</p>
-    <div
-      class="sgs-spendprog__bar"
-      role="progressbar"
-      aria-label="{{ message | escape }}"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="{{ fill | round }}"
-    >
-      <span class="sgs-spendprog__fill" style="width: {{ fill }}%;"></span>
-    </div>
+  <div class="sgs-spendprog">
+    {%- for phase in phases -%}
+      {%- liquid
+        if phase == '2'
+          assign threshold = settings.sgs_spend_threshold_2 | default: 50 | plus: 0
+          assign discount_text = settings.sgs_spend_discount_2 | strip | default: '25% off'
+        else
+          assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
+          assign discount_text = settings.sgs_spend_discount | strip | default: '20% off'
+        endif
+        assign threshold_pence = threshold | times: 100
+        if threshold_pence < 1
+          assign threshold_pence = 1
+        endif
+        if eligible >= threshold_pence
+          assign message = settings.sgs_spend_text_met | default: "You've unlocked [discount]. It's applied at checkout."
+          assign fill = 100
+        else
+          assign remaining = threshold_pence | minus: eligible | money_without_trailing_zeros
+          assign message = settings.sgs_spend_text_below | default: 'Add [amount] more of unframed prints to get [discount]'
+          assign message = message | replace: '[amount]', remaining
+          assign fill = eligible | times: 100.0 | divided_by: threshold_pence | round: 1
+        endif
+        assign message = message | replace: '[discount]', discount_text
+      -%}
+      <div class="sgs-spendprog__phase" data-phase="{{ phase }}"{% if phase == server_phase %} data-server-current{% endif %}>
+        <p class="sgs-spendprog__message">{{ message | escape }}</p>
+        <div
+          class="sgs-spendprog__bar"
+          role="progressbar"
+          aria-label="{{ message | escape }}"
+          aria-valuemin="0"
+          aria-valuemax="100"
+          aria-valuenow="{{ fill | round }}"
+        >
+          <span class="sgs-spendprog__fill" style="width: {{ fill }}%;"></span>
+        </div>
+      </div>
+    {%- endfor -%}
   </div>
-  <script>
-    (function () {
-      // Gone after the end time on the visitor's UK clock too (a page served earlier)
-      var box = document.currentScript.previousElementSibling;
-      var ends = box && box.getAttribute('data-sgs-spend-ends');
-      if (!ends || ends.length !== 16) return;
-      try {
-        var p = {};
-        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
-          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
-        if (p.year + '-' + p.month + '-' + p.day + ' ' + p.hour + ':' + p.minute > ends) box.hidden = true;
-      } catch (e) {}
-    })();
-  </script>
 {%- endif -%}
 
 {% stylesheet %}
@@ -103,7 +118,18 @@
     container-type: inline-size;
   }
 
-  .sgs-spendprog[hidden] {
+  /* Only the current phase's wording shows; nothing at all after the end (html[data-sgs-spend-phase]) */
+  .sgs-spendprog__phase {
+    display: none;
+  }
+
+  :root:not([data-sgs-spend-phase]) .sgs-spendprog__phase[data-server-current],
+  html[data-sgs-spend-phase='1'] .sgs-spendprog__phase[data-phase='1'],
+  html[data-sgs-spend-phase='2'] .sgs-spendprog__phase[data-phase='2'] {
+    display: block;
+  }
+
+  html[data-sgs-spend-phase='off'] .sgs-spendprog {
     display: none;
   }
 

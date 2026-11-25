@@ -146,32 +146,40 @@
     assign label_id = 'SgsFinish-' | append: block.id
   -%}
 
+  {%- comment -%}
+    One line per pill: "Framed · from £55.99" (the sale price while an offer is open). The chosen
+    finish's short line ("Ready to hang · black frame") sits under the row.
+  {%- endcomment -%}
+  {%- assign from_word = bs.from_label | default: 'from' -%}
   {%- capture unframed_price -%}
     {%- if bs.show_prices -%}
-      <span class="sgs-finish__price">{{ bs.from_label | default: 'From' | escape }} <span class="sgs-tile-price">
-        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: unframed_product, window: sgs_sale_win, amount: unframed_product.price_min %}{%- endif -%}
+      <span class="sgs-finish__price"> · {{ from_word | escape }} <span class="sgs-tile-price">
+        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: unframed_product, window: sgs_sale_win, amount: unframed_product.price_min, part: 'now' %}{%- endif -%}
         <span class="sgs-tile-price__normal">{{ unframed_product.price_min | money_without_trailing_zeros }}</span>
       </span></span>
     {%- endif -%}
   {%- endcapture -%}
   {%- capture framed_price -%}
     {%- if bs.show_prices -%}
-      <span class="sgs-finish__price">{{ bs.from_label | default: 'From' | escape }} <span class="sgs-tile-price">
-        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: framed_product, window: sgs_sale_win, amount: framed_product.price_min %}{%- endif -%}
+      <span class="sgs-finish__price"> · {{ from_word | escape }} <span class="sgs-tile-price">
+        {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: framed_product, window: sgs_sale_win, amount: framed_product.price_min, part: 'now' %}{%- endif -%}
         <span class="sgs-tile-price__normal">{{ framed_product.price_min | money_without_trailing_zeros }}</span>
       </span></span>
     {%- endif -%}
   {%- endcapture -%}
   {%- capture unframed_inner -%}
-    <span class="sgs-finish__name">{{ bs.unframed_label | escape }}</span>
-    {%- if unframed_desc != blank -%}<span class="sgs-finish__desc">{{ unframed_desc | escape }}</span>{%- endif -%}
-    {{- unframed_price -}}
+    <span class="sgs-finish__name">{{ bs.unframed_label | escape }}</span>{{- unframed_price -}}
   {%- endcapture -%}
   {%- capture framed_inner -%}
-    <span class="sgs-finish__name">{{ bs.framed_label | escape }}</span>
-    {%- if framed_desc != blank -%}<span class="sgs-finish__desc">{{ framed_desc | escape }}</span>{%- endif -%}
-    {{- framed_price -}}
+    <span class="sgs-finish__name">{{ bs.framed_label | escape }}</span>{{- framed_price -}}
   {%- endcapture -%}
+  {%- liquid
+    if is_framed == 'true'
+      assign current_note = framed_desc
+    else
+      assign current_note = unframed_desc
+    endif
+  -%}
 
   <sgs-finish
     id="sgs-finish"
@@ -194,6 +202,9 @@
         <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ unframed_inner }}</span>
       {%- endif -%}
     </div>
+    {%- if current_note != blank -%}
+      <p class="sgs-finish__note">{{ current_note | escape }}</p>
+    {%- endif -%}
     <script type="application/json" data-sgs-finish-map>{{ size_map | strip }}</script>
   </sgs-finish>
 
@@ -265,91 +276,28 @@
     color: var(--sgs-text, #111111);
   }
 
-  /* Two cards side by side: name, a short line, the starting price */
+  /* Two pills in one row (shape and colours: the pill rules in assets/sgs-studio.css) */
   .sgs-finish__options {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: flex;
     gap: 8px;
   }
 
-  .sgs-finish__card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    min-width: 0;
-    min-height: 84px;
-    padding: 12px 10px;
-    border: 1px solid rgb(var(--sgs-text-rgb, 242 239 234) / 0.22);
-    border-radius: var(--sgs-radius-btn, 4px);
-    background: var(--sgs-raised, #ffffff);
-    color: var(--sgs-text, #111111);
-    text-align: center;
-    text-decoration: none;
-    transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-  }
-
-  a.sgs-finish__card:hover {
-    border-color: var(--sgs-text, #111111);
-  }
-
-  a.sgs-finish__card:focus-visible {
-    outline: 2px solid var(--sgs-text, #111111);
-    outline-offset: 2px;
-  }
-
-  .sgs-finish__card--on {
-    border-color: var(--sgs-text, #f2efea);
-    background: var(--sgs-text, #f2efea);
-    color: var(--sgs-bg, #0e0e0e);
-  }
-
   .sgs-finish__name {
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.3;
-  }
-
-  .sgs-finish__desc {
-    font-size: 12px;
-    line-height: 1.35;
-    opacity: 0.75;
-  }
-
-  .sgs-finish__price {
-    margin-top: 5px;
-    font-size: 13px;
-    font-weight: 500;
-    line-height: 1.3;
-    font-variant-numeric: tabular-nums;
+    font-weight: inherit;
   }
 
   .sgs-finish__price .sgs-tile-price {
     position: static;
-    font-family: inherit;
-    font-size: inherit;
+    font: inherit;
     letter-spacing: 0;
   }
 
-  .sgs-finish__price .sgs-sale {
-    gap: 0 5px;
-    align-items: baseline;
+  /* The chosen finish, in one line of small grey text under the row */
+  .sgs-finish__note {
+    margin: 8px 0 0;
     font-size: 13px;
-    font-weight: 500;
-  }
-
-  .sgs-finish__price .sgs-sale__now {
-    order: 1;
-    color: inherit;
-  }
-
-  .sgs-finish__price .sgs-sale__was {
-    order: 2;
-    font-size: 11px;
-    font-weight: 400;
-    color: inherit;
-    opacity: 0.72;
+    line-height: 1.4;
+    color: var(--sgs-text-2, #9a9a9a);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -384,8 +332,8 @@
       "type": "text",
       "id": "unframed_note",
       "label": "Unframed description",
-      "default": "Premium art print",
-      "info": "A short line on the unframed card. Leave empty to hide."
+      "default": "Print only · rolled in a tube",
+      "info": "One line of small grey text under the pills while unframed is chosen. Leave empty to hide."
     },
     {
       "type": "text",
@@ -397,8 +345,8 @@
       "type": "text",
       "id": "framed_note",
       "label": "Framed description",
-      "default": "Ready-to-hang framed artwork",
-      "info": "A short line on the framed card. Leave empty to hide."
+      "default": "Ready to hang · black frame",
+      "info": "One line of small grey text under the pills while framed is chosen. Leave empty to hide."
     },
     {
       "type": "checkbox",
@@ -410,7 +358,7 @@
       "type": "text",
       "id": "from_label",
       "label": "Word before the price",
-      "default": "From"
+      "default": "from"
     }
   ],
   "presets": [

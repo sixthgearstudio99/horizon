@@ -502,42 +502,64 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   opacity: 0.78;
 }
 
-/* ---------- Size pills: inches, cm and price on each button ---------- */
-/* Option headings ("Size") in the same quiet style as "Finish" */
+/* ---------- Finish and size pills ----------
+   One row of equal-width, fully rounded pills, 48px tall, one line each.
+   Unselected: transparent, 1px #3a3a3a border, off-white text. Selected: off-white fill, near-black
+   text. Finish: .sgs-finish__card (blocks/sgs-finish-toggle.liquid). Size: the variant picker's
+   buttons with "Size buttons" on (snippets/variant-main-picker.liquid). */
 .variant-option.sgs-size-pills legend {
   margin-block-end: 10px;
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-  color: var(--sgs-text, #111111);
 }
 
 .variant-option.sgs-size-pills {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  display: flex !important;
+  flex-wrap: nowrap;
   gap: 8px;
 }
 
-.variant-option.sgs-size-pills .variant-option__button-label {
+:is(.variant-option.sgs-size-pills .variant-option__button-label, .sgs-finish .sgs-finish__card) {
+  box-sizing: border-box;
   display: flex;
-  flex-direction: column;
+  flex: 1 1 0;
   align-items: center;
   justify-content: center;
   min-width: 0;
-  min-height: 76px;
-  padding: 10px 6px;
-  border: 1px solid rgb(var(--sgs-text-rgb, 242 239 234) / 0.22);
-  border-radius: var(--sgs-radius-btn, 4px) !important;
-  background: var(--sgs-raised, #ffffff);
+  height: 48px;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 14px;
+  overflow: hidden;
+  border: 1px solid #3a3a3a;
+  border-radius: 999px !important;
+  background: transparent;
   box-shadow: none;
-  color: var(--sgs-text, #111111);
+  color: #f2efea;
+  font-family: var(--sgs-font-body);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
   text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   cursor: pointer;
   transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
-.variant-option.sgs-size-pills .variant-option__button-label:hover {
-  border-color: var(--sgs-text, #111111);
+:is(.variant-option.sgs-size-pills .variant-option__button-label, .sgs-finish a.sgs-finish__card):hover {
+  border-color: #f2efea;
+}
+
+:is(.variant-option.sgs-size-pills .variant-option__button-label:has(:checked), .sgs-finish .sgs-finish__card--on) {
+  border-color: #f2efea;
+  background: #f2efea;
+  color: #0e0e0e;
+  font-weight: 500;
+}
+
+:is(.variant-option.sgs-size-pills .variant-option__button-label:has(:focus-visible), .sgs-finish a.sgs-finish__card:focus-visible) {
+  outline: 2px solid #f2efea;
+  outline-offset: 2px;
 }
 
 /* Horizon's sliding highlight isn't used: the chosen pill is filled instead */
@@ -545,74 +567,44 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   display: none;
 }
 
-.variant-option.sgs-size-pills .variant-option__button-label:has(:checked) {
-  border-color: var(--sgs-text);
-  background: var(--sgs-text);
-  color: var(--sgs-bg);
-}
-
-.variant-option.sgs-size-pills .variant-option__button-label:has(:focus-visible) {
-  outline: 2px solid var(--sgs-text, #111111);
-  outline-offset: 2px;
-}
-
 .variant-option.sgs-size-pills .variant-option__button-label .sgs-pill {
   position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
   min-width: 0;
+  overflow: hidden;
   color: inherit !important;
-  text-align: center;
+  font: inherit !important;
+  letter-spacing: 0 !important;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.sgs-pill__in {
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
+.sgs-pill__in,
+.sgs-finish__card .sgs-tile-price {
   font-variant-numeric: tabular-nums;
 }
 
-.sgs-pill__cm {
-  font-size: 12px;
-  line-height: 1.3;
-  opacity: 0.72;
+/* The chosen size's cm and price: one line of small grey text under the row */
+.sgs-size-captions {
+  margin-top: 8px;
+}
+
+.sgs-size-caption {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--sgs-text-2, #9a9a9a);
   font-variant-numeric: tabular-nums;
 }
 
-.sgs-size-pills .sgs-pill__price {
-  margin-top: 4px;
-  font-family: var(--sgs-font-body);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.3;
-  color: inherit;
+.sgs-size-caption[hidden] {
+  display: none;
 }
 
-/* Sale: the sale price first, the old price small and struck through after it */
-.sgs-size-pills .sgs-pill__price .sgs-sale {
-  gap: 0 5px;
-  align-items: baseline;
-  font-size: 13px;
-}
-
-.sgs-size-pills .sgs-pill__price .sgs-sale__now {
-  order: 1;
-  font-weight: 600;
-}
-
-.sgs-size-pills .sgs-pill__price .sgs-sale__was {
-  order: 2;
-  font-size: 11px;
-  font-weight: 400;
-  opacity: 0.72;
-}
-
-.sgs-size-pills .sgs-pill .sgs-popular {
-  margin: 4px auto 0;
+.sgs-size-caption .sgs-tile-price {
+  position: static;
+  font: inherit;
+  letter-spacing: 0;
 }
 
 /* See it on your wall: a small text link under the delivery estimate */
@@ -1480,4 +1472,30 @@ media-gallery :is(slideshow-slide, .product-media-container) {
 /* The cart progress line: the accent */
 .sgs-spendprog__fill {
   background: var(--sgs-accent) !important;
+}
+
+/* ---------- Add to cart and the sticky add-to-cart button: pills, 52px tall ---------- */
+.product-details button[ref='addToCartButton'],
+.sticky-add-to-cart__bar .sticky-add-to-cart__button {
+  height: 52px !important;
+  min-height: 52px !important;
+  border-radius: 999px !important;
+}
+
+/* Phones: the sticky button shows "Add to cart" as text (no icon), so it is the same pill */
+.sticky-add-to-cart__bar .sticky-add-to-cart__button .svg-wrapper {
+  display: none !important;
+}
+
+@media screen and (max-width: 749px) {
+  .sticky-add-to-cart__bar .sticky-add-to-cart__button {
+    flex-shrink: 0;
+    width: auto !important;
+    padding: 0 22px !important;
+  }
+
+  .sticky-add-to-cart__bar .sticky-add-to-cart__button .add-to-cart-text__content {
+    display: inline !important;
+    white-space: nowrap;
+  }
 }

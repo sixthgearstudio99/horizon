@@ -612,37 +612,13 @@ sticky-add-to-cart[data-sgs-past='true'] .sticky-add-to-cart__bar[data-stuck='tr
   font-size: 13px;
 }
 
-/* Slimmer cards: same content, less padding */
-/* (Scoped to the product column so they outrank the blocks' own styles, which load later) */
+/* (Pill shape and colours: "Finish and size pills" in assets/sgs-studio.css) */
 .product-details .sgs-finish .sgs-finish__label {
   margin-bottom: 8px;
 }
 
-.product-details .sgs-finish .sgs-finish__card {
-  min-height: 0;
-  padding: 9px 8px;
-  gap: 0;
-}
-
-.product-details .sgs-finish .sgs-finish__price {
-  margin-top: 2px;
-}
-
 .product-details .variant-option.sgs-size-pills legend {
   margin-block-end: 8px;
-}
-
-.product-details .variant-option.sgs-size-pills .variant-option__button-label {
-  min-height: 0;
-  padding: 8px 6px;
-}
-
-.product-details .variant-option.sgs-size-pills .variant-option__button-label .sgs-pill {
-  gap: 0;
-}
-
-.product-details .sgs-size-pills .sgs-pill__price {
-  margin-top: 2px;
 }
 
 /* Phones: the finish, size and Add to cart blocks sit a little closer together */

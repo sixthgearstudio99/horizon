@@ -209,6 +209,7 @@
                 assign show_tile_price = true
               endif
             -%}
+            {%- assign sgs_captions = '' -%}
             {%- for product_option_value in product_option.values -%}
               {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
               {%- assign tile_variant = product_option_value.variant -%}
@@ -291,22 +292,20 @@
                   {% endif %}
                   {%- assign value_lower = product_option_value.name | downcase | strip -%}
                   {%- if sgs_pills -%}
-                    {%- comment -%} Size pill: inches, cm, then price (sale price first, old price small and struck through) {%- endcomment -%}
-                    {%- assign label_parts = value_label | strip | split: ' / ' -%}
+                    {%- comment -%}
+                      Size pill: the size in inches only, on one line ("18×24 in"). Its cm size and price
+                      show in one line under the row for the chosen size (sgs-size-captions below).
+                    {%- endcomment -%}
+                    {%- liquid
+                      assign label_parts = value_label | strip | split: ' / '
+                      assign pill_text = label_parts[0] | replace: ' × ', '×'
+                      capture sgs_caption_one
+                        render 'sgs-size-caption', index: forloop.index0, selected: product_option_value.selected, label: value_label, variant: tile_variant, product_resource: product_resource, sale_win: sgs_sale_win
+                      endcapture
+                      assign sgs_captions = sgs_captions | append: sgs_caption_one
+                    -%}
                     <span class="variant-option__button-label__text sgs-pill" data-key="variant-option-text">
-                      <span class="sgs-pill__in">{{ label_parts[0] }}</span>
-                      {%- if label_parts.size > 1 -%}<span class="sgs-pill__cm">{{ label_parts[1] }}</span>{%- endif -%}
-                      {%- if tile_variant != blank -%}
-                        <span class="sgs-pill__price sgs-tile-price">
-                          {%- if sgs_sale_win != blank -%}
-                            {% render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, amount: tile_variant.price %}
-                          {%- endif -%}
-                          <span class="sgs-tile-price__normal">{{ tile_variant.price | money_without_trailing_zeros }}</span>
-                        </span>
-                      {%- endif -%}
-                      {%- if sgs_popular != blank and value_lower == sgs_popular -%}
-                        <span class="sgs-popular">{{ settings.sgs_popular_label | default: 'Most popular' | escape }}</span>
-                      {%- endif -%}
+                      <span class="sgs-pill__in">{{ pill_text }}</span>
                     </span>
                   {%- else -%}
                   <span
@@ -343,6 +342,11 @@
               {% endstyle %}
             {% endif %}
           </fieldset>
+          {%- if sgs_pills and sgs_captions != blank -%}
+            {%- comment -%} SixthGear: cm size and price of the chosen size, one line under the size pills {%- endcomment -%}
+            <div class="sgs-size-captions" aria-live="polite">{{ sgs_captions }}</div>
+            {%- render 'sgs-pill-captions' -%}
+          {%- endif -%}
           {%- if option_name_lower contains 'size' and block_settings.size_guide_label != blank and sgs_pills != true -%}
             {%- comment -%} Opens the Size guide block's drawer, right under the size tiles {%- endcomment -%}
             <button type="button" class="sgs-sg__link sgs-sg__link--picker" data-sgs-sg-trigger aria-haspopup="dialog">

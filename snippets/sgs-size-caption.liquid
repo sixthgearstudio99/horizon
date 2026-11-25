@@ -1,0 +1,25 @@
+{%- doc -%}
+  SixthGear Studios: one caption line under the size pills, e.g. "46 × 61 cm · £35": the size in cm
+  and the price of that variant (the sale price while an offer window is open). Hidden unless it is
+  the chosen size; snippets/sgs-pill-captions.liquid switches them over.
+
+  @param {number} index - The size's position (0-based), matching the input's data-input-index
+  @param {boolean} selected - Whether this size is the chosen one
+  @param {string} label - The friendly size label, e.g. "18 × 24 in / 46 × 61 cm"
+  @param {variant} [variant] - The variant for this size with the other options chosen
+  @param {product} product_resource - The product
+  @param {string} [sale_win] - The open offer window, if any
+
+  @example
+  {% render 'sgs-size-caption', index: 0, selected: true, label: value_label, variant: tile_variant, product_resource: product, sale_win: sgs_sale_win %}
+{%- enddoc -%}
+{%- assign label_parts = label | strip | split: ' / ' -%}
+<p class="sgs-size-caption" data-sgs-caption="{{ index }}"{% unless selected %} hidden{% endunless %}>
+  {%- if label_parts.size > 1 -%}{{ label_parts[1] }} · {% endif -%}
+  {%- if variant != blank -%}
+    <span class="sgs-tile-price">
+      {%- if sale_win != blank -%}{% render 'sgs-sale-price', product_resource: product_resource, window: sale_win, amount: variant.price, part: 'now' %}{%- endif -%}
+      <span class="sgs-tile-price__normal">{{ variant.price | money_without_trailing_zeros }}</span>
+    </span>
+  {%- endif -%}
+</p>

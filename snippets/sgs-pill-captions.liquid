@@ -1,0 +1,25 @@
+{%- doc -%}
+  SixthGear Studios: under the size pills, shows the caption line ("46 × 61 cm · £35") of the size
+  just picked, straight away; Horizon's re-render of the picker then brings the same line from the
+  server. Bound once per page.
+
+  @example
+  {% render 'sgs-pill-captions' %}
+{%- enddoc -%}
+<script>
+  (function () {
+    if (window.sgsPillCaptionsBound) return;
+    window.sgsPillCaptionsBound = true;
+    document.addEventListener('change', function (event) {
+      var input = event.target;
+      if (!input || !input.matches || !input.matches('.sgs-size-pills input[type="radio"]')) return;
+      var fieldset = input.closest('fieldset');
+      var captions = fieldset && fieldset.nextElementSibling;
+      if (!captions || !captions.classList.contains('sgs-size-captions')) return;
+      var index = input.getAttribute('data-input-index');
+      captions.querySelectorAll('[data-sgs-caption]').forEach(function (line) {
+        line.hidden = line.getAttribute('data-sgs-caption') !== index;
+      });
+    });
+  })();
+</script>

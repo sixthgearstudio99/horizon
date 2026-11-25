@@ -186,11 +186,11 @@
               "settings": {
                 "label": "Finish",
                 "unframed_label": "Unframed",
-                "unframed_note": "Print only",
+                "unframed_note": "Print only · rolled in a tube",
                 "framed_label": "Framed",
-                "framed_note": "Ready to hang",
+                "framed_note": "Ready to hang · black frame",
                 "show_prices": true,
-                "from_label": "From"
+                "from_label": "from"
               },
               "blocks": {}
             },

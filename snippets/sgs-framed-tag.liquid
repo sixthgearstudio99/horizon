@@ -1,8 +1,11 @@
 {%- doc -%}
   SixthGear Studios: outputs "true" when the product has the tag "framed" (any case). Framed
-  prints are only reached from their print's Finish toggle, so every product listing skips them.
+  prints are only reached from their print's Finish toggle, so product listings skip them, except
+  in a collection meant for framed prints (snippets/sgs-shows-framed.liquid, e.g. framed-prints):
+  pass that collection and nothing is output there.
 
   @param {product} product_resource - The product
+  @param {collection} [collection] - The collection being listed, if any
 
   @example
   {%- capture framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
@@ -10,7 +13,16 @@
 {%- enddoc -%}
 
 {%- liquid
-  if product_resource != blank
+  assign keep_framed = false
+  if collection != blank
+    capture shows_framed
+      render 'sgs-shows-framed', collection: collection
+    endcapture
+    if shows_framed contains 'true'
+      assign keep_framed = true
+    endif
+  endif
+  if product_resource != blank and keep_framed == false
     assign tag_list = product_resource.tags | join: '|' | downcase | prepend: '|' | append: '|'
     if tag_list contains '|framed|'
       echo 'true'

@@ -45,7 +45,8 @@
       class="collection-wrapper grid gap-style{% if section.settings.product_grid_width == 'full-width' %} collection-wrapper--grid-full-width{% endif %}"
     >
       {%- liquid
-        # SixthGear: framed prints (tag "framed") are left out of the grid and the count
+        # SixthGear: framed prints (tag "framed") are left out of the grid and the count, except in a
+        # collection meant for them (snippets/sgs-shows-framed.liquid, e.g. framed-prints)
         capture sgs_framed_count
           render 'sgs-framed-count', resource: collection
         endcapture
@@ -68,7 +69,7 @@
         {% capture children %}
           {% assign sgs_skipped = 0 %}
           {% for product in collection.products %}
-            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: collection %}{%- endcapture -%}
             {%- if sgs_framed contains 'true' -%}
               {%- assign sgs_skipped = sgs_skipped | plus: 1 -%}
               {%- continue -%}

@@ -2604,6 +2604,13 @@
         "label": "Show the second image on hover",
         "default": false,
         "info": "Off: a product card keeps its first image when hovered. Applies to every product card (collections, search, recommendations, product grids)."
+      },
+      {
+        "type": "text",
+        "id": "sgs_framed_collections",
+        "label": "Collections that list framed prints",
+        "default": "framed-prints",
+        "info": "Collection handles, separated by commas. Framed prints (tag framed) are left out of every other listing; these collections, and any with \"framed\" in the handle (not \"unframed\"), show them."
       }
     ]
   },

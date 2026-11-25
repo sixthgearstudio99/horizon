@@ -18,7 +18,7 @@
   if image == blank
     for item in collection.products
       capture item_framed
-        render 'sgs-framed-tag', product_resource: item
+        render 'sgs-framed-tag', product_resource: item, collection: collection
       endcapture
       unless item_framed contains 'true'
         assign image = item.featured_media.preview_image | default: item.featured_image

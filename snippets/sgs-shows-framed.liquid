@@ -1,0 +1,25 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" for a collection that is meant to list framed prints, so the
+  rule that leaves framed prints (tag "framed") out of listings is skipped for it: a handle listed in
+  Theme settings > SixthGear: product cards (default framed-prints), or any handle with "framed" in
+  it (but not "unframed").
+
+  @param {collection} collection - The collection
+
+  @example
+  {%- capture shows_framed -%}{% render 'sgs-shows-framed', collection: collection %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign handle = collection.handle | append: '' | downcase
+  if handle != blank
+    assign listed = settings.sgs_framed_collections | default: 'framed-prints' | downcase | strip_newlines | remove: ' ' | split: ','
+    if listed contains handle
+      echo 'true'
+    elsif handle contains 'framed'
+      unless handle contains 'unframed'
+        echo 'true'
+      endunless
+    endif
+  endif
+-%}

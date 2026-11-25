@@ -64,7 +64,7 @@
                 assign c_first = nil
                 for fu_p in c.products
                   capture fu_framed
-                    render 'sgs-framed-tag', product_resource: fu_p
+                    render 'sgs-framed-tag', product_resource: fu_p, collection: c
                   endcapture
                   unless fu_framed contains 'true'
                     assign c_first = fu_p

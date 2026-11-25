@@ -14,7 +14,15 @@
 
 {%- liquid
   assign framed_total = 0
-  if resource != blank
+  # A collection meant for framed prints (e.g. framed-prints) counts them all
+  capture shows_framed
+    render 'sgs-shows-framed', collection: resource
+  endcapture
+  assign counts_framed = true
+  if shows_framed contains 'true'
+    assign counts_framed = false
+  endif
+  if resource != blank and counts_framed
     assign has_tag = true
     if resource.all_tags != blank
       assign tag_list = resource.all_tags | join: '|' | downcase | prepend: '|' | append: '|'

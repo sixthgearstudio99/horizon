@@ -1,9 +1,11 @@
 {%- doc -%}
   SixthGear Studios: spend progress in the cart drawer and cart page, e.g. "Add £12 more of unframed
-  prints to get 25% off", then "You've unlocked 25% off. It's applied at checkout." Counts only cart
-  lines whose product is in the collection set in Theme settings > SixthGear: cart spend offer
-  (default sale-eligible), at their line price. Display only: the discount itself is set up in
-  Shopify. Hidden when switched off, when the cart is empty, and after the end date and time (UK).
+  prints to get 25% off", then "You've unlocked 25% off. It's applied at checkout." Counts cart lines,
+  at their line price, whose product has the tag set in Theme settings > SixthGear: cart spend offer
+  (default "sale eligible"; any case, a hyphen or underscore counts as a space) and not the tag
+  "framed". The collection handle there is only a fallback, for products without that tag.
+  Display only: the discount itself is set up in Shopify. Hidden when switched off, when the cart
+  is empty, and after the end date and time (UK).
 
   @example
   {% render 'sgs-spend-progress' %}
@@ -11,7 +13,8 @@
 
 {%- liquid
   assign show = settings.sgs_spend_enabled
-  assign handle = settings.sgs_spend_collection | strip | default: 'sale-eligible'
+  assign handle = settings.sgs_spend_collection | strip
+  assign want_tag = settings.sgs_spend_tag | default: 'sale eligible' | downcase | replace: '-', ' ' | replace: '_', ' ' | strip
   assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
   assign threshold_pence = threshold | times: 100
   assign discount_text = settings.sgs_spend_discount | strip | default: '25% off'
@@ -28,8 +31,22 @@
   if show
     assign eligible = 0
     for item in cart.items
-      assign item_handles = item.product.collections | map: 'handle'
-      if item_handles contains handle
+      # Tags compared in lower case, with "-" and "_" read as spaces ("Sale Eligible", "sale-eligible")
+      assign item_tags = item.product.tags | join: '|' | downcase | replace: '-', ' ' | replace: '_', ' ' | split: '|'
+      if item_tags contains 'framed'
+        continue
+      endif
+      assign counts = false
+      if want_tag != blank and item_tags contains want_tag
+        assign counts = true
+      elsif handle != blank
+        # Fallback: the collection (only lists collections published to the Online Store)
+        assign item_handles = item.product.collections | map: 'handle'
+        if item_handles contains handle
+          assign counts = true
+        endif
+      endif
+      if counts
         assign eligible = eligible | plus: item.final_line_price
       endif
     endfor

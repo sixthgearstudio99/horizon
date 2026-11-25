@@ -2507,10 +2507,17 @@
       },
       {
         "type": "text",
+        "id": "sgs_spend_tag",
+        "label": "Product tag that counts",
+        "default": "sale eligible",
+        "info": "Cart items whose product has this tag count towards the spend (any case; sale-eligible works too). Products tagged framed never count."
+      },
+      {
+        "type": "text",
         "id": "sgs_spend_collection",
-        "label": "Collection that counts (handle)",
+        "label": "Fallback collection (handle)",
         "default": "sale-eligible",
-        "info": "Only cart items from this collection count towards the spend."
+        "info": "Only for products without the tag above: items in this collection count too. Leave empty to use the tag alone."
       },
       {
         "type": "text",

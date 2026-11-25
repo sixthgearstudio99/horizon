@@ -741,6 +741,7 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 
   media-gallery .slideshow-controls__counter .slash {
     padding-inline: 4px;
+    color: var(--sgs-text-2, #9a9a9a);
   }
 }
 

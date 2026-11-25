@@ -170,8 +170,8 @@
     background: linear-gradient(
       to top,
       rgb(10 10 10 / var(--sgs-phero-overlay)) 0%,
-      rgb(10 10 10 / calc(var(--sgs-phero-overlay) * 0.45)) 55%,
-      rgb(10 10 10 / 0.15) 100%
+      rgb(10 10 10 / calc(var(--sgs-phero-overlay) * 0.8)) 55%,
+      rgb(10 10 10 / 0.35) 100%
     );
   }
 
@@ -224,6 +224,12 @@
     gap: 10px;
     margin: 0 0 24px;
     color: rgb(var(--sgs-phero-fg) / 0.6);
+  }
+
+  /* Over a photo: off-white, not the grey label colour, so it reads on the image */
+  .sgs-phero__media ~ .sgs-phero__inner .sgs-phero__crumbs,
+  .sgs-phero:has(.sgs-phero__media) .sgs-phero__crumbs {
+    color: rgb(242 239 234 / 0.85) !important;
   }
 
   .sgs-phero__crumbs a {

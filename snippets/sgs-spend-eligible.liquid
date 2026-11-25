@@ -1,0 +1,35 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when a product counts towards the cart offers (the spend offer
+  and the 3rd-print-half-price bundle): not framed (tag "framed"), and tagged with the tag in Theme
+  settings > SixthGear: cart spend offer (default "sale eligible"; any case, "-" or "_" read as
+  spaces), else in that collection. Used by the cart line and the product page offer ticker, so
+  both always agree.
+
+  @param {product} product_resource - The product
+
+  @example
+  {%- capture eligible -%}{% render 'sgs-spend-eligible', product_resource: product %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if product_resource != blank
+    assign want_tag = settings.sgs_spend_tag | default: 'sale eligible' | downcase | replace: '-', ' ' | replace: '_', ' ' | strip
+    assign handle = settings.sgs_spend_collection | strip
+    assign item_tags = product_resource.tags | join: '|' | downcase | replace: '-', ' ' | replace: '_', ' ' | split: '|'
+    assign counts = false
+    unless item_tags contains 'framed'
+      if want_tag != blank and item_tags contains want_tag
+        assign counts = true
+      elsif handle != blank
+        # Fallback: the collection (only lists collections published to the Online Store)
+        assign item_handles = product_resource.collections | map: 'handle'
+        if item_handles contains handle
+          assign counts = true
+        endif
+      endif
+    endunless
+    if counts
+      echo 'true'
+    endif
+  endif
+-%}

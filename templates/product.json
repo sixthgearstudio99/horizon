@@ -570,6 +570,17 @@
                 "less_label": "Read less"
               },
               "blocks": {}
+            },
+            "sgs_offer_ticker": {
+              "type": "sgs-offer-box",
+              "settings": {
+                "point_1": "Free UK delivery",
+                "point_2": "Printed in the UK",
+                "point_3": "Free replacement if damaged",
+                "point_4": "",
+                "label": "Offers and delivery"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -577,6 +588,7 @@
             "sgs_rating",
             "price_tVjtKg",
             "sgs_review_line",
+            "sgs_offer_ticker",
             "sgs_intro",
             "divider_VJhene",
             "sgs_finish",

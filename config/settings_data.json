@@ -139,6 +139,10 @@
     "sgs_popular_middle": false,
     "sgs_popular_value": "",
     "sgs_reviews_min": 1,
+    "sgs_spend_name_1": "Pre Black Friday",
+    "sgs_spend_name_2": "Black Friday",
+    "sgs_ticker_spend_text": "[name] · [discount] unframed over [threshold] · [ends]",
+    "sgs_ticker_bundle_text": "Buy 3 prints · your 3rd is half price",
     "blocks": {
       "2567389343055140935": {
         "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",

@@ -1,175 +1,361 @@
 {%- liquid
-  # The open offer window (Theme settings > SixthGear: offers), on Shopify's clock; CSS shows it
-  # only while the visitor's clock agrees (html[data-sgs-sale]).
+  # SixthGear: the product page offer box, as a scrolling strip (a ticker) under the price. It loops
+  # right to left: the offer for the current phase first, in the accent colour, then the trust
+  # points and, while Theme settings > SixthGear: Christmas has a date, the order-by line.
+  #
+  # The offer comes from the same phase settings as the cart line (Theme settings > SixthGear: cart
+  # spend offer): phase 1 and 2 ("Pre Black Friday · 20% off unframed over £50 · Ends Thursday
+  # midnight"), then the bundle offer from its start date. Every phase this page may need is in the
+  # strip, and the visitor's UK clock picks one (html[data-sgs-spend-phase], set by
+  # snippets/sgs-spend-phase-head.liquid), so it switches over by itself. The offer only shows on
+  # products that count towards it (snippets/sgs-spend-eligible.liquid: never framed prints).
+  # Paused while hovered, touched or focused; with "reduce motion" on it doesn't move and shows the
+  # offer line on its own instead.
   assign bs = block.settings
   assign product_resource = closest.product
-  capture sgs_sale_win
-    render 'sgs-sale-window'
-  endcapture
-  assign sgs_sale_win = sgs_sale_win | strip
-  assign message = ''
-  if sgs_sale_win != blank
-    assign key = 'sgs_sale' | append: sgs_sale_win
-    assign message_key = key | append: '_message'
-    assign percent_key = key | append: '_percent'
-    assign end_key = key | append: '_end'
-    assign message = settings[message_key] | strip
-    assign percent = settings[percent_key] | plus: 0
-    assign window_end = settings[end_key] | strip
+  assign now = 'now' | date: '%Y-%m-%d %H:%M'
+  assign today = 'now' | date: '%Y-%m-%d'
 
-    # "15% OFF · ENDS SUN 15 NOV" (or with [saving], e.g. "YOU SAVE £5.25"): the saving is the struck-through price minus
-    # the sale price of the chosen size, rounded as the percentage discount is at checkout
-    assign in_sale = true
-    if percent <= 0 or product_resource == blank
-      assign in_sale = false
+  capture eligible
+    render 'sgs-spend-eligible', product_resource: product_resource
+  endcapture
+  assign eligible = eligible | strip
+
+  # Phases still to come or running on Shopify's clock (as in snippets/sgs-spend-progress.liquid)
+  assign switch_at = settings.sgs_spend_switch | strip
+  assign ends = settings.sgs_spend_end | strip
+  assign bundle_from = settings.sgs_bundle_start | strip
+  assign bundle_end = settings.sgs_bundle_end | strip
+  assign phases = ''
+  if settings.sgs_spend_enabled and eligible == 'true'
+    assign spend_on = true
+    if ends.size == 16 and now > ends
+      assign spend_on = false
     endif
-    assign excluded = settings.sgs_sale_excluded_handles | strip_newlines | remove: ' ' | split: ','
-    if excluded contains product_resource.handle
-      assign in_sale = false
-    endif
-    if in_sale and bs.title_format != blank
-      assign amount = product_resource.selected_or_first_available_variant.price
-      assign saving = amount | times: percent | plus: 50 | divided_by: 100 | floor | money
-      assign title = bs.title_format | strip
-      if window_end.size == 16
-        assign ends = window_end | date: '%a %-d %b' | upcase
-        assign title = title | replace: '[end]', ends
-      else
-        assign title = title | remove: ' · ENDS [end]' | remove: ' · Ends [end]' | remove: '[end]'
+    if spend_on
+      assign phases = '1'
+      if switch_at.size == 16
+        assign phases = '1,2'
       endif
-      assign message = title | replace: '[percent]', percent | replace: '[saving]', saving
+    endif
+    if bundle_from.size == 16
+      assign bundle_on = true
+      if bundle_end.size == 16 and now > bundle_end
+        assign bundle_on = false
+      endif
+      if bundle_on
+        if phases == ''
+          assign phases = '3'
+        else
+          assign phases = phases | append: ',3'
+        endif
+      endif
     endif
   endif
-  assign note = bs.note | strip
+  assign phases = phases | split: ','
 
-  # Framed prints are never discounted: no offer, just a plain line saying so
-  capture sgs_framed
-    render 'sgs-is-framed', product_resource: product_resource
+  assign server_phase = 'off'
+  if switch_at.size == 16 and now >= switch_at
+    assign server_phase = '2'
+  else
+    assign server_phase = '1'
+  endif
+  if ends.size == 16 and now > ends
+    assign server_phase = 'off'
+  endif
+  if bundle_from.size == 16 and now >= bundle_from
+    assign server_phase = '3'
+  endif
+
+  # The offer text for each phase
+  capture offers
+    for phase in phases
+      if phase == '3'
+        assign text = settings.sgs_ticker_bundle_text | default: 'Buy 3 prints · your 3rd is half price'
+      else
+        if phase == '2'
+          assign phase_name = settings.sgs_spend_name_2
+          assign discount = settings.sgs_spend_discount_2 | default: '25% off'
+          assign threshold = settings.sgs_spend_threshold_2 | default: 50 | times: 100 | money_without_trailing_zeros
+          assign phase_ends = settings.sgs_spend_ends_2 | strip
+        else
+          assign phase_name = settings.sgs_spend_name_1
+          assign discount = settings.sgs_spend_discount | default: '20% off'
+          assign threshold = settings.sgs_spend_threshold | default: 50 | times: 100 | money_without_trailing_zeros
+          assign phase_ends = settings.sgs_spend_ends_1 | strip
+        endif
+        assign text = settings.sgs_ticker_spend_text | default: '[name] · [discount] unframed over [threshold] · [ends]'
+        if phase_ends == blank
+          assign text = text | remove: ' · [ends]' | remove: '[ends]'
+        endif
+        if phase_name == blank
+          assign text = text | remove: '[name] · ' | remove: '[name]'
+        endif
+        assign text = text | replace: '[name]', phase_name | replace: '[discount]', discount | replace: '[threshold]', threshold | replace: '[ends]', phase_ends
+      endif
+      assign text = text | strip
+      if text != blank
+        echo '<span class="sgs-ticker__item sgs-ticker__offer" data-phase="' | append: phase | append: '"'
+        if phase == server_phase
+          echo ' data-server-current'
+        endif
+        assign text_safe = text | escape
+        echo '>' | append: text_safe | append: '</span>'
+      endif
+    endfor
   endcapture
-  assign sgs_framed = sgs_framed | strip
+
+  # Christmas order-by line, while the date is set and not past (UK)
+  assign xmas_day = settings.sgs_xmas_last_order | strip
+  assign xmas_text = ''
+  if xmas_day.size == 10 and today <= xmas_day
+    assign xmas_date = xmas_day | append: ' 12:00' | date: '%a %-d %b'
+    assign xmas_text = settings.sgs_xmas_text | default: 'Order by [date] for Christmas delivery' | replace: '[date]', xmas_date
+  endif
+
+  capture group
+    echo offers
+    for i in (1..4)
+      assign point_key = 'point_' | append: i
+      assign point = bs[point_key] | strip
+      if point != blank
+        assign point_safe = point | escape
+        echo '<span class="sgs-ticker__item">' | append: point_safe | append: '</span>'
+      endif
+    endfor
+    if xmas_text != blank
+      assign xmas_safe = xmas_text | escape
+      assign xmas_day_safe = xmas_day | escape
+      echo '<span class="sgs-ticker__item" data-sgs-xmas-until="' | append: xmas_day_safe | append: '">' | append: xmas_safe | append: '</span>'
+    endif
+  endcapture
+  assign group = group | strip
+
+  # Reduced motion: the offer on its own; with no offer for this product, the trust points
+  capture fallback
+    for i in (1..4)
+      assign point_key = 'point_' | append: i
+      assign point = bs[point_key] | strip
+      if point != blank
+        echo point | escape
+        unless forloop.last
+          echo ' · '
+        endunless
+      endif
+    endfor
+  endcapture
+  assign fallback = fallback | strip | remove_last: ' ·'
 -%}
 
-{%- if sgs_framed == 'true' -%}
-  {%- if bs.framed_line != blank -%}
-    <p class="sgs-offer-framed" {{ block.shopify_attributes }}>{{ bs.framed_line | escape }}</p>
-  {%- endif -%}
-{%- elsif message != blank and product_resource.gift_card? != true -%}
-  <div class="sgs-offer" data-sgs-offer-win="{{ sgs_sale_win }}" data-block-id="{{ block.id }}" role="note" {{ block.shopify_attributes }}>
-    <p class="sgs-offer__title" data-sgs-offer-title>{{ message | escape }}</p>
-    {%- if note != blank -%}
-      <p class="sgs-offer__note">{{ note | escape }}</p>
-    {%- endif -%}
+{%- if group != blank and product_resource.gift_card? != true -%}
+  <div class="sgs-ticker" tabindex="0" role="region" aria-label="{{ bs.label | default: 'Offers and delivery' | escape }}" data-sgs-ticker {{ block.shopify_attributes }}>
+    <div class="sgs-ticker__track">
+      {%- for i in (1..4) -%}
+        <div class="sgs-ticker__group"{% unless forloop.first %} aria-hidden="true"{% endunless %}>{{ group }}</div>
+      {%- endfor -%}
+    </div>
+    <p class="sgs-ticker__static">
+      {{- offers -}}
+      {%- if fallback != blank -%}<span class="sgs-ticker__fallback">{{ fallback }}</span>{%- endif -%}
+    </p>
   </div>
   <script>
     (function () {
-      // The saving follows the chosen size: Horizon re-renders the page for the new variant and
-      // hands the HTML to listeners; the new title is copied across from it
-      var box = document.currentScript.previousElementSibling;
-      var section = box && box.closest('.shopify-section');
-      if (!section || section.dataset.sgsOfferWatch) return;
-      section.dataset.sgsOfferWatch = '1';
-      section.addEventListener('shopify:product:select', function (event) {
-        if (!event.promise) return;
-        event.promise.then(function (result) {
-          var html = result && result.detail && result.detail.html;
-          if (!html) return;
-          section.querySelectorAll('.sgs-offer[data-block-id]').forEach(function (current) {
-            var fresh = html.querySelector('.sgs-offer[data-block-id="' + current.dataset.blockId + '"] [data-sgs-offer-title]');
-            var title = current.querySelector('[data-sgs-offer-title]');
-            if (fresh && title) title.textContent = fresh.textContent;
-          });
-        }).catch(function () {});
-      });
+      var root = document.currentScript.previousElementSibling;
+      if (!root || !root.matches('[data-sgs-ticker]')) return;
+      // Paused while touched
+      var pause = function () { root.classList.add('is-paused'); };
+      var play = function () { root.classList.remove('is-paused'); };
+      root.addEventListener('touchstart', pause, { passive: true });
+      root.addEventListener('touchend', play);
+      root.addEventListener('touchcancel', play);
+      // The Christmas line goes once its date has passed on the visitor's UK clock
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        var today = p.year + '-' + p.month + '-' + p.day;
+        root.querySelectorAll('[data-sgs-xmas-until]').forEach(function (el) {
+          if (today > el.getAttribute('data-sgs-xmas-until')) el.remove();
+        });
+      } catch (e) {}
     })();
   </script>
 {%- endif -%}
 
 {% stylesheet %}
-  .sgs-offer {
-    display: none;
-    width: 100%;
-    padding: 14px 16px;
-    border: 1px solid var(--sgs-text, #111111);
-    color: var(--sgs-text, #111111);
-  }
+  .sgs-ticker {
+    --sgs-ticker-duration: 30s;
 
-  html[data-sgs-sale='1'] .sgs-offer[data-sgs-offer-win='1'],
-  html[data-sgs-sale='2'] .sgs-offer[data-sgs-offer-win='2'],
-  html[data-sgs-sale='3'] .sgs-offer[data-sgs-offer-win='3'],
-  html[data-sgs-sale='4'] .sgs-offer[data-sgs-offer-win='4'] {
-    display: block;
-  }
-
-  .sgs-offer__title {
+    position: relative;
+    box-sizing: border-box;
     display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin: 0;
-    font-family: var(--sgs-font-mono, monospace);
-    font-size: 14px;
-    line-height: 1.5;
-    letter-spacing: 0.02em;
-    text-transform: none;
-  }
-
-  .sgs-offer__title::before {
-    content: '';
-    flex-shrink: 0;
-    width: 6px;
-    height: 6px;
-    background: var(--sgs-red, #d7261e);
-    translate: 0 -1px;
-  }
-
-  .sgs-offer-framed {
+    align-items: center;
     width: 100%;
-    margin: 0;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--sgs-text-2, #6b6b6b);
+    height: 40px;
+    overflow: hidden;
+    border: 1px solid #2a2a2a;
+    border-radius: 999px;
+    background: #1a1a1a;
+    color: #f2efea;
+    font-family: var(--sgs-font-body);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    /* Soft fade at both ends, inside the rounded edge */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
   }
 
-  .sgs-offer__note {
-    margin: 4px 0 0 16px;
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--sgs-text-2, #6b6b6b);
+  .sgs-ticker:focus-visible {
+    outline: 2px solid #f2efea;
+    outline-offset: 3px;
+  }
+
+  /* Four copies in a row; moving by one copy loops seamlessly */
+  .sgs-ticker__track {
+    display: flex;
+    flex-shrink: 0;
+    width: max-content;
+    animation: sgs-ticker var(--sgs-ticker-duration) linear infinite;
+  }
+
+  .sgs-ticker:hover .sgs-ticker__track,
+  .sgs-ticker:focus-within .sgs-ticker__track,
+  .sgs-ticker.is-paused .sgs-ticker__track {
+    animation-play-state: paused;
+  }
+
+  @keyframes sgs-ticker {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-25%);
+    }
+  }
+
+  .sgs-ticker__group {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  /* Each item carries its own separator after it, so hidden items take theirs with them */
+  .sgs-ticker__item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .sgs-ticker__item::after {
+    content: '✦';
+    margin-inline: 14px;
+    font-size: 9px;
+    letter-spacing: 0;
+    color: #9a9a9a;
+  }
+
+  /* The offer: the accent, and only the current phase's (as the cart line) */
+  .sgs-ticker__offer {
+    display: none;
+    color: #ec6238;
+  }
+
+  :root:not([data-sgs-spend-phase]) .sgs-ticker__offer[data-server-current],
+  html[data-sgs-spend-phase='1'] .sgs-ticker__offer[data-phase='1'],
+  html[data-sgs-spend-phase='2'] .sgs-ticker__offer[data-phase='2'],
+  html[data-sgs-spend-phase='3'] .sgs-ticker__offer[data-phase='3'] {
+    display: inline-flex;
+  }
+
+  /* Reduced motion: no scrolling, the offer line on its own (or the trust points when this product
+     has no offer right now) */
+  .sgs-ticker__static {
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sgs-ticker {
+      justify-content: center;
+      height: auto;
+      min-height: 40px;
+      padding: 8px 18px;
+      white-space: normal;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .sgs-ticker__track {
+      display: none;
+    }
+
+    .sgs-ticker__static {
+      display: block;
+      margin: 0;
+      line-height: 1.4;
+      text-align: center;
+      text-wrap: balance;
+    }
+
+    .sgs-ticker__static .sgs-ticker__item::after {
+      content: none;
+    }
+
+    :root:not([data-sgs-spend-phase]) .sgs-ticker__static:has(.sgs-ticker__offer[data-server-current]) .sgs-ticker__fallback,
+    html[data-sgs-spend-phase='1'] .sgs-ticker__static:has([data-phase='1']) .sgs-ticker__fallback,
+    html[data-sgs-spend-phase='2'] .sgs-ticker__static:has([data-phase='2']) .sgs-ticker__fallback,
+    html[data-sgs-spend-phase='3'] .sgs-ticker__static:has([data-phase='3']) .sgs-ticker__fallback {
+      display: none;
+    }
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Offer box",
+  "name": "Offer ticker",
   "tag": null,
   "settings": [
     {
       "type": "paragraph",
-      "content": "The current offer from Theme settings > SixthGear: offers. Hidden when no offer is running."
+      "content": "A scrolling strip: the current offer in the accent colour (wording and dates in Theme settings > SixthGear: cart spend offer > Product page offer ticker; only on products that count towards it), then the points below, then the Christmas order-by line while Theme settings > SixthGear: Christmas has a date."
     },
     {
       "type": "text",
-      "id": "title_format",
-      "label": "Offer text",
-      "default": "[percent]% OFF · ENDS [end]",
-      "info": "[percent] is the offer's percentage, [saving] what it takes off the chosen size, [end] its end date (left out when it has none). Empty uses the offer's message from Theme settings."
+      "id": "point_1",
+      "label": "Point 1",
+      "default": "Free UK delivery"
     },
     {
       "type": "text",
-      "id": "note",
-      "label": "Line under the offer",
-      "info": "Leave empty to hide."
+      "id": "point_2",
+      "label": "Point 2",
+      "default": "Printed in the UK"
     },
     {
       "type": "text",
-      "id": "framed_line",
-      "label": "Line on framed prints",
-      "default": "Framed prints are excluded from sales and bundle offers.",
-      "info": "Shown instead of the offer on products tagged framed. Leave empty to hide."
+      "id": "point_3",
+      "label": "Point 3",
+      "default": "Free replacement if damaged"
+    },
+    {
+      "type": "text",
+      "id": "point_4",
+      "label": "Point 4",
+      "info": "Leave empty for none."
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Name for screen readers",
+      "default": "Offers and delivery"
     }
   ],
   "presets": [
     {
-      "name": "Offer box"
+      "name": "Offer ticker"
     }
   ]
 }

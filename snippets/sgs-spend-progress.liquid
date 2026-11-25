@@ -18,8 +18,6 @@
 
 {%- liquid
   assign show = settings.sgs_spend_enabled
-  assign handle = settings.sgs_spend_collection | strip
-  assign want_tag = settings.sgs_spend_tag | default: 'sale eligible' | downcase | replace: '-', ' ' | replace: '_', ' ' | strip
   assign switch_at = settings.sgs_spend_switch | strip
   assign ends = settings.sgs_spend_end | strip
   assign bundle_from = settings.sgs_bundle_start | strip
@@ -75,20 +73,13 @@
     assign eligible = 0
     assign eligible_count = 0
     for item in cart.items
-      # Tags compared in lower case, with "-" and "_" read as spaces ("Sale Eligible", "sale-eligible")
-      assign item_tags = item.product.tags | join: '|' | downcase | replace: '-', ' ' | replace: '_', ' ' | split: '|'
-      if item_tags contains 'framed'
-        continue
-      endif
+      # The same rule as the product page offer ticker (snippets/sgs-spend-eligible.liquid)
+      capture item_counts
+        render 'sgs-spend-eligible', product_resource: item.product
+      endcapture
       assign counts = false
-      if want_tag != blank and item_tags contains want_tag
+      if item_counts contains 'true'
         assign counts = true
-      elsif handle != blank
-        # Fallback: the collection (only lists collections published to the Online Store)
-        assign item_handles = item.product.collections | map: 'handle'
-        if item_handles contains handle
-          assign counts = true
-        endif
       endif
       if counts
         assign eligible = eligible | plus: item.final_line_price

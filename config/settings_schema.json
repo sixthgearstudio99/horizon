@@ -2520,6 +2520,13 @@
         "info": "Small line under the bar. Leave empty to hide."
       },
       {
+        "type": "text",
+        "id": "sgs_spend_name_1",
+        "label": "Phase 1: name",
+        "default": "Pre Black Friday",
+        "info": "For the product page offer ticker."
+      },
+      {
         "type": "header",
         "content": "Phase 2 (e.g. Black Friday)"
       },
@@ -2548,6 +2555,13 @@
         "label": "Phase 2: end line",
         "default": "Ends Monday midnight",
         "info": "Small line under the bar. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "sgs_spend_name_2",
+        "label": "Phase 2: name",
+        "default": "Black Friday",
+        "info": "For the product page offer ticker."
       },
       {
         "type": "header",
@@ -2583,6 +2597,24 @@
         "id": "sgs_bundle_text_3",
         "label": "Bundle: 3 or more prints",
         "default": "Garage complete. Your cheapest print is half price, shown at checkout."
+      },
+      {
+        "type": "header",
+        "content": "Product page offer ticker"
+      },
+      {
+        "type": "text",
+        "id": "sgs_ticker_spend_text",
+        "label": "Phases 1 and 2",
+        "default": "[name] · [discount] unframed over [threshold] · [ends]",
+        "info": "[name], [discount], [threshold] and [ends] come from the phase settings above. Shown on products that count towards the offer (not framed prints)."
+      },
+      {
+        "type": "text",
+        "id": "sgs_ticker_bundle_text",
+        "label": "Bundle offer (phase 3)",
+        "default": "Buy 3 prints · your 3rd is half price",
+        "info": "Shown from the bundle start on products that count towards it."
       },
       {
         "type": "text",

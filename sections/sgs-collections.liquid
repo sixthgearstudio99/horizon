@@ -43,6 +43,10 @@
         {%- for block in feature_blocks -%}
           {%- liquid
             assign c = block.settings.collection
+            # "All products": Shopify's all-products page (/collections/all)
+            if c == blank and block.settings.all_products
+              assign c = collections.all
+            endif
             assign tile_title = block.settings.title | default: c.title
             assign tile_text = block.settings.text
             if tile_text == blank and c.description != blank
@@ -114,6 +118,9 @@
           {%- for block in compact_blocks -%}
             {%- liquid
               assign c = block.settings.collection
+              if c == blank and block.settings.all_products
+                assign c = collections.all
+              endif
               assign row_title = block.settings.title | default: c.title
               assign row_image = block.settings.image | default: c.image
               if row_image == blank and c != blank
@@ -601,6 +608,13 @@
           "label": "Collection"
         },
         {
+          "type": "checkbox",
+          "id": "all_products",
+          "label": "Or all products",
+          "default": false,
+          "info": "With no collection picked: links to all products (/collections/all). Set a title, e.g. Shop all."
+        },
+        {
           "type": "text",
           "id": "title",
           "label": "Title",
@@ -629,6 +643,13 @@
           "type": "collection",
           "id": "collection",
           "label": "Collection"
+        },
+        {
+          "type": "checkbox",
+          "id": "all_products",
+          "label": "Or all products",
+          "default": false,
+          "info": "With no collection picked: links to all products (/collections/all). Set a title, e.g. Shop all."
         },
         {
           "type": "text",

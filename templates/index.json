@@ -73,7 +73,7 @@
         "tile_2": {
           "type": "tile",
           "settings": {
-            "collection": "mindset",
+            "collection": "office-wall-art",
             "product": "",
             "title": "",
             "link": ""
@@ -82,34 +82,17 @@
         "tile_3": {
           "type": "tile",
           "settings": {
-            "collection": "grand-prix",
+            "collection": "",
             "product": "",
-            "title": "",
-            "link": ""
+            "title": "Shop all",
+            "link": "",
+            "all_products": true
           }
         },
         "tile_4": {
           "type": "tile",
           "settings": {
-            "collection": "lineage",
-            "product": "",
-            "title": "",
-            "link": ""
-          }
-        },
-        "tile_5": {
-          "type": "tile",
-          "settings": {
-            "collection": "portraits",
-            "product": "",
-            "title": "",
-            "link": ""
-          }
-        },
-        "tile_6": {
-          "type": "tile",
-          "settings": {
-            "collection": "german-engineering",
+            "collection": "porsche-posters-wall-art",
             "product": "",
             "title": "",
             "link": ""
@@ -118,16 +101,16 @@
         "tile_7": {
           "type": "tile",
           "settings": {
-            "collection": "jdm",
+            "collection": "80s-90s-classics",
             "product": "",
-            "title": "JDM",
+            "title": "",
             "link": ""
           }
         },
         "tile_8": {
           "type": "tile",
           "settings": {
-            "collection": "super-hypercars",
+            "collection": "garage-man-cave-wall-art",
             "product": "",
             "title": "",
             "link": ""
@@ -148,8 +131,6 @@
         "tile_2",
         "tile_3",
         "tile_4",
-        "tile_5",
-        "tile_6",
         "tile_7",
         "tile_8",
         "tile_9"
@@ -266,7 +247,7 @@
         "feature_1": {
           "type": "feature",
           "settings": {
-            "collection": "lineage",
+            "collection": "porsche-posters-wall-art",
             "title": "",
             "text": ""
           }
@@ -274,23 +255,16 @@
         "feature_2": {
           "type": "feature",
           "settings": {
-            "collection": "portraits",
-            "title": "",
-            "text": ""
-          }
-        },
-        "feature_3": {
-          "type": "feature",
-          "settings": {
-            "collection": "grand-prix",
-            "title": "",
-            "text": "Formula One, for your wall."
+            "collection": "",
+            "title": "Shop all",
+            "text": "",
+            "all_products": true
           }
         },
         "feature_4": {
           "type": "feature",
           "settings": {
-            "collection": "mindset",
+            "collection": "office-wall-art",
             "title": "",
             "text": ""
           }
@@ -299,7 +273,6 @@
       "block_order": [
         "feature_1",
         "feature_2",
-        "feature_3",
         "feature_4"
       ],
       "settings": {
@@ -321,7 +294,7 @@
         "compact_5": {
           "type": "compact",
           "settings": {
-            "collection": "german-engineering",
+            "collection": "porsche-posters-wall-art",
             "title": "",
             "text": ""
           }
@@ -329,7 +302,7 @@
         "compact_6": {
           "type": "compact",
           "settings": {
-            "collection": "jdm",
+            "collection": "80s-90s-classics",
             "title": "",
             "text": ""
           }
@@ -337,7 +310,7 @@
         "compact_7": {
           "type": "compact",
           "settings": {
-            "collection": "super-hypercars",
+            "collection": "garage-man-cave-wall-art",
             "title": "",
             "text": ""
           }

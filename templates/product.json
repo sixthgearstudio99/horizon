@@ -92,7 +92,7 @@
               "settings": {
                 "show_breadcrumb": true,
                 "eyebrow_source": "collection",
-                "preferred_collections": "lineage,german-engineering,jdm,super-hypercars,grand-prix,portraits,mindset",
+                "preferred_collections": "porsche-posters-wall-art,80s-90s-classics,garage-man-cave-wall-art,office-wall-art",
                 "subtitle": "",
                 "eyebrow_text": "Automotive art print"
               },
@@ -877,12 +877,12 @@
       ],
       "settings": {
         "products": [],
-        "collection_handle": "lineage",
         "blocks_match": "911",
         "eyebrow": "The lineage",
         "heading": "Every generation",
         "padding-block-start": 156,
-        "padding-block-end": 156
+        "padding-block-end": 156,
+        "lineage_tag": "Lineage"
       }
     },
     "sgs_bundle": {
@@ -906,7 +906,7 @@
         "eyebrow": "You may also like",
         "heading": "Complete the wall",
         "view_all_label": "Shop all prints",
-        "preferred_collections": "lineage,grand-prix,german-engineering,jdm,super-hypercars,portraits,mindset",
+        "preferred_collections": "porsche-posters-wall-art,80s-90s-classics,garage-man-cave-wall-art,office-wall-art",
         "hidden_products": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
         "hidden_products_collections": "custom-car-posters, custom-posters, custom",
         "products_to_show": 4,

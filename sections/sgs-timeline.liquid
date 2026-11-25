@@ -15,7 +15,9 @@
   endif
 
   assign picked = false
+  # Shown on prints tagged "Lineage" (any case), so it doesn't depend on a collection existing
   assign in_collection = false
+  assign lineage_tag = s.lineage_tag | strip | downcase
   assign blocks_apply = false
   if product != blank
     for p in s.products
@@ -24,13 +26,11 @@
         break
       endif
     endfor
-    if s.collection_handle != blank
-      for c in product.collections
-        if c.handle == s.collection_handle
-          assign in_collection = true
-          break
-        endif
-      endfor
+    if lineage_tag != blank
+      assign product_tags = product.tags | join: '|' | downcase | split: '|'
+      if product_tags contains lineage_tag
+        assign in_collection = true
+      endif
     endif
     if picked
       assign blocks_apply = true
@@ -434,10 +434,10 @@
     },
     {
       "type": "text",
-      "id": "collection_handle",
-      "label": "Otherwise show on collection",
-      "default": "lineage",
-      "info": "Shows on every print in this collection that has generations in its metafields: custom.lineage_models, plus optional custom.lineage_years, custom.lineage_notes and custom.lineage_images (lists, same order)."
+      "id": "lineage_tag",
+      "label": "Otherwise show on prints tagged",
+      "default": "Lineage",
+      "info": "Any case. Shows on every print with this tag that has generations in its metafields: custom.lineage_models, plus optional custom.lineage_years, custom.lineage_notes and custom.lineage_images (lists, same order)."
     },
     {
       "type": "text",

@@ -166,6 +166,19 @@
     },
     {
       "type": "select",
+      "id": "sgs_desktop_columns",
+      "label": "Columns on desktop",
+      "options": [
+        { "value": "auto", "label": "From card size" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" }
+      ],
+      "default": "auto",
+      "info": "From tablet width up. Mobile columns follow the mobile card size (small = 2).",
+      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
+    },
+    {
+      "type": "select",
       "id": "mobile_product_card_size",
       "label": "t:settings.mobile_card_size",
       "options": [

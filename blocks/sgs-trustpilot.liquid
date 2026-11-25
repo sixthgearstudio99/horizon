@@ -1,0 +1,45 @@
+{%- comment -%}
+  SixthGear: a slot for a Trustpilot widget (TrustBox). Paste the widget code Trustpilot gives you
+  into the block's setting. Nothing at all is shown while it's empty, so it can sit on the page
+  until there's a real widget to put in it.
+{%- endcomment -%}
+{%- assign code = block.settings.code | strip -%}
+{%- if code != blank -%}
+  <div class="sgs-trustpilot" {{ block.shopify_attributes }}>{{ code }}</div>
+{%- elsif request.design_mode -%}
+  <p class="sgs-trustpilot sgs-trustpilot--empty" {{ block.shopify_attributes }}>Trustpilot: paste your TrustBox widget code in this block's settings. Hidden from visitors until you do.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-trustpilot {
+    width: 100%;
+  }
+
+  .sgs-trustpilot--empty {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px dashed var(--sgs-line, #e4e0d9);
+    font-size: 13px;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Trustpilot widget",
+  "tag": null,
+  "settings": [
+    {
+      "type": "html",
+      "id": "code",
+      "label": "Trustpilot widget code",
+      "info": "Paste the TrustBox code from your Trustpilot account (Integrations > TrustBox). Leave empty to show nothing."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trustpilot widget"
+    }
+  ]
+}
+{% endschema %}

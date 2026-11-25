@@ -21,6 +21,14 @@
     {%- render 'view-transition-opt-in' -%}
 
     {%- render 'meta-tags' -%}
+    {%- comment -%} SixthGear: collections kept out of search results but still published (Theme settings > SixthGear: search engines) {%- endcomment -%}
+    {%- if template.name == 'collection' and collection.handle != blank -%}
+      {%- assign sgs_noindex = settings.sgs_noindex_collections | remove: ' ' | prepend: ',' | append: ',' -%}
+      {%- assign sgs_noindex_key = ',' | append: collection.handle | append: ',' -%}
+      {%- if sgs_noindex contains sgs_noindex_key -%}
+        <meta name="robots" content="noindex, follow">
+      {%- endif -%}
+    {%- endif -%}
     {%- render 'stylesheets' -%}
     {%- render 'card-hover-effect-styles' -%}
     {%- render 'scripts' -%}
@@ -29,6 +37,7 @@
     {%- render 'sgs-fonts' -%}
     {%- render 'sgs-sale-head' -%}
     {%- render 'sgs-spend-phase-head' -%}
+    {%- render 'sgs-date-gate-head' -%}
     {{ 'sgs-theme.css' | asset_url | stylesheet_tag }}
     {{ 'sgs-studio.css' | asset_url | stylesheet_tag }}
     {{ 'sgs-judgeme.css' | asset_url | stylesheet_tag }}

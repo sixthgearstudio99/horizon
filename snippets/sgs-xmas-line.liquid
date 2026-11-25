@@ -1,0 +1,38 @@
+{%- doc -%}
+  SixthGear Studios: "Order by Wed 9 Dec for Christmas delivery", from Theme settings > SixthGear:
+  Christmas (last order date and wording). Nothing when the date is empty or has passed (UK), checked
+  on Shopify's clock and again on the visitor's, so a page served earlier can't keep showing it.
+
+  @param {string} [class] - CSS class for the line
+
+  @example
+  {% render 'sgs-xmas-line', class: 'sgs-dinfo__gift' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign last_day = settings.sgs_xmas_last_order | strip
+  assign today = 'now' | date: '%Y-%m-%d'
+  assign show = false
+  if last_day.size == 10 and today <= last_day
+    assign show = true
+  endif
+  if show
+    assign day_text = last_day | append: ' 12:00' | date: '%a %-d %b'
+    assign line = settings.sgs_xmas_text | default: 'Order by [date] for Christmas delivery' | escape | replace: '[date]', day_text
+  endif
+-%}
+{%- if show -%}
+  <span class="{{ class | default: 'sgs-xmas-line' }}" data-sgs-xmas-until="{{ last_day }}">{{ line }}</span>
+  <script>
+    (function () {
+      var el = document.currentScript.previousElementSibling;
+      var until = el && el.getAttribute('data-sgs-xmas-until');
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        if (until && p.year + '-' + p.month + '-' + p.day > until) el.hidden = true;
+      } catch (e) {}
+    })();
+  </script>
+{%- endif -%}

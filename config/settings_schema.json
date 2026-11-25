@@ -2419,7 +2419,7 @@
       },
       {
         "type": "header",
-        "content": "Window 4: Buy 2, Get 1 Free"
+        "content": "Window 4: 3rd print half price"
       },
       {
         "type": "text",
@@ -2448,13 +2448,13 @@
         "type": "text",
         "id": "sgs_sale4_message",
         "label": "Message",
-        "default": "BUY 2, GET 1 FREE · MIX ANY DESIGNS AND SIZES"
+        "default": "3RD PRINT HALF PRICE · MIX ANY DESIGNS AND SIZES"
       },
       {
         "type": "checkbox",
         "id": "sgs_sale4_hide_wall",
         "label": "Hide Buy 2, Get 1 Free progress during this window",
-        "default": false
+        "default": true
       },
       {
         "type": "text",
@@ -2465,17 +2465,20 @@
         "type": "text",
         "id": "sgs_sale4_panel_heading",
         "label": "Product page panel: heading",
-        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel."
+        "info": "Shows the offer panel on product pages (not framed prints) while this window is open. Leave empty for no panel.",
+        "default": "3rd Print Half Price"
       },
       {
         "type": "text",
         "id": "sgs_sale4_panel_text",
-        "label": "Product page panel: text"
+        "label": "Product page panel: text",
+        "default": "Add 3 unframed prints and the cheapest is half price. Mix any designs and sizes; taken off automatically at checkout."
       },
       {
         "type": "text",
         "id": "sgs_sale4_panel_note",
-        "label": "Product page panel: small print"
+        "label": "Product page panel: small print",
+        "default": "Framed prints aren't part of this offer."
       }
     ]
   },
@@ -2510,6 +2513,13 @@
         "info": "Fills [discount] in the messages below."
       },
       {
+        "type": "text",
+        "id": "sgs_spend_ends_1",
+        "label": "Phase 1: end line",
+        "default": "Ends Thursday midnight",
+        "info": "Small line under the bar. Leave empty to hide."
+      },
+      {
         "type": "header",
         "content": "Phase 2 (e.g. Black Friday)"
       },
@@ -2533,8 +2543,46 @@
         "default": "25% off"
       },
       {
+        "type": "text",
+        "id": "sgs_spend_ends_2",
+        "label": "Phase 2: end line",
+        "default": "Ends Monday midnight",
+        "info": "Small line under the bar. Leave empty to hide."
+      },
+      {
         "type": "header",
         "content": "End and wording"
+      },
+      {
+        "type": "text",
+        "id": "sgs_bundle_start",
+        "label": "Bundle offer starts (YYYY-MM-DD HH:MM, UK time)",
+        "default": "2026-12-01 00:00",
+        "info": "Phase 3, after the spend offer ends: the cart line counts the same prints and shows the messages below. Also shows \"3rd print half price\" under Pick your garage and Complete the garage from this time. Leave empty for no bundle offer."
+      },
+      {
+        "type": "text",
+        "id": "sgs_bundle_end",
+        "label": "Bundle offer ends (YYYY-MM-DD HH:MM, UK time)",
+        "info": "Leave empty for no end date."
+      },
+      {
+        "type": "text",
+        "id": "sgs_bundle_text_1",
+        "label": "Bundle: 1 print in the cart",
+        "default": "Complete the garage: add 2 more prints and your 3rd is half price"
+      },
+      {
+        "type": "text",
+        "id": "sgs_bundle_text_2",
+        "label": "Bundle: 2 prints",
+        "default": "Add 1 more print and it's half price"
+      },
+      {
+        "type": "text",
+        "id": "sgs_bundle_text_3",
+        "label": "Bundle: 3 or more prints",
+        "default": "Garage complete. Your cheapest print is half price, shown at checkout."
       },
       {
         "type": "text",
@@ -2583,15 +2631,48 @@
         "type": "text",
         "id": "sgs_gift_line_text",
         "label": "Text",
-        "default": "The gift for the car lover. Order by Wed 9 Dec for Christmas delivery.",
+        "default": "The gift for the car lover.",
         "info": "The first sentence shows a little bolder. Leave empty to hide."
       },
       {
         "type": "text",
         "id": "sgs_gift_line_end",
         "label": "Last day to show it (YYYY-MM-DD)",
-        "default": "2026-12-09",
         "info": "UK date. Hidden automatically from the next day."
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: Christmas",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "\"Order by … for Christmas delivery\" under the delivery estimate on product pages and in the cart. Shown only while a date is set, up to and including that day (UK). Not on custom posters, which have their own cut-off in the delivery estimate."
+      },
+      {
+        "type": "text",
+        "id": "sgs_xmas_last_order",
+        "label": "Christmas last order date (YYYY-MM-DD)",
+        "info": "e.g. 2026-12-16. Leave empty to show nothing. From the next day, the delivery estimate on product pages switches to its \"too late for Christmas\" message until 24 Dec."
+      },
+      {
+        "type": "text",
+        "id": "sgs_xmas_text",
+        "label": "Wording",
+        "default": "Order by [date] for Christmas delivery",
+        "info": "[date] becomes the date above, e.g. Wed 16 Dec."
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: search engines",
+    "settings": [
+      {
+        "type": "text",
+        "id": "sgs_noindex_collections",
+        "label": "Collections kept out of search results",
+        "default": "sale-eligble",
+        "info": "Collection handles, separated by commas. They stay published and work as normal, but ask search engines not to list them (noindex)."
       }
     ]
   },
@@ -2604,6 +2685,13 @@
         "label": "Show the second image on hover",
         "default": false,
         "info": "Off: a product card keeps its first image when hovered. Applies to every product card (collections, search, recommendations, product grids)."
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_makes",
+        "label": "Car makes",
+        "default": "Porsche, Ferrari, Lamborghini, McLaren, BMW, Mercedes-AMG, Mercedes-Benz, Mercedes, Audi, Volkswagen, Nissan, Honda, Toyota, Mazda, Subaru, Mitsubishi, Ford, Aston Martin, Jaguar, Lotus, Bugatti, Pagani, Koenigsegg, Alfa Romeo, Lancia, Chevrolet, Dodge, Renault, Peugeot",
+        "info": "Separated by commas, most specific first. Used for the small make above each print in Pick your garage: the first of these found in a print's tags or title."
       },
       {
         "type": "text",

@@ -279,6 +279,30 @@
         Free UK delivery applied at checkout
       </p>
     {%- endif -%}
+    {%- comment -%}
+      SixthGear: "Order by … for Christmas delivery" (Theme settings > SixthGear: Christmas). Not when
+      the cart has a custom poster, which has its own, earlier cut-off.
+    {%- endcomment -%}
+    {%- if settings.sgs_xmas_last_order != blank -%}
+      {%- liquid
+        assign cart_has_custom = false
+        for item in cart.items
+          capture item_custom
+            render 'sgs-is-custom', product_resource: item.product, handles: settings.sgs_wall_excluded_handles
+          endcapture
+          if item_custom contains 'true'
+            assign cart_has_custom = true
+            break
+          endif
+        endfor
+      -%}
+      {%- unless cart_has_custom -%}
+        {%- capture xmas_line -%}{%- render 'sgs-xmas-line', class: 'sgs-xmas-line' -%}{%- endcapture -%}
+        {%- if xmas_line != blank -%}
+          <p class="sgs-cart-xmas">{{ xmas_line }}</p>
+        {%- endif -%}
+      {%- endunless -%}
+    {%- endif -%}
   </div>
 </div>
 
@@ -391,6 +415,17 @@
     font-size: 14px;
     line-height: 1.5;
     resize: vertical;
+  }
+
+  .sgs-cart-xmas {
+    margin: 6px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  .sgs-cart-xmas:not(:has(.sgs-xmas-line:not([hidden]))) {
+    display: none;
   }
 
   .sgs-cart-delivery {

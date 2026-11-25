@@ -328,7 +328,13 @@
                 "christmas_from": "12-10",
                 "christmas_to": "12-24",
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
-                "gift_card_handle": "gift-card"
+                "gift_card_handle": "gift-card",
+                "wyg_heading": "What you get",
+                "wyg_paper": "Semi-gloss paper with fade-resistant inks",
+                "wyg_paper_fine": "Printed on fine art paper",
+                "wyg_sizes_label": "Sizes:",
+                "wyg_framed": "Black wooden frame, clear Perspex front, ready to hang",
+                "wyg_unframed": "Unframed print, rolled and sent in a protective tube"
               },
               "blocks": {}
             },
@@ -403,7 +409,8 @@
                 "paper_fine_text": "Printed on fine art paper",
                 "item_5": ""
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "sgs_info": {
               "type": "sgs-product-info",
@@ -452,7 +459,9 @@
             "sgs_pdp_faq": {
               "type": "sgs-pdp-faq",
               "settings": {
-                "heading": "Questions & answers"
+                "heading": "Questions & answers",
+                "contact_text": "Questions? Email us at",
+                "contact_email": "hello@sixthgearstudios.co.uk"
               },
               "blocks": {
                 "faq_sizes": {
@@ -523,6 +532,13 @@
               "type": "sgs-mobile-slot",
               "settings": {},
               "blocks": {}
+            },
+            "sgs_trustpilot": {
+              "type": "sgs-trustpilot",
+              "settings": {
+                "code": ""
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -539,6 +555,7 @@
             "sgs_gift_line",
             "buy_buttons_eYQEYi",
             "sgs_delivery_line",
+            "sgs_trustpilot",
             "sgs_ptrust",
             "sgs_size_guide",
             "sgs_personalise",
@@ -904,14 +921,15 @@
       "type": "sgs-product-recommendations",
       "settings": {
         "eyebrow": "You may also like",
-        "heading": "Complete the wall",
+        "heading": "Complete the garage",
         "view_all_label": "Shop all prints",
         "preferred_collections": "porsche-posters-wall-art,80s-90s-classics,garage-man-cave-wall-art,office-wall-art",
         "hidden_products": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
         "hidden_products_collections": "custom-car-posters, custom-posters, custom",
         "products_to_show": 4,
         "padding-block-start": 96,
-        "padding-block-end": 120
+        "padding-block-end": 120,
+        "offer_line": "Pick 3 prints, the 3rd is half price"
       }
     }
   },

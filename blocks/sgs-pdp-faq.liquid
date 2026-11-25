@@ -13,6 +13,13 @@
       <h2 class="sgs-pdp-faq__heading sgs-label">{{ block.settings.heading | escape }}</h2>
     {%- endif -%}
     <div class="sgs-info">{{ faq_items }}</div>
+    {%- assign contact_email = block.settings.contact_email | strip -%}
+    {%- if contact_email != blank and contact_email contains '@' -%}
+      <p class="sgs-pdp-faq__contact">
+        {%- if block.settings.contact_text != blank -%}{{ block.settings.contact_text | escape }} {% endif -%}
+        <a href="mailto:{{ contact_email | escape }}">{{ contact_email | escape }}</a>
+      </p>
+    {%- endif -%}
   </div>
 
   {%- if faq_markers.size > 1 -%}
@@ -44,6 +51,20 @@
   .sgs-pdp-faq__heading {
     margin: 0 0 12px;
   }
+
+  .sgs-pdp-faq__contact {
+    margin: 14px 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #6b6b6b);
+  }
+
+  .sgs-pdp-faq__contact a {
+    color: var(--sgs-text, #111111);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -57,6 +78,18 @@
       "label": "Heading",
       "default": "Questions & answers",
       "info": "Leave empty to hide."
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact line",
+      "default": "Questions? Email us at"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "info": "Shown after the contact line, as a link. Leave empty to hide the line."
     }
   ],
   "blocks": [

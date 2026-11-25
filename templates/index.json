@@ -26,12 +26,12 @@
         "show_product_tag": false,
         "product_tag_label": "Featured print",
         "eyebrow": "Car culture · Designed in Bristol · Printed in the UK",
-        "heading": "Art for the <em>driven</em>",
-        "text": "",
-        "button_1_label": "Shop the prints",
-        "button_1_link": "shopify://collections/all",
-        "button_2_label": "",
-        "button_2_link": "",
+        "heading": "Wall art for the garage, office and man cave",
+        "text": "Classic 80s and 90s supercars and Porsche icons, printed in the UK.",
+        "button_1_label": "Shop best sellers",
+        "button_1_link": "shopify://collections/bestsellers",
+        "button_2_label": "Shop gifts",
+        "button_2_link": "shopify://collections/gifts-for-car-lovers",
         "feature_1": "",
         "feature_2": "",
         "feature_3": "",
@@ -49,13 +49,18 @@
         "collection": "gifts-for-car-lovers",
         "overlay_opacity": 55,
         "eyebrow": "",
-        "heading": "The gift for the car lover",
-        "subline": "From £25 · Free UK delivery · Order by Wed 9 Dec for Christmas",
-        "button_label": "Shop gifts",
-        "button_link": "/collections/gifts-for-car-lovers",
-        "hide_after": "2026-12-24",
+        "heading": "Buying it as a gift?",
+        "subline": "From £25 · Free UK delivery",
+        "button_label": "Shop gifts for car lovers",
+        "button_link": "shopify://collections/gifts-for-car-lovers",
+        "hide_after": "",
         "min_height": 560,
-        "min_height_mobile": 460
+        "min_height_mobile": 460,
+        "point_1": "Pick their car: classic supercars, Porsche and more.",
+        "point_2": "Pick a size: three sizes, shown in inches and cm.",
+        "point_3": "A delivery estimate is shown on every product.",
+        "gift_card_handle": "gift-card",
+        "gift_card_label": "Or send a digital gift card"
       }
     },
     "sgs_shop_collections": {
@@ -145,7 +150,7 @@
     "sgs_best_sellers": {
       "type": "sgs-product-grid",
       "settings": {
-        "collection": "best-sellers",
+        "collection": "bestsellers",
         "products_to_show": 8,
         "columns": "4",
         "preferred_collection": "featured",
@@ -244,40 +249,39 @@
     "sgs_collections": {
       "type": "sgs-collections",
       "blocks": {
-        "feature_1": {
+        "room_garage": {
           "type": "feature",
           "settings": {
-            "collection": "porsche-posters-wall-art",
-            "title": "",
-            "text": ""
+            "collection": "garage-man-cave-wall-art",
+            "title": "Garage & man cave",
+            "text": "For the garage, the workshop and the man cave."
           }
         },
-        "feature_2": {
-          "type": "feature",
-          "settings": {
-            "collection": "",
-            "title": "Shop all",
-            "text": "",
-            "all_products": true
-          }
-        },
-        "feature_4": {
+        "room_office": {
           "type": "feature",
           "settings": {
             "collection": "office-wall-art",
-            "title": "",
-            "text": ""
+            "title": "Office",
+            "text": "For the home office and the desk you work at."
+          }
+        },
+        "room_gifts": {
+          "type": "feature",
+          "settings": {
+            "collection": "gifts-for-car-lovers",
+            "title": "Gifts",
+            "text": "For the car lover in your life."
           }
         }
       },
       "block_order": [
-        "feature_1",
-        "feature_2",
-        "feature_4"
+        "room_garage",
+        "room_office",
+        "room_gifts"
       ],
       "settings": {
         "eyebrow": "",
-        "heading": "Pick your discipline",
+        "heading": "Shop by room",
         "view_all_label": "All collections",
         "view_all_link": "",
         "tile_ratio": "3 / 4",
@@ -332,7 +336,8 @@
         "secondary_label": "",
         "padding-block-start": 156,
         "padding-block-end": 156
-      }
+      },
+      "disabled": true
     },
     "sgs_spec": {
       "type": "sgs-spec",
@@ -544,7 +549,7 @@
       "type": "sgs-newsletter",
       "settings": {
         "eyebrow": "",
-        "heading": "Join the paddock",
+        "heading": "Get new prints first",
         "text": "Early access to new prints, member-only drops and 10% off your first order.",
         "placeholder": "Your email address",
         "button_label": "Subscribe",
@@ -609,9 +614,9 @@
         "item_1": {
           "type": "item",
           "settings": {
-            "icon": "print",
-            "title": "Printed to order",
-            "text": "Made to order in the UK, dispatched in 2–5 working days."
+            "icon": "globe",
+            "title": "Printed in the UK",
+            "text": "Made to order in the UK and dispatched in 2–5 working days."
           }
         },
         "item_2": {
@@ -619,39 +624,90 @@
           "settings": {
             "icon": "package",
             "title": "Free UK delivery",
-            "text": "Printed in the UK and delivered free to your door."
+            "text": "Delivered free in 2–4 working days after printing."
           }
         },
         "item_3": {
           "type": "item",
           "settings": {
-            "icon": "lock",
-            "title": "Secure checkout",
-            "text": "Encrypted payments through Shopify Checkout."
+            "icon": "print",
+            "title": "Semi-gloss paper",
+            "text": "Fade-resistant inks on semi-gloss paper, fine art on selected sizes."
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "icon": "sizes",
+            "title": "Framed or unframed",
+            "text": "Every design comes unframed, or in a black frame ready to hang."
           }
         }
       },
       "block_order": [
         "item_1",
         "item_2",
-        "item_3"
+        "item_3",
+        "item_4"
       ],
-      "disabled": true,
       "settings": {
-        "padding-block-start": 0,
-        "padding-block-end": 64
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    },
+    "sgs_garages": {
+      "type": "sgs-garages",
+      "blocks": {
+        "garage_1": {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 1",
+            "products": []
+          }
+        },
+        "garage_2": {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 2",
+            "products": []
+          }
+        },
+        "garage_3": {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 3",
+            "products": []
+          }
+        }
+      },
+      "block_order": [
+        "garage_1",
+        "garage_2",
+        "garage_3"
+      ],
+      "settings": {
+        "eyebrow": "",
+        "heading": "Pick your garage",
+        "offer_line": "3rd print half price",
+        "button_label": "Shop this garage",
+        "button_note": "Adds all three to your cart in their smallest size.",
+        "makes": "",
+        "padding-block-start": 120,
+        "padding-block-end": 120
       }
     }
   },
   "order": [
     "sgs_hero",
+    "sgs_trust",
+    "sgs_collections",
+    "sgs_best_sellers",
+    "sgs_garages",
     "sgs_gift_band",
     "sgs_shop_collections",
-    "sgs_best_sellers",
     "sgs_reviews",
     "sgs_walls",
     "sgs_culture",
-    "sgs_collections",
     "sgs_origins",
     "sgs_spec",
     "sgs_gallery",
@@ -660,7 +716,6 @@
     "sgs_studio_story",
     "sgs_instagram",
     "sgs_newsletter",
-    "sgs_trust",
     "sgs_reviews_carousel"
   ]
 }

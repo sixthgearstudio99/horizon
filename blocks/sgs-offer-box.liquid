@@ -17,7 +17,7 @@
     assign percent = settings[percent_key] | plus: 0
     assign window_end = settings[end_key] | strip
 
-    # "15% OFF · YOU SAVE £5.25 · ENDS SUN 15 NOV": the saving is the struck-through price minus
+    # "15% OFF · ENDS SUN 15 NOV" (or with [saving], e.g. "YOU SAVE £5.25"): the saving is the struck-through price minus
     # the sale price of the chosen size, rounded as the percentage discount is at checkout
     assign in_sale = true
     if percent <= 0 or product_resource == blank
@@ -150,7 +150,7 @@
       "type": "text",
       "id": "title_format",
       "label": "Offer text",
-      "default": "[percent]% OFF · YOU SAVE [saving] · ENDS [end]",
+      "default": "[percent]% OFF · ENDS [end]",
       "info": "[percent] is the offer's percentage, [saving] what it takes off the chosen size, [end] its end date (left out when it has none). Empty uses the offer's message from Theme settings."
     },
     {

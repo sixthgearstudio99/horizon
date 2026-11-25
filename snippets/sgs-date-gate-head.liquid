@@ -1,0 +1,34 @@
+{%- doc -%}
+  SixthGear Studios: shows elements marked data-sgs-show-from="YYYY-MM-DD HH:MM" from that minute,
+  UK time (Europe/London), on the visitor's own clock. They're in the page hidden; this checks them
+  when the page loads and again every minute, so a page left open changes over by itself. Used for
+  lines such as "3rd print half price" that start on a set date (Theme settings > SixthGear: cart
+  spend offer > Bundle offer starts).
+
+  @example
+  {% render 'sgs-date-gate-head' %}
+{%- enddoc -%}
+<script>
+  (function () {
+    var update = function () {
+      var p = {};
+      try {
+        new Intl.DateTimeFormat('en-GB', {
+          timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+        }).formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+      } catch (e) {
+        return;
+      }
+      var now = p.year + '-' + p.month + '-' + p.day + ' ' + p.hour + ':' + p.minute;
+      document.querySelectorAll('[data-sgs-show-from]').forEach(function (el) {
+        var from = el.getAttribute('data-sgs-show-from');
+        el.hidden = !(from && from.length === 16 && now >= from);
+      });
+    };
+    window.sgsDateGate = update;
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', update);
+    else update();
+    setInterval(update, 60000);
+  })();
+</script>

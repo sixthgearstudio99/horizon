@@ -62,6 +62,16 @@
         }
     {% endcase %}
 
+    /* SixthGear: a fixed number of columns from tablet width up (section setting "Columns on desktop") */
+    {%- assign sgs_columns = section.settings.sgs_desktop_columns | default: 'auto' -%}
+    {%- if section.settings.layout_type == 'grid' and sgs_columns != 'auto' %}
+      @media screen and (min-width: 750px) {
+        .product-grid--{{ section.id }}:is(.product-grid--grid):not([product-grid-view='zoom-out']) {
+          --product-grid-columns-desktop: repeat({{ sgs_columns | plus: 0 }}, minmax(0, 1fr));
+        }
+      }
+    {%- endif %}
+
     /* When zoomed out, fit as many 100px-wide columns as possible */
     .product-grid--{{ section.id }}[product-grid-view='zoom-out'] {
       --product-grid-columns-desktop: repeat(auto-fill, minmax(6.25rem, 1fr));

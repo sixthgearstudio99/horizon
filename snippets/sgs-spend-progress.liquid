@@ -4,10 +4,12 @@
   at their line price, whose product has the tag set in Theme settings > SixthGear: cart spend offer
   (default "sale eligible"; any case, a hyphen or underscore counts as a space) and not the tag
   "framed". The collection handle there is only a fallback, for products without that tag.
-  Two phases (Theme settings > SixthGear: cart spend offer): phase 1 until the switch time, phase 2
-  until the end time, each with its own threshold and discount text; hidden after the end. Both
-  phases are in the page and the visitor's UK clock picks one (snippets/sgs-spend-phase-head.liquid),
-  so it changes over by itself. Display only: the discounts themselves are set up in Shopify.
+  Two spend phases (Theme settings > SixthGear: cart spend offer): phase 1 until the switch time,
+  phase 2 until the end time, each with its own threshold, discount text and "Ends …" line. Then
+  phase 3, the bundle offer, from its start date: a message by the number of those prints in the
+  cart ("add 2 more prints and your 3rd is half price"), hidden while there are none. All phases
+  are in the page and the visitor's UK clock picks one (snippets/sgs-spend-phase-head.liquid), so
+  it changes over by itself. Display only: the discounts themselves are set up in Shopify.
   Hidden when switched off, when the cart is empty, and after the end.
 
   @example
@@ -20,29 +22,58 @@
   assign want_tag = settings.sgs_spend_tag | default: 'sale eligible' | downcase | replace: '-', ' ' | replace: '_', ' ' | strip
   assign switch_at = settings.sgs_spend_switch | strip
   assign ends = settings.sgs_spend_end | strip
+  assign bundle_from = settings.sgs_bundle_start | strip
+  assign bundle_end = settings.sgs_bundle_end | strip
   assign now = 'now' | date: '%Y-%m-%d %H:%M'
 
-  if cart.item_count == 0
-    assign show = false
-  endif
+  # Phases still to come or running on Shopify's clock; the visitor's clock picks the one shown
+  # (html[data-sgs-spend-phase], set by snippets/sgs-spend-phase-head.liquid)
+  assign phases = ''
+  assign spend_on = true
   if ends.size == 16 and now > ends
-    assign show = false
+    assign spend_on = false
   endif
-
-  # The phase on Shopify's clock; the visitor's clock decides in the end (html[data-sgs-spend-phase],
-  # set by snippets/sgs-spend-phase-head.liquid), so the wording changes over by itself
-  assign phases = '1'
-  if switch_at.size == 16
-    assign phases = '1,2'
+  if spend_on
+    assign phases = '1'
+    if switch_at.size == 16
+      assign phases = '1,2'
+    endif
+  endif
+  assign bundle_on = false
+  if bundle_from.size == 16
+    assign bundle_on = true
+    if bundle_end.size == 16 and now > bundle_end
+      assign bundle_on = false
+    endif
+  endif
+  if bundle_on
+    if phases == ''
+      assign phases = '3'
+    else
+      assign phases = phases | append: ',3'
+    endif
+  endif
+  if phases == '' or cart.item_count == 0
+    assign show = false
   endif
   assign phases = phases | split: ','
-  assign server_phase = '1'
-  if switch_at.size == 16 and now >= switch_at
-    assign server_phase = '2'
+
+  assign server_phase = 'off'
+  if spend_on
+    assign server_phase = '1'
+    if switch_at.size == 16 and now >= switch_at
+      assign server_phase = '2'
+    endif
+  endif
+  if bundle_on and now >= bundle_from
+    assign server_phase = '3'
   endif
 
   if show
+    # Eligible prints: tagged (default "sale eligible") and not framed. Spend at their line price,
+    # count by quantity.
     assign eligible = 0
+    assign eligible_count = 0
     for item in cart.items
       # Tags compared in lower case, with "-" and "_" read as spaces ("Sale Eligible", "sale-eligible")
       assign item_tags = item.product.tags | join: '|' | downcase | replace: '-', ' ' | replace: '_', ' ' | split: '|'
@@ -61,6 +92,7 @@
       endif
       if counts
         assign eligible = eligible | plus: item.final_line_price
+        assign eligible_count = eligible_count | plus: item.quantity
       endif
     endfor
   endif
@@ -70,27 +102,44 @@
   <div class="sgs-spendprog">
     {%- for phase in phases -%}
       {%- liquid
-        if phase == '2'
-          assign threshold = settings.sgs_spend_threshold_2 | default: 50 | plus: 0
-          assign discount_text = settings.sgs_spend_discount_2 | strip | default: '25% off'
+        assign ends_text = ''
+        if phase == '3'
+          if eligible_count == 0
+            continue
+          endif
+          if eligible_count == 1
+            assign message = settings.sgs_bundle_text_1 | default: 'Complete the garage: add 2 more prints and your 3rd is half price'
+          elsif eligible_count == 2
+            assign message = settings.sgs_bundle_text_2 | default: "Add 1 more print and it's half price"
+          else
+            assign message = settings.sgs_bundle_text_3 | default: 'Garage complete. Your cheapest print is half price, shown at checkout.'
+          endif
+          assign fill = eligible_count | at_most: 3 | times: 100.0 | divided_by: 3 | round: 1
         else
-          assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
-          assign discount_text = settings.sgs_spend_discount | strip | default: '20% off'
+          if phase == '2'
+            assign threshold = settings.sgs_spend_threshold_2 | default: 50 | plus: 0
+            assign discount_text = settings.sgs_spend_discount_2 | strip | default: '25% off'
+            assign ends_text = settings.sgs_spend_ends_2 | strip
+          else
+            assign threshold = settings.sgs_spend_threshold | default: 50 | plus: 0
+            assign discount_text = settings.sgs_spend_discount | strip | default: '20% off'
+            assign ends_text = settings.sgs_spend_ends_1 | strip
+          endif
+          assign threshold_pence = threshold | times: 100
+          if threshold_pence < 1
+            assign threshold_pence = 1
+          endif
+          if eligible >= threshold_pence
+            assign message = settings.sgs_spend_text_met | default: "You've unlocked [discount]. It's applied at checkout."
+            assign fill = 100
+          else
+            assign remaining = threshold_pence | minus: eligible | money_without_trailing_zeros
+            assign message = settings.sgs_spend_text_below | default: 'Add [amount] more of unframed prints to get [discount]'
+            assign message = message | replace: '[amount]', remaining
+            assign fill = eligible | times: 100.0 | divided_by: threshold_pence | round: 1
+          endif
+          assign message = message | replace: '[discount]', discount_text
         endif
-        assign threshold_pence = threshold | times: 100
-        if threshold_pence < 1
-          assign threshold_pence = 1
-        endif
-        if eligible >= threshold_pence
-          assign message = settings.sgs_spend_text_met | default: "You've unlocked [discount]. It's applied at checkout."
-          assign fill = 100
-        else
-          assign remaining = threshold_pence | minus: eligible | money_without_trailing_zeros
-          assign message = settings.sgs_spend_text_below | default: 'Add [amount] more of unframed prints to get [discount]'
-          assign message = message | replace: '[amount]', remaining
-          assign fill = eligible | times: 100.0 | divided_by: threshold_pence | round: 1
-        endif
-        assign message = message | replace: '[discount]', discount_text
       -%}
       <div class="sgs-spendprog__phase" data-phase="{{ phase }}"{% if phase == server_phase %} data-server-current{% endif %}>
         <p class="sgs-spendprog__message">{{ message | escape }}</p>
@@ -104,6 +153,9 @@
         >
           <span class="sgs-spendprog__fill" style="width: {{ fill }}%;"></span>
         </div>
+        {%- if ends_text != blank -%}
+          <p class="sgs-spendprog__ends">{{ ends_text | escape }}</p>
+        {%- endif -%}
       </div>
     {%- endfor -%}
   </div>
@@ -125,23 +177,34 @@
 
   :root:not([data-sgs-spend-phase]) .sgs-spendprog__phase[data-server-current],
   html[data-sgs-spend-phase='1'] .sgs-spendprog__phase[data-phase='1'],
-  html[data-sgs-spend-phase='2'] .sgs-spendprog__phase[data-phase='2'] {
+  html[data-sgs-spend-phase='2'] .sgs-spendprog__phase[data-phase='2'],
+  html[data-sgs-spend-phase='3'] .sgs-spendprog__phase[data-phase='3'] {
     display: block;
   }
 
-  html[data-sgs-spend-phase='off'] .sgs-spendprog {
+  /* Nothing at all (no rule, no gap) when the current phase has nothing to say */
+  html[data-sgs-spend-phase='off'] .sgs-spendprog,
+  :root:not([data-sgs-spend-phase]) .sgs-spendprog:not(:has([data-server-current])),
+  html[data-sgs-spend-phase='1'] .sgs-spendprog:not(:has([data-phase='1'])),
+  html[data-sgs-spend-phase='2'] .sgs-spendprog:not(:has([data-phase='2'])),
+  html[data-sgs-spend-phase='3'] .sgs-spendprog:not(:has([data-phase='3'])) {
     display: none;
   }
 
   .sgs-spendprog__message {
     margin: 0;
-    overflow: hidden;
     font-size: clamp(12px, 3.9cqi, 14px);
     font-weight: 500;
     line-height: 1.45;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    text-wrap: pretty;
     color: rgb(var(--color-foreground-rgb));
+  }
+
+  .sgs-spendprog__ends {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgb(var(--color-foreground-rgb) / 0.72);
   }
 
   .sgs-spendprog__bar {

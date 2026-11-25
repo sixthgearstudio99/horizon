@@ -1,6 +1,7 @@
 {%- doc -%}
   SixthGear Studios: a product's description HTML. On a framed print, a paragraph or list item
   saying the frame is only for styling, not included, or that the print comes unframed is left out.
+  "Bedroom" is taken out of the room lists.
 
   @param {product} product_resource - The product
 
@@ -65,6 +66,18 @@
       endfor
       assign description = kept
     endfor
+  endif
+
+  # Shown for garages, offices and man caves: "bedroom" is taken out of the room lists in the
+  # descriptions ("Made for a garage, office, bedroom or living room wall" → "…office or living room
+  # wall"). Nostalgic mentions ("the car every 80s bedroom wall wanted") stay. Display only; the
+  # product's own description is unchanged.
+  if description contains 'edroom'
+    assign description = description | replace: ', bedroom,', ',' | replace: ', bedroom or ', ' or '
+    assign description = description | replace: ', office or bedroom wall', ' or office wall' | replace: ', gaming setup or bedroom wall', ' or gaming setup wall'
+    assign description = description | replace: ', living room or bedroom wall', ' or living room wall' | replace: ', hallway, office or bedroom wall', ', hallway or office wall'
+    assign description = description | replace: ' or bedroom wall', ' wall' | replace: 'bedroom, ', '' | replace: 'Bedroom, ', ''
+    assign description = description | replace: ' setups and bedrooms', ' setups'
   endif
   echo description
 -%}

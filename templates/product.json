@@ -108,19 +108,6 @@
               },
               "blocks": {}
             },
-            "sgs_b2g1": {
-              "type": "sgs-b2g1",
-              "settings": {
-                "eyebrow": "Build your wall",
-                "heading": "Buy 2 Prints, Get 1 Free",
-                "text": "Mix any designs and sizes. The cheapest is free, taken off automatically at checkout.",
-                "note": "Framed prints aren't part of this offer.",
-                "link_label": "",
-                "link": "",
-                "excluded_line": ""
-              },
-              "blocks": {}
-            },
             "price_tVjtKg": {
               "type": "price",
               "settings": {
@@ -142,6 +129,30 @@
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "sgs_review_line": {
+              "type": "sgs-review-line",
+              "settings": {
+                "rating_text": "[rating] from our customers",
+                "item_2": "Free UK delivery",
+                "item_3": "Printed in the UK",
+                "anchor": "reviews"
+              },
+              "blocks": {}
+            },
+            "sgs_b2g1": {
+              "type": "sgs-b2g1",
+              "disabled": true,
+              "settings": {
+                "eyebrow": "Build your wall",
+                "heading": "Buy 2 Prints, Get 1 Free",
+                "text": "Mix any designs and sizes. The cheapest is free, taken off automatically at checkout.",
+                "note": "Framed prints aren't part of this offer.",
+                "link_label": "",
+                "link": "",
+                "excluded_line": ""
               },
               "blocks": {}
             },
@@ -214,6 +225,19 @@
               },
               "blocks": {}
             },
+            "sgs_framed_upgrade": {
+              "type": "sgs-framed-upgrade",
+              "settings": {
+                "price_line": "From [price], black frame, ready to hang",
+                "link_label": "View framed"
+              },
+              "blocks": {}
+            },
+            "sgs_gift_line": {
+              "type": "sgs-gift-line",
+              "settings": {},
+              "blocks": {}
+            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -275,29 +299,6 @@
                 }
               },
               "block_order": []
-            },
-            "sgs_framed_upgrade": {
-              "type": "sgs-framed-upgrade",
-              "settings": {
-                "price_line": "From [price], black frame, ready to hang",
-                "link_label": "View framed"
-              },
-              "blocks": {}
-            },
-            "sgs_gift_line": {
-              "type": "sgs-gift-line",
-              "settings": {},
-              "blocks": {}
-            },
-            "sgs_review_line": {
-              "type": "sgs-review-line",
-              "settings": {
-                "rating_text": "[rating] from our customers",
-                "item_2": "Free UK delivery",
-                "item_3": "Printed in the UK",
-                "anchor": "reviews"
-              },
-              "blocks": {}
             },
             "sgs_delivery_line": {
               "type": "sgs-delivery-estimate",
@@ -428,15 +429,15 @@
                 "guarantee_text": "<p>If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.</p><p><a href=\"/policies/refund-policy\">Read our returns policy</a></p>",
                 "framing_heading": "Framing options",
                 "framing_text": "<p>Supplied unframed, rolled in a protective tube.</p>",
-                "framing_link_text": "Want it framed? See the [framed version]",
                 "framing_text_framed": "<p>Supplied in a black frame, ready to hang.</p>",
+                "framing_link_text": "Want it framed? See the [framed version]",
                 "framing_text_custom": "<p>Your custom print is supplied unframed in a 2:1 panoramic size (20 × 10, 22 × 11 or 30 × 15 in). Standard 12 × 18 in style frames won't fit — choose a frame made for your print's exact size, or choose Framed above.</p>",
                 "framing_text_custom_framed": "<p>Your design is laid out to fit your chosen frame size (18 × 12, 24 × 16 or 36 × 24 in) and arrives in a black wooden frame with a Perspex front, ready to hang.</p>",
                 "delivery_text_custom_framed": "<p>Your framed print is made after you approve your proof, then usually delivered within 5–7 working days. Shipped in protective packaging, with free UK delivery.</p>",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
                 "list_sizes": false,
-                "questions_heading": "Questions",
-                "questions_text": "<p>Email <a href=\"mailto:hello@sixthgearstudios.co.uk\">hello@sixthgearstudios.co.uk</a> and we'll help with sizes, framing or your order.</p>",
+                "questions_heading": "",
+                "questions_text": "",
                 "question_1": "",
                 "answer_1": "",
                 "question_2": "",
@@ -458,8 +459,12 @@
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
                     "question": "What sizes can I choose?",
-                    "answer": "Every print comes in three sizes, shown above in inches and cm. The middle size is the most popular."
-                  }
+                    "answer": "Every print comes in three sizes, shown above in inches and cm. The middle size is the most popular.",
+                    "answer_framed": "",
+                    "answer_unframed": "",
+                    "answer_unframed_no_version": ""
+                  },
+                  "blocks": {}
                 },
                 "faq_frame": {
                   "type": "_sgs-pdp-faq-item",
@@ -469,28 +474,41 @@
                     "answer_framed": "Yes. This version arrives in a black frame, ready to hang.",
                     "answer_unframed": "No, this is the print only. A [framed version] is available.",
                     "answer_unframed_no_version": "No, this is the print only."
-                  }
+                  },
+                  "blocks": {}
                 },
                 "faq_paper": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
                     "question": "What paper do you use?",
-                    "answer": "Premium paper with fade-resistant inks, printed in the UK."
-                  }
+                    "answer": "Premium paper with fade-resistant inks, printed in the UK.",
+                    "answer_framed": "",
+                    "answer_unframed": "",
+                    "answer_unframed_no_version": ""
+                  },
+                  "blocks": {}
                 },
                 "faq_delivery": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
                     "question": "How long does delivery take?",
-                    "answer": "Each print is made to order in 2–5 working days, then delivered in 2–4 working days. UK delivery is free."
-                  }
+                    "answer": "Each print is made to order in 2–5 working days, then delivered in 2–4 working days. UK delivery is free.",
+                    "answer_framed": "",
+                    "answer_unframed": "",
+                    "answer_unframed_no_version": ""
+                  },
+                  "blocks": {}
                 },
                 "faq_returns": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
                     "question": "Can I return it?",
-                    "answer": "Standard prints can be returned within 14 days. If a print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Custom posters can't be returned unless faulty."
-                  }
+                    "answer": "Standard prints can be returned within 14 days. If a print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Custom posters can't be returned unless faulty.",
+                    "answer_framed": "",
+                    "answer_unframed": "",
+                    "answer_unframed_no_version": ""
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -543,6 +561,87 @@
         "enable_sticky_add_to_cart": true,
         "background_color": "",
         "padding-block-start": 32,
+        "padding-block-end": 48
+      }
+    },
+    "sgs_reviews_anchor": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "<div id=\"reviews\"></div>",
+        "background_color": "",
+        "section_width": "page-width",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "sgs_reviews_carousel": {
+      "type": "_blocks",
+      "blocks": {
+        "judge_me_reviews_cards_carousel_pdp": {
+          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "show_sample_reviews": true,
+            "reviews_selection": "all",
+            "products": [],
+            "filter_pinned": false,
+            "filter_featured": false,
+            "filter_custom_tags": "",
+            "star_rating": "all",
+            "show_review_media": true,
+            "display_order": "media_first",
+            "no_image_fallback": "review_text_only",
+            "max_reviews": 20,
+            "review_length": "medium",
+            "text_size": "medium",
+            "image_ratio": "1",
+            "reviews_shown": 4,
+            "show_reviewer_name": true,
+            "show_product_name": true,
+            "hide_arrows_mobile": false,
+            "arrows_position": "sides",
+            "max_width": 1100,
+            "corner_styling": "soft",
+            "header_text_color": "#000000",
+            "text_color": "#000000",
+            "card_color": "#f9f9f9",
+            "stars_color": "",
+            "arrows_color": "#000000",
+            "transition_speed": 5,
+            "header_text": "What our customers say",
+            "show_average_rating": true,
+            "rating_display": "default"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_cards_carousel_pdp"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "background_media": "none",
+        "background_color": "",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_color": "",
+        "border_radius": 0,
+        "padding-block-start": 48,
         "padding-block-end": 48
       }
     },
@@ -626,6 +725,7 @@
             "layout": "full",
             "details_line_1": "Complimentary UK delivery",
             "details_estimate_label": "Estimated delivery",
+            "details_estimate_text": "Order today, arrives between [start] and [end]",
             "details_line_3": "Free replacement if damaged in transit",
             "line_text": "Free UK delivery · Arrives by [date] · 14-day returns",
             "line_text_custom": "Free UK delivery · Arrives by [date]",
@@ -798,62 +898,6 @@
         "button_label": "Add the set to cart",
         "padding-block-start": 156,
         "padding-block-end": 156
-      }
-    },
-    "sgs_reviews_anchor": {
-      "type": "custom-liquid",
-      "settings": {
-        "custom_liquid": "<div id=\"reviews\"></div>",
-        "background_color": "",
-        "section_width": "page-width",
-        "padding-block-start": 0,
-        "padding-block-end": 0
-      }
-    },
-    "sgs_reviews_carousel": {
-      "type": "_blocks",
-      "blocks": {
-        "judge_me_reviews_cards_carousel_pdp": {
-          "type": "shopify://apps/judge-me-reviews/blocks/cards_carousel/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {
-            "header_text": "What our customers say",
-            "reviews_selection": "all",
-            "show_product_name": true,
-            "no_image_fallback": "review_text_only",
-            "hide_arrows_mobile": false
-          }
-        }
-      },
-      "block_order": [
-        "judge_me_reviews_cards_carousel_pdp"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "background_media": "none",
-        "background_color": "",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_color": "",
-        "border_radius": 0,
-        "padding-block-start": 48,
-        "padding-block-end": 48
       }
     },
     "sgs_recs": {

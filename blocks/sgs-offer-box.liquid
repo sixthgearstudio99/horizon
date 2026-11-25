@@ -205,9 +205,29 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
-    /* Soft fade at both ends, inside the rounded edge */
-    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0, #000 22px, #000 calc(100% - 22px), transparent 100%);
+  }
+
+  /* Soft fade at both ends, inside the border so the outline stays crisp */
+  .sgs-ticker::before,
+  .sgs-ticker::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    z-index: 1;
+    width: 28px;
+    pointer-events: none;
+  }
+
+  .sgs-ticker::before {
+    inset-inline-start: 0;
+    border-radius: 999px 0 0 999px;
+    background: linear-gradient(90deg, #1a1a1a 30%, rgb(26 26 26 / 0));
+  }
+
+  .sgs-ticker::after {
+    inset-inline-end: 0;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(270deg, #1a1a1a 30%, rgb(26 26 26 / 0));
   }
 
   .sgs-ticker:focus-visible {
@@ -284,8 +304,11 @@
       min-height: 40px;
       padding: 8px 18px;
       white-space: normal;
-      -webkit-mask-image: none;
-      mask-image: none;
+    }
+
+    .sgs-ticker::before,
+    .sgs-ticker::after {
+      content: none;
     }
 
     .sgs-ticker__track {

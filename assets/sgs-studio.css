@@ -575,6 +575,7 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   color: inherit !important;
   font: inherit !important;
   letter-spacing: 0 !important;
+  text-align: center !important;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

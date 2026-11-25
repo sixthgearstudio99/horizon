@@ -153,7 +153,7 @@
   {%- assign from_word = bs.from_label | default: 'from' -%}
   {%- capture unframed_price -%}
     {%- if bs.show_prices -%}
-      <span class="sgs-finish__price"> · {{ from_word | escape }} <span class="sgs-tile-price">
+      <span class="sgs-finish__price">&nbsp;· {{ from_word | escape }} <span class="sgs-tile-price">
         {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: unframed_product, window: sgs_sale_win, amount: unframed_product.price_min, part: 'now' %}{%- endif -%}
         <span class="sgs-tile-price__normal">{{ unframed_product.price_min | money_without_trailing_zeros }}</span>
       </span></span>
@@ -161,7 +161,7 @@
   {%- endcapture -%}
   {%- capture framed_price -%}
     {%- if bs.show_prices -%}
-      <span class="sgs-finish__price"> · {{ from_word | escape }} <span class="sgs-tile-price">
+      <span class="sgs-finish__price">&nbsp;· {{ from_word | escape }} <span class="sgs-tile-price">
         {%- if sgs_sale_win != blank -%}{% render 'sgs-sale-price', product_resource: framed_product, window: sgs_sale_win, amount: framed_product.price_min, part: 'now' %}{%- endif -%}
         <span class="sgs-tile-price__normal">{{ framed_product.price_min | money_without_trailing_zeros }}</span>
       </span></span>

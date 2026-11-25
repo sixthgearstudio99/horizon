@@ -2665,6 +2665,13 @@
         "label": "Review sections (section IDs)",
         "default": "sgs_reviews_carousel,17937299023bbff9d5",
         "info": "The template section IDs to hide until then, separated by commas."
+      },
+      {
+        "type": "text",
+        "id": "sgs_reviews_widget_section",
+        "label": "Product review widget section (section ID)",
+        "default": "17937299023bbff9d5",
+        "info": "Hidden on products that have no reviews of their own."
       }
     ]
   },

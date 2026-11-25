@@ -2,7 +2,9 @@
   SixthGear Studios: hides the review sections ("What our customers say" carousel and the product
   review widget) until the store has at least the number of real reviews set in Theme settings >
   SixthGear: reviews (default 5). The count is Judge.me's own store-wide total
-  (shop.metafields.judgeme.all_reviews_count). Rendered in the head, so they never flash on screen.
+  (shop.metafields.judgeme.all_reviews_count). On a product page, the product review widget's
+  section is also hidden while that product has no reviews of its own. Rendered in the head, so
+  nothing flashes on screen.
 
   @example
   {% render 'sgs-reviews-gate' %}
@@ -20,4 +22,21 @@
       display: none !important;
     }
   </style>
+{%- endif -%}
+
+{%- comment -%}
+  The product review widget on a product with no reviews of its own: Judge.me shows nothing there,
+  so its section is hidden too, leaving no empty band
+{%- endcomment -%}
+{%- assign widget_key = settings.sgs_reviews_widget_section | strip -%}
+{%- if template.name == 'product' and product != blank and widget_key != blank -%}
+  {%- capture product_count -%}{% render 'sgs-product-review-count', product_resource: product %}{%- endcapture -%}
+  {%- assign product_count = product_count | strip | plus: 0 -%}
+  {%- if product_count == 0 -%}
+    <style>
+      .shopify-section[id$='__{{ widget_key | escape }}'] {
+        display: none !important;
+      }
+    </style>
+  {%- endif -%}
 {%- endif -%}

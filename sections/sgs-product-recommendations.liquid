@@ -1,7 +1,7 @@
 {%- liquid
   assign s = section.settings
   assign limit = s.products_to_show
-  assign card_sizes = '(min-width: 990px) 23vw, (min-width: 750px) 46vw, 78vw'
+  assign card_sizes = '(min-width: 990px) 30vw, 46vw'
 
   # Products kept out of these suggestions (the Custom Car Poster), unless the print being
   # viewed belongs to one of their own collections
@@ -36,12 +36,12 @@
 {% render 'sgs-grid-styles' %}
 
 <section
-  class="sgs-grid sgs-grid--light sgs-grid--mobile-carousel sgs-recs"
+  class="sgs-grid sgs-grid--light sgs-grid--mobile-grid sgs-recs"
   style="
     --sgs-grid-bg: transparent;
-    --sgs-grid-columns: 4;
-    --sgs-grid-pad-top: {{ s['padding-block-start'] }}px;
-    --sgs-grid-pad-bottom: {{ s['padding-block-end'] }}px;
+    --sgs-grid-columns: {{ s.products_to_show | at_most: 3 }};
+    --sgs-grid-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1));
+    --sgs-grid-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));
   "
 >
   <div class="sgs-grid__inner">
@@ -58,7 +58,6 @@
               {% render 'sgs-product-card',
                 product: rec,
                 show_secondary: true,
-                show_options: true,
                 sizes: card_sizes
               %}
             </li>
@@ -157,7 +156,7 @@
               {%- assign shown = shown | plus: 1 -%}
               {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
               <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="collection">
-                {% render 'sgs-product-card', product: rec, show_secondary: true, show_options: true, sizes: card_sizes %}
+                {% render 'sgs-product-card', product: rec, show_secondary: true, sizes: card_sizes %}
               </li>
             {%- endfor -%}
           {%- endfor -%}
@@ -172,7 +171,7 @@
             {%- assign shown = shown | plus: 1 -%}
             {%- assign shown_handles = shown_handles | append: rec.handle | append: ',' -%}
             <li class="sgs-grid__item" data-sgs-reveal data-handle="{{ rec.handle }}" data-source="fill">
-              {% render 'sgs-product-card', product: rec, show_secondary: true, show_options: true, sizes: card_sizes %}
+              {% render 'sgs-product-card', product: rec, show_secondary: true, sizes: card_sizes %}
             </li>
           {%- endfor -%}
         </ul>

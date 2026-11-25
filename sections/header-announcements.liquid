@@ -10,19 +10,12 @@
     assign sgs_sale_message_key = 'sgs_sale' | append: sgs_sale_win | append: '_message'
     assign sgs_sale_message = settings[sgs_sale_message_key] | strip
   endif
-  assign slide_count = section.blocks.size
-  if sgs_sale_message != blank
-    assign slide_count = slide_count | plus: 1
-  endif
 -%}
 
-{% if slide_count > 1 %}
-  <script
-    src="{{ 'announcement-bar.js' | asset_url }}"
-    type="module"
-    fetchpriority="low"
-  ></script>
-{% endif %}
+{%- comment -%}
+  SixthGear: one message, no arrows or rotation. During an offer window its message shows
+  (in the accent colour); otherwise the first announcement block.
+{%- endcomment -%}
 
 {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
 
@@ -34,10 +27,6 @@
   {% liquid
     assign autoplay = false
     assign show_arrows = false
-    if slide_count > 1
-      assign autoplay = true
-      assign show_arrows = true
-    endif
   %}
 
   <announcement-bar-component
@@ -55,8 +44,8 @@
         <slideshow-slide
           ref="slides[]"
           id="SgsSaleSlide-{{ section.id }}"
-          class="announcement-bar__slide text-block text-block--align-center text-block--full-width"
-          style="--width: 100%; --text-align: center; --line-height: 1; --color: #f5f3ef; --color-rgb: 245 243 239;"
+          class="announcement-bar__slide announcement-bar__slide--sale text-block text-block--align-center text-block--full-width"
+          style="--width: 100%; --text-align: center; --line-height: 1; --color: #ec6238; --color-rgb: 236 98 56;"
           data-sgs-sale-slide="{{ sgs_sale_win }}"
           aria-hidden="false"
         >
@@ -86,8 +75,10 @@
           var p = slide.querySelector('.announcement-bar__text');
           if (p && p.innerHTML.trim() !== text.trim()) p.innerHTML = text;
         });
+        // One message only: the first that's left
         slides.querySelectorAll('.announcement-bar__slide').forEach(function (el, i) {
-          el.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
+          if (i === 0) el.setAttribute('aria-hidden', 'false');
+          else el.remove();
         });
       })();
     </script>
@@ -194,9 +185,9 @@
     {
       "type": "checkbox",
       "id": "sgs_bold",
-      "label": "Bold black bar",
+      "label": "Dark bar",
       "default": false,
-      "info": "SixthGear: near-black bar, capitals in a cream-to-red gradient and a cream-to-red edge, like the Buy 2, Get 1 Free panel on product pages. Overrides the colours below."
+      "info": "SixthGear: one line of small capitals on the page colour, with a hairline below; offer messages in the accent colour. Overrides the colours below."
     },
     {
       "type": "checkbox",

@@ -33,15 +33,15 @@ body {
 
 body {
   font-family: var(--sgs-font-body);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 strong,
 b {
-  font-weight: 400;
+  font-weight: 600;
 }
 
-/* ---------- Headings: Inter Tight, sentence case, three sizes ---------- */
+/* ---------- Headings: Inter Display, bold, uppercase; product names stay as written ---------- */
 :is(h1, h2, h3, h4, h5, h6),
 :is(
     .sgs-hero__heading,
@@ -59,13 +59,23 @@ b {
     .sgs-spec__heading,
     .sgs-reviews__heading,
     .sgs-faqs__heading,
+    .sgs-news__success-title,
+    .sgs-contact__success-title
+  ) {
+  font-family: var(--sgs-font-display) !important;
+  font-weight: 700 !important;
+  font-style: normal;
+  text-transform: uppercase !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Product and tile names: the display face, as written (short display names) */
+:is(
     .sgs-tile__title,
     .sgs-row__title,
     .sgs-card__title,
     .sgs-set__title,
     .sgs-wall__title,
-    .sgs-news__success-title,
-    .sgs-contact__success-title,
     .sgs-hero__tag-title,
     .product-card a.user-select-text .text-block,
     .cart-items__title
@@ -121,31 +131,16 @@ b {
   color: inherit;
 }
 
-/* ---------- Mono: labels, prices, sizes, breadcrumbs, buttons, spec tables ---------- */
-.sgs-label,
+/* ---------- Body face, medium: prices, sizes, links, menus ---------- */
 :is(
-    .sgs-hero__eyebrow,
-    .sgs-phero__eyebrow,
     .sgs-phero__crumbs,
     .sgs-phero__meta,
-    .sgs-grid__eyebrow,
-    .sgs-cols__eyebrow,
-    .sgs-cols__secondary-label,
-    .sgs-gallery__eyebrow,
-    .sgs-feature__eyebrow,
-    .sgs-statement__eyebrow,
-    .sgs-tl__eyebrow,
-    .sgs-set__eyebrow,
-    .sgs-news__eyebrow,
-    .sgs-pdp-header__eyebrow,
     .sgs-crumbs,
     .sgs-tile__number,
     .sgs-tile__cta,
     .sgs-card__price,
     .sgs-card__meta,
-    .sgs-card__options,
     .sgs-print-note,
-    .sgs-spec__label,
     .sgs-spec__value--mono,
     .sgs-tl__years,
     .sgs-set__plus,
@@ -163,19 +158,9 @@ b {
     product-price,
     .tax-note,
     .variant-option__button-label__text,
-    .variant-option legend,
-    [data-testid='variant-option-single'],
     .cart-items__price,
     .cart-items__variants,
-    .cart-totals__total,
-    .button,
-    .button-secondary,
-    button[ref='addToCartButton'],
-    .sgs-news__button,
-    .sgs-contact__submit,
-    .sgs-set__button,
-    .sgs-hero__button,
-    .sgs-hero__link
+    .cart-totals__total
   ) {
   font-family: var(--sgs-font-mono) !important;
   font-weight: 500 !important;
@@ -338,6 +323,7 @@ product-price s,
 .sgs-print-note::before {
   content: '';
   flex-shrink: 0;
+  display: none;
   width: 6px;
   height: 6px;
   background: var(--sgs-red);
@@ -359,7 +345,7 @@ product-price s,
 
 /* ---------- Footer: hairline columns ---------- */
 .sgs-footer {
-  --sgs-footer-bg: #111111;
+  --sgs-footer-bg: #1a1a1a;
 }
 
 @media screen and (min-width: 990px) {
@@ -540,7 +526,7 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
   min-width: 0;
   min-height: 76px;
   padding: 10px 6px;
-  border: 1px solid rgb(17 17 17 / 0.22);
+  border: 1px solid rgb(var(--sgs-text-rgb, 242 239 234) / 0.22);
   border-radius: var(--sgs-radius-btn, 4px) !important;
   background: var(--sgs-raised, #ffffff);
   box-shadow: none;
@@ -560,9 +546,9 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
 }
 
 .variant-option.sgs-size-pills .variant-option__button-label:has(:checked) {
-  border-color: #111111;
-  background: #111111;
-  color: #ffffff;
+  border-color: var(--sgs-text);
+  background: var(--sgs-text);
+  color: var(--sgs-bg);
 }
 
 .variant-option.sgs-size-pills .variant-option__button-label:has(:focus-visible) {
@@ -719,9 +705,9 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgb(255 255 255 / 0.9);
+    background: rgb(14 14 14 / 0.8);
     color: var(--sgs-text, #111111);
-    box-shadow: 0 1px 4px rgb(0 0 0 / 0.16);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.4);
     pointer-events: none;
   }
 
@@ -732,7 +718,7 @@ html[data-sgs-sale-hide-wall] .sgs-wallprog {
     min-height: 0;
     padding-block: 10px 2px;
     --color-foreground: var(--sgs-text, #111111);
-    --color-foreground-rgb: 17 17 17;
+    --color-foreground-rgb: var(--sgs-text-rgb);
   }
 
   media-gallery .slideshow-controls__counter {
@@ -1041,13 +1027,22 @@ html.sgs-lb-open {
 
 /* =====================================================================================
    GALLERY LOOK
-   Light paper background, white surfaces, near-black type, 12px rounded media, pill buttons.
-   Red (--sgs-red) is kept for sale badges, savings and errors.
+   Dark look: near-black page, charcoal sections and cards, off-white type, 4px corners.
+   The accent (--sgs-accent, also --sgs-red) is kept for sale messages and the cart progress line.
    ===================================================================================== */
 
-/* ---------- Type: sentence case, normal spacing ---------- */
+/* ---------- Type: headings in Inter Display, bold, uppercase ---------- */
 :is(h1, h2, h3, h4, h5, h6) {
-  letter-spacing: -0.01em !important;
+  font-family: var(--sgs-font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em !important;
+}
+
+body {
+  font-family: var(--sgs-font-body);
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 /* Section headings: simple and bold */
@@ -1065,18 +1060,32 @@ html.sgs-lb-open {
     .sgs-proof__heading,
     .sgs-cscroll__heading,
     .sgs-story__heading,
-    .sgs-arrive__heading
+    .sgs-arrive__heading,
+    .sgs-garages__heading,
+    .sgs-band__heading,
+    .sgs-hero__heading,
+    .sgs-trust__heading
   ) {
+  font-family: var(--sgs-font-display) !important;
   font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.01em !important;
 }
 
-/* Small labels: quiet, never shouty */
+/* Small labels (section kickers, car make, sizes): a spec sheet's small grey capitals */
 .sgs-label,
 :is(.sgs-hero__eyebrow, .sgs-grid__eyebrow, .sgs-cols__eyebrow, .sgs-gallery__eyebrow, .sgs-feature__eyebrow,
   .sgs-statement__eyebrow, .sgs-tl__eyebrow, .sgs-set__eyebrow, .sgs-news__eyebrow, .sgs-proof__label,
-  .sgs-cscroll__label, .sgs-story__label, .sgs-arrive__label) {
+  .sgs-cscroll__label, .sgs-story__label, .sgs-arrive__label, .sgs-garages__eyebrow, .sgs-band__eyebrow,
+  .sgs-garage__make, .sgs-card__make, .sgs-pdp-make, .sgs-garage__title, .sgs-finish__label, .sgs-dinfo__heading,
+  .sgs-pdp-faq__heading, .sgs-desc__heading) {
+  font-family: var(--sgs-font-body) !important;
+  font-size: 12px !important;
   font-weight: 500 !important;
-  letter-spacing: 0.02em !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--sgs-text-2) !important;
 }
 
 /* ---------- Product cards ---------- */
@@ -1174,38 +1183,38 @@ media-gallery,
   .sgs-set__button, .sgs-hero__button, .sgs-band__button, .sgs-sg__wall-btn, .sgs-phero__button,
   .shopify-payment-button__button, .sgs-wall__size) {
   border-radius: var(--sgs-radius-btn, 4px) !important;
-  text-transform: none !important;
-  letter-spacing: 0 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
 }
 
 :is(.sgs-sg__wall-btn, .button-secondary) {
-  background: #ffffff;
+  background: transparent;
   border-color: var(--sgs-text);
   color: var(--sgs-text);
 }
 
 :is(.sgs-sg__wall-btn, .button-secondary):hover {
   background: var(--sgs-text);
-  color: #ffffff;
+  color: var(--sgs-bg);
 }
 
 /* ---------- Size and option tiles: white, 10px corners, black outline when chosen ---------- */
 .variant-picker,
 .variant-option {
-  --color-variant-background: #ffffff;
+  --color-variant-background: var(--sgs-raised);
   --color-variant-border: var(--sgs-line);
   --color-variant-text: var(--sgs-text);
-  --color-variant-text-rgb: 17 17 17;
-  --color-variant-hover-background: #ffffff;
+  --color-variant-text-rgb: 242 239 234;
+  --color-variant-hover-background: var(--sgs-raised);
   --color-variant-hover-border: var(--sgs-text);
   --color-variant-hover-text: var(--sgs-text);
-  --color-selected-variant-background: #ffffff;
+  --color-selected-variant-background: var(--sgs-text);
   --color-selected-variant-border: var(--sgs-text);
-  --color-selected-variant-text: var(--sgs-text);
-  --color-selected-variant-text-rgb: 17 17 17;
-  --color-selected-variant-hover-background: #ffffff;
+  --color-selected-variant-text: var(--sgs-bg);
+  --color-selected-variant-text-rgb: 14 14 14;
+  --color-selected-variant-hover-background: var(--sgs-text);
   --color-selected-variant-hover-border: var(--sgs-text);
-  --color-selected-variant-hover-text: var(--sgs-text);
+  --color-selected-variant-hover-text: var(--sgs-bg);
   --options-border-radius: var(--sgs-radius-tile);
 }
 
@@ -1236,9 +1245,9 @@ media-gallery,
 
 .sgs-band-section .sgs-band .sgs-band__button,
 .sgs-band-section .sgs-band .sgs-band__button:hover {
-  --button-color: #111111;
-  --button-background-color: #ffffff;
-  --button-border-color: #ffffff;
+  --button-color: #0e0e0e;
+  --button-background-color: #f2efea;
+  --button-border-color: #f2efea;
 }
 
 .sgs-band-section .sgs-band .sgs-band__button:is(:hover, :focus-visible) {
@@ -1248,19 +1257,19 @@ media-gallery,
 
 /* Page header without a photo: dark text on the light page */
 .sgs-phero--text {
-  --sgs-phero-fg: 17 17 17;
+  --sgs-phero-fg: 242 239 234;
 }
 
-/* ---------- Footer: #111111 with white text ---------- */
+/* ---------- Footer: charcoal with off-white text ---------- */
 .sgs-footer {
-  --sgs-bg: #111111;
-  --sgs-raised: #1c1c1c;
-  --sgs-text: #ffffff;
-  --sgs-text-2: rgb(255 255 255 / 0.72);
-  --sgs-line: rgb(255 255 255 / 0.16);
-  --sgs-footer-fg: 255 255 255;
-  --color-foreground: rgb(255 255 255);
-  --color-foreground-rgb: 255 255 255;
+  --sgs-bg: #1a1a1a;
+  --sgs-raised: #222222;
+  --sgs-text: #f2efea;
+  --sgs-text-2: #9a9a9a;
+  --sgs-line: #2a2a2a;
+  --sgs-footer-fg: 242 239 234;
+  --color-foreground: rgb(242 239 234);
+  --color-foreground-rgb: 242 239 234;
 }
 
 /* ---------- Cards and surfaces ---------- */
@@ -1271,7 +1280,7 @@ media-gallery,
 .sgs-offer {
   border-radius: var(--sgs-radius);
   border-color: var(--sgs-line);
-  background: #ffffff;
+  background: var(--sgs-raised);
 }
 
 :is(.sgs-sg__dialog, .sgs-wall__dialog) {
@@ -1280,23 +1289,23 @@ media-gallery,
 
 .sgs-sg__wall,
 .sgs-sg__floor {
-  fill: #ece9e3;
+  fill: #1f1f1f;
 }
 
 .sgs-sg__floor {
-  fill: #ddd8cf;
+  fill: #2a2a2a;
 }
 
 .sgs-sg__furniture {
-  fill: #b9b2a6;
+  fill: #3a3a3a;
 }
 
 .sgs-sg__furniture .sgs-sg__light {
-  fill: #cdc6ba;
+  fill: #4a4a4a;
 }
 
 .sgs-sg__print {
-  fill: rgb(255 255 255 / 0.55);
+  fill: rgb(242 239 234 / 0.1);
   stroke: var(--sgs-text);
 }
 
@@ -1333,47 +1342,43 @@ media-gallery :is(slideshow-slide, .product-media-container) {
   color: var(--sgs-text-2) !important;
 }
 
-/* The newsletter sits on a beige band: one step darker for its small text */
-.sgs-news {
-  --sgs-text-2: #575757;
-}
-
 .sgs-news :is(.sgs-news__fine, .sgs-news__text) {
   color: var(--sgs-text-2) !important;
 }
 
-/* ---------- Add to cart: black, white type, quiet hover and press ---------- */
+/* ---------- Add to cart: the primary button, off-white with near-black type ---------- */
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button) {
-  --button-background-color: #111111;
-  --button-border-color: #111111;
-  --button-color: #ffffff;
-  background-color: #111111 !important;
-  border-color: #111111 !important;
-  color: #ffffff !important;
-  font-weight: 500;
-  letter-spacing: 0.01em !important;
+  --button-background-color: #f2efea;
+  --button-border-color: #f2efea;
+  --button-color: #0e0e0e;
+  background-color: #f2efea !important;
+  border-color: #f2efea !important;
+  color: #0e0e0e !important;
+  font-weight: 600;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
   transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):not(:disabled):is(:hover, :focus-visible) {
-  --button-background-color: #2b2b2b;
-  --button-border-color: #2b2b2b;
-  background-color: #2b2b2b !important;
-  border-color: #2b2b2b !important;
+  --button-background-color: #ffffff;
+  --button-border-color: #ffffff;
+  background-color: #ffffff !important;
+  border-color: #ffffff !important;
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):not(:disabled):active {
-  background-color: #000000 !important;
+  background-color: #dcd8d1 !important;
   transform: translateY(1px);
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button, .sticky-add-to-cart__button):focus-visible {
-  outline: 2px solid #111111;
+  outline: 2px solid #f2efea;
   outline-offset: 3px;
 }
 
 :is(button[ref='addToCartButton'], .add-to-cart-button) .add-to-cart-icon {
-  color: #ffffff;
+  color: #0e0e0e;
 }
 
 /* Text-only label on the main button: the bag icon is left out. The sticky bar keeps it,
@@ -1419,7 +1424,7 @@ media-gallery :is(slideshow-slide, .product-media-container) {
   min-height: 52px;
   border: 1.5px solid var(--sgs-text);
   border-radius: var(--sgs-radius-tile);
-  background: #ffffff;
+  background: var(--sgs-raised);
   color: var(--sgs-text);
 }
 
@@ -1447,4 +1452,31 @@ media-gallery :is(slideshow-slide, .product-media-container) {
   right: 18px;
   width: 11px;
   color: var(--sgs-text);
+}
+
+/* =====================================================================================
+   DARK LOOK: lists without decorative icons, sizes as spec labels
+   ===================================================================================== */
+:is(.sgs-dinfo__icon, .sgs-delivery__icon, .sgs-hl__icon, .sgs-ptrust__icon, .sgs-trust__icon,
+  .sgs-trustline__icon, .sgs-arrive__tick, .sgs-cd__icon) {
+  display: none !important;
+}
+
+.sgs-band__point::before {
+  content: none !important;
+}
+
+/* Size buttons: the size in small capitals, like a spec sheet */
+.variant-option.sgs-size-pills legend,
+.variant-option--dropdowns > label {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--sgs-text-2) !important;
+}
+
+/* The cart progress line: the accent */
+.sgs-spendprog__fill {
+  background: var(--sgs-accent) !important;
 }

@@ -15,7 +15,9 @@
   assign rating = rating_whole | append: '.' | append: rating_tenth
 
   assign rating_text = ''
-  if count > 0 and bs.rating_text != blank
+  # Only once the store has enough real reviews (Theme settings > SixthGear: reviews)
+  assign min_reviews = settings.sgs_reviews_min | default: 5 | plus: 0
+  if count > 0 and count >= min_reviews and bs.rating_text != blank
     assign rating_text = bs.rating_text | replace: '[rating]', rating | replace: '[count]', count
   endif
   assign item_2 = bs.item_2 | strip
@@ -107,7 +109,7 @@
 
   .sgs-revline__link {
     text-decoration: underline;
-    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.3);
     text-underline-offset: 3px;
     transition: text-decoration-color 0.3s ease;
   }

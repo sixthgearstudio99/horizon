@@ -155,6 +155,11 @@
           <bdi>{{ price | default: '&nbsp;' }}</bdi>
         </span>
       {% endif %}
+    {% elsif is_product_card and product_resource.price_varies %}
+      {%- comment -%} SixthGear: product cards show the starting price, e.g. "From £25" {%- endcomment -%}
+      <span class="price"
+        ><bdi>{{ 'content.price_from' | t: price: price_min }}</bdi></span
+      >
     {% else %}
       <span class="price"
         ><bdi>{{ price | default: '&nbsp;' }}</bdi></span

@@ -1,0 +1,58 @@
+{%- doc -%}
+  SixthGear Studios: a product's car make, e.g. "Porsche", or nothing: its custom.make metafield,
+  else the first make in Theme settings > SixthGear: product cards > Car makes found in its title,
+  else in its tags (a tag such as "porsche 911" counts as Porsche), else a model in its title from
+  Theme settings > SixthGear: product cards > Models ("Chiron=Bugatti").
+
+  @param {product} product_resource - The product
+  @param {string} [makes] - Comma-separated makes to look for instead of the theme setting
+
+  @example
+  {%- capture make -%}{% render 'sgs-product-make', product_resource: product %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign make = product_resource.metafields.custom.make.value | default: product_resource.metafields.custom.make | strip
+  if make == blank
+    assign make_list = makes | default: settings.sgs_makes | split: ','
+    # Words of the title, and of the tags, as " word word " (so "porsche 911" holds " porsche ")
+    assign title_key = product_resource.title | downcase | replace: ',', ' ' | prepend: ' ' | append: ' '
+    assign tags_key = product_resource.tags | join: ' , ' | downcase | replace: ',', ' ' | prepend: ' ' | append: ' '
+    # 1) the title names the make; 2) otherwise a tag does
+    for pass in (1..2)
+      for raw_make in make_list
+        assign m = raw_make | strip
+        if m == blank
+          continue
+        endif
+        assign needle = m | downcase | prepend: ' ' | append: ' '
+        if pass == 1 and title_key contains needle
+          assign make = m
+          break
+        elsif pass == 2 and tags_key contains needle
+          assign make = m
+          break
+        endif
+      endfor
+      if make != blank
+        break
+      endif
+    endfor
+    # 3) a model in the title, from the list "Model=Make, …" (e.g. "Chiron=Bugatti")
+    if make == blank
+      assign model_list = settings.sgs_make_models | newline_to_br | replace: '<br />', ',' | split: ','
+      for pair in model_list
+        assign pair_parts = pair | split: '='
+        if pair_parts.size != 2
+          continue
+        endif
+        assign model_needle = pair_parts[0] | strip | downcase | prepend: ' ' | append: ' '
+        if model_needle != '  ' and title_key contains model_needle
+          assign make = pair_parts[1] | strip
+          break
+        endif
+      endfor
+    endif
+  endif
+  echo make
+-%}

@@ -125,7 +125,9 @@
                 "padding-block-start": 4,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "sgs_show_make": true,
+                "sgs_short_title": true
               },
               "blocks": {}
             },

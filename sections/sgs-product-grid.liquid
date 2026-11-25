@@ -48,8 +48,8 @@
   style="
     --sgs-grid-bg: {{ bg }};
     --sgs-grid-columns: {{ s.columns }};
-    --sgs-grid-pad-top: {{ s['padding-block-start'] }}px;
-    --sgs-grid-pad-bottom: {{ s['padding-block-end'] }}px;
+    --sgs-grid-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1));
+    --sgs-grid-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));
   "
   {% if s.heading != blank %}
     aria-labelledby="SgsGridHeading-{{ section.id }}"
@@ -90,7 +90,6 @@
             {% render 'sgs-product-card',
               product: product,
               show_secondary: s.show_secondary_image,
-              show_options: s.show_option_count,
               sizes: card_sizes
             %}
           </li>

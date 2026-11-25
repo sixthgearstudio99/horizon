@@ -76,7 +76,7 @@
 {%- if show -%}
   <section
     class="sgs-tl"
-    style="--sgs-tl-pad-top: {{ s['padding-block-start'] }}px; --sgs-tl-pad-bottom: {{ s['padding-block-end'] }}px;"
+    style="--sgs-tl-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1)); --sgs-tl-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));"
     aria-labelledby="SgsTl-{{ section.id }}"
   >
     <div class="sgs-tl__inner">
@@ -212,7 +212,7 @@
 
   .sgs-tl__eyebrow {
     margin: 0 0 16px;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-tl__heading {
@@ -334,7 +334,7 @@
     right: calc(-1 * clamp(24px, 3vw, 48px));
     top: calc(var(--sgs-tl-step) * 0.75 + 28px + 5px);
     height: 1px;
-    background: rgb(17 17 17 / 0.08);
+    background: rgb(var(--sgs-text-rgb, 242 239 234) / 0.08);
     transform-origin: left;
   }
 
@@ -371,7 +371,7 @@
     max-width: 32ch;
     font-size: 14px;
     line-height: 1.6;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   @media (prefers-reduced-motion: no-preference) {

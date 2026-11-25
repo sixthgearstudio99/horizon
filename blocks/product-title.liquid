@@ -3,7 +3,28 @@
   {% assign product_title = '<p role="heading" aria-level="3">' | append: text | append: '</p>' %}
   {% render 'text', fallback_text: product_title, block: block %}
 {% else %}
-  {% assign product_title = '<p role="heading" aria-level="3">' | append: closest.product.title | append: '</p>' %}
+  {%- liquid
+    # SixthGear: optionally the car make above, and the short display name (the full title stays
+    # the product's title)
+    assign sgs_title = closest.product.title
+    if block.settings.sgs_short_title
+      capture sgs_title
+        render 'sgs-short-title', product_resource: closest.product
+      endcapture
+      assign sgs_title = sgs_title | strip | escape
+    endif
+    assign sgs_make = ''
+    if block.settings.sgs_show_make
+      capture sgs_make
+        render 'sgs-product-make', product_resource: closest.product
+      endcapture
+      assign sgs_make = sgs_make | strip
+    endif
+  -%}
+  {%- if sgs_make != blank -%}
+    <p class="sgs-card__make">{{ sgs_make | escape }}</p>
+  {%- endif -%}
+  {% assign product_title = '<p role="heading" aria-level="3">' | append: sgs_title | append: '</p>' %}
   <a
     class="contents user-select-text"
     ref="productTitleLink"
@@ -21,6 +42,20 @@
     {
       "type": "paragraph",
       "content": "t:content.resource_reference_product_title"
+    },
+    {
+      "type": "checkbox",
+      "id": "sgs_show_make",
+      "label": "Show the car make above",
+      "default": false,
+      "info": "SixthGear: from custom.make, or the first make in Theme settings > SixthGear: product cards found in the tags or title."
+    },
+    {
+      "type": "checkbox",
+      "id": "sgs_short_title",
+      "label": "Short display name",
+      "default": false,
+      "info": "SixthGear: the title up to the first comma, without \"Framed Poster\" or \"Poster\"."
     },
     {
       "type": "header",

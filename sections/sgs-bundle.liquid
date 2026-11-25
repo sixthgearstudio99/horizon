@@ -36,7 +36,7 @@
 {%- if show and s.products.size > 1 -%}
   <section
     class="sgs-set"
-    style="--sgs-set-pad-top: {{ s['padding-block-start'] }}px; --sgs-set-pad-bottom: {{ s['padding-block-end'] }}px; --sgs-set-count: {{ s.products.size }};"
+    style="--sgs-set-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1)); --sgs-set-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1)); --sgs-set-count: {{ s.products.size }};"
     aria-labelledby="SgsSet-{{ section.id }}"
   >
     <sgs-bundle class="sgs-set__inner" data-currency="{{ cart.currency.iso_code }}" data-money-format="{{ shop.money_format | strip_html | escape }}">
@@ -150,7 +150,7 @@
 
   .sgs-set__eyebrow {
     margin: 0 0 16px;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-set__heading {
@@ -169,7 +169,7 @@
     margin: 0 0 4px;
     font-size: 15px;
     line-height: 1.6;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-set__items {
@@ -270,7 +270,7 @@
   }
 
   .sgs-set__total .sgs-label {
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-set__total strong {

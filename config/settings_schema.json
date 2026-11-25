@@ -2643,6 +2643,32 @@
     ]
   },
   {
+    "name": "SixthGear: reviews",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Review sections and the store rating line stay hidden until the store has this many real reviews in Judge.me. Nothing is ever made up: the numbers come from Judge.me."
+      },
+      {
+        "type": "range",
+        "id": "sgs_reviews_min",
+        "label": "Show reviews from",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "unit": "rev",
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "sgs_reviews_sections",
+        "label": "Review sections (section IDs)",
+        "default": "sgs_reviews_carousel,17937299023bbff9d5",
+        "info": "The template section IDs to hide until then, separated by commas."
+      }
+    ]
+  },
+  {
     "name": "SixthGear: Christmas",
     "settings": [
       {
@@ -2691,7 +2717,14 @@
         "id": "sgs_makes",
         "label": "Car makes",
         "default": "Porsche, Ferrari, Lamborghini, McLaren, BMW, Mercedes-AMG, Mercedes-Benz, Mercedes, Audi, Volkswagen, Nissan, Honda, Toyota, Mazda, Subaru, Mitsubishi, Ford, Aston Martin, Jaguar, Lotus, Bugatti, Pagani, Koenigsegg, Alfa Romeo, Lancia, Chevrolet, Dodge, Renault, Peugeot",
-        "info": "Separated by commas, most specific first. Used for the small make above each print in Pick your garage: the first of these found in a print's tags or title."
+        "info": "Separated by commas, most specific first. The small make label on product cards, product pages and Pick your garage: the first of these found in a print's title, then its tags (a product's custom.make metafield wins)."
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_make_models",
+        "label": "Models and their makes",
+        "default": "Carrera GT=Porsche, 911=Porsche, 959=Porsche, 930=Porsche, 964=Porsche, 918=Porsche, GT3=Porsche, Chiron=Bugatti, EB110=Bugatti, GT-R=Nissan, R34=Nissan, Supra=Toyota, Civic=Honda, Golf=Volkswagen, MX-5=Mazda, Impreza=Subaru, Countach=Lamborghini, Murcielago=Lamborghini, Revuelto=Lamborghini, F40=Ferrari, LaFerrari=Ferrari, 812=Ferrari, M2=BMW, M3=BMW, M4=BMW, M140i=BMW, RS6=Audi, 720S=McLaren, P1=McLaren",
+        "info": "For prints whose title names only the model: Model=Make, separated by commas. Checked after the makes above. Prints that match nothing (e.g. circuits) show no make."
       },
       {
         "type": "text",
@@ -2713,14 +2746,14 @@
         "type": "checkbox",
         "id": "sgs_popular_middle",
         "label": "Tag the middle size",
-        "default": true,
-        "info": "On products with 3 or more sizes, the middle one (e.g. 24 × 16 of 18 × 12, 24 × 16, 36 × 24)."
+        "default": false,
+        "info": "Off by default: only tag a size as most popular if your order data shows it. On products with 3 or more sizes, the middle one."
       },
       {
         "type": "text",
         "id": "sgs_popular_value",
         "label": "Tag this option value instead",
-        "info": "Exact value name as in Shopify, e.g. 16x24 (Vertical). Takes the place of the middle size. Leave empty to use the middle size."
+        "info": "Exact value name as in Shopify, e.g. 16x24 (Vertical). Only use this if your order data shows it's the best seller. Leave empty for no tag."
       },
       {
         "type": "text",

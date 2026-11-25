@@ -4,8 +4,8 @@
   class="sgs-trust"
   style="
     --sgs-trust-count: {{ section.blocks.size | at_least: 1 }};
-    --sgs-trust-pad-top: {{ s['padding-block-start'] }}px;
-    --sgs-trust-pad-bottom: {{ s['padding-block-end'] }}px;
+    --sgs-trust-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1));
+    --sgs-trust-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));
   "
 >
   <div class="sgs-trust__inner">
@@ -80,18 +80,19 @@
     color: var(--sgs-text);
   }
 
+  /* Spec-sheet label: small capitals */
   .sgs-trust__title {
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    text-transform: none;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
   }
 
   .sgs-trust__text {
     max-width: 30ch;
     font-size: 14px;
     line-height: 1.55;
-    color: rgb(17 17 17 / 0.62);
+    color: var(--sgs-text-2, #9a9a9a);
     text-wrap: pretty;
   }
 
@@ -106,9 +107,9 @@
 
     .sgs-trust__item {
       display: grid;
-      grid-template-columns: 28px minmax(0, 1fr);
-      align-items: center;
-      gap: 4px 20px;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+      gap: 4px;
       padding: 24px 0;
       text-align: start;
     }
@@ -124,7 +125,6 @@
     }
 
     .sgs-trust__text {
-      grid-column: 2;
       max-width: none;
     }
   }

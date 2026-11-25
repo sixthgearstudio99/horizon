@@ -90,11 +90,12 @@
             "sgs_header": {
               "type": "sgs-product-header",
               "settings": {
-                "show_breadcrumb": true,
-                "eyebrow_source": "collection",
+                "show_breadcrumb": false,
+                "eyebrow_source": "make",
                 "preferred_collections": "porsche-posters-wall-art,80s-90s-classics,garage-man-cave-wall-art,office-wall-art",
                 "subtitle": "",
-                "eyebrow_text": "Automotive art print"
+                "eyebrow_text": "Automotive art print",
+                "short_title": true
               },
               "blocks": {}
             },
@@ -106,7 +107,8 @@
                 "show_stars_always": false,
                 "star_color": "#b7821a"
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "price_tVjtKg": {
               "type": "price",
@@ -140,7 +142,8 @@
                 "item_3": "Printed in the UK",
                 "anchor": "reviews"
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "sgs_b2g1": {
               "type": "sgs-b2g1",
@@ -185,7 +188,7 @@
                 "unframed_label": "Unframed",
                 "unframed_note": "Print only",
                 "framed_label": "Framed",
-                "framed_note": "Black frame, ready to hang",
+                "framed_note": "Ready to hang",
                 "show_prices": true,
                 "from_label": "From"
               },
@@ -202,7 +205,7 @@
                 "size_step_label": "Choose your size",
                 "finish_step_label": "Choose your finish",
                 "size_guide_label": "Which size?",
-                "paper_explainer": "Semi-gloss: rich colour · Fine art: matte, gallery finish",
+                "paper_explainer": "",
                 "paper_note_custom": "20 × 10 in is printed on fine art paper; 22 × 11 and 30 × 15 in on semi-gloss.",
                 "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
                 "hide_single_choice": true,
@@ -228,15 +231,15 @@
             "sgs_framed_upgrade": {
               "type": "sgs-framed-upgrade",
               "settings": {
-                "price_line": "From [price], black frame, ready to hang",
-                "link_label": "View framed"
+                "price_line": "Want it ready to hang? Framed from [price]"
               },
               "blocks": {}
             },
             "sgs_gift_line": {
               "type": "sgs-gift-line",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -304,10 +307,10 @@
               "type": "sgs-delivery-estimate",
               "settings": {
                 "layout": "details",
-                "details_line_1": "Complimentary UK delivery",
+                "details_line_1": "Free UK delivery, and a free replacement if it arrives damaged",
                 "details_estimate_label": "Estimated delivery",
                 "details_estimate_text": "Order today, arrives between [start] and [end]",
-                "details_line_3": "Free replacement if damaged in transit",
+                "details_line_3": "",
                 "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
                 "line_text_custom": "Free UK delivery · Arrives by [date]",
                 "text_before": "Order today · arrives",
@@ -330,11 +333,11 @@
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
                 "gift_card_handle": "gift-card",
                 "wyg_heading": "What you get",
-                "wyg_paper": "Semi-gloss paper with fade-resistant inks",
-                "wyg_paper_fine": "Printed on fine art paper",
-                "wyg_sizes_label": "Sizes:",
-                "wyg_framed": "Black wooden frame, clear Perspex front, ready to hang",
-                "wyg_unframed": "Unframed print, rolled and sent in a protective tube"
+                "wyg_paper": "Semi-gloss paper with fade-resistant inks, printed in the UK",
+                "wyg_paper_fine": "Fine art paper, printed in the UK",
+                "wyg_sizes_label": "",
+                "wyg_framed": "Black wooden frame with a clear Perspex front, ready to hang",
+                "wyg_unframed": "Unframed, rolled and sent in a protective tube"
               },
               "blocks": {}
             },
@@ -358,7 +361,8 @@
                 "framed_cta": "Want it framed? See the [framed version]",
                 "framed_note": "Supplied in a black frame, ready to hang."
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "sgs_size_guide": {
               "type": "sgs-size-guide",
@@ -454,78 +458,94 @@
                 "question_4": "",
                 "answer_4": ""
               },
-              "blocks": {}
+              "blocks": {},
+              "disabled": true
             },
             "sgs_pdp_faq": {
               "type": "sgs-pdp-faq",
               "settings": {
-                "heading": "Questions & answers",
-                "contact_text": "Questions? Email us at",
-                "contact_email": "hello@sixthgearstudios.co.uk"
+                "heading": "Details",
+                "contact_text": "",
+                "contact_email": ""
               },
               "blocks": {
                 "faq_sizes": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
-                    "question": "What sizes can I choose?",
-                    "answer": "Every print comes in three sizes, shown above in inches and cm. The middle size is the most popular.",
-                    "answer_framed": "",
-                    "answer_unframed": "",
-                    "answer_unframed_no_version": ""
-                  },
-                  "blocks": {}
-                },
-                "faq_frame": {
-                  "type": "_sgs-pdp-faq-item",
-                  "settings": {
-                    "question": "Is the frame included?",
-                    "answer": "No, this is the print only.",
-                    "answer_framed": "Yes. This version arrives in a black frame, ready to hang.",
-                    "answer_unframed": "No, this is the print only. A [framed version] is available.",
-                    "answer_unframed_no_version": "No, this is the print only."
+                    "question": "Sizes & framing",
+                    "answer": "Choose from the sizes above, shown in inches and cm. Supplied unframed, rolled in a protective tube, and fits a standard frame of the same size.",
+                    "answer_framed": "Choose from the sizes above, shown in inches and cm. It arrives in a black wooden frame with a clear Perspex front, ready to hang.",
+                    "answer_unframed": "Choose from the sizes above, shown in inches and cm. Supplied unframed, rolled in a protective tube, and fits a standard frame of the same size. The [framed version] arrives in a black wooden frame with a clear Perspex front, ready to hang.",
+                    "answer_unframed_no_version": "Choose from the sizes above, shown in inches and cm. Supplied unframed, rolled in a protective tube, and fits a standard frame of the same size.",
+                    "answer_custom": "Your custom print is supplied unframed in a 2:1 panoramic size (20 × 10, 22 × 11 or 30 × 15 in). Standard 12 × 18 in style frames won't fit: choose a frame made for your print's exact size, or choose Framed above.",
+                    "answer_custom_framed": "Your design is laid out to fit your chosen frame size (18 × 12, 24 × 16 or 36 × 24 in) and arrives in a black wooden frame with a Perspex front, ready to hang.",
+                    "email": ""
                   },
                   "blocks": {}
                 },
                 "faq_paper": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
-                    "question": "What paper do you use?",
-                    "answer": "Premium paper with fade-resistant inks, printed in the UK.",
+                    "question": "Print quality",
+                    "answer": "Printed to order in the UK on semi-gloss paper with fade-resistant inks. Some sizes are printed on fine art paper: the paper for the size you choose is shown under What you get.",
                     "answer_framed": "",
                     "answer_unframed": "",
-                    "answer_unframed_no_version": ""
+                    "answer_unframed_no_version": "",
+                    "answer_custom": "",
+                    "answer_custom_framed": "",
+                    "email": ""
                   },
                   "blocks": {}
                 },
                 "faq_delivery": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
-                    "question": "How long does delivery take?",
-                    "answer": "Each print is made to order in 2–5 working days, then delivered in 2–4 working days. UK delivery is free.",
-                    "answer_framed": "",
+                    "question": "Delivery",
+                    "answer": "UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days. Prints are rolled and sent in a protective tube.",
+                    "answer_framed": "UK delivery is free. Every print is made to order in 2 to 5 working days, then delivered in 2 to 4 working days. Framed prints arrive in protective packaging, ready to hang.",
                     "answer_unframed": "",
-                    "answer_unframed_no_version": ""
+                    "answer_unframed_no_version": "",
+                    "answer_custom": "We'll email you a digital proof within 3 working days, with one round of changes included. Your print is made once you approve it, and the delivery estimate above allows for the proof. UK delivery is free.",
+                    "answer_custom_framed": "Your framed print is made after you approve your proof, then usually delivered within 5–7 working days. Shipped in protective packaging, with free UK delivery.",
+                    "email": ""
                   },
                   "blocks": {}
                 },
                 "faq_returns": {
                   "type": "_sgs-pdp-faq-item",
                   "settings": {
-                    "question": "Can I return it?",
-                    "answer": "Standard prints can be returned within 14 days. If a print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Custom posters can't be returned unless faulty.",
+                    "question": "Returns & replacements",
+                    "answer": "If your print arrives damaged or misprinted, send us a photo within 7 days and we'll replace it free. Standard prints can be returned within 14 days. Custom posters are made for you and can't be returned unless faulty.",
                     "answer_framed": "",
                     "answer_unframed": "",
-                    "answer_unframed_no_version": ""
+                    "answer_unframed_no_version": "",
+                    "answer_custom": "",
+                    "answer_custom_framed": "",
+                    "email": ""
+                  },
+                  "blocks": {}
+                },
+                "faq_questions": {
+                  "type": "_sgs-pdp-faq-item",
+                  "settings": {
+                    "question": "Questions",
+                    "answer": "Email us at hello@sixthgearstudios.co.uk and we'll help.",
+                    "answer_framed": "",
+                    "answer_unframed": "",
+                    "answer_unframed_no_version": "",
+                    "answer_custom": "",
+                    "answer_custom_framed": "",
+                    "email": "hello@sixthgearstudios.co.uk"
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
                 "faq_sizes",
-                "faq_frame",
                 "faq_paper",
                 "faq_delivery",
-                "faq_returns"
+                "faq_returns",
+                "faq_questions"
               ]
             },
             "sgs_mobile_slot": {
@@ -539,6 +559,19 @@
                 "code": ""
               },
               "blocks": {}
+            },
+            "sgs_description": {
+              "type": "sgs-description",
+              "settings": {
+                "heading": "",
+                "spec_line": "",
+                "layout": "first_paragraph",
+                "remove_lists": true,
+                "collapse_after": 350,
+                "more_label": "Read more",
+                "less_label": "Read less"
+              },
+              "blocks": {}
             }
           },
           "block_order": [
@@ -546,19 +579,20 @@
             "sgs_rating",
             "price_tVjtKg",
             "sgs_review_line",
-            "sgs_b2g1",
             "sgs_intro",
             "divider_VJhene",
             "sgs_finish",
             "variant_picker_R3rGDr",
             "sgs_framed_upgrade",
+            "sgs_personalise",
             "sgs_gift_line",
             "buy_buttons_eYQEYi",
             "sgs_delivery_line",
+            "sgs_b2g1",
             "sgs_trustpilot",
             "sgs_ptrust",
+            "sgs_description",
             "sgs_size_guide",
-            "sgs_personalise",
             "sgs_specs",
             "sgs_info",
             "sgs_pdp_faq",
@@ -618,11 +652,11 @@
             "arrows_position": "sides",
             "max_width": 1100,
             "corner_styling": "soft",
-            "header_text_color": "#000000",
-            "text_color": "#000000",
-            "card_color": "#f9f9f9",
+            "header_text_color": "#F2EFEA",
+            "text_color": "#F2EFEA",
+            "card_color": "#1A1A1A",
             "stars_color": "",
-            "arrows_color": "#000000",
+            "arrows_color": "#F2EFEA",
             "transition_speed": 5,
             "header_text": "What our customers say",
             "show_average_rating": true,
@@ -731,7 +765,8 @@
         "mobile_under_buy": false,
         "padding-block-start": 72,
         "padding-block-end": 48
-      }
+      },
+      "disabled": true
     },
     "sgs_arrival": {
       "type": "sgs-arrival",
@@ -803,7 +838,8 @@
         "mobile_under_buy": false,
         "padding-block-start": 72,
         "padding-block-end": 72
-      }
+      },
+      "disabled": true
     },
     "17937299023bbff9d5": {
       "type": "_blocks",
@@ -900,7 +936,8 @@
         "padding-block-start": 156,
         "padding-block-end": 156,
         "lineage_tag": "Lineage"
-      }
+      },
+      "disabled": true
     },
     "sgs_bundle": {
       "type": "sgs-bundle",
@@ -915,18 +952,19 @@
         "button_label": "Add the set to cart",
         "padding-block-start": 156,
         "padding-block-end": 156
-      }
+      },
+      "disabled": true
     },
     "sgs_recs": {
       "type": "sgs-product-recommendations",
       "settings": {
-        "eyebrow": "You may also like",
+        "eyebrow": "",
         "heading": "Complete the garage",
         "view_all_label": "Shop all prints",
         "preferred_collections": "porsche-posters-wall-art,80s-90s-classics,garage-man-cave-wall-art,office-wall-art",
         "hidden_products": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
         "hidden_products_collections": "custom-car-posters, custom-posters, custom",
-        "products_to_show": 4,
+        "products_to_show": 3,
         "padding-block-start": 96,
         "padding-block-end": 120,
         "offer_line": "Pick 3 prints, the 3rd is half price"

@@ -36,6 +36,12 @@
           break
         endfor
       endif
+    when 'make'
+      # The car make (custom.make, or found in the tags or title), as a small grey label
+      capture eyebrow
+        render 'sgs-product-make', product_resource: product_resource
+      endcapture
+      assign eyebrow = eyebrow | strip
     when 'type'
       assign eyebrow = product_resource.type
     when 'custom'
@@ -59,9 +65,20 @@
       <span aria-current="page">{{ product_resource.title | escape }}</span>
     </nav>
   {%- elsif eyebrow != blank -%}
-    <p class="sgs-pdp-header__eyebrow sgs-label">{{ eyebrow | escape }}</p>
+    <p class="sgs-pdp-header__eyebrow sgs-label sgs-pdp-make">{{ eyebrow | escape }}</p>
   {%- endif -%}
-  <h1 class="sgs-pdp-header__title">{{ product_resource.title | escape }}</h1>
+  {%- liquid
+    # Short display name (title up to the first comma, without "Poster"); the full title stays the
+    # page title for search engines
+    assign display_title = product_resource.title
+    if block_settings.short_title
+      capture display_title
+        render 'sgs-short-title', product_resource: product_resource
+      endcapture
+      assign display_title = display_title | strip
+    endif
+  -%}
+  <h1 class="sgs-pdp-header__title">{{ display_title | escape }}</h1>
   {%- liquid
     # Line under the title, e.g. "Lineage · SixthGear Studios": [collection] is the print's first
     # style collection; with none, that part is left out
@@ -106,29 +123,20 @@
     max-width: 100%;
   }
 
+  /* The car make: small grey capitals, like a spec sheet */
   .sgs-pdp-header__eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 0 0 18px;
-    color: rgb(var(--color-foreground-rgb) / 0.55);
-  }
-
-  .sgs-pdp-header__eyebrow::before {
-    content: '';
-    width: 28px;
-    height: 1px;
-    background: currentColor;
+    margin: 0 0 8px;
+    color: var(--sgs-text-2, #9a9a9a);
   }
 
   .sgs-pdp-header__title {
     margin: 0;
-    font-family: var(--font-heading--family);
-    font-weight: 600;
+    font-family: var(--sgs-font-display, var(--font-heading--family));
+    font-weight: 700;
     font-size: clamp(1.75rem, 1.35rem + 1.5vw, 2.75rem);
     line-height: 1.04;
-    letter-spacing: -0.02em;
-    text-transform: none;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
     text-wrap: balance;
   }
 
@@ -157,14 +165,37 @@
       "info": "Home / collection / print, in place of the collection label."
     },
     {
+      "type": "checkbox",
+      "id": "short_title",
+      "label": "Short display name",
+      "default": false,
+      "info": "The title up to the first comma, without \"Framed Poster\" or \"Poster\". The full title stays the page title for search engines."
+    },
+    {
       "type": "select",
       "id": "eyebrow_source",
       "label": "Label above title",
       "options": [
-        { "value": "collection", "label": "First collection" },
-        { "value": "type", "label": "Product type" },
-        { "value": "custom", "label": "Custom text" },
-        { "value": "none", "label": "None" }
+        {
+          "value": "make",
+          "label": "Car make"
+        },
+        {
+          "value": "collection",
+          "label": "First collection"
+        },
+        {
+          "value": "type",
+          "label": "Product type"
+        },
+        {
+          "value": "custom",
+          "label": "Custom text"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
       ],
       "default": "collection"
     },

@@ -8,7 +8,6 @@
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
-  assign makes = s.makes | default: settings.sgs_makes | split: ','
   assign garage_count = 0
   for block in section.blocks
     if block.settings.products.size > 0
@@ -20,7 +19,7 @@
 {%- if garage_count > 0 or request.design_mode -%}
   <section
     class="sgs-garages"
-    style="--sgs-garages-pad-top: {{ s['padding-block-start'] }}px; --sgs-garages-pad-bottom: {{ s['padding-block-end'] }}px;"
+    style="--sgs-garages-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1)); --sgs-garages-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));"
     aria-labelledby="SgsGarages-{{ section.id }}"
   >
     <div class="sgs-garages__inner">
@@ -53,27 +52,15 @@
             <ul class="sgs-garage__prints" role="list">
               {%- for p in picks limit: 3 -%}
                 {%- liquid
-                  # Make: the product's custom.make metafield, else the first make in the list found in
-                  # its tags or title (e.g. "Ferrari" for the F40). Model: the title before its first comma.
-                  assign make = p.metafields.custom.make.value | default: p.metafields.custom.make | strip
-                  if make == blank
-                    assign tags_key = p.tags | join: '|' | downcase | prepend: '|' | append: '|'
-                    assign title_key = p.title | downcase | prepend: ' ' | append: ' '
-                    for raw_make in makes
-                      assign m = raw_make | strip
-                      assign m_key = m | downcase
-                      if m == blank
-                        continue
-                      endif
-                      assign tag_needle = '|' | append: m_key | append: '|'
-                      assign title_needle = ' ' | append: m_key | append: ' '
-                      if tags_key contains tag_needle or title_key contains title_needle
-                        assign make = m
-                        break
-                      endif
-                    endfor
-                  endif
-                  assign model = p.title | split: ',' | first | remove: ' Framed Poster' | remove: ' Poster' | remove: ' Wall Art' | strip
+                  # Make (custom.make, else the first make found in its tags or title) and the short name
+                  capture make
+                    render 'sgs-product-make', product_resource: p, makes: s.makes
+                  endcapture
+                  assign make = make | strip
+                  capture model
+                    render 'sgs-short-title', product_resource: p
+                  endcapture
+                  assign model = model | strip
                   assign v = p.selected_or_first_available_variant
                   assign img = p.featured_media.preview_image | default: p.featured_image
                 -%}
@@ -87,7 +74,7 @@
                         | image_url: width: 700
                         | image_tag:
                           widths: '200, 300, 450, 700',
-                          sizes: '(min-width: 990px) 13vw, 30vw',
+                          sizes: '(min-width: 990px) 13vw, 45vw',
                           loading: 'lazy',
                           class: img_class,
                           alt: p.title
@@ -195,6 +182,30 @@
     list-style: none;
   }
 
+  /* Phones: two prints across, the third a swipe away (at most two products per row) */
+  @media screen and (max-width: 749px) {
+    .sgs-garage__prints {
+      display: flex;
+      gap: 10px;
+      margin-inline: calc(var(--page-margin, 16px) * -1);
+      padding-inline: var(--page-margin, 16px);
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scroll-padding-inline: var(--page-margin, 16px);
+      scrollbar-width: none;
+    }
+
+    .sgs-garage__prints::-webkit-scrollbar {
+      display: none;
+    }
+
+    .sgs-garage__print {
+      flex: 0 0 calc((100% - 10px) / 2 - 12px);
+      scroll-snap-align: start;
+    }
+  }
+
   .sgs-garage__print {
     display: flex;
     flex-direction: column;
@@ -220,7 +231,7 @@
 
   .sgs-garage__img--contain {
     object-fit: contain;
-    background: #f5f3ef;
+    background: var(--sgs-card-bg, #1a1a1a);
   }
 
   .sgs-garage__make {

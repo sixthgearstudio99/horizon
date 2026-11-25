@@ -9,11 +9,11 @@
  */
 
 :root {
-  --sgs-jdgm-text: #111111;
-  --sgs-jdgm-text-2: #6b6b6b;
-  --sgs-jdgm-line: #e4e0d9;
-  --sgs-jdgm-bg: #ffffff;
-  --sgs-jdgm-raised: #ffffff;
+  --sgs-jdgm-text: #f2efea;
+  --sgs-jdgm-text-2: #9a9a9a;
+  --sgs-jdgm-line: #2a2a2a;
+  --sgs-jdgm-bg: #0e0e0e;
+  --sgs-jdgm-raised: #1a1a1a;
 }
 
 /* ---------- No reviews yet ---------- */
@@ -502,7 +502,7 @@
   letter-spacing: 0 !important;
   text-transform: none !important;
   text-decoration: underline !important;
-  text-decoration-color: rgb(17 17 17 / 0.3) !important;
+  text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.3) !important;
   text-underline-offset: 3px;
   box-shadow: none !important;
 }

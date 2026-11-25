@@ -101,22 +101,20 @@
 {%- endif -%}
 
 {% stylesheet %}
-  /* Near-black panel, cream type, a cream-to-red headline and a thin cream-to-red edge with a
-     soft red glow: the brand's own colours (#111111, #f5f3ef, #d7261e) */
+  /* Offer panel: a charcoal card with an accent edge and an accent headline (the accent is kept
+     for sale messages) */
   .sgs-b2g1 {
-    --sgs-b2g1-ink: #111111;
-    --sgs-b2g1-cream: #f5f3ef;
-    --sgs-b2g1-red: #d7261e;
+    --sgs-b2g1-ink: var(--sgs-raised, #1a1a1a);
+    --sgs-b2g1-cream: var(--sgs-text, #f2efea);
+    --sgs-b2g1-red: var(--sgs-accent, #ec6238);
 
     box-sizing: border-box;
     width: 100%;
     padding: 18px 20px 20px;
-    border: 1px solid transparent;
+    border: 1px solid var(--sgs-line, #2a2a2a);
+    border-inline-start: 3px solid var(--sgs-b2g1-red);
     border-radius: var(--sgs-radius, 4px);
-    background:
-      linear-gradient(var(--sgs-b2g1-ink), var(--sgs-b2g1-ink)) padding-box,
-      linear-gradient(100deg, var(--sgs-b2g1-cream) 0%, #e9675e 55%, var(--sgs-b2g1-red) 100%) border-box;
-    box-shadow: 0 0 0 1px rgb(215 38 30 / 0.06), 0 6px 28px -6px rgb(215 38 30 / 0.45);
+    background: var(--sgs-b2g1-ink);
     color: var(--sgs-b2g1-cream);
   }
 
@@ -144,9 +142,9 @@
     font-size: 13px;
     font-weight: 600;
     line-height: 1.3;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
-    color: var(--sgs-b2g1-cream);
+    color: var(--sgs-text-2, #9a9a9a);
   }
 
   .sgs-b2g1__title {
@@ -156,30 +154,15 @@
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.015em;
-    text-transform: none;
-    color: var(--sgs-b2g1-cream);
-  }
-
-  @supports ((-webkit-background-clip: text) or (background-clip: text)) {
-    .sgs-b2g1__title {
-      background: linear-gradient(95deg, var(--sgs-b2g1-cream) 0%, #ef8a80 38%, #e8483f 68%, var(--sgs-b2g1-red) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-  }
-
-  @media (forced-colors: active) {
-    .sgs-b2g1__title {
-      -webkit-text-fill-color: currentColor;
-    }
+    text-transform: uppercase;
+    color: var(--sgs-b2g1-red);
   }
 
   .sgs-b2g1__text {
     margin: 8px 0 0;
     font-size: 15px;
     line-height: 1.5;
-    color: rgb(245 243 239 / 0.78);
+    color: var(--sgs-b2g1-cream);
   }
 
   .sgs-b2g1__note {
@@ -187,7 +170,7 @@
     font-size: 12px;
     line-height: 1.4;
     letter-spacing: 0.01em;
-    color: rgb(245 243 239 / 0.6);
+    color: var(--sgs-text-2, #9a9a9a);
   }
 
   .sgs-b2g1__link {
@@ -197,7 +180,7 @@
     font-weight: 500;
     color: var(--sgs-b2g1-cream);
     text-decoration: underline;
-    text-decoration-color: rgb(245 243 239 / 0.4);
+    text-decoration-color: rgb(242 239 234 / 0.4);
     text-underline-offset: 3px;
   }
 

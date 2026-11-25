@@ -1,7 +1,7 @@
 {%- liquid
-  # SixthGear: on an unframed print, a small card for its framed version (custom.framed_version):
-  # the framed product's first image, its title, "From £55.99, black frame, ready to hang" and a
-  # link. Hidden on framed prints and when there's no framed version.
+  # SixthGear: on an unframed print, one line under the sizes linking to its framed version
+  # (custom.framed_version), e.g. "Want it ready to hang? Framed from £55.99". Hidden on framed
+  # prints and when there's no framed version.
   assign bs = block.settings
   assign product_resource = closest.product
   assign framed = product_resource.metafields.custom.framed_version.value
@@ -20,140 +20,53 @@
   endif
 
   if show
-    assign thumb = framed.featured_media.preview_image | default: framed.featured_image
     assign framed_price = framed.price_min | default: framed.price | money_without_trailing_zeros
-    assign line = bs.price_line | default: 'From [price], black frame, ready to hang' | escape | replace: '[price]', framed_price
+    assign line = bs.price_line | default: 'Want it ready to hang? Framed from [price]' | escape | replace: '[price]', framed_price
   endif
 -%}
 
-{%- if show -%}
-  <a class="sgs-fup" href="{{ framed.url }}" {{ block.shopify_attributes }}>
-    {%- if thumb != blank -%}
-      <span class="sgs-fup__media">
-        {{
-          thumb
-          | image_url: width: 240
-          | image_tag: widths: '80, 120, 160, 240', sizes: '80px', loading: 'lazy', class: 'sgs-fup__img', alt: ''
-        }}
-      </span>
-    {%- endif -%}
-    <span class="sgs-fup__body">
-      <span class="sgs-fup__title">{{ framed.title | escape }}</span>
-      <span class="sgs-fup__line">{{ line }}</span>
-    </span>
-    {%- if bs.link_label != blank -%}
-      <span class="sgs-fup__cta">{{ bs.link_label | escape }}</span>
-    {%- endif -%}
-  </a>
+{%- if show and line != blank -%}
+  <p class="sgs-fup-line" {{ block.shopify_attributes }}>
+    <a href="{{ framed.url }}">{{ line }}</a>
+  </p>
 {%- endif -%}
 
 {% stylesheet %}
-  /* Small card in the page's own palette: hairline border, crisp corners, the theme's type */
-  .sgs-fup {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  .sgs-fup-line {
     width: 100%;
-    padding: 10px 12px 10px 10px;
-    border: 1px solid var(--sgs-line, #e4e0d9);
-    border-radius: var(--sgs-radius, 4px);
-    background: var(--sgs-raised, #ffffff);
-    color: var(--sgs-text, #111111);
-    text-decoration: none;
-    transition: border-color 0.3s ease;
-  }
-
-  .sgs-fup:hover {
-    border-color: var(--sgs-text, #111111);
-  }
-
-  .sgs-fup:focus-visible {
-    outline: 1px solid var(--sgs-text, #111111);
-    outline-offset: 2px;
-  }
-
-  .sgs-fup__media {
-    flex-shrink: 0;
-    width: 64px;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    border-radius: calc(var(--sgs-radius, 4px) - 1px);
-    background: var(--sgs-card-bg, #ece9e3);
-  }
-
-  .sgs-fup__img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .sgs-fup__body {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .sgs-fup__title {
-    overflow: hidden;
+    margin: -4px 0 0;
     font-size: 14px;
-    font-weight: 500;
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    line-height: 1.5;
   }
 
-  .sgs-fup__line {
-    font-size: 13px;
-    line-height: 1.45;
-    color: var(--sgs-text-2, #6b6b6b);
-  }
-
-  .sgs-fup__cta {
-    flex-shrink: 0;
-    font-size: 13px;
-    font-weight: 500;
-    white-space: nowrap;
+  .sgs-fup-line a {
+    color: var(--sgs-text, #f2efea);
     text-decoration: underline;
-    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.4);
     text-underline-offset: 3px;
   }
 
-  .sgs-fup:hover .sgs-fup__cta {
+  .sgs-fup-line a:hover {
     text-decoration-color: currentColor;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Framed version card",
+  "name": "Framed version line",
   "tag": null,
   "settings": [
     {
-      "type": "paragraph",
-      "content": "On unframed prints with a framed version (custom.framed_version). Hidden otherwise."
-    },
-    {
       "type": "text",
       "id": "price_line",
-      "label": "Line under the title",
-      "default": "From [price], black frame, ready to hang",
-      "info": "[price] is the framed version's lowest price."
-    },
-    {
-      "type": "text",
-      "id": "link_label",
-      "label": "Link text",
-      "default": "View framed"
+      "label": "Line",
+      "default": "Want it ready to hang? Framed from [price]",
+      "info": "Shown on unframed prints that have a framed version (custom.framed_version), linking to it. [price] is the framed version's starting price. Leave empty to hide."
     }
   ],
   "presets": [
     {
-      "name": "Framed version card"
+      "name": "Framed version line"
     }
   ]
 }

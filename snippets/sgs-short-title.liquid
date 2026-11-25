@@ -1,0 +1,19 @@
+{%- doc -%}
+  SixthGear Studios: a product's short display name: its title up to the first comma, without the
+  words "Framed Poster" or "Poster", e.g. "911 Generations Poster, 901 to 992 Evolution…" ->
+  "911 Generations". For display only; the full title stays the product's title and SEO title.
+
+  @param {product} product_resource - The product
+
+  @example
+  {%- capture short_title -%}{% render 'sgs-short-title', product_resource: product %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign full = product_resource.title | default: ''
+  assign short = full | split: ',' | first | replace: ' Framed Poster', '' | replace: 'Framed Poster ', '' | replace: ' Poster', '' | replace: 'Poster ', '' | strip
+  if short == blank
+    assign short = full
+  endif
+  echo short
+-%}

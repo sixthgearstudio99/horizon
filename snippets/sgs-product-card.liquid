@@ -4,7 +4,6 @@
 
   @param {object} [product] - Product to render. Renders a placeholder card when blank.
   @param {boolean} [show_secondary] - Reveal the second product image (e.g. an on-the-wall mockup) on hover
-  @param {boolean} [show_options] - Show the number of sizes / options
   @param {string} [sizes] - Value for the image sizes attribute
   @param {boolean} [eager] - Load the image eagerly (above the fold)
   @param {number} [placeholder_index] - Which placeholder illustration to use when product is blank
@@ -49,28 +48,20 @@
       assign secondary_class = secondary_class | append: ' sgs-card__img--contain'
     endif
 
-    # Count the sizes (or other options) this product actually offers
-    assign option_count = 0
-    assign option_label = ''
-    unless product.has_only_default_variant
-      for option in product.options_with_values
-        assign option_name = option.name | downcase
-        if option_name contains 'size' or option_name contains 'dimension' or option_name contains 'format'
-          assign option_count = option.values.size
-          assign option_label = 'size'
-          break
-        endif
-      endfor
-      if option_count == 0
-        assign option_count = product.variants.size
-        assign option_label = 'option'
-      endif
-    endunless
-
     assign on_sale = false
     if product.compare_at_price > product.price
       assign on_sale = true
     endif
+
+    # Car make (small grey label) above the short display name
+    capture card_make
+      render 'sgs-product-make', product_resource: product
+    endcapture
+    assign card_make = card_make | strip
+    capture card_title
+      render 'sgs-short-title', product_resource: product
+    endcapture
+    assign card_title = card_title | strip
   endif
 -%}
 
@@ -124,15 +115,17 @@
           }}
         {%- endif -%}
 
-        {%- if product.available == false -%}
-          <span class="sgs-card__badge sgs-label">{{ 'content.product_badge_sold_out' | t }}</span>
-        {%- elsif on_sale -%}
-          <span class="sgs-card__badge sgs-card__badge--sale sgs-label">{{ 'content.product_badge_sale' | t }}</span>
+        {%- comment -%} The only badge: a real sale (a compare-at price above the price) {%- endcomment -%}
+        {%- if on_sale -%}
+          <span class="sgs-card__badge sgs-card__badge--sale">{{ 'content.product_badge_sale' | t }}</span>
         {%- endif -%}
       </span>
 
       <span class="sgs-card__info">
-        <span class="sgs-card__title">{{ product.title | escape }}</span>
+        {%- if card_make != blank -%}
+          <span class="sgs-card__make">{{ card_make | escape }}</span>
+        {%- endif -%}
+        <span class="sgs-card__title">{{ card_title | escape }}</span>
         <span class="sgs-card__meta">
           <span class="sgs-card__price">
             {%- comment -%} SixthGear sale display (hidden unless a sale window is open) {%- endcomment -%}
@@ -159,12 +152,7 @@
               {%- endif -%}
             </span>
           </span>
-          {%- if show_options and option_count > 1 -%}
-            <span class="sgs-card__options sgs-label">
-              {{ option_count }}
-              {% if option_label == 'size' %}sizes{% else %}options{% endif %}
-            </span>
-          {%- endif -%}
+
         </span>
       </span>
     </a>
@@ -224,14 +212,14 @@
     opacity: 0;
   }
 
-  /* Wider than the card: the whole image, centred on the page colour */
+  /* Wider than the card: the whole image, centred on the card colour */
   .sgs-card__img--contain {
     object-fit: contain;
-    background-color: #f5f3ef;
+    background-color: var(--sgs-card-bg, #1a1a1a);
   }
 
   .sgs-card__placeholder {
-    fill: rgb(17 17 17 / 0.08);
+    fill: rgb(var(--sgs-text-rgb, 242 239 234) / 0.08);
   }
 
   @media (hover: hover) {
@@ -260,14 +248,24 @@
     line-height: 1;
   }
 
+  /* A real sale only: the accent, with near-black type */
   .sgs-card__badge--sale {
-    color: var(--sgs-red);
+    border-radius: var(--sgs-radius, 4px);
+    background: var(--sgs-accent, #ec6238);
+    color: #0e0e0e;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
   }
 
   .sgs-card__info {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .sgs-card__make {
+    margin-bottom: -2px;
   }
 
   .sgs-card__title {
@@ -306,12 +304,7 @@
   }
 
   .sgs-card__compare {
-    color: rgb(var(--color-foreground-rgb) / 0.4);
-  }
-
-  .sgs-card__options {
-    font-size: 12px;
-    color: rgb(var(--color-foreground-rgb) / 0.5);
+    color: var(--sgs-text-2, #9a9a9a);
   }
 
   @media (prefers-reduced-motion: reduce) {

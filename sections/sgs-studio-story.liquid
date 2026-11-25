@@ -12,7 +12,7 @@
 {%- if s.heading != blank or s.text != blank or s.image != blank -%}
   <section
     class="sgs-story{% if s.image != blank %} sgs-story--image{% endif %}"
-    style="--sgs-story-pad-top: {{ s['padding-block-start'] }}px; --sgs-story-pad-bottom: {{ s['padding-block-end'] }}px;"
+    style="--sgs-story-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1)); --sgs-story-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));"
     {% if s.heading != blank %}aria-labelledby="SgsStory-{{ section.id }}"{% endif %}
   >
     <div class="sgs-story__inner">

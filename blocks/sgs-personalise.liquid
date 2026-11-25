@@ -321,7 +321,7 @@
   }
 
   .sgs-pers__plate-text.is-placeholder {
-    color: rgb(17 17 17 / 0.4);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.4);
   }
 
   .sgs-pers {
@@ -396,7 +396,7 @@
   }
 
   .sgs-pers .sgs-pers__input[aria-invalid='true'] {
-    border-bottom-color: var(--sgs-red);
+    border-bottom-color: var(--sgs-error, #f87171);
   }
 
   .sgs-pers .sgs-pers__input--textarea {
@@ -522,7 +522,7 @@
   }
 
   .sgs-pers__tile[data-invalid] .sgs-pers__tile-label {
-    border-color: var(--sgs-red);
+    border-color: var(--sgs-error, #f87171);
   }
 
   .sgs-pers__tile[data-filled] .sgs-pers__tile-label {

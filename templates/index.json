@@ -12,8 +12,8 @@
     "sgs_hero": {
       "type": "sgs-hero",
       "settings": {
-        "layout": "split",
-        "background": "video",
+        "layout": "full",
+        "background": "image",
         "video": "shopify://files/videos/gemini_generated_video_0c2ec674.mp4",
         "video_url": "",
         "video_mobile_url": "",
@@ -35,8 +35,8 @@
         "feature_1": "",
         "feature_2": "",
         "feature_3": "",
-        "background_color": "#0b0b0b",
-        "accent_color": "#ffffff",
+        "background_color": "#0E0E0E",
+        "accent_color": "#F2EFEA",
         "show_stripes": false,
         "overlay_opacity": 75,
         "padding-block-start": 128,
@@ -151,11 +151,11 @@
       "type": "sgs-product-grid",
       "settings": {
         "collection": "bestsellers",
-        "products_to_show": 8,
-        "columns": "4",
+        "products_to_show": 6,
+        "columns": "3",
         "preferred_collection": "featured",
-        "desktop_layout": "carousel",
-        "mobile_layout": "carousel",
+        "desktop_layout": "grid",
+        "mobile_layout": "grid",
         "show_secondary_image": true,
         "show_option_count": true,
         "eyebrow": "",
@@ -557,7 +557,7 @@
         "success_heading": "Welcome to the paddock",
         "discount_code": "WELCOME10",
         "success_text": "Use this code at checkout for 10% off your first order.",
-        "background_color": "#ece9e3",
+        "background_color": "#1A1A1A",
         "padding-block-start": 156,
         "padding-block-end": 156
       }

@@ -1,0 +1,23 @@
+{%- doc -%}
+  SixthGear Studios: hides the review sections ("What our customers say" carousel and the product
+  review widget) until the store has at least the number of real reviews set in Theme settings >
+  SixthGear: reviews (default 5). The count is Judge.me's own store-wide total
+  (shop.metafields.judgeme.all_reviews_count). Rendered in the head, so they never flash on screen.
+
+  @example
+  {% render 'sgs-reviews-gate' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign jm = shop.metafields.judgeme
+  assign count = jm.all_reviews_count.value | default: jm.all_reviews_count | plus: 0
+  assign min = settings.sgs_reviews_min | default: 5 | plus: 0
+  assign keys = settings.sgs_reviews_sections | default: 'sgs_reviews_carousel' | remove: ' ' | split: ','
+-%}
+{%- if count < min -%}
+  <style>
+    {% for key in keys %}{% if key != blank %}.shopify-section[id$='__{{ key | escape }}']{% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %} {
+      display: none !important;
+    }
+  </style>
+{%- endif -%}

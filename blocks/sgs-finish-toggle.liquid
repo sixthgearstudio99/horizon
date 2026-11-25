@@ -185,12 +185,13 @@
       <p class="sgs-finish__label" id="{{ label_id }}">{{ bs.label | escape }}</p>
     {%- endif -%}
     <div class="sgs-finish__options" role="group"{% if bs.label != blank %} aria-labelledby="{{ label_id }}"{% endif %}>
+      {%- comment -%} Framed first, then unframed {%- endcomment -%}
       {%- if is_framed == 'true' -%}
-        <a class="sgs-finish__card" href="{{ other_href }}" data-sgs-finish-link>{{ unframed_inner }}</a>
         <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ framed_inner }}</span>
+        <a class="sgs-finish__card" href="{{ other_href }}" data-sgs-finish-link>{{ unframed_inner }}</a>
       {%- else -%}
-        <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ unframed_inner }}</span>
         <a class="sgs-finish__card" href="{{ other_href }}" data-sgs-finish-link>{{ framed_inner }}</a>
+        <span class="sgs-finish__card sgs-finish__card--on" aria-current="true">{{ unframed_inner }}</span>
       {%- endif -%}
     </div>
     <script type="application/json" data-sgs-finish-map>{{ size_map | strip }}</script>
@@ -280,7 +281,7 @@
     min-width: 0;
     min-height: 84px;
     padding: 12px 10px;
-    border: 1px solid rgb(17 17 17 / 0.22);
+    border: 1px solid rgb(var(--sgs-text-rgb, 242 239 234) / 0.22);
     border-radius: var(--sgs-radius-btn, 4px);
     background: var(--sgs-raised, #ffffff);
     color: var(--sgs-text, #111111);
@@ -299,9 +300,9 @@
   }
 
   .sgs-finish__card--on {
-    border-color: #111111;
-    background: #111111;
-    color: #ffffff;
+    border-color: var(--sgs-text, #f2efea);
+    background: var(--sgs-text, #f2efea);
+    color: var(--sgs-bg, #0e0e0e);
   }
 
   .sgs-finish__name {

@@ -1,7 +1,8 @@
 {%- liquid
   # SixthGear: one question in the product FAQ (blocks/sgs-pdp-faq.liquid). The answer can differ for
-  # framed prints, unframed prints, and unframed prints without a framed version; [bracketed words]
-  # link to the framed version (custom.framed_version), or stay plain text without one.
+  # custom posters, framed prints, unframed prints, and unframed prints without a framed version;
+  # [bracketed words] link to the framed version (custom.framed_version), or stay plain text
+  # without one. An email address set on the question becomes a mailto link.
   assign bs = block.settings
   assign product_resource = closest.product
   assign question = bs.question | strip
@@ -15,8 +16,18 @@
     assign has_version = true
   endif
 
+  # Custom posters can have their own answers (framed and unframed)
+  capture sgs_custom
+    render 'sgs-is-custom', product_resource: product_resource, handles: settings.sgs_wall_excluded_handles
+  endcapture
+
   assign answer = bs.answer | strip
-  if sgs_framed contains 'true'
+  if sgs_custom contains 'true' and bs.answer_custom != blank
+    assign answer = bs.answer_custom | strip
+    if sgs_framed contains 'true' and bs.answer_custom_framed != blank
+      assign answer = bs.answer_custom_framed | strip
+    endif
+  elsif sgs_framed contains 'true'
     if bs.answer_framed != blank
       assign answer = bs.answer_framed | strip
     endif
@@ -36,6 +47,14 @@
   endif
   if answer_html == blank
     assign answer_html = answer_plain | escape
+  endif
+
+  # An email address in the answer (the one set on this question) becomes a mailto link
+  assign email = bs.email | strip
+  if email != blank and email contains '@'
+    assign email_safe = email | escape
+    assign email_link = '<a href="mailto:' | append: email_safe | append: '">' | append: email_safe | append: '</a>'
+    assign answer_html = answer_html | replace: email_safe, email_link
   endif
 -%}
 
@@ -85,6 +104,24 @@
       "id": "answer_unframed_no_version",
       "label": "Answer on unframed prints without a framed version",
       "info": "Optional. Used instead when an unframed print has no framed version."
+    },
+    {
+      "type": "textarea",
+      "id": "answer_custom",
+      "label": "Answer on custom posters",
+      "info": "Optional. Used instead on custom posters (tagged custom)."
+    },
+    {
+      "type": "textarea",
+      "id": "answer_custom_framed",
+      "label": "Answer on framed custom posters",
+      "info": "Optional."
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email to link",
+      "info": "Optional. Where this email address appears in the answer, it becomes a link."
     }
   ],
   "presets": [

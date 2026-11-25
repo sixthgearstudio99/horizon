@@ -11,8 +11,8 @@ html {
 }
 
 ::selection {
-  background: #111111;
-  color: #ffffff;
+  background: #f2efea;
+  color: #0e0e0e;
 }
 
 :focus-visible {
@@ -23,24 +23,30 @@ html {
 :root {
   --sgs-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --sgs-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --sgs-hairline-light: #e4e0d9;
-  --sgs-hairline-dark: #e4e0d9;
-  --sgs-label-size: 13px;
-  --sgs-label-tracking: 0.02em;
+  --sgs-hairline-light: #2a2a2a;
+  --sgs-hairline-dark: #2a2a2a;
+  --sgs-label-size: 12px;
+  --sgs-label-tracking: 0.15em;
 
-  /* Gallery palette: light, warm paper with near-black type */
-  --sgs-bg: #f5f3ef;
-  --sgs-raised: #ffffff;
-  --sgs-surface: #ffffff;
-  --sgs-card-bg: #ece9e3;
-  --sgs-line: #e4e0d9;
-  --sgs-text: #111111;
-  --sgs-text-2: #6b6b6b;
-  --sgs-red: #d7261e;
-  /* Studio look: crisp, near-square corners on media, cards and buttons */
+  /* Dark look: near-black page, charcoal sections and cards, warm off-white type */
+  --sgs-bg: #0e0e0e;
+  --sgs-raised: #1a1a1a;
+  --sgs-surface: #1a1a1a;
+  --sgs-card-bg: #1a1a1a;
+  --sgs-line: #2a2a2a;
+  --sgs-text: #f2efea;
+  --sgs-text-rgb: 242 239 234;
+  --sgs-text-2: #9a9a9a;
+  /* The accent: sale messages and the cart progress line only */
+  --sgs-accent: #ec6238;
+  --sgs-red: var(--sgs-accent);
+  /* Form errors: a light red, distinct from the sale accent */
+  --sgs-error: #f87171;
   --sgs-radius: 4px;
   --sgs-radius-tile: 4px;
   --sgs-radius-btn: 4px;
+  /* Vertical space between sections: about 1.5 times the old spacing */
+  --sgs-section-space: 1.5;
 }
 
 /* Small uppercase label used across sections */
@@ -145,64 +151,30 @@ html {
   }
 }
 
-/* Bold black bar (Announcement bar > Bold black bar): the look of the Buy 2, Get 1 Free panel.
-   Near-black, capitals in a cream-to-red gradient (stopping at a red light enough to read at
-   this size), and a thin cream-to-red edge with a soft red glow. */
-.announcement-bar--sgs-bold {
-  position: relative;
-  z-index: 1;
-  box-shadow: 0 4px 16px -8px rgb(215 38 30 / 0.55);
-}
-
-/* Black whatever the bar's colour setting: Horizon paints a section's colour on the separate
-   .section-background layer behind it and makes the section itself transparent, both with more
-   specific rules, hence !important */
+/* Dark bar (Announcement bar > Bold black bar): one quiet line on the page colour with a hairline
+   below. Horizon paints a section's colour on the separate .section-background layer behind it
+   and makes the section itself transparent, both with more specific rules, hence !important. */
 .shopify-section .announcement-bar.announcement-bar--sgs-bold,
 .shopify-section .section-background:has(+ .announcement-bar--sgs-bold) {
-  background-color: #111111 !important;
+  background-color: var(--sgs-bg) !important;
 }
 
-.announcement-bar--sgs-bold::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
-  height: 1px;
-  background: linear-gradient(90deg, #f5f3ef 0%, #e9675e 55%, #d7261e 100%);
-  pointer-events: none;
+.announcement-bar--sgs-bold {
+  border-block-end: 1px solid var(--sgs-line);
 }
 
-/* Same type as the panel's small heading; !important to beat the mono label rule in sgs-studio.css */
 .announcement-bar--sgs-bold .announcement-bar__text {
   font-family: var(--font-body--family) !important;
-  font-size: 13px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.08em !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
   text-transform: uppercase !important;
-  color: #f5f3ef;
-  /* As wide as the words, centred, so the gradient runs across the text itself */
-  width: fit-content;
-  max-width: 100%;
-  margin-inline: auto !important;
+  color: var(--sgs-text) !important;
 }
 
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .announcement-bar--sgs-bold .announcement-bar__text {
-    background: linear-gradient(95deg, #f5f3ef 0%, #ef8a80 55%, #e8483f 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
-@media (forced-colors: active) {
-  .announcement-bar--sgs-bold .announcement-bar__text {
-    -webkit-text-fill-color: currentColor;
-  }
-}
-
-.announcement-bar--sgs-bold .slideshow-control {
-  color: #f5f3ef;
+/* Sale messages take the accent */
+.announcement-bar--sgs-bold .announcement-bar__slide--sale .announcement-bar__text {
+  color: var(--sgs-accent) !important;
 }
 
 /* ---------- Header ---------- */
@@ -296,10 +268,10 @@ button[ref='addToCartButton'] {
   object-position: center;
 }
 
-/* ...except an image wider than the card, shown whole on the page colour (card-gallery.liquid) */
+/* ...except an image wider than the card, shown whole on the card colour (card-gallery.liquid) */
 .product-card .card-gallery .sgs-media--contain,
 .product-card .card-gallery .sgs-media--contain img {
-  background-color: #f5f3ef;
+  background-color: var(--sgs-card-bg);
 }
 
 /* ---------- Product page gallery: natural aspect ratios, never cropped ---------- */
@@ -469,7 +441,7 @@ button[ref='addToCartButton'] {
 .shopify-policy__body {
   font-size: 15px;
   line-height: 1.75;
-  color: rgb(17 17 17 / 0.62);
+  color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
 }
 
 .shopify-policy__body :is(h2, h3, h4) {
@@ -598,6 +570,24 @@ sticky-add-to-cart[data-sgs-past='true'] .sticky-add-to-cart__bar[data-stuck='tr
 @media (prefers-reduced-motion: reduce) {
   .sticky-add-to-cart__bar {
     transition: none;
+  }
+}
+
+/* Dark style: a charcoal bar with a hairline, the off-white primary button */
+.sticky-add-to-cart__bar {
+  border: 1px solid var(--sgs-line);
+  background: var(--sgs-raised) !important;
+  color: var(--sgs-text);
+  box-shadow: 0 -8px 24px rgb(0 0 0 / 0.5);
+}
+
+.sticky-add-to-cart__bar::before {
+  display: none;
+}
+
+@media screen and (max-width: 749px) {
+  .sticky-add-to-cart__bar {
+    border-width: 1px 0 0;
   }
 }
 

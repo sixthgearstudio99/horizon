@@ -9,8 +9,8 @@
   style="
     --sgs-cols-ratio: {{ s.tile_ratio }};
     --sgs-cols-count: {{ feature_blocks.size | at_least: 1 | at_most: 4 }};
-    --sgs-cols-pad-top: {{ s['padding-block-start'] }}px;
-    --sgs-cols-pad-bottom: {{ s['padding-block-end'] }}px;
+    --sgs-cols-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1));
+    --sgs-cols-pad-bottom: calc({{ s['padding-block-end'] }}px * var(--sgs-section-space, 1));
   "
   {% if s.heading != blank %}
     aria-labelledby="SgsColsHeading-{{ section.id }}"
@@ -209,7 +209,7 @@
 
   .sgs-cols__eyebrow {
     margin: 0 0 16px;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-cols__heading {
@@ -244,7 +244,7 @@
     overflow: hidden;
     aspect-ratio: var(--sgs-cols-ratio);
     background: #1a1a1a;
-    color: #f5f3ef;
+    color: #f2efea;
     text-decoration: none;
     isolation: isolate;
   }
@@ -264,7 +264,7 @@
 
   .sgs-tile__placeholder {
     background: var(--sgs-raised);
-    fill: rgb(17 17 17 / 0.08);
+    fill: rgb(var(--sgs-text-rgb, 242 239 234) / 0.08);
   }
 
   .sgs-tile__overlay {
@@ -337,7 +337,7 @@
 
   .sgs-cols__secondary-label {
     margin: 0 0 20px;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-cols__compact {
@@ -404,12 +404,12 @@
 
   .sgs-row__text {
     font-size: 13px;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
   }
 
   .sgs-row__arrow {
     flex-shrink: 0;
-    color: rgb(17 17 17 / 0.62);
+    color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.62);
     transition: translate 0.5s var(--sgs-cols-ease), color 0.5s var(--sgs-cols-ease);
   }
 

@@ -315,6 +315,15 @@
     margin-top: -8px;
   }
 
+  /* The size buttons carry their own "Which size?" link: then this block is just the dialog */
+  .product-details:has(.sgs-sg__link--legend) .sgs-sg {
+    margin: 0;
+  }
+
+  .product-details:has(.sgs-sg__link--legend) .sgs-sg > [data-sg-open] {
+    display: none;
+  }
+
   .sgs-sg__link {
     display: inline-flex;
     align-items: center;
@@ -328,7 +337,7 @@
     letter-spacing: 0.02em;
     text-transform: none;
     text-decoration: underline;
-    text-decoration-color: rgb(17 17 17 / 0.3);
+    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.3);
     text-underline-offset: 4px;
     cursor: pointer;
   }
@@ -465,15 +474,15 @@
   }
 
   .sgs-sg__print {
-    fill: rgb(17 17 17 / 0.06);
-    stroke: rgb(17 17 17 / 0.55);
+    fill: rgb(var(--sgs-text-rgb, 242 239 234) / 0.06);
+    stroke: rgb(var(--sgs-text-rgb, 242 239 234) / 0.55);
     stroke-width: 1px;
     vector-effect: non-scaling-stroke;
   }
 
   /* The size chosen now */
   .sgs-sg__print.is-current {
-    fill: rgb(17 17 17 / 0.18);
+    fill: rgb(var(--sgs-text-rgb, 242 239 234) / 0.18);
     stroke: var(--sgs-text, #111111);
     stroke-width: 2px;
   }
@@ -527,7 +536,7 @@
     min-width: 88px;
     min-height: 44px;
     padding: 0 14px;
-    border: 1px solid rgb(17 17 17 / 0.22);
+    border: 1px solid rgb(var(--sgs-text-rgb, 242 239 234) / 0.22);
     border-radius: var(--sgs-radius-btn, 4px);
     background: var(--sgs-raised, #ffffff);
     color: var(--sgs-text, #111111);
@@ -552,9 +561,9 @@
   }
 
   .sgs-sg__item.is-current .sgs-sg__choose {
-    border-color: #111111;
-    background: #111111;
-    color: #ffffff;
+    border-color: var(--sgs-text, #f2efea);
+    background: var(--sgs-text, #f2efea);
+    color: var(--sgs-bg, #0e0e0e);
   }
 
   .sgs-sg__item.is-current .sgs-sg__choose-text {
@@ -574,8 +583,8 @@
     margin-top: 24px;
     border: 0;
     border-radius: var(--sgs-radius-btn, 4px);
-    background: #111111;
-    color: #ffffff;
+    background: var(--sgs-text, #f2efea);
+    color: var(--sgs-bg, #0e0e0e);
     font-family: var(--sgs-font-body, Inter, sans-serif);
     font-size: 15px;
     font-weight: 500;

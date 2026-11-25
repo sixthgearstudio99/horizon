@@ -175,8 +175,9 @@
             </a>
           {%- endif -%}
           {%- if s.button_2_label != blank -%}
+            {%- comment -%} Secondary: an outlined button {%- endcomment -%}
             <a
-              class="sgs-link sgs-hero__link"
+              class="button button-secondary sgs-hero__button sgs-hero__button--secondary"
               {% if s.button_2_link != blank %}
                 href="{{ s.button_2_link }}"
               {% else %}
@@ -184,9 +185,6 @@
               {% endif %}
             >
               {{- s.button_2_label | escape -}}
-              <svg aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 14 14">
-                <path d="M1 7h12M8.5 2.5L13 7l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
             </a>
           {%- endif -%}
         </div>
@@ -285,7 +283,7 @@
   }
 
   .sgs-hero--dark {
-    --sgs-hero-fg: #f5f3ef;
+    --sgs-hero-fg: #f2efea;
     --sgs-hero-fg-muted: rgb(245 243 239 / 0.66);
     --sgs-hero-fg-faint: rgb(245 243 239 / 0.42);
     --sgs-hero-line: rgb(245 243 239 / 0.14);
@@ -395,8 +393,7 @@
     --button-border-color: var(--sgs-hero-fg);
 
     font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.02em;
+    font-weight: 600;
     transition: background-color 0.4s var(--sgs-hero-ease), box-shadow 0.4s var(--sgs-hero-ease),
       color 0.4s var(--sgs-hero-ease);
   }
@@ -406,8 +403,17 @@
     --button-border-color: color-mix(in srgb, var(--sgs-hero-fg) 86%, var(--sgs-hero-bg));
   }
 
-  .sgs-hero__link {
-    color: var(--sgs-hero-fg);
+  /* Secondary: outlined in the text colour, filled on hover */
+  .sgs-hero__button--secondary,
+  .sgs-hero__button--secondary:hover {
+    --button-color: var(--sgs-hero-fg);
+    --button-background-color: transparent;
+    --button-border-color: var(--sgs-hero-fg);
+  }
+
+  .sgs-hero__button--secondary:hover {
+    --button-color: var(--sgs-hero-bg);
+    --button-background-color: var(--sgs-hero-fg);
   }
 
   .sgs-hero__features {
@@ -735,8 +741,8 @@
       align-items: stretch;
     }
 
-    .sgs-hero__link {
-      align-self: center;
+    .sgs-hero__button--secondary {
+      align-self: stretch;
     }
   }
 
@@ -749,7 +755,7 @@
     .sgs-hero,
     .sgs-hero--full {
       --sgs-hero-bg: #0e0e0e;
-      --sgs-hero-fg: #f5f3ef;
+      --sgs-hero-fg: #f2efea;
       --sgs-hero-fg-muted: rgb(245 243 239 / 0.7);
       --sgs-hero-fg-faint: rgb(245 243 239 / 0.45);
       --sgs-hero-line: rgb(245 243 239 / 0.14);
@@ -857,8 +863,8 @@
       width: 100%;
     }
 
-    .sgs-hero__link {
-      align-self: center;
+    .sgs-hero__button--secondary {
+      align-self: stretch;
     }
 
     .sgs-hero__features {

@@ -1,7 +1,7 @@
 {%- doc -%}
   SixthGear Studios: under the size pills, shows the caption line ("46 × 61 cm · £35") of the size
-  just picked, straight away; Horizon's re-render of the picker then brings the same line from the
-  server. Bound once per page.
+  just picked, straight away, and sets the main price and the sticky bar's price to match; Horizon's
+  re-render then brings the same prices from the server. Bound once per page.
 
   @example
   {% render 'sgs-pill-captions' %}
@@ -17,8 +17,25 @@
       var captions = fieldset && fieldset.nextElementSibling;
       if (!captions || !captions.classList.contains('sgs-size-captions')) return;
       var index = input.getAttribute('data-input-index');
+      var chosen = null;
       captions.querySelectorAll('[data-sgs-caption]').forEach(function (line) {
-        line.hidden = line.getAttribute('data-sgs-caption') !== index;
+        var on = line.getAttribute('data-sgs-caption') === index;
+        line.hidden = !on;
+        if (on) chosen = line;
+      });
+      if (!chosen) return;
+      // The main price and the sticky bar's price follow straight away too, so they never show a
+      // different price from this line while Horizon fetches the new variant
+      var normal = chosen.querySelector('.sgs-tile-price__normal');
+      var now = chosen.querySelector('.sgs-sale-now');
+      var section = input.closest('.shopify-section') || document;
+      section.querySelectorAll('.product-details product-price, .sticky-add-to-cart__price').forEach(function (box) {
+        var price = box.querySelector('.price bdi');
+        if (price && normal) price.textContent = normal.textContent;
+        var saleWas = box.querySelector('.sgs-sale__was bdi');
+        if (saleWas && normal) saleWas.textContent = normal.textContent;
+        var saleNow = box.querySelector('.sgs-sale__now bdi');
+        if (saleNow && now) saleNow.textContent = now.textContent;
       });
     });
   })();

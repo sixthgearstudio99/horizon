@@ -26,8 +26,8 @@
         "show_product_tag": false,
         "product_tag_label": "Featured print",
         "eyebrow": "Car culture · Designed in Bristol · Printed in the UK",
-        "heading": "Wall art for the garage, office and man cave",
-        "text": "Classic 80s and 90s supercars and Porsche icons, printed in the UK.",
+        "heading": "Finish the garage.",
+        "text": "The cars you grew up wanting, framed and ready to hang. Printed in the UK.",
         "button_1_label": "Shop best sellers",
         "button_1_link": "shopify://collections/bestsellers",
         "button_2_label": "Shop gifts",
@@ -49,7 +49,7 @@
         "collection": "gifts-for-car-lovers",
         "overlay_opacity": 55,
         "eyebrow": "",
-        "heading": "Buying it as a gift?",
+        "heading": "Buying for a car lover? Sorted.",
         "subline": "From £25 · Free UK delivery",
         "button_label": "Shop gifts for car lovers",
         "button_link": "shopify://collections/gifts-for-car-lovers",
@@ -57,8 +57,8 @@
         "min_height": 560,
         "min_height_mobile": 460,
         "point_1": "Pick their car: classic supercars, Porsche and more.",
-        "point_2": "Pick a size: three sizes, shown in inches and cm.",
-        "point_3": "A delivery estimate is shown on every product.",
+        "point_2": "Pick the size that suits their wall, shown in inches and cm.",
+        "point_3": "See when it will arrive before you order: every print shows a delivery estimate.",
         "gift_card_handle": "gift-card",
         "gift_card_label": "Or send a digital gift card"
       }
@@ -254,7 +254,7 @@
           "settings": {
             "collection": "garage-man-cave-wall-art",
             "title": "Garage & man cave",
-            "text": "For the garage, the workshop and the man cave."
+            "text": "Make the garage yours"
           }
         },
         "room_office": {
@@ -262,7 +262,7 @@
           "settings": {
             "collection": "office-wall-art",
             "title": "Office",
-            "text": "For the home office and the desk you work at."
+            "text": "Something worth looking up at"
           }
         },
         "room_gifts": {
@@ -270,7 +270,7 @@
           "settings": {
             "collection": "gifts-for-car-lovers",
             "title": "Gifts",
-            "text": "For the car lover in your life."
+            "text": "For the car person who has everything"
           }
         }
       },

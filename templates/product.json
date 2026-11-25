@@ -236,8 +236,7 @@
             "sgs_gift_line": {
               "type": "sgs-gift-line",
               "settings": {},
-              "blocks": {},
-              "disabled": true
+              "blocks": {}
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -331,11 +330,11 @@
                 "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
                 "gift_card_handle": "gift-card",
                 "wyg_heading": "What you get",
-                "wyg_paper": "Semi-gloss paper with fade-resistant inks, printed in the UK",
+                "wyg_paper": "Fade-resistant inks, so it stays sharp on your wall",
                 "wyg_paper_fine": "Fine art paper, printed in the UK",
                 "wyg_sizes_label": "",
-                "wyg_framed": "Black wooden frame with a clear Perspex front, ready to hang",
-                "wyg_unframed": "Unframed, rolled and sent in a protective tube"
+                "wyg_framed": "Up on the wall the day it arrives",
+                "wyg_unframed": "Rolled in a tube, ready for your own frame"
               },
               "blocks": {}
             },
@@ -595,8 +594,8 @@
             "variant_picker_R3rGDr",
             "sgs_framed_upgrade",
             "sgs_personalise",
-            "sgs_gift_line",
             "buy_buttons_eYQEYi",
+            "sgs_gift_line",
             "sgs_delivery_line",
             "sgs_b2g1",
             "sgs_trustpilot",

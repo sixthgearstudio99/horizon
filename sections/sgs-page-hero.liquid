@@ -15,9 +15,26 @@
       assign hero_title = collection.title | escape
     endif
 
+    # A one-line intro for this collection from the section's list ("handle: line"), if it has
+    # one; it takes the place of the collection's description on the page
+    assign collection_intro = ''
+    assign intro_lines = s.intros | newline_to_br | split: '<br />'
+    for intro_line in intro_lines
+      assign intro_parts = intro_line | strip | split: ':'
+      if intro_parts.size > 1
+        assign intro_handle = intro_parts[0] | strip
+        if intro_handle == collection.handle
+          assign collection_intro = intro_line | strip | remove_first: intro_parts[0] | remove_first: ':' | strip
+          break
+        endif
+      endif
+    endfor
+
     # Chosen collections show their full description under the banner, above the grid
     assign intro_handles = s.description_below | remove: ' ' | split: ','
-    if intro_handles contains collection.handle and collection.description != blank
+    if hero_text == blank and collection_intro != blank
+      assign hero_text = collection_intro | escape
+    elsif intro_handles contains collection.handle and collection.description != blank
       assign show_intro = true
     elsif hero_text == blank and collection.description != blank
       assign hero_text = collection.description
@@ -506,6 +523,12 @@
     },
     {
       "type": "textarea",
+      "id": "intros",
+      "label": "Collection intro lines",
+      "info": "One per line, as handle: line (e.g. office-wall-art: Something worth looking up at). Shown under the collection's title instead of its description. Collections not listed show their description."
+    },
+    {
+      "type": "textarea",
       "id": "description_below",
       "label": "Show the description under the banner on",
       "default": "gifts-for-car-lovers",
@@ -528,8 +551,14 @@
       "id": "alignment",
       "label": "Alignment",
       "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "center", "label": "Centre" }
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        }
       ],
       "default": "left"
     },

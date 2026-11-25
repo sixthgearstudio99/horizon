@@ -1,137 +1,143 @@
 {%- liquid
-  # SixthGear: one small trust line under the buy buttons, e.g.
-  # "★ 5.0 from our customers · Free UK delivery · Printed in the UK". The rating part links to the
-  # reviews carousel (#reviews) and uses the store-wide Judge.me average from its shop metafields
-  # (judgeme.all_reviews_rating / all_reviews_count, as in Judge.me's own All Reviews Counter); it's
-  # left out until there's a review. Display only: nothing here goes into structured data.
+  # SixthGear: the review line under the price, e.g. "★★★★★ 4.9 · 23 store reviews", linking to the
+  # reviews on the page. Live Judge.me numbers only, never typed in:
+  # - the product's own rating and count when it has reviews (Shopify's reviews.rating /
+  #   reviews.rating_count metafields that Judge.me keeps in sync, else Judge.me's product badge)
+  # - otherwise the store-wide rating and count (shop.metafields.judgeme.all_reviews_rating /
+  #   all_reviews_count, as in Judge.me's All Reviews Counter)
+  # Nothing at all when Judge.me has no reviews, or fewer than Theme settings > SixthGear: reviews.
+  # Display only: nothing here goes into structured data.
   assign bs = block.settings
-  assign jm = shop.metafields.judgeme
-  assign count = jm.all_reviews_count.value | default: jm.all_reviews_count | plus: 0
+  assign product_resource = closest.product
 
-  # Always one decimal place, e.g. 5.0 or 4.7
-  assign rating_x10 = jm.all_reviews_rating.value | default: jm.all_reviews_rating | times: 10 | round
-  assign rating_whole = rating_x10 | divided_by: 10 | floor
-  assign rating_tenth = rating_x10 | modulo: 10
-  assign rating = rating_whole | append: '.' | append: rating_tenth
-
-  assign rating_text = ''
-  # Only once the store has enough real reviews (Theme settings > SixthGear: reviews)
-  assign min_reviews = settings.sgs_reviews_min | default: 5 | plus: 0
-  if count > 0 and count >= min_reviews and bs.rating_text != blank
-    assign rating_text = bs.rating_text | replace: '[rating]', rating | replace: '[count]', count
+  # 1) This product's own reviews
+  capture product_count
+    render 'sgs-product-review-count', product_resource: product_resource
+  endcapture
+  assign count = product_count | strip | plus: 0
+  assign rating = 0
+  assign is_product = false
+  if count > 0
+    assign is_product = true
+    assign rating = product_resource.metafields.reviews.rating.value.rating | default: 0 | plus: 0
+    if rating == 0
+      assign badge = product_resource.metafields.judgeme.badge.value | default: product_resource.metafields.judgeme.badge | append: '' | replace: '"', "'"
+      if badge contains 'data-average-rating'
+        assign rating = badge | split: "data-average-rating='" | last | split: "'" | first | plus: 0
+      endif
+    endif
   endif
-  assign item_2 = bs.item_2 | strip
-  assign item_3 = bs.item_3 | strip
 
+  # 2) Otherwise the store's
+  if count == 0 or rating == 0
+    assign is_product = false
+    assign jm = shop.metafields.judgeme
+    assign count = jm.all_reviews_count.value | default: jm.all_reviews_count | plus: 0
+    assign rating = jm.all_reviews_rating.value | default: jm.all_reviews_rating | plus: 0
+  endif
+
+  assign min_reviews = settings.sgs_reviews_min | default: 1 | plus: 0
   assign show = false
-  if rating_text != blank or item_2 != blank or item_3 != blank
+  if count > 0 and count >= min_reviews and rating > 0 and product_resource.gift_card? != true
     assign show = true
   endif
-  if closest.product.gift_card?
-    assign show = false
+
+  if show
+    # One decimal place, e.g. 5.0 or 4.7; the stars are filled to the same figure
+    assign rating_x10 = rating | times: 10 | round
+    assign rating_whole = rating_x10 | divided_by: 10 | floor
+    assign rating_tenth = rating_x10 | modulo: 10
+    assign rating_text = rating_whole | append: '.' | append: rating_tenth
+    assign stars_pct = rating_x10 | times: 2
+    if is_product
+      assign line = bs.product_text | default: '[rating] · [count] reviews'
+    else
+      assign line = bs.store_text | default: '[rating] · [count] store reviews'
+    endif
+    if count == 1
+      assign line = line | replace: ' reviews', ' review'
+    endif
+    assign line = line | replace: '[rating]', rating_text | replace: '[count]', count
   endif
 -%}
 
 {%- if show -%}
   <div class="sgs-revline-wrap" {{ block.shopify_attributes }}>
-    <p class="sgs-revline">
-      {%- if rating_text != blank -%}
-        <a class="sgs-revline__rating" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
-          <span class="sgs-revline__star" aria-hidden="true">★</span>
-          <span class="sgs-revline__link">{{ rating_text | escape }}</span>
-        </a>
-      {%- endif -%}
-      {%- if item_2 != blank -%}
-        {%- if rating_text != blank -%}<span class="sgs-revline__sep" aria-hidden="true">·</span>{%- endif -%}
-        <span class="sgs-revline__item">{{ item_2 | escape }}</span>
-      {%- endif -%}
-      {%- if item_3 != blank -%}
-        {%- if rating_text != blank or item_2 != blank -%}<span class="sgs-revline__sep" aria-hidden="true">·</span>{%- endif -%}
-        <span class="sgs-revline__item">{{ item_3 | escape }}</span>
-      {%- endif -%}
-    </p>
+    <a class="sgs-revline" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
+      <span class="sgs-revline__stars" style="--sgs-stars: {{ stars_pct }}%;" aria-hidden="true">★★★★★</span>
+      <span class="visually-hidden">Rated {{ rating_text }} out of 5:</span>
+      <span class="sgs-revline__link">{{ line | escape }}</span>
+    </a>
   </div>
-  {%- if rating_text != blank -%}
-    <script>
-      (function () {
-        // Smooth scroll to the reviews (instant with reduced motion); the link still works without this
-        if (window.sgsRevlineBound) return;
-        window.sgsRevlineBound = true;
-        document.addEventListener('click', function (event) {
-          var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
-          if (!link) return;
-          var target = document.getElementById(link.getAttribute('href').slice(1));
-          if (!target) return;
-          event.preventDefault();
-          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-          if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
-        });
-      })();
-    </script>
-  {%- endif -%}
+  <script>
+    (function () {
+      // Smooth scroll to the reviews (instant with reduced motion); the link still works without this
+      if (window.sgsRevlineBound) return;
+      window.sgsRevlineBound = true;
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
+        if (!link) return;
+        var target = document.getElementById(link.getAttribute('href').slice(1));
+        if (!target) return;
+        event.preventDefault();
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+        if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
+      });
+    })();
+  </script>
 {%- endif -%}
 
 {% stylesheet %}
-  /* Small, one line: the type of the delivery rows below, scaled down to fit narrow phones */
   .sgs-revline-wrap {
     width: 100%;
     min-width: 0;
-    container-type: inline-size;
+    margin-top: -6px;
   }
 
   .sgs-revline {
-    display: flex;
-    align-items: center;
-    gap: 0 0.5em;
-    margin: 0;
-    padding: 4px 0;
-    overflow: hidden;
-    font-size: clamp(10px, 3.05cqi, 13px);
-    line-height: 1.45;
-    white-space: nowrap;
-    color: var(--sgs-text, #111111);
-  }
-
-  .sgs-revline__rating {
     display: inline-flex;
-    flex-shrink: 0;
     align-items: center;
-    gap: 0.35em;
-    color: inherit;
+    gap: 10px;
+    min-height: 32px;
+    color: var(--sgs-text, #f2efea);
+    font-size: 14px;
+    line-height: 1.4;
     text-decoration: none;
   }
 
-  .sgs-revline__star {
-    font-size: 1.1em;
-    color: #b7821a;
+  /* Five stars, filled to the rating: off-white over the hairline grey */
+  .sgs-revline__stars {
+    flex-shrink: 0;
+    font-size: 16px;
+    line-height: 1;
+    letter-spacing: 2px;
+    background: linear-gradient(90deg, #f2efea var(--sgs-stars, 0%), #4a4a4a var(--sgs-stars, 0%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  @media (forced-colors: active) {
+    .sgs-revline__stars {
+      color: CanvasText;
+    }
   }
 
   .sgs-revline__link {
     text-decoration: underline;
-    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.3);
+    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.35);
     text-underline-offset: 3px;
     transition: text-decoration-color 0.3s ease;
   }
 
-  .sgs-revline__rating:hover .sgs-revline__link {
+  .sgs-revline:hover .sgs-revline__link {
     text-decoration-color: currentColor;
   }
 
-  .sgs-revline__rating:focus-visible {
-    outline: 1px solid var(--sgs-text, #111111);
-    outline-offset: 2px;
-  }
-
-  .sgs-revline__sep {
-    flex-shrink: 0;
-    color: var(--sgs-text-2, #6b6b6b);
-  }
-
-  .sgs-revline__item {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .sgs-revline:focus-visible {
+    outline: 1px solid var(--sgs-text, #f2efea);
+    outline-offset: 3px;
   }
 
   /* The reviews anchor lands below the sticky header */
@@ -142,36 +148,31 @@
 
 {% schema %}
 {
-  "name": "Trust line",
+  "name": "Review line",
   "tag": null,
   "settings": [
     {
       "type": "paragraph",
-      "content": "One small line under the buy buttons. The rating part uses the store-wide Judge.me rating, links to the reviews, and is left out until there's a review. Empty parts are left out."
+      "content": "Five stars and the rating under the price, linking to the reviews. Live Judge.me numbers only: the product's own reviews when it has some, otherwise the store's. Hidden when there are no reviews (or fewer than Theme settings > SixthGear: reviews)."
     },
     {
       "type": "text",
-      "id": "rating_text",
-      "label": "Rating",
-      "default": "[rating] from our customers",
-      "info": "After a gold star. [rating] is the store-wide average (e.g. 5.0), [count] the number of reviews."
+      "id": "store_text",
+      "label": "Store-wide wording",
+      "default": "[rating] · [count] store reviews",
+      "info": "[rating] is the store's average (e.g. 4.9), [count] its number of reviews. \"reviews\" becomes \"review\" for one."
     },
     {
       "type": "text",
-      "id": "item_2",
-      "label": "Second part",
-      "default": "Free UK delivery"
-    },
-    {
-      "type": "text",
-      "id": "item_3",
-      "label": "Third part",
-      "default": "Printed in the UK"
+      "id": "product_text",
+      "label": "This product's wording",
+      "default": "[rating] · [count] reviews",
+      "info": "Used when the product has its own Judge.me reviews."
     },
     {
       "type": "text",
       "id": "anchor",
-      "label": "Rating links to",
+      "label": "Links to",
       "default": "reviews",
       "info": "The id of the element to scroll to, without #."
     }

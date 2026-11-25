@@ -17,8 +17,8 @@
         "tagline": "SixthGear Studios makes car wall art for garages, offices and man caves, printed in the UK.",
         "menu_1_heading": "Shop",
         "menu_1": "main-menu",
-        "menu_2_heading": "Collections",
-        "menu_2": "collections",
+        "menu_2_heading": "",
+        "menu_2": "",
         "menu_3_heading": "Help",
         "menu_3": "footer",
         "instagram_url": "https://www.instagram.com/sixthgearstudio/",
@@ -34,7 +34,8 @@
         "copyright_name": "SixthGear Studios",
         "show_policies": true,
         "show_payment_icons": true,
-        "background_color": "#1A1A1A"
+        "background_color": "#1A1A1A",
+        "menu_1_shop_all": "Shop all"
       }
     }
   },

@@ -137,13 +137,11 @@
             "sgs_review_line": {
               "type": "sgs-review-line",
               "settings": {
-                "rating_text": "[rating] from our customers",
-                "item_2": "Free UK delivery",
-                "item_3": "Printed in the UK",
+                "store_text": "[rating] · [count] store reviews",
+                "product_text": "[rating] · [count] reviews",
                 "anchor": "reviews"
               },
-              "blocks": {},
-              "disabled": true
+              "blocks": {}
             },
             "sgs_b2g1": {
               "type": "sgs-b2g1",

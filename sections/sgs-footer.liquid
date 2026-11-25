@@ -68,6 +68,16 @@
             <div class="sgs-footer__col">
               <p class="sgs-footer__col-heading sgs-label">{{ s[heading_key] | default: menu.title | escape }}</p>
               <ul class="sgs-footer__links" role="list">
+                {%- comment -%} Column 1 can start with a "Shop all" link (theme setting), unless the menu already has one {%- endcomment -%}
+                {%- if i == 1 and s.menu_1_shop_all != blank -%}
+                  {%- assign all_url = routes.all_products_collection_url -%}
+                  {%- assign has_all = menu.links | where: 'url', all_url | size -%}
+                  {%- if has_all == 0 -%}
+                    <li>
+                      <a href="{{ all_url }}"{% if request.path == all_url %} aria-current="page"{% endif %}>{{ s.menu_1_shop_all | escape }}</a>
+                    </li>
+                  {%- endif -%}
+                {%- endif -%}
                 {%- for link in menu.links -%}
                   <li>
                     <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
@@ -188,7 +198,9 @@
   .sgs-footer__nav {
     grid-column: 7 / span 6;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    /* As many equal columns as there are menus (one to three) */
+    grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column;
     gap: 40px 24px;
   }
 
@@ -322,6 +334,7 @@
   @media screen and (max-width: 749px) {
     .sgs-footer__nav {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-flow: row;
     }
 
     .sgs-footer__bottom {
@@ -344,7 +357,9 @@
   "tag": "div",
   "class": "sgs-footer-section",
   "enabled_on": {
-    "groups": ["footer"]
+    "groups": [
+      "footer"
+    ]
   },
   "settings": [
     {
@@ -375,7 +390,15 @@
       "type": "link_list",
       "id": "menu_1",
       "label": "Column 1 menu",
-      "default": "main-menu"
+      "default": "main-menu",
+      "info": "Shopify admin > Content > Menus. The header uses the same main menu, so its links stay in step."
+    },
+    {
+      "type": "text",
+      "id": "menu_1_shop_all",
+      "label": "Column 1: first link to all products",
+      "default": "Shop all",
+      "info": "Added before the menu's own links (to /collections/all), unless the menu already has it. Leave empty for none."
     },
     {
       "type": "text",
@@ -386,7 +409,8 @@
     {
       "type": "link_list",
       "id": "menu_2",
-      "label": "Column 2 menu"
+      "label": "Column 2 menu",
+      "info": "Leave empty for no second column."
     },
     {
       "type": "text",
@@ -404,12 +428,36 @@
       "type": "header",
       "content": "Social"
     },
-    { "type": "url", "id": "instagram_url", "label": "Instagram" },
-    { "type": "url", "id": "tiktok_url", "label": "TikTok" },
-    { "type": "url", "id": "youtube_url", "label": "YouTube" },
-    { "type": "url", "id": "pinterest_url", "label": "Pinterest" },
-    { "type": "url", "id": "facebook_url", "label": "Facebook" },
-    { "type": "url", "id": "x_url", "label": "X" },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "pinterest_url",
+      "label": "Pinterest"
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook"
+    },
+    {
+      "type": "url",
+      "id": "x_url",
+      "label": "X"
+    },
     {
       "type": "header",
       "content": "Bottom bar"

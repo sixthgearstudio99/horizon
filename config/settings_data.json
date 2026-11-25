@@ -138,6 +138,7 @@
     "sgs_noindex_collections": "sale-eligble",
     "sgs_popular_middle": false,
     "sgs_popular_value": "",
+    "sgs_reviews_min": 1,
     "blocks": {
       "2567389343055140935": {
         "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",

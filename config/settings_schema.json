@@ -2647,7 +2647,7 @@
     "settings": [
       {
         "type": "paragraph",
-        "content": "Review sections and the store rating line stay hidden until the store has this many real reviews in Judge.me. Nothing is ever made up: the numbers come from Judge.me."
+        "content": "Review sections and the review line under the price show once the store has this many real reviews in Judge.me (1 = as soon as there's one). Nothing is ever made up: the numbers come from Judge.me."
       },
       {
         "type": "range",
@@ -2657,7 +2657,7 @@
         "max": 20,
         "step": 1,
         "unit": "rev",
-        "default": 5
+        "default": 1
       },
       {
         "type": "text",

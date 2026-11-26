@@ -205,6 +205,11 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     white-space: nowrap;
+    /* The scrolling track is several thousand pixels long: it must never set the width of the
+       product column (that pushed the desktop layout off the screen) */
+    min-width: 0;
+    max-width: 100%;
+    contain: inline-size;
   }
 
   /* Soft fade at both ends, inside the border so the outline stays crisp */
@@ -237,8 +242,12 @@
 
   /* Four copies in a row; moving by one copy loops seamlessly */
   .sgs-ticker__track {
+    /* Out of the flow, so its length doesn't count towards any layout width */
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
     display: flex;
-    flex-shrink: 0;
+    align-items: center;
     width: max-content;
     animation: sgs-ticker var(--sgs-ticker-duration) linear infinite;
   }

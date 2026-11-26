@@ -657,3 +657,27 @@ html.sgs-fade img.sgs-fade-in {
     animation: none;
   }
 }
+
+/* ---------- Product page, desktop (1024px and up): gallery about 58%, details about 42% ----------
+   Both tracks may shrink below their content (minmax(0, …)), so nothing inside the details, such
+   as the offer ticker's long scrolling track, can widen the column and push the page off screen.
+   The details content stops at 520px. Mobile and tablet keep Horizon's own layout. ("html body"
+   outranks Horizon's own column rules, which load later.) */
+@media screen and (min-width: 1024px) {
+  html body .product-information__grid.product-information--media-left:not(.product-information__grid--half, .product-information--media-none) {
+    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
+  }
+
+  html body .product-information__grid.product-information--media-right:not(.product-information__grid--half, .product-information--media-none) {
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+  }
+
+  html body .product-information__grid:not(.product-information--media-none) > .product-details {
+    min-width: 0;
+  }
+
+  html body .product-information__grid:not(.product-information--media-none) .product-details > .group-block {
+    width: 100%;
+    max-width: 520px;
+  }
+}

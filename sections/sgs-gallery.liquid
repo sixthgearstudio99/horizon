@@ -45,9 +45,9 @@
             assign b = block.settings
             assign link_url = b.product.url | default: b.link
             if forloop.first
-              assign img_sizes = '(min-width: 990px) 62vw, 82vw'
+              assign img_sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 51vw, (min-width: 990px) 62vw, 75vw'
             else
-              assign img_sizes = '(min-width: 990px) 31vw, 82vw'
+              assign img_sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 51vw, (min-width: 990px) 31vw, 75vw'
             endif
           -%}
           <li class="sgs-gallery__item" data-sgs-reveal {{ block.shopify_attributes }}>

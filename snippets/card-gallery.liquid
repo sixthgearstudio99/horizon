@@ -106,11 +106,18 @@
       {% liquid
         assign featured_media = product.featured_media
 
+        # SixthGear: cards load lazily (a collection page used to fetch every card's image at once),
+        # with explicit sizes rather than "auto", so phones with 3x screens get about twice the
+        # card's width. Cards rendered on their own (section.index blank, e.g. quick add) stay eager.
+        assign sgs_card_mobile = '31vw'
+        if section.settings.mobile_product_card_size == 'large'
+          assign sgs_card_mobile = '62vw'
+        endif
+        assign image_sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) ' | append: sgs_card_mobile | append: ', ' | append: image_sizes
         assign featured_media_loading = 'lazy'
-        assign featured_media_sizes = 'auto, ' | append: image_sizes
-        if section.index == null or section.index < 5
+        assign featured_media_sizes = image_sizes
+        if section.index == null
           assign featured_media_loading = 'eager'
-          assign featured_media_sizes = image_sizes
         endif
 
         # The class differs per media only by media_type; the base template and the
@@ -137,6 +144,7 @@
           {% render 'product-media',
             media: featured_media,
             sizes: featured_media_sizes,
+            widths: '240, 352, 400, 480, 640, 832, 1200, 1600',
             loading: featured_media_loading,
             preview_image_only: true,
             alt_title: product.title,
@@ -193,7 +201,7 @@
                 assign sizes = featured_media_sizes
               else
                 assign loading = 'lazy'
-                assign sizes = 'auto, ' | append: image_sizes
+                assign sizes = image_sizes
               endif
 
               assign class = media_class | replace: '[media_type]', media.media_type | append: media_class_suffix
@@ -204,7 +212,7 @@
               endif
 
               capture slideshow_children
-                render 'product-media', media: media, sizes: sizes, loading: loading, preview_image_only: true, alt_title: product.title, alt_total: product.media.size
+                render 'product-media', media: media, sizes: sizes, widths: '240, 352, 400, 480, 640, 832, 1200, 1600', loading: loading, preview_image_only: true, alt_title: product.title, alt_total: product.media.size
               endcapture
 
               render 'slideshow-slide', slide_id: media.id, index: forloop.index0, hidden: hidden, class: class, attributes: attributes, children: slideshow_children, media_fit: slide_fit

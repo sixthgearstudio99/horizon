@@ -628,3 +628,32 @@ sticky-add-to-cart[data-sgs-past='true'] .sticky-add-to-cart__bar[data-stuck='tr
     margin-top: -8px;
   }
 }
+
+/* ---------- Images loading: #1A1A1A placeholder, then a 200ms fade (snippets/sgs-media-preload.liquid) ---------- */
+/* The gallery image's own box is the placeholder: it has the image's exact shape, so nothing moves */
+media-gallery .product-media {
+  background-color: #1a1a1a;
+}
+
+html.sgs-fade img.sgs-pending {
+  opacity: 0;
+}
+
+html.sgs-fade img.sgs-fade-in {
+  animation: sgs-img-in 0.2s ease-out both;
+}
+
+@keyframes sgs-img-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.sgs-fade img.sgs-fade-in {
+    animation: none;
+  }
+}

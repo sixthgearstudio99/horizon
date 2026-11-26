@@ -1,0 +1,52 @@
+{%- doc -%}
+  SixthGear Studios: image loading on phones, rendered in the head.
+  - Product gallery: images 4 onwards are lazy until the visitor first touches, swipes, scrolls or
+    keys through the gallery; then they all start loading, so the next slide is ready before it
+    arrives (images 1 to 3 already load straight away: snippets/product-media-gallery-content.liquid).
+  - Fade-in: gallery, product card and section images that are still loading when the page is read
+    show the #1A1A1A placeholder behind them, then fade in over 200ms once loaded. The first gallery
+    image (fetchpriority high) is never held back. Only a class added here hides an image, and it is
+    removed on load or error, so an image is never left hidden.
+
+  @example
+  {% render 'sgs-media-preload' %}
+{%- enddoc -%}
+<script>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add('sgs-fade');
+    var SEL = 'media-gallery .product-media__image, .product-card .product-media__image, .sgs-card__img--primary, .sgs-garage__img, .sgs-tile__img, .sgs-cscroll__img, .sgs-gallery__img, .sgs-proof__img';
+
+    var done = function (img) {
+      if (!img.classList.contains('sgs-pending')) return;
+      img.classList.remove('sgs-pending');
+      img.classList.add('sgs-fade-in');
+      setTimeout(function () { img.classList.remove('sgs-fade-in'); }, 260);
+    };
+    // Load and error don't bubble, but they can be caught on the way down
+    document.addEventListener('load', function (e) { if (e.target.tagName === 'IMG') done(e.target); }, true);
+    document.addEventListener('error', function (e) { if (e.target.tagName === 'IMG') done(e.target); }, true);
+
+    var mark = function () {
+      document.querySelectorAll(SEL).forEach(function (img) {
+        if (img.getAttribute('fetchpriority') === 'high') return;
+        if (!img.complete) img.classList.add('sgs-pending');
+      });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mark);
+    else mark();
+
+    // Gallery: start the rest the first time it's touched, swiped, scrolled or keyed
+    var started = new WeakSet();
+    var warm = function (e) {
+      var gallery = e.target && e.target.closest && e.target.closest('media-gallery');
+      if (!gallery || started.has(gallery)) return;
+      started.add(gallery);
+      gallery.querySelectorAll('img[loading="lazy"]').forEach(function (img) { img.loading = 'eager'; });
+    };
+    ['touchstart', 'pointerdown', 'wheel', 'keydown', 'focusin'].forEach(function (type) {
+      document.addEventListener(type, warm, { capture: true, passive: true });
+    });
+    document.addEventListener('scroll', warm, { capture: true, passive: true });
+  })();
+</script>

@@ -30,6 +30,9 @@
   endcase
   if s.mobile_layout == 'grid'
     assign card_sizes = card_sizes | replace: '78vw', '46vw'
+  else
+    # Swipeable row on phones: 3x screens get about twice the card's width (cards are 78vw)
+    assign card_sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 52vw, ' | append: card_sizes
   endif
 
   assign bg = s.background_color | default: settings.color_palette.background

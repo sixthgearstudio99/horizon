@@ -17,7 +17,11 @@
   assign card_ratio = '4 / 5'
   assign card_ratio_max = 0.81
   assign card_fit = 'cover'
-  assign card_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 80vw'
+  assign card_sizes = sizes | default: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 46vw'
+  # Phones with 3x screens: about twice the card's width, not three times (cards are ~46vw)
+  unless card_sizes contains 'device-pixel-ratio'
+    assign card_sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 30vw, ' | append: card_sizes
+  endunless
   if eager
     assign card_loading = 'eager'
   else
@@ -85,7 +89,7 @@
             primary_image
             | image_url: width: 1400
             | image_tag:
-              widths: '300, 450, 600, 800, 1000, 1200, 1400',
+              widths: '300, 360, 450, 600, 800, 1000, 1200, 1400',
               sizes: card_sizes,
               loading: card_loading,
               class: primary_class,
@@ -107,7 +111,7 @@
             secondary_image
             | image_url: width: 1400
             | image_tag:
-              widths: '300, 450, 600, 800, 1000, 1200, 1400',
+              widths: '300, 360, 450, 600, 800, 1000, 1200, 1400',
               sizes: card_sizes,
               loading: 'lazy',
               class: secondary_class,

@@ -162,6 +162,11 @@
     render 'util-product-media-sizes-attr', block: block, section: section, settings: settings, is_first_image: false, is_single_column: is_single_column, needs_both_sizes: needs_both_sizes
   endcapture
   assign sizes = sizes | strip
+  # SixthGear: phones with 3x screens get about twice the slide's width, not three times
+  assign sizes = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 67vw, ' | append: sizes
+  if sizes_single != blank
+    assign sizes_single = '(max-width: 749px) and (-webkit-min-device-pixel-ratio: 2.5) 67vw, ' | append: sizes_single
+  endif
 
   assign product_media_container_class = 'product-media-container'
   if block_settings.constrain_to_viewport
@@ -379,9 +384,11 @@
     {% capture slides %}
       {% for media in sorted_media %}
         {%- liquid
-          # SixthGear: first image loads straight away at high priority, the rest lazily
+          # SixthGear: the first three images load straight away (the first at high priority), so a
+          # swipe never lands on an empty slide; the rest are lazy until the gallery is first
+          # touched or swiped, when snippets/sgs-media-preload.liquid starts them all
           assign media_loading = 'lazy'
-          if forloop.first
+          if forloop.index <= 3
             assign media_loading = 'eager'
           endif
         -%}

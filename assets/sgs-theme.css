@@ -681,3 +681,15 @@ html.sgs-fade img.sgs-fade-in {
     max-width: 520px;
   }
 }
+
+/* Wider than 1440px: the whole product section (gallery + details) stops at 1400px, centred on the
+   page, still 58/42. It spans the full page row first (the gallery's "extend to the edge" setting
+   otherwise starts it at the left edge), so the centring is relative to the whole page. */
+@media screen and (min-width: 1441px) {
+  html body .product-information__grid.product-information__grid:not(.product-information--media-none):is(.product-information--media-left, .product-information--media-right) {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+}

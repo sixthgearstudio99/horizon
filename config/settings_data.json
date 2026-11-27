@@ -151,7 +151,7 @@
     "sgs_pdp_offer_line_text": "Black Friday: 25% off unframed prints when you spend £50 · Ends Mon 30 Nov",
     "sgs_pdp_offer_line_until": "2026-11-30",
     "sgs_popular_label": "Most popular",
-    "sgs_buy2_enabled": false,
+    "sgs_buy2_enabled": true,
     "sgs_buy2_title": "Buy 2 prints, get the 3rd half price",
     "sgs_buy2_subline": "Applies to unframed prints. Discount added automatically at checkout.",
     "sgs_buy2_link_label": "Complete your wall ↓",

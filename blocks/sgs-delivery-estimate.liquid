@@ -417,10 +417,20 @@
   }
 
   @media screen and (min-width: 750px) {
+    /* One row: the three short lines share the space, the delivery estimate gets the most */
     .sgs-trustrow__list {
       grid-template-columns: none;
       grid-auto-flow: column;
       grid-auto-columns: minmax(0, 1fr);
+      gap: 12px 14px;
+    }
+
+    .sgs-trustrow__item--estimate {
+      grid-column: span 2;
+    }
+
+    .sgs-trustrow__item {
+      font-size: 12px;
     }
   }
 

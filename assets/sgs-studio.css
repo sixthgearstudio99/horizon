@@ -1531,8 +1531,11 @@ media-gallery :is(slideshow-slide, .product-media-container) {
 }
 
 /* "Most popular" on the middle size pill: a small tag on the pill's top edge (no extra height) */
-.variant-option.sgs-size-pills {
-  overflow: visible;
+.variant-option.sgs-size-pills,
+.variant-option.sgs-size-pills .variant-option__button-label:has(.sgs-pill-popular) {
+  overflow: visible !important;
+  contain: none !important;
+  clip-path: none !important;
 }
 
 .sgs-pill-popular {

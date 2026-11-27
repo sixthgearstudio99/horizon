@@ -580,12 +580,18 @@
                 "label": "Offers and delivery"
               },
               "blocks": {}
+            },
+            "sgs_offer_line": {
+              "type": "sgs-offer-line",
+              "settings": {},
+              "blocks": {}
             }
           },
           "block_order": [
             "sgs_header",
             "sgs_rating",
             "price_tVjtKg",
+            "sgs_offer_line",
             "sgs_review_line",
             "sgs_offer_ticker",
             "sgs_intro",

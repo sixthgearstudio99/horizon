@@ -1,7 +1,7 @@
 {%- doc -%}
-  SixthGear Studios: display-only sale price for an open sale window. The real discount is an
-  automatic discount applied at checkout; prices and structured data are untouched. Hidden by
-  CSS unless the visitor's device agrees the same window is open (html[data-sgs-sale]).
+  SixthGear Studios: no longer shows reduced prices (see the note below); kept so its callers keep
+  working. With part 'note', the open offer window's short message, hidden by CSS unless the
+  visitor's device agrees the same window is open (html[data-sgs-sale]).
 
   @param {product} product_resource - The product
   @param {string} window - The open window, 1 or 2 (from sgs-sale-window)
@@ -16,13 +16,11 @@
 
 {%- liquid
   assign part = part | default: 'price'
-  assign percent_key = 'sgs_sale' | append: window | append: '_percent'
   assign message_key = 'sgs_sale' | append: window | append: '_message'
   assign short_key = 'sgs_sale' | append: window | append: '_short'
-  assign percent = settings[percent_key] | plus: 0
 
   assign in_sale = true
-  if product_resource == blank or product_resource.gift_card? or percent <= 0
+  if product_resource == blank or product_resource.gift_card?
     assign in_sale = false
   endif
   assign excluded = settings.sgs_sale_excluded_handles | strip_newlines | remove: ' ' | split: ','
@@ -40,31 +38,16 @@
   endif
 -%}
 
-{%- if in_sale -%}
-  {%- if part == 'note' -%}
-    {%- assign message = settings[short_key] | strip | default: settings[message_key] -%}
-    {%- if message != blank -%}
-      <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">{{ message | escape }}</p>
-    {%- endif -%}
-  {%- elsif part == 'now' and amount != blank -%}
-    {%- liquid
-      assign discount = amount | times: percent | plus: 50 | divided_by: 100 | floor
-      assign sale_amount = amount | minus: discount
-    -%}
-    <span class="sgs-sale-now" data-sgs-sale-win="{{ window }}">{{ sale_amount | money_without_trailing_zeros }}</span>
-  {%- elsif amount != blank -%}
-    {%- liquid
-      # Discount rounded to the nearest penny, then taken off, as a percentage discount does
-      assign discount = amount | times: percent | plus: 50 | divided_by: 100 | floor
-      assign sale_amount = amount | minus: discount
-    -%}
-    <span class="sgs-sale" data-sgs-sale-win="{{ window }}">
-      {%- if from -%}<span class="sgs-sale__from">From</span>{%- endif -%}
-      <span class="sgs-sale__was"><span class="visually-hidden">Regular price&nbsp;</span><bdi>{{ amount | money_without_trailing_zeros }}</bdi></span>
-      <span class="sgs-sale__now"><span class="visually-hidden">Sale price&nbsp;</span><bdi>{{ sale_amount | money_without_trailing_zeros }}</bdi></span>
-      {%- if save and discount > 0 -%}
-        <span class="sgs-sale__save">{{ percent }}% off</span>
-      {%- endif -%}
-    </span>
+{%- comment -%}
+  Prices are never shown reduced. The offers are taken off at checkout (e.g. 25% off unframed prints
+  when the unframed prints in the cart reach £50), so a product's own price is what one item costs;
+  showing it already reduced would not match what the customer is charged. A genuine compare-at
+  price set in Shopify still shows as a sale (snippets/price.liquid). Only the offer's short note
+  can be output here.
+{%- endcomment -%}
+{%- if in_sale and part == 'note' -%}
+  {%- assign message = settings[short_key] | strip | default: settings[message_key] -%}
+  {%- if message != blank -%}
+    <p class="sgs-sale-note" data-sgs-sale-win="{{ window }}">{{ message | escape }}</p>
   {%- endif -%}
 {%- endif -%}

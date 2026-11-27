@@ -1,0 +1,82 @@
+{%- liquid
+  # SixthGear: one small line under the price on unframed product pages, e.g. "Black Friday: 25% off
+  # unframed prints when you spend £50 · Ends Mon 30 Nov". Text, on/off and last day in Theme
+  # settings > SixthGear: product page offer line. Shown only on prints the cart offer counts
+  # (snippets/sgs-spend-eligible.liquid: unframed, tagged "sale eligible" or in that collection, never
+  # framed), and hidden after its last day (UK), checked on Shopify's clock and the visitor's.
+  assign text = settings.sgs_pdp_offer_line_text | strip
+  assign until = settings.sgs_pdp_offer_line_until | strip
+  assign today = 'now' | date: '%Y-%m-%d'
+
+  assign show = settings.sgs_pdp_offer_line_enabled
+  if text == blank or closest.product == blank or closest.product.gift_card?
+    assign show = false
+  endif
+  if until.size == 10 and today > until
+    assign show = false
+  endif
+  if show
+    capture eligible
+      render 'sgs-spend-eligible', product_resource: closest.product
+    endcapture
+    unless eligible contains 'true'
+      assign show = false
+    endunless
+  endif
+-%}
+
+{%- if show -%}
+  <p class="sgs-offer-line" data-sgs-offer-until="{{ until | escape }}" {{ block.shopify_attributes }}>{{ text | escape }}</p>
+  <script>
+    (function () {
+      var line = document.currentScript.previousElementSibling;
+      var until = line && line.getAttribute('data-sgs-offer-until');
+      if (!until || until.length !== 10) return;
+      try {
+        var p = {};
+        new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+          .formatToParts(new Date()).forEach(function (x) { p[x.type] = x.value; });
+        if (p.year + '-' + p.month + '-' + p.day > until) line.hidden = true;
+      } catch (e) {}
+    })();
+  </script>
+{%- elsif request.design_mode -%}
+  <p class="sgs-offer-line sgs-offer-line--editor" {{ block.shopify_attributes }}>Offer line: set it in Theme settings > SixthGear: product page offer line (unframed prints only).</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-offer-line {
+    width: 100%;
+    margin: -8px 0 0;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+    color: var(--sgs-accent, #ec6238);
+  }
+
+  .sgs-offer-line[hidden] {
+    display: none;
+  }
+
+  .sgs-offer-line--editor {
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Offer line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text and on/off in Theme settings > SixthGear: product page offer line."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Offer line"
+    }
+  ]
+}
+{% endschema %}

@@ -512,3 +512,23 @@
   color: var(--sgs-jdgm-text) !important;
   text-decoration-color: currentColor !important;
 }
+
+/* ---------- "What our customers say": text-only cards fit their text ----------
+   Judge.me stretches every card in the row to the tallest (a photo card), which left a large empty
+   box in cards without a photo. Text-only cards (.jdgm-text-card) now take their own height;
+   photo cards are unchanged. */
+[id*='sgs_reviews_carousel'] .jdgm-card.jdgm-text-card {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: flex-start !important;
+}
+
+[id*='sgs_reviews_carousel'] .jdgm-card.jdgm-text-card .jdgm-text {
+  flex: 0 0 auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+[id*='sgs_reviews_carousel'] :is(.jdgm-cards-wrapper, .jdgm-videos-container) {
+  align-items: flex-start !important;
+}

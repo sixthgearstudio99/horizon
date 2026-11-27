@@ -19,8 +19,10 @@
         {%- if s.heading != blank -%}
           <h2 class="sgs-grid__heading">{{ s.heading }}</h2>
         {%- endif -%}
-        {%- if s.offer_line != blank and settings.sgs_bundle_start != blank -%}
-          <p class="sgs-grid__offer" data-sgs-show-from="{{ settings.sgs_bundle_start | strip | escape }}" hidden>{{ s.offer_line | escape }}</p>
+        {%- comment -%} Only while Theme settings > SixthGear: Buy 2 offer is on {%- endcomment -%}
+        {%- assign recs_offer = settings.sgs_buy2_recs_line | default: s.offer_line | strip -%}
+        {%- if settings.sgs_buy2_enabled and recs_offer != blank -%}
+          <p class="sgs-grid__offer">{{ recs_offer | escape }}</p>
         {%- endif -%}
       </div>
       <a class="sgs-link sgs-grid__view-all" href="{{ routes.all_products_collection_url }}">
@@ -36,6 +38,7 @@
 {% render 'sgs-grid-styles' %}
 
 <section
+  id="complete-the-garage"
   class="sgs-grid sgs-grid--dark sgs-grid--mobile-grid sgs-recs"
   style="
     --sgs-grid-bg: transparent;
@@ -197,6 +200,7 @@
 
   .sgs-recs {
     border-top: 1px solid var(--sgs-line);
+    scroll-margin-top: calc(var(--header-height, 64px) + 8px);
   }
 
   .sgs-recs sgs-recommendations {
@@ -210,7 +214,9 @@
   "tag": "div",
   "class": "sgs-recs-section",
   "enabled_on": {
-    "templates": ["product"]
+    "templates": [
+      "product"
+    ]
   },
   "settings": [
     {
@@ -230,7 +236,7 @@
       "id": "offer_line",
       "label": "Offer line under the heading",
       "default": "Pick 3 prints, the 3rd is half price",
-      "info": "Shown from Theme settings > SixthGear: cart spend offer > Bundle offer starts, on each visitor's own UK clock. Leave empty to hide."
+      "info": "Shown only while Theme settings > SixthGear: Buy 2 offer is on; the wording there (Complete the garage line) takes priority."
     },
     {
       "type": "text",

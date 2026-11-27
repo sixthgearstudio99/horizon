@@ -17,55 +17,42 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign show = settings.sgs_spend_enabled
+  assign show = false
+  if settings.sgs_spend_enabled or settings.sgs_buy2_enabled
+    assign show = true
+  endif
   assign switch_at = settings.sgs_spend_switch | strip
   assign ends = settings.sgs_spend_end | strip
-  assign bundle_from = settings.sgs_bundle_start | strip
-  assign bundle_end = settings.sgs_bundle_end | strip
   assign now = 'now' | date: '%Y-%m-%d %H:%M'
 
-  # Phases still to come or running on Shopify's clock; the visitor's clock picks the one shown
-  # (html[data-sgs-spend-phase], set by snippets/sgs-spend-phase-head.liquid)
+  # Which phases this cart line needs; the visitor's clock picks the one shown
+  # (html[data-sgs-spend-phase], set by snippets/sgs-spend-phase-head.liquid).
+  # Buy 2 offer on: only phase 3 (counts prints), in place of the spend offer.
   assign phases = ''
-  assign spend_on = true
-  if ends.size == 16 and now > ends
-    assign spend_on = false
-  endif
-  if spend_on
-    assign phases = '1'
-    if switch_at.size == 16
-      assign phases = '1,2'
+  assign server_phase = 'off'
+  if settings.sgs_buy2_enabled
+    assign phases = '3'
+    assign server_phase = '3'
+  elsif settings.sgs_spend_enabled
+    assign spend_on = true
+    if ends.size == 16 and now > ends
+      assign spend_on = false
     endif
-  endif
-  assign bundle_on = false
-  if bundle_from.size == 16
-    assign bundle_on = true
-    if bundle_end.size == 16 and now > bundle_end
-      assign bundle_on = false
-    endif
-  endif
-  if bundle_on
-    if phases == ''
-      assign phases = '3'
-    else
-      assign phases = phases | append: ',3'
+    if spend_on
+      assign phases = '1'
+      assign server_phase = '1'
+      if switch_at.size == 16
+        assign phases = '1,2'
+        if now >= switch_at
+          assign server_phase = '2'
+        endif
+      endif
     endif
   endif
   if phases == '' or cart.item_count == 0
     assign show = false
   endif
   assign phases = phases | split: ','
-
-  assign server_phase = 'off'
-  if spend_on
-    assign server_phase = '1'
-    if switch_at.size == 16 and now >= switch_at
-      assign server_phase = '2'
-    endif
-  endif
-  if bundle_on and now >= bundle_from
-    assign server_phase = '3'
-  endif
 
   if show
     # Eligible prints: tagged (default "sale eligible") and not framed. Spend at their line price,

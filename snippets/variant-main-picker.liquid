@@ -307,6 +307,10 @@
                     <span class="variant-option__button-label__text sgs-pill" data-key="variant-option-text">
                       <span class="sgs-pill__in">{{ pill_text }}</span>
                     </span>
+                    {%- if sgs_popular != blank and value_lower == sgs_popular -%}
+                      {%- comment -%} Sits on the pill's top edge, so it adds no height {%- endcomment -%}
+                      <span class="sgs-pill-popular">{{ settings.sgs_popular_label | default: 'Most popular' | escape }}</span>
+                    {%- endif -%}
                   {%- else -%}
                   <span
                     class="variant-option__button-label__text"

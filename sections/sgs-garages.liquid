@@ -28,8 +28,9 @@
           <p class="sgs-garages__eyebrow sgs-label">{{ s.eyebrow | escape }}</p>
         {%- endif -%}
         <h2 class="sgs-garages__heading" id="SgsGarages-{{ section.id }}">{{ s.heading | escape }}</h2>
-        {%- if s.offer_line != blank and settings.sgs_bundle_start != blank -%}
-          <p class="sgs-garages__offer" data-sgs-show-from="{{ settings.sgs_bundle_start | strip | escape }}" hidden>{{ s.offer_line | escape }}</p>
+        {%- comment -%} Only while Theme settings > SixthGear: Buy 2 offer is on {%- endcomment -%}
+        {%- if s.offer_line != blank and settings.sgs_buy2_enabled -%}
+          <p class="sgs-garages__offer">{{ s.offer_line | escape }}</p>
         {%- endif -%}
       </header>
 
@@ -311,7 +312,7 @@
       "id": "offer_line",
       "label": "Offer line under the heading",
       "default": "3rd print half price",
-      "info": "Shown from Theme settings > SixthGear: cart spend offer > Bundle offer starts, on each visitor's own UK clock. Leave empty to hide."
+      "info": "Shown only while Theme settings > SixthGear: Buy 2 offer is on. Leave empty to hide."
     },
     {
       "type": "text",
@@ -378,9 +379,24 @@
     {
       "name": "SixthGear garages",
       "blocks": [
-        { "type": "garage", "settings": { "title": "Garage 1" } },
-        { "type": "garage", "settings": { "title": "Garage 2" } },
-        { "type": "garage", "settings": { "title": "Garage 3" } }
+        {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 1"
+          }
+        },
+        {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 2"
+          }
+        },
+        {
+          "type": "garage",
+          "settings": {
+            "title": "Garage 3"
+          }
+        }
       ]
     }
   ]

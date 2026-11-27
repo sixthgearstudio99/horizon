@@ -4,6 +4,7 @@
   on Shopify's clock and again on the visitor's, so a page served earlier can't keep showing it.
 
   @param {string} [class] - CSS class for the line
+  @param {string} [text] - Wording with [date] instead of the theme setting's, e.g. "Order by [date] for Christmas."
 
   @example
   {% render 'sgs-xmas-line', class: 'sgs-dinfo__gift' %}
@@ -18,7 +19,7 @@
   endif
   if show
     assign day_text = last_day | append: ' 12:00' | date: '%a %-d %b'
-    assign line = settings.sgs_xmas_text | default: 'Order by [date] for Christmas delivery' | escape | replace: '[date]', day_text
+    assign line = text | default: settings.sgs_xmas_text | default: 'Order by [date] for Christmas delivery' | escape | replace: '[date]', day_text
   endif
 -%}
 {%- if show -%}

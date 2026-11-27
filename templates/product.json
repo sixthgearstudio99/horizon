@@ -303,10 +303,10 @@
             "sgs_delivery_line": {
               "type": "sgs-delivery-estimate",
               "settings": {
-                "layout": "details",
+                "layout": "trust",
                 "details_line_1": "Free UK delivery, and a free replacement if it arrives damaged",
                 "details_estimate_label": "Estimated delivery",
-                "details_estimate_text": "Order today, arrives between [start] and [end]",
+                "details_estimate_text": "Arrives [start] – [end]",
                 "details_line_3": "",
                 "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
                 "line_text_custom": "Free UK delivery · Arrives by [date]",
@@ -334,7 +334,11 @@
                 "wyg_paper_fine": "Fine art paper, printed in the UK",
                 "wyg_sizes_label": "",
                 "wyg_framed": "Up on the wall the day it arrives",
-                "wyg_unframed": "Rolled in a tube, ready for your own frame"
+                "wyg_unframed": "Rolled in a tube, ready for your own frame",
+                "details_hide_estimate": false,
+                "trust_1": "Printed in the UK",
+                "trust_2": "Free UK delivery",
+                "trust_3": "Free replacement if damaged"
               },
               "blocks": {}
             },
@@ -570,19 +574,52 @@
               },
               "blocks": {}
             },
-            "sgs_offer_ticker": {
-              "type": "sgs-offer-box",
+            "sgs_offer_line": {
+              "type": "sgs-offer-line",
+              "settings": {},
+              "blocks": {}
+            },
+            "sgs_what_you_get": {
+              "type": "sgs-delivery-estimate",
               "settings": {
-                "point_1": "Free UK delivery",
-                "point_2": "Printed in the UK",
-                "point_3": "Free replacement if damaged",
-                "point_4": "",
-                "label": "Offers and delivery"
+                "layout": "details",
+                "details_line_1": "",
+                "details_estimate_label": "Estimated delivery",
+                "details_estimate_text": "Order today, arrives between [start] and [end]",
+                "details_line_3": "",
+                "line_text": "Free UK delivery · Arrives by [date] · Free Damage Replacement Guarantee",
+                "line_text_custom": "Free UK delivery · Arrives by [date]",
+                "text_before": "Order today · arrives",
+                "footnote": "",
+                "bank_holidays": "2026-12-25, 2026-12-28, 2027-01-01, 2027-03-26, 2027-03-29, 2027-05-03, 2027-05-31, 2027-08-30, 2027-12-27, 2027-12-28",
+                "production_min": 2,
+                "production_max": 5,
+                "delivery_min": 2,
+                "delivery_max": 4,
+                "christmas_line": "",
+                "christmas_line_from": "2026-11-23",
+                "christmas_line_until": "2026-12-09",
+                "custom_handles": "custom-car-poster-personalized-car-print-with-your-own-car-name-plate-cinematic-garage-wall-art-multiple-sizes, custom-car-poster-personalized-car-print-with-your-own-car",
+                "custom_proof_days": 3,
+                "custom_estimate_text": "Free proof within 3 working days · Estimated delivery [range] if you approve your proof the day you receive it",
+                "custom_line": "Custom posters: order by Wed 2 Dec for Christmas delivery",
+                "custom_line_until": "2026-12-02",
+                "christmas_from": "12-10",
+                "christmas_to": "12-24",
+                "christmas_message": "Too late for Christmas delivery – send a [digital gift card] instead",
+                "gift_card_handle": "gift-card",
+                "wyg_heading": "What you get",
+                "wyg_paper": "Fade-resistant inks, so it stays sharp on your wall",
+                "wyg_paper_fine": "Fine art paper, printed in the UK",
+                "wyg_sizes_label": "",
+                "wyg_framed": "Up on the wall the day it arrives",
+                "wyg_unframed": "Rolled in a tube, ready for your own frame",
+                "details_hide_estimate": true
               },
               "blocks": {}
             },
-            "sgs_offer_line": {
-              "type": "sgs-offer-line",
+            "sgs_buy2": {
+              "type": "sgs-buy2-offer",
               "settings": {},
               "blocks": {}
             }
@@ -593,16 +630,17 @@
             "price_tVjtKg",
             "sgs_offer_line",
             "sgs_review_line",
-            "sgs_offer_ticker",
             "sgs_intro",
             "divider_VJhene",
             "sgs_finish",
             "variant_picker_R3rGDr",
             "sgs_framed_upgrade",
             "sgs_personalise",
+            "sgs_buy2",
             "buy_buttons_eYQEYi",
-            "sgs_gift_line",
             "sgs_delivery_line",
+            "sgs_gift_line",
+            "sgs_what_you_get",
             "sgs_b2g1",
             "sgs_trustpilot",
             "sgs_ptrust",
@@ -982,12 +1020,78 @@
         "products_to_show": 3,
         "padding-block-start": 96,
         "padding-block-end": 120,
-        "offer_line": "Pick 3 prints, the 3rd is half price"
+        "offer_line": "Add 2 more unframed prints and get your 3rd half price."
       }
+    },
+    "sgs_benefit_1": {
+      "type": "sgs-feature",
+      "settings": {
+        "image": "",
+        "require_image": true,
+        "product": "",
+        "image_ratio": "4 / 5",
+        "image_position": "left",
+        "eyebrow": "",
+        "heading": "Built for the garage, office or man cave",
+        "text": "<p>Bold, cinematic car art designed to own a wall, not blend into it.</p>",
+        "christmas_line": "",
+        "link_label": "",
+        "link": "",
+        "background_color": "",
+        "padding-block-start": 56,
+        "padding-block-end": 56
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "sgs_benefit_2": {
+      "type": "sgs-feature",
+      "settings": {
+        "image": "",
+        "require_image": true,
+        "product": "",
+        "image_ratio": "4 / 5",
+        "image_position": "right",
+        "eyebrow": "",
+        "heading": "Printed in the UK, made to last",
+        "text": "<p>Fade-resistant inks on premium paper, printed and shipped from the UK.</p>",
+        "christmas_line": "",
+        "link_label": "",
+        "link": "",
+        "background_color": "",
+        "padding-block-start": 56,
+        "padding-block-end": 56
+      },
+      "blocks": {},
+      "block_order": []
+    },
+    "sgs_benefit_3": {
+      "type": "sgs-feature",
+      "settings": {
+        "image": "",
+        "require_image": true,
+        "product": "",
+        "image_ratio": "4 / 5",
+        "image_position": "left",
+        "eyebrow": "",
+        "heading": "The gift he'll actually put up",
+        "text": "<p>Framed and ready to hang, or rolled in a tube for his own frame.</p>",
+        "christmas_line": "Order by [date] for Christmas.",
+        "link_label": "",
+        "link": "",
+        "background_color": "",
+        "padding-block-start": 56,
+        "padding-block-end": 56
+      },
+      "blocks": {},
+      "block_order": []
     }
   },
   "order": [
     "main",
+    "sgs_benefit_1",
+    "sgs_benefit_2",
+    "sgs_benefit_3",
     "sgs_reviews_anchor",
     "sgs_reviews_carousel",
     "sgs_wall_videos",

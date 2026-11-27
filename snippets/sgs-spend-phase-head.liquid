@@ -1,8 +1,9 @@
 {%- doc -%}
   SixthGear Studios: which phase the cart spend offer is in, from the visitor's own clock in UK time
   (Europe/London), as <html data-sgs-spend-phase="1|2|3|off">. Phase 1 runs until the switch time,
-  phase 2 from the switch time to the end time, phase 3 (the bundle offer) from the bundle start to
-  its end, if it has one, and "off" otherwise (Theme settings > SixthGear: cart spend offer). Set in the head before anything paints, and checked again every minute so an
+  phase 2 from the switch time to the end time, and "off" after that (Theme settings > SixthGear:
+  cart spend offer). Phase 3, the Buy 2 offer, whenever Theme settings > SixthGear: Buy 2 offer >
+  Show Buy 2 offer is on: it replaces the spend offer while on. Set in the head before anything paints, and checked again every minute so an
   open page changes over by itself. The cart progress line (snippets/sgs-spend-progress.liquid)
   shows the wording for the current phase.
 
@@ -10,13 +11,13 @@
   {% render 'sgs-spend-phase-head' %}
 {%- enddoc -%}
 
-{%- if settings.sgs_spend_enabled -%}
+{%- if settings.sgs_spend_enabled or settings.sgs_buy2_enabled -%}
   <script>
     (function () {
       var switchAt = {{ settings.sgs_spend_switch | strip | json }};
       var endsAt = {{ settings.sgs_spend_end | strip | json }};
-      var bundleFrom = {{ settings.sgs_bundle_start | strip | json }};
-      var bundleEnd = {{ settings.sgs_bundle_end | strip | json }};
+      var buy2 = {{ settings.sgs_buy2_enabled | json }};
+      var spendOn = {{ settings.sgs_spend_enabled | json }};
       var root = document.documentElement;
       var update = function () {
         var p = {};
@@ -32,9 +33,10 @@
         var phase = '1';
         if (switchAt && switchAt.length === 16 && now >= switchAt) phase = '2';
         if (endsAt && endsAt.length === 16 && now > endsAt) phase = 'off';
-        // Phase 3: the bundle offer ("3rd print half price"), from its start to its end (if any)
-        if (bundleFrom && bundleFrom.length === 16 && now >= bundleFrom) phase = '3';
-        if (phase === '3' && bundleEnd && bundleEnd.length === 16 && now > bundleEnd) phase = 'off';
+        if (!spendOn) phase = 'off';
+        // Phase 3: the Buy 2 offer ("3rd print half price") replaces the spend offer while it's on
+        // (Theme settings > SixthGear: Buy 2 offer)
+        if (buy2) phase = '3';
         if (root.getAttribute('data-sgs-spend-phase') !== phase) root.setAttribute('data-sgs-spend-phase', phase);
       };
       update();

@@ -26,7 +26,12 @@
     endfor
   endif
   assign feature_image = s.image
-  if feature_image == blank and feature_product != blank
+  # "Only with an uploaded image": no stand-in image, and the whole section stays hidden until one is set
+  assign feature_hidden = false
+  if s.require_image and s.image == blank
+    assign feature_hidden = true
+  endif
+  if feature_image == blank and feature_product != blank and s.require_image != true
     for media in feature_product.media
       if media.position > 1 and media.media_type == 'image'
         assign feature_image = media.preview_image
@@ -47,6 +52,7 @@
   endif
 -%}
 
+{%- unless feature_hidden -%}
 <section
   class="sgs-feature sgs-feature--{{ tone }} sgs-feature--image-{{ s.image_position }}"
   style="
@@ -85,6 +91,10 @@
       {%- if s.text != blank -%}
         <div class="sgs-feature__text" data-sgs-reveal>{{ s.text }}</div>
       {%- endif -%}
+      {%- if s.christmas_line != blank -%}
+        {%- comment -%} Only while Theme settings > SixthGear: Christmas has a date that hasn't passed {%- endcomment -%}
+        <p class="sgs-feature__xmas">{%- render 'sgs-xmas-line', class: 'sgs-feature__xmas-text', text: s.christmas_line -%}</p>
+      {%- endif -%}
 
       {%- if section.blocks.size > 0 -%}
         <dl class="sgs-feature__points" data-sgs-reveal>
@@ -108,8 +118,21 @@
     </div>
   </div>
 </section>
+{%- endunless -%}
 
 {% stylesheet %}
+  .sgs-feature__xmas {
+    margin: 12px 0 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--sgs-text, #f2efea);
+  }
+
+  .sgs-feature__xmas:not(:has(.sgs-feature__xmas-text:not([hidden]))) {
+    display: none;
+  }
+
   .sgs-feature {
     --sgs-feature-fg: 17 17 17;
 
@@ -290,6 +313,13 @@
       "info": "A lifestyle or on-the-wall photo works best. Leave empty to use the featured product's second image."
     },
     {
+      "type": "checkbox",
+      "id": "require_image",
+      "label": "Only with an uploaded image",
+      "default": false,
+      "info": "Hides the whole section until an image is uploaded (no stand-in product image)."
+    },
+    {
       "type": "product",
       "id": "product",
       "label": "Featured product",
@@ -300,10 +330,22 @@
       "id": "image_ratio",
       "label": "Image shape",
       "options": [
-        { "value": "natural", "label": "Image's own shape (never cropped)" },
-        { "value": "4 / 5", "label": "Portrait 4:5" },
-        { "value": "1 / 1", "label": "Square" },
-        { "value": "5 / 4", "label": "Landscape 5:4" }
+        {
+          "value": "natural",
+          "label": "Image's own shape (never cropped)"
+        },
+        {
+          "value": "4 / 5",
+          "label": "Portrait 4:5"
+        },
+        {
+          "value": "1 / 1",
+          "label": "Square"
+        },
+        {
+          "value": "5 / 4",
+          "label": "Landscape 5:4"
+        }
       ],
       "default": "4 / 5"
     },
@@ -312,8 +354,14 @@
       "id": "image_position",
       "label": "Image position",
       "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
       ],
       "default": "left"
     },
@@ -338,6 +386,12 @@
       "id": "text",
       "label": "Text",
       "default": "<p>Every SixthGear print begins with the car: its lines, its history, the moment it became a legend. Each one is printed to order and sent straight to your door.</p>"
+    },
+    {
+      "type": "text",
+      "id": "christmas_line",
+      "label": "Christmas line",
+      "info": "E.g. Order by [date] for Christmas. Shown under the text only while Theme settings > SixthGear: Christmas has a last order date that hasn't passed; [date] becomes that date."
     },
     {
       "type": "text",
@@ -406,15 +460,24 @@
       "blocks": [
         {
           "type": "point",
-          "settings": { "title": "Considered design", "text": "Every composition is built around the car's defining lines." }
+          "settings": {
+            "title": "Considered design",
+            "text": "Every composition is built around the car's defining lines."
+          }
         },
         {
           "type": "point",
-          "settings": { "title": "Sized for your wall", "text": "Choose from the sizes offered on each print." }
+          "settings": {
+            "title": "Sized for your wall",
+            "text": "Choose from the sizes offered on each print."
+          }
         },
         {
           "type": "point",
-          "settings": { "title": "Ready to frame", "text": "Supplied unframed, so you can choose a frame to suit your space." }
+          "settings": {
+            "title": "Ready to frame",
+            "text": "Supplied unframed, so you can choose a frame to suit your space."
+          }
         }
       ]
     }

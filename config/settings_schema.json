@@ -2572,7 +2572,7 @@
         "id": "sgs_bundle_start",
         "label": "Bundle offer starts (YYYY-MM-DD HH:MM, UK time)",
         "default": "2026-12-01 00:00",
-        "info": "Phase 3, after the spend offer ends: the cart line counts the same prints and shows the messages below. Also shows \"3rd print half price\" under Pick your garage and Complete the garage from this time. Leave empty for no bundle offer."
+        "info": "No longer switches the bundle offer on by itself: it shows only while Theme settings > SixthGear: Buy 2 offer > Show Buy 2 offer is on."
       },
       {
         "type": "text",
@@ -2584,19 +2584,19 @@
         "type": "text",
         "id": "sgs_bundle_text_1",
         "label": "Bundle: 1 print in the cart",
-        "default": "Complete the garage: add 2 more prints and your 3rd is half price"
+        "default": "Add 2 more prints to get your 3rd half price"
       },
       {
         "type": "text",
         "id": "sgs_bundle_text_2",
         "label": "Bundle: 2 prints",
-        "default": "Add 1 more print and it's half price"
+        "default": "Add 1 more print to get it half price"
       },
       {
         "type": "text",
         "id": "sgs_bundle_text_3",
         "label": "Bundle: 3 or more prints",
-        "default": "Garage complete. Your cheapest print is half price, shown at checkout."
+        "default": "Your 3rd print is half price ✓"
       },
       {
         "type": "header",
@@ -2677,6 +2677,50 @@
         "label": "Last day to show it (YYYY-MM-DD)",
         "default": "2026-11-30",
         "info": "UK date. Hidden automatically from the next day. Leave empty to keep it until you switch it off."
+      }
+    ]
+  },
+  {
+    "name": "SixthGear: Buy 2 offer",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Buy 2 prints, get the 3rd half price, on unframed prints. Display only: set up the matching automatic discount in Shopify (Discounts) before switching this on. While on, the cart progress line counts unframed prints instead of showing the spend offer."
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_buy2_enabled",
+        "label": "Show Buy 2 offer",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "sgs_buy2_title",
+        "label": "Product page: title",
+        "default": "Buy 2 prints, get the 3rd half price"
+      },
+      {
+        "type": "text",
+        "id": "sgs_buy2_subline",
+        "label": "Product page: line under the title",
+        "default": "Applies to unframed prints. Discount added automatically at checkout."
+      },
+      {
+        "type": "text",
+        "id": "sgs_buy2_link_label",
+        "label": "Product page: link to Complete the garage",
+        "default": "Complete your wall ↓",
+        "info": "Scrolls to the Complete the garage section. Leave empty to hide."
+      },
+      {
+        "type": "text",
+        "id": "sgs_buy2_recs_line",
+        "label": "Complete the garage: line under the heading",
+        "default": "Add 2 more unframed prints and get your 3rd half price."
+      },
+      {
+        "type": "paragraph",
+        "content": "Cart progress messages: Theme settings > SixthGear: cart spend offer > Bundle: 1 print / 2 prints / 3 or more prints."
       }
     ]
   },

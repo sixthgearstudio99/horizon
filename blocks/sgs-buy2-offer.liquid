@@ -1,0 +1,117 @@
+{%- liquid
+  # SixthGear: the Buy 2 offer above Add to cart: "Buy 2 prints, get the 3rd half price", a line
+  # saying it's for unframed prints and taken off at checkout, and a link down to Complete the
+  # garage. Only while Theme settings > SixthGear: Buy 2 offer > Show Buy 2 offer is on, and only on
+  # prints that count towards it (snippets/sgs-spend-eligible.liquid: unframed, never framed).
+  # Display only: the discount is Shopify's automatic discount.
+  assign show = settings.sgs_buy2_enabled
+  assign title = settings.sgs_buy2_title | strip
+  if title == blank or closest.product == blank or closest.product.gift_card?
+    assign show = false
+  endif
+  if show
+    capture eligible
+      render 'sgs-spend-eligible', product_resource: closest.product
+    endcapture
+    unless eligible contains 'true'
+      assign show = false
+    endunless
+  endif
+-%}
+
+{%- if show -%}
+  <div class="sgs-buy2" {{ block.shopify_attributes }}>
+    <p class="sgs-buy2__title">{{ title | escape }}</p>
+    {%- if settings.sgs_buy2_subline != blank -%}
+      <p class="sgs-buy2__line">{{ settings.sgs_buy2_subline | escape }}</p>
+    {%- endif -%}
+    {%- if settings.sgs_buy2_link_label != blank -%}
+      <a class="sgs-buy2__link" href="#complete-the-garage" data-sgs-buy2-link>{{ settings.sgs_buy2_link_label | escape }}</a>
+    {%- endif -%}
+  </div>
+  <script>
+    (function () {
+      // Smooth scroll to Complete the garage (instant with reduced motion); a plain link without this
+      if (window.sgsBuy2Bound) return;
+      window.sgsBuy2Bound = true;
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest && event.target.closest('a[data-sgs-buy2-link]');
+        if (!link) return;
+        var target = document.getElementById('complete-the-garage');
+        if (!target) return;
+        event.preventDefault();
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      });
+    })();
+  </script>
+{%- elsif request.design_mode and settings.sgs_buy2_enabled == false -%}
+  <p class="sgs-buy2 sgs-buy2--editor" {{ block.shopify_attributes }}>Buy 2 offer: switched off (Theme settings > SixthGear: Buy 2 offer).</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-buy2 {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #2a2a2a;
+    border-inline-start: 3px solid var(--sgs-accent, #ec6238);
+    border-radius: var(--sgs-radius, 4px);
+    background: #1a1a1a;
+  }
+
+  .sgs-buy2__title {
+    margin: 0;
+    font-family: var(--sgs-font-body);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--sgs-accent, #ec6238);
+  }
+
+  .sgs-buy2__line {
+    margin: 4px 0 0;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+
+  .sgs-buy2__link {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--sgs-text, #f2efea);
+    text-decoration: underline;
+    text-decoration-color: rgb(var(--sgs-text-rgb, 242 239 234) / 0.4);
+    text-underline-offset: 3px;
+  }
+
+  .sgs-buy2__link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .sgs-buy2--editor {
+    margin: 0;
+    color: var(--sgs-text-2, #9a9a9a);
+    font-size: 13px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Buy 2 offer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Switch on and edit the wording in Theme settings > SixthGear: Buy 2 offer. Unframed prints only."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Buy 2 offer"
+    }
+  ]
+}
+{% endschema %}

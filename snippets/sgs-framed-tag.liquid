@@ -3,11 +3,8 @@
 
   Framed prints are only reached from their print's Finish toggle, so listings skip them, except
   in a collection meant for framed prints (snippets/sgs-shows-framed.liquid, e.g. framed-prints).
-  A product counts as framed when any of these is true:
-  - it has the tag "framed" (any case)
-  - its title has the word "Framed" (and not only "Unframed")
-  - its custom.framed_version / custom.unframed_version metafields mark it as the framed one
-    (snippets/sgs-is-framed.liquid)
+  A product counts as framed when it has the tag "framed" (any case) or its title has the word
+  "Framed" (and not only "Unframed").
 
   With grid: true (collection grids, never search), a product tagged "hide-from-grid" is also
   left out, in every collection including framed ones. It stays live: its URL, search and feeds
@@ -49,13 +46,6 @@
           assign title_lower = product_resource.title | downcase | remove: 'unframed'
           if title_lower contains 'framed'
             assign hidden = true
-          else
-            capture is_framed
-              render 'sgs-is-framed', product_resource: product_resource
-            endcapture
-            if is_framed contains 'true'
-              assign hidden = true
-            endif
           endif
         endif
       endif

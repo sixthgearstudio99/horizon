@@ -24,10 +24,42 @@
   if template.name == 'collection' and collection.handle == 'all' and page_title == 'Products'
     assign sgs_page_title = 'All Prints'
   endif
+
+  # SixthGear: search titles and descriptions from Theme settings > SixthGear: SEO (homepage and
+  # up to eight collections, matched by handle) replace Shopify's when filled in. Such a title is
+  # used as written, without the shop name added.
+  assign sgs_page_description = page_description
+  assign sgs_title_as_written = false
+  assign sgs_seo_title = ''
+  assign sgs_seo_description = ''
+  if request.page_type == 'index'
+    assign sgs_seo_title = settings.sgs_seo_home_title | strip
+    assign sgs_seo_description = settings.sgs_seo_home_description | strip
+  elsif request.page_type == 'collection' and collection.handle != blank
+    for i in (1..8)
+      assign seo_handle_key = 'sgs_seo_c' | append: i | append: '_handle'
+      assign seo_handle = settings[seo_handle_key] | strip | downcase
+      if seo_handle != blank and seo_handle == collection.handle
+        assign seo_title_key = 'sgs_seo_c' | append: i | append: '_title'
+        assign seo_description_key = 'sgs_seo_c' | append: i | append: '_description'
+        assign sgs_seo_title = settings[seo_title_key] | strip
+        assign sgs_seo_description = settings[seo_description_key] | strip
+        break
+      endif
+    endfor
+  endif
+  if sgs_seo_title != blank
+    assign sgs_page_title = sgs_seo_title
+    assign sgs_title_as_written = true
+  endif
+  if sgs_seo_description != blank
+    assign sgs_page_description = sgs_seo_description | strip_newlines
+  endif
+
   assign og_title = sgs_page_title | default: shop.name
   assign og_url = canonical_url | default: request.origin
   assign og_type = 'website'
-  assign og_description = page_description | default: shop.description | default: shop.name
+  assign og_description = sgs_page_description | default: shop.description | default: shop.name
 
   if request.page_type == 'product'
     assign og_type = 'product'
@@ -112,7 +144,7 @@
   {{ sgs_page_title }}
   {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
   {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-  {%- unless sgs_page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  {%- unless sgs_page_title contains shop.name or sgs_title_as_written %} &ndash; {{ shop.name }}{% endunless -%}
 </title>
 
 <link
@@ -120,9 +152,9 @@
   href="{{ canonical_url }}"
 >
 
-{% if page_description %}
+{% if sgs_page_description != blank %}
   <meta
     name="description"
-    content="{{ page_description | escape }}"
+    content="{{ sgs_page_description | escape }}"
   >
 {% endif %}

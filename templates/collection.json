@@ -159,10 +159,73 @@
         "padding-block-end": 64,
         "intros": "all: Every print, framed or unframed. Find the one for your wall.\n80s-90s-classics: The poster cars you grew up with, on your wall: Ferrari F40, Lamborghini Countach, Porsche 930 and 959, and more.\nbestsellers: Not sure where to start? Start here.\nframed-prints: Up on your wall the day it arrives: black frames, three sizes, printed in the UK.\ngarage-man-cave-wall-art: Make the garage yours: classic 80s and 90s supercars and Porsche, framed or unframed.\ngifts-for-car-lovers: The gift they'll actually put up. Pick their car, pick a size, free UK delivery.\noffice-wall-art: Something worth looking up at: Porsche and supercar prints and clean spec sheets for the home office.\nporsche-posters-wall-art: For the 911 fan: GT3 RS, 930 Turbo, 911 Generations and more, framed or unframed."
       }
+    },
+    "sgs_collection_copy": {
+      "type": "sgs-collection-copy",
+      "blocks": {
+        "copy_porsche_posters_wall_art": {
+          "type": "copy",
+          "settings": {
+            "handle": "porsche-posters-wall-art",
+            "heading": "About our Porsche posters",
+            "text": "<p>Our Porsche posters celebrate the cars that made the badge famous. You'll find the 911 in many forms, from the classic 930 Turbo and 964 to our 911 Generations poster, which traces the car from the 901 to the 992. There's a GT3 RS poster for track day fans, plus the 959, Carrera GT and 918 Spyder for anyone who loves Porsche's supercars. Spec sheets, minimalist artwork and black and white photography mean there's a style for every room.</p><p>Every Porsche 911 poster is designed in Bristol and printed in the UK, with free UK delivery. Choose an unframed print, sent rolled in a tube, or framed Porsche wall art in a black wooden frame with a clear Perspex front, ready to hang. Standard prints come with 14-day returns, so you can order knowing you're covered.</p>"
+          }
+        },
+        "copy_garage_man_cave_wall_art": {
+          "type": "copy",
+          "settings": {
+            "handle": "garage-man-cave-wall-art",
+            "heading": "Garage and man cave wall art",
+            "text": "<p>Good garage wall art makes the space feel like yours. This collection brings together car posters for the garage and the man cave: Ferrari F40 and Lamborghini Countach prints, the BMW E30 and E46 M3, the Bugatti EB110 and a wide choice of Porsche 911s. Bold colour and black and white photography both look at home above a workbench or next to the car itself.</p><p>All our man cave wall art is designed in Bristol and printed in the UK, and delivery is free across the UK. Pick an unframed print, rolled in a tube for your own frame, or, for many designs, a framed version in a black wooden frame with a clear Perspex front, ready to hang when it arrives. Standard prints can be returned within 14 days.</p>"
+          }
+        },
+        "copy_office_wall_art": {
+          "type": "copy",
+          "settings": {
+            "handle": "office-wall-art",
+            "heading": "Car art for the office",
+            "text": "<p>Office wall art should keep you focused without shouting for attention. Our car art for the office includes motivational prints, such as the GT3 RS Discipline Achieves Dreams poster and the R34 GT-R and G80 M3 Mindset posters, alongside clean spec sheet designs of the Porsche 959, Carrera GT and Lamborghini Countach. Designs range from bold colour to quiet black and white, so they suit a home office, a desk at work or a meeting room.</p><p>Each print is designed in Bristol and printed in the UK, with free UK delivery. Many designs also come as framed car prints, in a black wooden frame with a clear Perspex front and ready to hang, or you can order an unframed print, sent rolled in a tube. Standard prints come with 14-day returns.</p>"
+          }
+        },
+        "copy_80s_90s_classics": {
+          "type": "copy",
+          "settings": {
+            "handle": "80s-90s-classics",
+            "heading": "80s and 90s car posters",
+            "text": "<p>These 80s car posters and 90s car posters bring back the cars that once covered bedroom walls. The Ferrari F40, Lamborghini Countach, Porsche 959 and 930 Turbo, BMW E30 M3 and McLaren F1 are all here, in spec sheet designs, minimalist artwork and moody black and white scenes. If you grew up with a Countach on your wall, this is a good place to start.</p><p>It's classic car wall art for grown-up spaces, whether that's a garage, an office or a living room. Every print is designed in Bristol and printed in the UK, with free UK delivery. Choose an unframed print, rolled in a tube, or a framed one in a black wooden frame with a clear Perspex front, ready to hang. Standard prints come with 14-day returns.</p>"
+          }
+        },
+        "copy_framed_prints": {
+          "type": "copy",
+          "settings": {
+            "handle": "framed-prints",
+            "heading": "Framed car prints, ready to hang",
+            "text": "<p>Our framed car prints arrive ready to hang, so your poster can go straight on the wall. Each one sits in a black wooden frame with a clear Perspex front, and the hanging hardware is included. Each design comes in three sizes, shown in inches and centimetres on the product page. It's an easy way to give a garage, office or living room a finished look without a trip to the framer's.</p><p>If you're looking for framed car posters in the UK, every print here is designed in Bristol and printed in the UK, with free UK delivery. The range covers Porsche, Ferrari, Lamborghini, BMW, McLaren and JDM favourites, along with race circuits such as Silverstone, Spa-Francorchamps and Monaco. Standard prints come with 14-day returns.</p>"
+          }
+        },
+        "copy_gifts_for_car_lovers": {
+          "type": "copy",
+          "settings": {
+            "handle": "gifts-for-car-lovers",
+            "heading": "Gifts for car lovers",
+            "text": "<p>Finding gifts for car lovers in the UK is easier when you know which car they love. Pick their favourite, from a Porsche 911 or Ferrari F40 to a Nissan R34 GT-R or Toyota Supra, or a circuit they've driven or watched, like Silverstone or Spa. A car poster gift makes a thoughtful choice among car gifts for men and women alike, and you can even order a custom poster of their own car.</p><p>Every print is designed in Bristol and printed in the UK, with free UK delivery. Choose an unframed print, rolled in a tube, or, for many designs, a framed version in a black wooden frame with a clear Perspex front, ready to hang. Standard prints come with 14-day returns. Custom posters are made to order, so they can't be returned for a change of mind.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "copy_porsche_posters_wall_art",
+        "copy_garage_man_cave_wall_art",
+        "copy_office_wall_art",
+        "copy_80s_90s_classics",
+        "copy_framed_prints",
+        "copy_gifts_for_car_lovers"
+      ],
+      "settings": {}
     }
   },
   "order": [
     "sgs_header",
-    "main"
+    "main",
+    "sgs_collection_copy"
   ]
 }

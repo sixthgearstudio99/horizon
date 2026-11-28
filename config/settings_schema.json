@@ -2839,6 +2839,189 @@
     ]
   },
   {
+    "name": "SixthGear: SEO",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Search titles and descriptions. When filled in, these are used instead of the SEO title and description set in Shopify admin. Leave a field empty to use Shopify's. Aim for titles under 60 characters and descriptions under 155."
+      },
+      {
+        "type": "header",
+        "content": "Homepage"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_home_title",
+        "label": "Homepage title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_home_description",
+        "label": "Homepage description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 1"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c1_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c1_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c1_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 2"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c2_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c2_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c2_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 3"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c3_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c3_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c3_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 4"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c4_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c4_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c4_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 5"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c5_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c5_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c5_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 6"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c6_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c6_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c6_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 7"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c7_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c7_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c7_description",
+        "label": "Description"
+      },
+      {
+        "type": "header",
+        "content": "Collection 8"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c8_handle",
+        "label": "Collection handle",
+        "info": "The end of the collection's address, e.g. porsche-posters-wall-art"
+      },
+      {
+        "type": "text",
+        "id": "sgs_seo_c8_title",
+        "label": "Title"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_seo_c8_description",
+        "label": "Description"
+      }
+    ]
+  },
+  {
     "name": "SixthGear: Buy 2 offer",
     "settings": [
       {

@@ -445,7 +445,8 @@
             controls_on_media: controls_on_media,
             pagination_position: pagination_position,
             aspect_ratio: block_settings.aspect_ratio,
-            thumbnail_radius: block_settings.thumbnail_radius
+            thumbnail_radius: block_settings.thumbnail_radius,
+            alt_title: selected_product.title
           -%}
         {% endif %}
 
@@ -458,7 +459,8 @@
             controls_on_media: mobile_controls_on_media,
             pagination_position: 'center',
             aspect_ratio: block_settings.aspect_ratio,
-            thumbnail_radius: block_settings.thumbnail_radius
+            thumbnail_radius: block_settings.thumbnail_radius,
+            alt_title: selected_product.title
           -%}
         {% endif %}
       {% endcapture %}
@@ -582,6 +584,11 @@
                       if media.presentation.focal_point != blank
                         assign focal_point_style = 'object-position: ' | append: media.presentation.focal_point | append: ';'
                       endif
+                      # SixthGear: never an empty or generic alt (snippets/sgs-image-alt.liquid)
+                      capture thumb_alt
+                        render 'sgs-image-alt', title: selected_product.title, alt: media.alt, position: media.position, total: selected_product.media.size
+                      endcapture
+                      assign thumb_alt = thumb_alt | strip | default: 'Image'
                     %}
                     {{
                       media.preview_image
@@ -590,7 +597,7 @@
                         loading: 'lazy',
                         sizes: 'auto, 110, (min-width: 750px) 160',
                         widths: '240, 352, 832, 1200',
-                        alt: media.alt | default: 'Image',
+                        alt: thumb_alt,
                         style: focal_point_style
                       | escape
                     }}

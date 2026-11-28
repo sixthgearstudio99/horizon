@@ -21,13 +21,14 @@
 {% liquid
   assign widths = widths | default: '240, 352, 640, 832, 1200, 1600, 1920, 2560, 3840'
 
-  # SixthGear: an image without alt text is described as "[Product title] – image 2 of 4"
+  # SixthGear: an image with empty or generic alt text is described from the product title,
+  # e.g. "Porsche 911 GT3 RS poster – black car wall art print" (snippets/sgs-image-alt.liquid)
   assign media_alt = media.alt | strip
-  if media_alt == blank and alt_title != blank
-    assign media_alt = alt_title | append: ' – image ' | append: media.position
-    if alt_total > 0
-      assign media_alt = media_alt | append: ' of ' | append: alt_total
-    endif
+  if alt_title != blank
+    capture media_alt
+      render 'sgs-image-alt', title: alt_title, alt: media.alt, position: media.position, total: alt_total
+    endcapture
+    assign media_alt = media_alt | strip
   endif
   assign ref_image_to_transition = ''
   if settings.transition_to_main_product

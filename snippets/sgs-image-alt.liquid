@@ -1,0 +1,103 @@
+{%- doc -%}
+  SixthGear Studios: alt text for a product image. Alt text set in Shopify is kept when it's
+  descriptive. When it's empty or generic (the product title itself, a file name, or a few
+  characters), it's written from the product title as "[Make Model] poster – [style] car wall art
+  print", e.g. "Porsche 911 GT3 RS Poster, Black Car Wall Art Print" gives "Porsche 911 GT3 RS
+  poster – black car wall art print". Framed prints read "framed poster". Images after the first
+  add ", image 2 of 4" so each one is distinct. Outputs plain text (escape it where it's used).
+
+  @param {string} title - The title of the product the image belongs to
+  @param {string} [alt] - The image's alt text from Shopify
+  @param {number} [position] - The image's position (1 = first)
+  @param {number} [total] - How many images the product has
+
+  @example
+  {%- capture img_alt -%}{% render 'sgs-image-alt', title: product.title, alt: media.alt, position: media.position, total: product.media.size %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign given = alt | strip
+  assign title = title | strip
+  assign given_lower = given | downcase
+  assign title_lower = title | downcase
+
+  assign generic = false
+  if given == blank or given_lower == title_lower or given.size < 6
+    assign generic = true
+  elsif given_lower contains '.jpg' or given_lower contains '.jpeg' or given_lower contains '.png' or given_lower contains '.webp'
+    assign generic = true
+  endif
+
+  if generic == false or title == blank
+    echo given
+  else
+    # "[Name] Poster, [style], …" (anything after " – " is a tagline and is left out)
+    assign base = title | split: ' – ' | first
+    assign parts = base | split: ','
+    assign head = parts.first | strip
+    assign noun = 'poster'
+    if head contains ' Framed Poster'
+      assign name = head | split: ' Framed Poster' | first
+      assign noun = 'framed poster'
+    elsif head contains ' Poster'
+      assign name = head | split: ' Poster' | first
+    else
+      assign name = head
+    endif
+    assign name = name | replace: 'Mclaren', 'McLaren'
+
+    assign style = ''
+    if parts.size > 1
+      assign style = parts[1] | strip
+    endif
+    assign suffixes = ' Car Wall Art Print| Car Wall Art| Wall Art Print| Wall Art| Print' | split: '|'
+    for suffix in suffixes
+      assign style_len = style.size
+      assign suffix_len = suffix.size
+      if style_len > suffix_len
+        assign start = style_len | minus: suffix_len
+        assign tail = style | slice: start, suffix_len
+        if tail == suffix
+          assign style = style | slice: 0, start
+          break
+        endif
+      endif
+    endfor
+
+    # Lower case, keeping model codes and place names as written
+    assign s = style | downcase | prepend: ' ' | append: ' '
+    assign keep = 'JDM,V12,V10,GT,RS,GT-R,AMG,BMW,F1,F40,M3,M2,M4,CS,EK9,FL5,F20,F87,Mk1,Mk8,RZ34,240Z,370Z,190E,Tokyo,Monaco,Spa,Italian,British,German,Miata,Phoenix,Riviera,Bougainvillea,Grand,Prix' | split: ','
+    for word in keep
+      assign word_lower = word | downcase | prepend: ' ' | append: ' '
+      assign word_padded = word | prepend: ' ' | append: ' '
+      assign s = s | replace: word_lower, word_padded
+    endfor
+    assign s = s | strip
+    if s == 'ready to hang'
+      assign s = ''
+    endif
+
+    # "… supercar wall art print", not "supercar car wall art print"
+    assign ending = 'car wall art print'
+    assign s_start = s | slice: 0, 4
+    assign s_len = s.size
+    assign s_end = ''
+    if s_len >= 3
+      assign s_end_start = s_len | minus: 3
+      assign s_end = s | slice: s_end_start, 3
+    endif
+    if s_start == 'car ' or s_end == 'car'
+      assign ending = 'wall art print'
+    endif
+
+    assign result = name | append: ' ' | append: noun | append: ' – '
+    if s != blank
+      assign result = result | append: s | append: ' '
+    endif
+    assign result = result | append: ending
+    if position > 1 and total > 1
+      assign result = result | append: ', image ' | append: position | append: ' of ' | append: total
+    endif
+    echo result
+  endif
+-%}

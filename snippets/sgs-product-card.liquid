@@ -78,12 +78,11 @@
       >
         {%- if primary_image != blank -%}
           {%- liquid
-            # Never an empty alt: "[Product title] – image 1 of 4" when the image has none
-            assign primary_alt = primary_image.alt | strip
-            if primary_alt == blank
-              assign primary_alt = product.title | append: ' – image 1 of ' | append: product.media.size
-            endif
-            assign primary_alt = primary_alt | escape
+            # Never an empty alt: written from the product title when the image has none
+            capture primary_alt
+              render 'sgs-image-alt', title: product.title, alt: primary_image.alt, position: 1, total: product.media.size
+            endcapture
+            assign primary_alt = primary_alt | strip | escape
           -%}
           {{
             primary_image
@@ -101,11 +100,10 @@
 
         {%- if secondary_image -%}
           {%- liquid
-            assign secondary_alt = secondary_image.alt | strip
-            if secondary_alt == blank
-              assign secondary_alt = product.title | append: ' – image ' | append: secondary_position | append: ' of ' | append: product.media.size
-            endif
-            assign secondary_alt = secondary_alt | escape
+            capture secondary_alt
+              render 'sgs-image-alt', title: product.title, alt: secondary_image.alt, position: secondary_position, total: product.media.size
+            endcapture
+            assign secondary_alt = secondary_alt | strip | escape
           -%}
           {{
             secondary_image

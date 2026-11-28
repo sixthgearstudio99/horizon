@@ -1,0 +1,89 @@
+{%- liquid
+  # SixthGear: helpful copy under the product grid, one block per collection (matched by its
+  # handle). Shows nothing on a collection without a block, so the grid always stays first.
+  assign match = nil
+  for block in section.blocks
+    assign block_handle = block.settings.handle | strip | downcase
+    if block_handle != blank and block_handle == collection.handle and block.settings.text != blank
+      assign match = block
+      break
+    endif
+  endfor
+-%}
+
+{%- if match != nil -%}
+  <div class="sgs-ccopy" {{ match.shopify_attributes }}>
+    <div class="sgs-ccopy__inner">
+      {%- if match.settings.heading != blank -%}
+        <h2 class="sgs-ccopy__heading">{{ match.settings.heading | escape }}</h2>
+      {%- endif -%}
+      <div class="sgs-ccopy__text">{{ match.settings.text }}</div>
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div class="sgs-ccopy"><div class="sgs-ccopy__inner"><p class="sgs-ccopy__text">Collection copy: add a block with this collection's handle ({{ collection.handle }}) to show text here.</p></div></div>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-ccopy {
+    padding-block: calc(56px * var(--sgs-section-space, 1)) calc(72px * var(--sgs-section-space, 1));
+    border-top: 1px solid var(--sgs-line, #2a2a2a);
+  }
+
+  .sgs-ccopy__inner {
+    max-width: var(--page-width);
+    margin-inline: auto;
+    padding-inline: var(--page-margin);
+  }
+
+  .sgs-ccopy__heading {
+    max-width: 68ch;
+    margin: 0 0 16px;
+    font-size: clamp(18px, 2vw, 22px);
+    line-height: 1.25;
+    color: var(--sgs-text, #f2efea);
+  }
+
+  .sgs-ccopy__text {
+    max-width: 68ch;
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+
+  .sgs-ccopy__text p {
+    margin: 0 0 14px;
+  }
+
+  .sgs-ccopy__text p:last-child {
+    margin-bottom: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "SixthGear collection copy",
+  "tag": "section",
+  "class": "sgs-ccopy-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text under the product grid. Add one block per collection with its handle (the end of its address, e.g. porsche-posters-wall-art)."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "copy",
+      "name": "Collection copy",
+      "settings": [
+        { "type": "text", "id": "handle", "label": "Collection handle" },
+        { "type": "text", "id": "heading", "label": "Heading" },
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "SixthGear collection copy" }
+  ]
+}
+{% endschema %}

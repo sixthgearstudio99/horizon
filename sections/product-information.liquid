@@ -58,7 +58,9 @@
         <div
           class="sticky-add-to-cart__image"
         >
-          {% assign image_alt = image_to_show.alt | default: product.title | escape %}
+          {%- comment -%} SixthGear: empty or generic alt text is written from the product title {%- endcomment -%}
+          {%- capture image_alt -%}{% render 'sgs-image-alt', title: product.title, alt: image_to_show.alt, position: 1, total: 1 %}{%- endcapture -%}
+          {%- assign image_alt = image_alt | strip | escape -%}
           {{
             image_to_show
             | image_url: width: 120

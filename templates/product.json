@@ -137,9 +137,10 @@
             "sgs_review_line": {
               "type": "sgs-review-line",
               "settings": {
-                "store_text": "[rating] · [count] store reviews",
-                "product_text": "[rating] · [count] reviews",
-                "anchor": "reviews"
+                "store_text": "[rating]",
+                "product_text": "[rating]",
+                "anchor": "reviews",
+                "product_anchor": "judgeme_product_reviews"
               },
               "blocks": {}
             },

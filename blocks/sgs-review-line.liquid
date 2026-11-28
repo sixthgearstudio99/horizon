@@ -58,15 +58,28 @@
       assign line = line | replace: ' reviews', ' review'
     endif
     assign line = line | replace: '[rating]', rating_text | replace: '[count]', count
+
+    # Screen readers always hear whose rating it is and how many reviews, even when the line
+    # shows the figure only
+    if is_product
+      assign spoken = 'Rated ' | append: rating_text | append: ' out of 5 from ' | append: count | append: ' reviews of this print. Go to the reviews.'
+      assign anchor = bs.product_anchor | default: 'judgeme_product_reviews'
+    else
+      assign spoken = 'Store rating ' | append: rating_text | append: ' out of 5 from ' | append: count | append: ' reviews. Go to the reviews.'
+      assign anchor = bs.anchor | default: 'reviews'
+    endif
+    if count == 1
+      assign spoken = spoken | replace: ' reviews', ' review' | replace: 'Go to the review.', 'Go to the reviews.'
+    endif
   endif
 -%}
 
 {%- if show -%}
   <div class="sgs-revline-wrap" {{ block.shopify_attributes }}>
-    <a class="sgs-revline" href="#{{ bs.anchor | default: 'reviews' | handle }}" data-sgs-revline>
+    <a class="sgs-revline" href="#{{ anchor | strip | escape }}" data-sgs-revline data-sgs-revline-fallback="{{ bs.anchor | default: 'reviews' | strip | escape }}">
       <span class="sgs-revline__stars" style="--sgs-stars: {{ stars_pct }}%;" aria-hidden="true">★★★★★</span>
-      <span class="visually-hidden">Rated {{ rating_text }} out of 5:</span>
-      <span class="sgs-revline__link">{{ line | escape }}</span>
+      <span class="visually-hidden">{{ spoken | escape }}</span>
+      <span class="sgs-revline__link" aria-hidden="true">{{ line | escape }}</span>
     </a>
   </div>
   <script>
@@ -78,6 +91,11 @@
         var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
         if (!link) return;
         var target = document.getElementById(link.getAttribute('href').slice(1));
+        // The product's own reviews widget can be missing or hidden: fall back to the reviews anchor
+        if (!target || !target.getClientRects().length) {
+          var fallback = link.getAttribute('data-sgs-revline-fallback');
+          target = fallback ? document.getElementById(fallback) : null;
+        }
         if (!target) return;
         event.preventDefault();
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -141,7 +159,8 @@
   }
 
   /* The reviews anchor lands below the sticky header */
-  #reviews {
+  #reviews,
+  #judgeme_product_reviews {
     scroll-margin-top: calc(var(--header-height, 64px) + 16px);
   }
 {% endstylesheet %}
@@ -159,14 +178,14 @@
       "type": "text",
       "id": "store_text",
       "label": "Store-wide wording",
-      "default": "[rating] · [count] store reviews",
+      "default": "[rating]",
       "info": "[rating] is the store's average (e.g. 4.9), [count] its number of reviews. \"reviews\" becomes \"review\" for one."
     },
     {
       "type": "text",
       "id": "product_text",
       "label": "This product's wording",
-      "default": "[rating] · [count] reviews",
+      "default": "[rating]",
       "info": "Used when the product has its own Judge.me reviews."
     },
     {
@@ -174,7 +193,14 @@
       "id": "anchor",
       "label": "Links to",
       "default": "reviews",
-      "info": "The id of the element to scroll to, without #."
+      "info": "The id of the element to scroll to, without #. Used for the store's rating, and as the fallback."
+    },
+    {
+      "type": "text",
+      "id": "product_anchor",
+      "label": "Links to (product's own reviews)",
+      "default": "judgeme_product_reviews",
+      "info": "Used when the product has its own reviews: Judge.me's review widget."
     }
   ],
   "presets": [

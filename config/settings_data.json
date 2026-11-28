@@ -182,7 +182,22 @@
     },
     "sgs_pdp_express_checkout": true,
     "sgs_fr_quote": "Stunning Ferrari F40 print. Excellent communication from Josh.",
-    "sgs_fr_name": "Richard B., verified buyer"
+    "sgs_fr_name": "Richard B., verified buyer",
+    "sgs_pay_enabled": true,
+    "sgs_pay_types": "visa, master, apple_pay, paypal, klarna, shopify_pay",
+    "sgs_pay_text": "Secure checkout · Pay in 3 with Klarna or PayPal",
+    "sgs_pay_small_print": "",
+    "sgs_fr_enabled": true,
+    "sgs_fr_rating": 5,
+    "sgs_fr_link_label": "Read all reviews ↓",
+    "sgs_maker_line": "Designed in Bristol by a car enthusiast · Printed in the UK",
+    "sgs_frame_feat_enabled": true,
+    "sgs_frame_feat_1": "Solid wood frame",
+    "sgs_frame_feat_2": "Shatter-resistant Perspex front",
+    "sgs_frame_feat_3": "Hanging hardware included",
+    "sgs_contact_label": "Questions? Email",
+    "sgs_contact_email": "hello@sixthgearstudios.co.uk",
+    "sgs_contact_reply_time": ""
   },
   "presets": {
     "Default": {

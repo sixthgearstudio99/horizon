@@ -628,27 +628,32 @@
             "sgs_payment_row": {
               "type": "sgs-payment-row",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": false
             },
             "sgs_featured_review": {
               "type": "sgs-featured-review",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": false
             },
             "sgs_maker_line": {
               "type": "sgs-maker-line",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": false
             },
             "sgs_frame_details": {
               "type": "sgs-framed-features",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": false
             },
             "sgs_contact_line": {
               "type": "sgs-contact-line",
               "settings": {},
-              "blocks": {}
+              "blocks": {},
+              "disabled": false
             }
           },
           "block_order": [

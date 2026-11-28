@@ -534,7 +534,7 @@
 }
 
 /* "What our customers say" heading in the reviews carousel: a smaller size on phones so it fits on
-   one line (Judge.me gives it one line and cuts the rest off with an ellipsis) */
+   one line (Judge.me clamps it to one line and cuts the rest off with an ellipsis) */
 @media screen and (max-width: 749px) {
   [id*='sgs_reviews_carousel'] .jdgm-title {
     font-size: min(28px, 6.4vw) !important;

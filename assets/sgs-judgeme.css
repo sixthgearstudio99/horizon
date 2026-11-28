@@ -532,3 +532,12 @@
 [id*='sgs_reviews_carousel'] :is(.jdgm-cards-wrapper, .jdgm-videos-container) {
   align-items: flex-start !important;
 }
+
+/* "What our customers say" heading in the reviews carousel: wraps on phones instead of being cut
+   off with an ellipsis */
+[id*='sgs_reviews_carousel'] .jdgm-title {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  text-wrap: balance;
+}

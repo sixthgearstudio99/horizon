@@ -18,21 +18,24 @@
 
 {%- if show -%}
   <div class="sgs-pay" {{ block.shopify_attributes }}>
-    {%- if icon_count > 0 -%}
-      <ul class="sgs-pay__icons" role="list" aria-label="Payment methods">
-        {%- for type in wanted -%}
-          {%- if shop.enabled_payment_types contains type -%}
-            <li>{{ type | payment_type_svg_tag: class: 'sgs-pay__icon' }}</li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
-    {%- endif -%}
-    {%- if text != blank -%}
-      <p class="sgs-pay__text">
-        <svg class="sgs-pay__lock" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7.5" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg>
-        <span>{{ text | escape }}</span>
-      </p>
-    {%- endif -%}
+    {%- comment -%} One line: lock and text, then the icons (they wrap under it on narrow screens) {%- endcomment -%}
+    <div class="sgs-pay__row">
+      {%- if text != blank -%}
+        <p class="sgs-pay__text">
+          <svg class="sgs-pay__lock" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7.5" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg>
+          <span>{{ text | escape }}</span>
+        </p>
+      {%- endif -%}
+      {%- if icon_count > 0 -%}
+        <ul class="sgs-pay__icons" role="list" aria-label="Payment methods">
+          {%- for type in wanted -%}
+            {%- if shop.enabled_payment_types contains type -%}
+              <li>{{ type | payment_type_svg_tag: class: 'sgs-pay__icon' }}</li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
     {%- if small_print != blank -%}
       <p class="sgs-pay__small">{{ small_print | escape }}</p>
     {%- endif -%}
@@ -46,6 +49,14 @@
     display: grid;
     gap: 8px;
     width: 100%;
+    min-width: 0;
+  }
+
+  .sgs-pay__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
     min-width: 0;
   }
 
@@ -80,6 +91,8 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .sgs-pay__lock {

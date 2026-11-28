@@ -2716,7 +2716,7 @@
         "type": "text",
         "id": "sgs_pay_text",
         "label": "Line under the icons",
-        "default": "Secure checkout · Pay in 3 with Klarna or PayPal",
+        "default": "Secure checkout",
         "info": "Leave empty to show the icons only."
       },
       {
@@ -2798,13 +2798,13 @@
         "type": "text",
         "id": "sgs_frame_feat_1",
         "label": "Detail 1",
-        "default": "Solid wood frame"
+        "default": "Black wooden frame"
       },
       {
         "type": "text",
         "id": "sgs_frame_feat_2",
         "label": "Detail 2",
-        "default": "Shatter-resistant Perspex front"
+        "default": "Clear Perspex front"
       },
       {
         "type": "text",

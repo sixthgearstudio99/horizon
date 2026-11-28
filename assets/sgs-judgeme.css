@@ -533,11 +533,11 @@
   align-items: flex-start !important;
 }
 
-/* "What our customers say" heading in the reviews carousel: wraps on phones instead of being cut
-   off with an ellipsis */
-[id*='sgs_reviews_carousel'] .jdgm-title {
-  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  text-wrap: balance;
+/* "What our customers say" heading in the reviews carousel: a smaller size on phones so it fits on
+   one line (Judge.me gives it one line and cuts the rest off with an ellipsis) */
+@media screen and (max-width: 749px) {
+  [id*='sgs_reviews_carousel'] .jdgm-title {
+    font-size: min(28px, 6.4vw) !important;
+    letter-spacing: 0 !important;
+  }
 }

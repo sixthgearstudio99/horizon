@@ -58,7 +58,7 @@
               assign c_first = nil
               for fu_p in c.products
                 capture fu_framed
-                  render 'sgs-framed-tag', product_resource: fu_p, collection: c
+                  render 'sgs-framed-tag', product_resource: fu_p, collection: c, grid: true
                 endcapture
                 unless fu_framed contains 'true'
                   assign c_first = fu_p
@@ -128,7 +128,7 @@
                 assign c_first = nil
                 for fu_p in c.products
                   capture fu_framed
-                    render 'sgs-framed-tag', product_resource: fu_p, collection: c
+                    render 'sgs-framed-tag', product_resource: fu_p, collection: c, grid: true
                   endcapture
                   unless fu_framed contains 'true'
                     assign c_first = fu_p
@@ -139,7 +139,7 @@
               endif
               # The count leaves out framed prints (tag "framed")
               capture row_framed
-                render 'sgs-framed-count', resource: c
+                render 'sgs-framed-count', resource: c, grid: true
               endcapture
               assign row_count = c.products_count | minus: row_framed | at_least: 0
               assign row_url = c.url | default: routes.collections_url

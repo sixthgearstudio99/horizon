@@ -18,7 +18,7 @@
   if image == blank
     for item in collection.products
       capture item_framed
-        render 'sgs-framed-tag', product_resource: item, collection: collection
+        render 'sgs-framed-tag', product_resource: item, collection: collection, grid: true
       endcapture
       unless item_framed contains 'true'
         assign image = item.featured_media.preview_image | default: item.featured_image
@@ -31,7 +31,7 @@
     assign loading = 'eager'
   endif
   capture framed_count
-    render 'sgs-framed-count', resource: collection
+    render 'sgs-framed-count', resource: collection, grid: true
   endcapture
   assign count = collection.products_count | minus: framed_count | at_least: 0
 -%}

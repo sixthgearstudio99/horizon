@@ -1,30 +1,67 @@
 {%- doc -%}
-  SixthGear Studios: outputs "true" when the product has the tag "framed" (any case). Framed
-  prints are only reached from their print's Finish toggle, so product listings skip them, except
-  in a collection meant for framed prints (snippets/sgs-shows-framed.liquid, e.g. framed-prints):
-  pass that collection and nothing is output there.
+  SixthGear Studios: outputs "true" when a product should be left out of a listing, else nothing.
+
+  Framed prints are only reached from their print's Finish toggle, so listings skip them, except
+  in a collection meant for framed prints (snippets/sgs-shows-framed.liquid, e.g. framed-prints).
+  A product counts as framed when any of these is true:
+  - it has the tag "framed" (any case)
+  - its title has the word "Framed" (and not only "Unframed")
+  - its custom.framed_version / custom.unframed_version metafields mark it as the framed one
+    (snippets/sgs-is-framed.liquid)
+
+  With grid: true (collection grids, never search), a product tagged "hide-from-grid" is also
+  left out, in every collection including framed ones. It stays live: its URL, search and feeds
+  are unaffected.
 
   @param {product} product_resource - The product
   @param {collection} [collection] - The collection being listed, if any
+  @param {boolean} [grid] - true in a collection grid: also leave out products tagged "hide-from-grid"
 
   @example
-  {%- capture framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+  {%- capture framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: collection, grid: true %}{%- endcapture -%}
   {%- if framed contains 'true' -%}{%- continue -%}{%- endif -%}
 {%- enddoc -%}
 
 {%- liquid
-  assign keep_framed = false
-  if collection != blank
-    capture shows_framed
-      render 'sgs-shows-framed', collection: collection
-    endcapture
-    if shows_framed contains 'true'
-      assign keep_framed = true
-    endif
-  endif
-  if product_resource != blank and keep_framed == false
+  if product_resource != blank
     assign tag_list = product_resource.tags | join: '|' | downcase | prepend: '|' | append: '|'
-    if tag_list contains '|framed|'
+    assign hidden = false
+
+    if grid == true and tag_list contains '|hide-from-grid|'
+      assign hidden = true
+    endif
+
+    unless hidden
+      assign keep_framed = false
+      if collection != blank
+        capture shows_framed
+          render 'sgs-shows-framed', collection: collection
+        endcapture
+        if shows_framed contains 'true'
+          assign keep_framed = true
+        endif
+      endif
+
+      if keep_framed == false
+        if tag_list contains '|framed|'
+          assign hidden = true
+        else
+          assign title_lower = product_resource.title | downcase | remove: 'unframed'
+          if title_lower contains 'framed'
+            assign hidden = true
+          else
+            capture is_framed
+              render 'sgs-is-framed', product_resource: product_resource
+            endcapture
+            if is_framed contains 'true'
+              assign hidden = true
+            endif
+          endif
+        endif
+      endif
+    endunless
+
+    if hidden
       echo 'true'
     endif
   endif

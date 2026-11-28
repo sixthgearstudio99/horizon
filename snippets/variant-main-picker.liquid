@@ -24,6 +24,19 @@
   if sgs_custom_out contains 'true'
     assign sgs_custom = true
   endif
+
+  # Paper choice hidden (block setting): the Paper option's buttons are kept in the form but not
+  # shown, sizes are priced from the paper they come in, a tap on a size switches the paper to
+  # one that size comes in, and the page opens on the default paper (snippets/sgs-variant-autoswitch)
+  capture sgs_paper_out
+    render 'sgs-paper-hidden', product_resource: product_resource, hide_paper: block_settings.sgs_hide_paper
+  endcapture
+  assign sgs_paper_hidden = false
+  assign sgs_fill_sizes = sgs_custom
+  if sgs_paper_out contains 'true'
+    assign sgs_paper_hidden = true
+    assign sgs_fill_sizes = true
+  endif
 -%}
 
 {% liquid
@@ -99,6 +112,15 @@
           # SixthGear: display heading for the option, e.g. "Size (unframed)"; the option itself is unchanged
           assign option_label = product_option.name | escape
           assign option_name_lower = product_option.name | downcase
+          # Paper choice hidden: its buttons stay in the form, unseen, and its notes are left out
+          assign sgs_hide_attr = ''
+          assign sgs_note_key = option_name_lower
+          assign sgs_option_shown = true
+          if sgs_paper_hidden and option_name_lower contains 'paper'
+            assign sgs_option_shown = false
+            assign sgs_hide_attr = 'hidden aria-hidden="true"'
+            assign sgs_note_key = ''
+          endif
           # SixthGear: the value tagged "Most popular" (by default the middle size)
           capture sgs_popular
             render 'sgs-popular-value', product_option: product_option
@@ -116,7 +138,7 @@
                 assign option_label = option_label | append: ' ' | append: sgs_size_suffix | escape
               endif
             else
-              assign shown = true
+              assign shown = sgs_option_shown
               if product_option.values.size == 1 and block_settings.hide_single_choice
                 assign shown = false
               endif
@@ -180,6 +202,7 @@
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}{% if option_name_lower contains 'paper' %} sgs-opt--paper{% elsif option_name_lower contains 'size' %} sgs-opt--size{% endif %}{% if sgs_pills %} sgs-size-pills{% endif %}"
             data-fieldset-index="{{ fieldset_index }}"
             ref="fieldsets[]"
+            {{ sgs_hide_attr }}
             {{ option_id_attribute }}
           >
             <legend{% if sgs_pills and block_settings.size_guide_label != blank %} class="sgs-legend--guide"{% endif %}>
@@ -213,25 +236,25 @@
             {%- for product_option_value in product_option.values -%}
               {%- capture value_label -%}{% render 'sgs-size-label', value: product_option_value.name %}{%- endcapture -%}
               {%- assign tile_variant = product_option_value.variant -%}
-              {%- if tile_variant == blank and sgs_custom -%}
+              {%- assign sgs_value_available = product_option_value.available -%}
+              {%- if tile_variant == blank and sgs_fill_sizes -%}
                 {%- comment -%} Not made in the chosen paper: price it from the paper it does come in {%- endcomment -%}
                 {%- assign opt_key = 'option' | append: product_option.position -%}
-                {%- assign tile_variant = product_resource.variants | where: opt_key, product_option_value.name | first -%}
+                {%- assign tile_matches = product_resource.variants | where: opt_key, product_option_value.name -%}
+                {%- assign tile_variant = tile_matches | where: 'available' | first | default: tile_matches.first -%}
+                {%- if sgs_paper_hidden -%}
+                  {%- comment -%} The paper isn't shown, so the size is available when any paper of it is {%- endcomment -%}
+                  {%- assign sgs_value_available = tile_variant.available -%}
+                {%- endif -%}
               {%- endif -%}
               {%- liquid
                 # SixthGear: the price read out for a size pill is the sale price while an offer is open
                 assign aria_price = ''
-                if show_tile_price and tile_variant != blank
-                  assign aria_price = tile_variant.price | money_without_trailing_zeros
-                  if sgs_pills and sgs_sale_win != blank
-                    capture aria_sale
-                      render 'sgs-sale-price', product_resource: product_resource, window: sgs_sale_win, amount: tile_variant.price, part: 'now'
-                    endcapture
-                    assign aria_sale = aria_sale | strip_html | strip
-                    if aria_sale != blank
-                      assign aria_price = aria_sale | append: ', was ' | append: aria_price
-                    endif
-                  endif
+                if show_tile_price
+                  capture aria_price
+                    render 'sgs-aria-price', product_resource: product_resource, variant: tile_variant, pills: sgs_pills, sale_win: sgs_sale_win
+                  endcapture
+                  assign aria_price = aria_price | strip
                 endif
               -%}
               {%- assign value_label_length = value_label | size -%}
@@ -245,8 +268,8 @@
                   type="radio"
                   name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
                   value="{{ product_option_value | escape }}"
-                  aria-label="{{ value_label | strip }}{% if aria_price != blank %}, {{ aria_price }}{% endif %}{% if product_option_value.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
-                  {% if product_option_value.available == false %}
+                  aria-label="{{ value_label | strip }}{% if aria_price != blank %}, {{ aria_price }}{% endif %}{% if sgs_value_available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}"
+                  {% if sgs_value_available == false %}
                     aria-disabled="true"
                   {% endif %}
                   data-previous-checked="false"
@@ -255,7 +278,7 @@
                   data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
                   data-option-name="{{ product_option.name | escape }}"
                   data-option-value-id="{{ product_option_value.id }}"
-                  data-option-available="{{ product_option_value.available }}"
+                  data-option-available="{{ sgs_value_available }}"
                   data-connected-product-url="{{ product_option_value.product_url }}"
                   {% if product_option_value.variant.id %}
                     data-variant-id="{{ product_option_value.variant.id }}"
@@ -284,7 +307,7 @@
                     mode: 'unscaled'
                   %}
                 {% else %}
-                  {% if product_option_value.available == true %}
+                  {% if sgs_value_available == true %}
                     <span
                       class="variant-option__button-label__pill"
                       data-key="variant-option-pill"
@@ -335,7 +358,7 @@
                     </span>
                   {%- endif -%}
                 {% endif %}
-                {% render 'strikethrough-variant', product_option: product_option_value %}
+                {%- unless sgs_value_available -%}{% render 'strikethrough-variant', product_option: product_option_value %}{%- endunless -%}
               </label>
             {%- endfor -%}
             {% if option_id_attribute %}
@@ -357,10 +380,10 @@
               {{- block_settings.size_guide_label | escape -}}
             </button>
           {%- endif -%}
-          {%- if option_name_lower contains 'paper' and block_settings.paper_explainer != blank -%}
+          {%- if sgs_note_key contains 'paper' and block_settings.paper_explainer != blank -%}
             <p class="sgs-opt-explainer">{{ block_settings.paper_explainer | escape }}</p>
           {%- endif -%}
-          {%- if sgs_custom and option_name_lower contains 'paper' and block_settings.paper_note_custom != blank -%}
+          {%- if sgs_custom and sgs_note_key contains 'paper' and block_settings.paper_note_custom != blank -%}
             <p class="sgs-opt-explainer sgs-opt-explainer--note">{{ block_settings.paper_note_custom | escape }}</p>
           {%- endif -%}
           {%- assign fieldset_index = fieldset_index | plus: 1 -%}
@@ -387,7 +410,7 @@
               assign show_option_price = true
             endif
           -%}
-          <div class="variant-option variant-option--dropdowns{% if option_name_lower contains 'size' %} sgs-opt--size{% elsif option_name_lower contains 'paper' %} sgs-opt--paper{% endif %}">
+          <div class="variant-option variant-option--dropdowns{% if option_name_lower contains 'size' %} sgs-opt--size{% elsif option_name_lower contains 'paper' %} sgs-opt--paper{% endif %}" {{ sgs_hide_attr }}>
             <label for="Option-{{ block.id }}-{{ forloop.index0 }}">
               {%- if option_step != blank -%}<span class="sgs-step-num" aria-hidden="true">{{ option_step }}</span>{%- endif -%}
               {{- option_label -}}
@@ -463,7 +486,13 @@
       <script type="application/json">
         {{ product_resource.selected_or_first_available_variant | json }}
       </script>
-      {%- if sgs_custom -%}{% render 'sgs-variant-autoswitch', product_resource: product_resource %}{%- endif -%}
+      {%- if sgs_fill_sizes -%}
+        {% render 'sgs-variant-autoswitch',
+          product_resource: product_resource,
+          default_paper: block_settings.sgs_default_paper,
+          paper_hidden: sgs_paper_hidden
+        %}
+      {%- endif -%}
     </form>
   </variant-picker>
 {% endunless %}

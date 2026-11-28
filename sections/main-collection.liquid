@@ -48,7 +48,7 @@
         # SixthGear: framed prints (tag "framed") are left out of the grid and the count, except in a
         # collection meant for them (snippets/sgs-shows-framed.liquid, e.g. framed-prints)
         capture sgs_framed_count
-          render 'sgs-framed-count', resource: collection
+          render 'sgs-framed-count', resource: collection, grid: true
         endcapture
         assign sgs_visible_count = collection.products_count | minus: sgs_framed_count | at_least: 0
       -%}
@@ -69,7 +69,7 @@
         {% capture children %}
           {% assign sgs_skipped = 0 %}
           {% for product in collection.products %}
-            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: collection %}{%- endcapture -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: collection, grid: true %}{%- endcapture -%}
             {%- if sgs_framed contains 'true' -%}
               {%- assign sgs_skipped = sgs_skipped | plus: 1 -%}
               {%- continue -%}

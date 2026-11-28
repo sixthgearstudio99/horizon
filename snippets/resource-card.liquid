@@ -141,7 +141,7 @@
           {% for product in resource_products %}
             {%- if sgs_shown >= 4 -%}{%- break -%}{%- endif -%}
             {%- comment -%} SixthGear: framed prints (tag "framed") are never shown {%- endcomment -%}
-            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: resource %}{%- endcapture -%}
+            {%- capture sgs_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: resource, grid: true %}{%- endcapture -%}
             {%- if sgs_framed contains 'true' -%}{%- continue -%}{%- endif -%}
             {%- assign sgs_shown = sgs_shown | plus: 1 -%}
             {{
@@ -166,7 +166,7 @@
       {%- liquid
         # SixthGear: framed prints (tag "framed") aren't counted
         capture sgs_framed_count
-          render 'sgs-framed-count', resource: resource
+          render 'sgs-framed-count', resource: resource, grid: true
         endcapture
         assign sgs_count = resource.all_products_count | minus: sgs_framed_count | at_least: 0
       -%}

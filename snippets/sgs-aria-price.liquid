@@ -1,0 +1,29 @@
+{%- doc -%}
+  SixthGear Studios: the price read out for a size button in the variant picker: the variant's
+  price, or "sale price, was price" for a size pill while an offer window gives a reduced price.
+  Outputs nothing when there is no variant.
+
+  @param {product} product_resource - The product
+  @param {variant} [variant] - The variant the size button stands for
+  @param {boolean} [pills] - true for size pills
+  @param {string} [sale_win] - The open offer window, if any (snippets/sgs-sale-window)
+
+  @example
+  {%- capture aria_price -%}{% render 'sgs-aria-price', product_resource: product_resource, variant: tile_variant, pills: sgs_pills, sale_win: sgs_sale_win %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if variant != blank
+    assign aria_price = variant.price | money_without_trailing_zeros
+    if pills and sale_win != blank
+      capture aria_sale
+        render 'sgs-sale-price', product_resource: product_resource, window: sale_win, amount: variant.price, part: 'now'
+      endcapture
+      assign aria_sale = aria_sale | strip_html | strip
+      if aria_sale != blank
+        assign aria_price = aria_sale | append: ', was ' | append: aria_price
+      endif
+    endif
+    echo aria_price
+  endif
+-%}

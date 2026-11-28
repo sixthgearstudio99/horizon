@@ -2681,6 +2681,18 @@
     ]
   },
   {
+    "name": "SixthGear: express checkout",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "sgs_pdp_express_checkout",
+        "label": "Show express checkout buttons on product page",
+        "default": true,
+        "info": "Off hides \"Buy with Apple Pay\" / \"More payment options\" under Add to cart on product pages. The cart and checkout keep their express buttons."
+      }
+    ]
+  },
+  {
     "name": "SixthGear: Buy 2 offer",
     "settings": [
       {

@@ -1562,3 +1562,8 @@ media-gallery :is(slideshow-slide, .product-media-container) {
 .variant-option.sgs-size-pills .variant-option__button-label:has(:checked) .sgs-pill-popular {
   border-color: #f2efea;
 }
+
+/* ---------- Paper choice hidden (variant picker "Hide the paper choice"): never shown ---------- */
+html body variant-picker .variant-option[hidden] {
+  display: none !important;
+}

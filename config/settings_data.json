@@ -179,7 +179,8 @@
       "color1": "#EC6238",
       "color2": "#1A1A1A",
       "color3": "#2A2A2A"
-    }
+    },
+    "sgs_pdp_express_checkout": true
   },
   "presets": {
     "Default": {

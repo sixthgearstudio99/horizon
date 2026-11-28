@@ -1,7 +1,7 @@
 {%- assign s = section.settings -%}
 
 <section
-  class="sgs-trust"
+  class="sgs-trust{% if s.compact %} sgs-trust--compact{% endif %}"
   style="
     --sgs-trust-count: {{ section.blocks.size | at_least: 1 }};
     --sgs-trust-pad-top: calc({{ s['padding-block-start'] }}px * var(--sgs-section-space, 1));
@@ -31,7 +31,7 @@
             {%- endcase -%}
           </span>
           <span class="sgs-trust__title">{{ block.settings.title | escape }}</span>
-          {%- if block.settings.text != blank -%}
+          {%- if block.settings.text != blank and s.compact != true -%}
             <span class="sgs-trust__text">{{ block.settings.text | escape }}</span>
           {%- endif -%}
         </li>
@@ -128,6 +128,58 @@
       max-width: none;
     }
   }
+
+  /* Compact: one slim row, icon and title only (the supporting text is left out) */
+  html body .sgs-trust--compact .sgs-trust__list {
+    grid-template-columns: repeat(var(--sgs-trust-count), minmax(0, 1fr));
+  }
+
+  html body .sgs-trust--compact .sgs-trust__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 12px;
+    text-align: center;
+  }
+
+  html body .sgs-trust--compact .sgs-trust__item + .sgs-trust__item {
+    border-top: 0;
+    border-inline-start: 1px solid var(--sgs-line);
+  }
+
+  html body .sgs-trust--compact .sgs-trust__icon {
+    margin: 0;
+    flex: none;
+  }
+
+  html body .sgs-trust--compact .sgs-trust__icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    html body .sgs-trust--compact {
+      padding-block: calc(var(--sgs-trust-pad-top) * 0.5) calc(var(--sgs-trust-pad-bottom) * 0.5);
+    }
+
+    html body .sgs-trust--compact .sgs-trust__inner {
+      padding-inline: 8px;
+    }
+
+    html body .sgs-trust--compact .sgs-trust__item {
+      flex-direction: column;
+      gap: 6px;
+      padding: 12px 4px;
+    }
+
+    html body .sgs-trust--compact .sgs-trust__title {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      line-height: 1.3;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -137,6 +189,13 @@
   "class": "sgs-trust-section",
   "max_blocks": 4,
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "compact",
+      "label": "Compact row",
+      "info": "One slim row: icon and title only, the supporting text is hidden.",
+      "default": false
+    },
     {
       "type": "range",
       "id": "padding-block-start",

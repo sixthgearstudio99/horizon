@@ -21,7 +21,7 @@
   {%- liquid
     # SixthGear: framed prints (tag "framed") aren't counted
     capture sgs_framed_count
-      render 'sgs-framed-count', resource: closest.collection
+      render 'sgs-framed-count', resource: closest.collection, grid: true
     endcapture
     assign count = closest.collection.all_products_count | minus: sgs_framed_count | at_least: 0
   -%}

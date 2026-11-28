@@ -1,65 +1,68 @@
 {%- doc -%}
-  SixthGear Studios: how many products tagged "framed" are in a collection (or search results),
-  so the counts shown leave them out. 0 straight away when no product there has the tag. Exact
-  from a Tag filter (Search & Discovery) when there is one; otherwise counted from the products
-  Shopify returns here: the first 50 of a collection, or the current page of search results.
+  SixthGear Studios: how many products in a collection (or search results) are left out of the
+  listing by snippets/sgs-framed-tag.liquid, so the counts shown leave them out too. Products
+  tagged "framed" (and, with grid: true, "hide-from-grid") are counted exactly from a Tag filter
+  (Search & Discovery) when there is one; the rest are counted from the products Shopify returns
+  here: the first 50 of a collection, or the current page of search results.
 
   @param {object} resource - A collection, or the search object
-  @param {object[]} [products] - The products to count when there's no Tag filter (defaults to resource.products)
+  @param {object[]} [products] - The products to count (defaults to resource.products)
+  @param {boolean} [grid] - true for a collection grid: products tagged "hide-from-grid" are left out too
 
   @example
-  {%- capture framed_count -%}{% render 'sgs-framed-count', resource: collection %}{%- endcapture -%}
+  {%- capture framed_count -%}{% render 'sgs-framed-count', resource: collection, grid: true %}{%- endcapture -%}
   {%- assign framed_count = framed_count | strip | plus: 0 -%}
 {%- enddoc -%}
 
 {%- liquid
   assign framed_total = 0
-  # A collection meant for framed prints (e.g. framed-prints) counts them all
-  capture shows_framed
-    render 'sgs-shows-framed', collection: resource
-  endcapture
-  assign counts_framed = true
-  if shows_framed contains 'true'
-    assign counts_framed = false
-  endif
-  if resource != blank and counts_framed
-    assign has_tag = true
-    if resource.all_tags != blank
-      assign tag_list = resource.all_tags | join: '|' | downcase | prepend: '|' | append: '|'
-      unless tag_list contains '|framed|'
-        assign has_tag = false
-      endunless
+  if resource != blank
+    # A collection meant for framed prints (e.g. framed-prints) lists them all
+    capture shows_framed
+      render 'sgs-shows-framed', collection: resource
+    endcapture
+    assign counts_framed = true
+    if shows_framed contains 'true'
+      assign counts_framed = false
     endif
 
-    if has_tag
-      assign from_filter = false
-      for filter in resource.filters
-        if filter.param_name == 'filter.p.tag'
-          assign from_filter = true
-          for value in filter.values
-            assign value_lower = value.value | downcase
-            if value_lower == 'framed'
-              assign framed_total = framed_total | plus: value.count
-            endif
-          endfor
-        endif
-      endfor
-
-      unless from_filter
-        assign list = products | default: resource.products
-        for item in list
-          if item.object_type == 'article' or item.object_type == 'page'
-            continue
-          endif
-          capture item_framed
-            render 'sgs-framed-tag', product_resource: item
-          endcapture
-          if item_framed contains 'true'
-            assign framed_total = framed_total | plus: 1
+    assign from_filter = false
+    for filter in resource.filters
+      if filter.param_name == 'filter.p.tag'
+        assign from_filter = true
+        for value in filter.values
+          assign value_lower = value.value | downcase
+          if value_lower == 'framed' and counts_framed
+            assign framed_total = framed_total | plus: value.count
+          elsif value_lower == 'hide-from-grid' and grid == true
+            assign framed_total = framed_total | plus: value.count
           endif
         endfor
-      endunless
-    endif
+      endif
+    endfor
+
+    assign list = products | default: resource.products
+    for item in list
+      if item.object_type == 'article' or item.object_type == 'page'
+        continue
+      endif
+      capture item_hidden
+        render 'sgs-framed-tag', product_resource: item, collection: resource, grid: grid
+      endcapture
+      if item_hidden contains 'true'
+        if from_filter
+          # Already counted from the Tag filter
+          assign item_tags = item.tags | join: '|' | downcase | prepend: '|' | append: '|'
+          if counts_framed and item_tags contains '|framed|'
+            continue
+          endif
+          if grid == true and item_tags contains '|hide-from-grid|'
+            continue
+          endif
+        endif
+        assign framed_total = framed_total | plus: 1
+      endif
+    endfor
   endif
   echo framed_total
 -%}

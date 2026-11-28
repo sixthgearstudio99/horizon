@@ -16,8 +16,13 @@
   endif
 %}
 
+{%- comment -%}
+  SixthGear: Theme settings > SixthGear: express checkout. When "Show express checkout buttons on
+  product page" is off, the Apple Pay / "More payment options" buttons are left out here (product
+  buy buttons only); the cart and checkout keep theirs.
+{%- endcomment -%}
 {% capture accelerated_checkout_button %}
-  {% if product != blank and form_obj != blank %}
+  {% if product != blank and form_obj != blank and settings.sgs_pdp_express_checkout != false %}
     {{ form_obj | payment_button }}
   {% endif %}
 {% endcapture %}

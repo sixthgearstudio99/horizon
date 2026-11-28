@@ -1,0 +1,23 @@
+{%- doc -%}
+  SixthGear Studios: outputs "true" when the variant picker hides the product's Paper choice: the
+  block's "Hide the paper choice" setting is on and the product has a Paper option with more than
+  one value (an option with one value is already hidden by "Hide options with only one choice").
+
+  @param {product} product_resource - The product
+  @param {boolean} [hide_paper] - The variant picker block's sgs_hide_paper setting
+
+  @example
+  {%- capture paper_hidden -%}{% render 'sgs-paper-hidden', product_resource: product_resource, hide_paper: block.settings.sgs_hide_paper %}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if hide_paper
+    for probe_option in product_resource.options_with_values
+      assign probe_lower = probe_option.name | downcase
+      if probe_lower contains 'paper' and probe_option.values.size > 1
+        echo 'true'
+        break
+      endif
+    endfor
+  endif
+-%}

@@ -86,7 +86,7 @@
         {%- for product in source.products -%}
           {%- if shown >= limit -%}{%- break -%}{%- endif -%}
           {%- comment -%} Framed prints (tag "framed") are never listed {%- endcomment -%}
-          {%- capture product_framed -%}{% render 'sgs-framed-tag', product_resource: product %}{%- endcapture -%}
+          {%- capture product_framed -%}{% render 'sgs-framed-tag', product_resource: product, collection: source, grid: true %}{%- endcapture -%}
           {%- if product_framed contains 'true' -%}{%- continue -%}{%- endif -%}
           {%- assign shown = shown | plus: 1 -%}
           <li class="sgs-grid__item" data-sgs-reveal>

@@ -5,7 +5,14 @@
   Outputs every variant's options as JSON (read by the script) and the script itself, bound once.
   Render it inside the variant picker's form.
 
+  With paper_hidden (the Paper choice isn't shown), the product page also opens on the default
+  paper: when the page has no ?variant= in its address and the variant Shopify picked is another
+  paper, the first available variant in the default paper is chosen. A product with no available
+  variant in that paper keeps Shopify's first available variant. A ?variant= link is respected.
+
   @param {product} product_resource - The product
+  @param {string} [default_paper] - The paper to open on, e.g. "Semi Glossy" (any case)
+  @param {boolean} [paper_hidden] - true when the Paper choice is hidden
 
   @example
   {% render 'sgs-variant-autoswitch', product_resource: product_resource %}
@@ -13,7 +20,7 @@
 
 {%- if product_resource.options.size > 1 -%}
   {%- comment -%} Every variant's options, so a tap can switch to a combination that exists {%- endcomment -%}
-  <script type="application/json" data-sgs-variant-options>
+  <script type="application/json" data-sgs-variant-options{% if paper_hidden and default_paper != blank %} data-sgs-default-paper="{{ default_paper | strip | downcase | escape }}"{% endif %}>
     {
       "names": {{ product_resource.options | json }},
       "variants": [
@@ -71,6 +78,56 @@
         input.dataset.variantId = String(best.id);
       } catch (e) {}
     }, true);
+
+    // Paper hidden: open the product page on the default paper (see the doc above)
+    function openOnDefaultPaper() {
+      if (window.sgsDefaultPaperDone) return;
+      window.sgsDefaultPaperDone = true;
+      try {
+        if (new URL(window.location.href).searchParams.has('variant')) return;
+        var source = document.querySelector('variant-picker[data-template-product-match="true"] script[data-sgs-default-paper]');
+        if (!source || source.closest('product-card, quick-add-dialog')) return;
+        var picker = source.closest('variant-picker');
+        var want = source.dataset.sgsDefaultPaper;
+        var data = JSON.parse(source.textContent);
+        var paperPos = -1;
+        data.names.forEach(function (name, i) { if (paperPos < 0 && name.toLowerCase().indexOf('paper') > -1) paperPos = i; });
+        if (paperPos < 0) return;
+        var radios = Array.prototype.slice.call(picker.querySelectorAll('fieldset input[type="radio"]'));
+        var current = radios.filter(function (el) { return el.checked && el.dataset.optionName === data.names[paperPos]; })[0];
+        if (!current || current.value.toLowerCase() === want) return;
+        var target = data.variants.filter(function (v) { return v.available && String(v.options[paperPos]).toLowerCase() === want; })[0];
+        if (!target) return;
+        var fire = null;
+        target.options.forEach(function (value, i) {
+          radios.forEach(function (el) {
+            if (el.dataset.optionName !== data.names[i]) return;
+            var on = el.value === value;
+            if (on && !el.checked && i !== paperPos) fire = el;
+            if (on && i === paperPos && !fire) fire = el;
+            el.checked = on;
+            if (i === paperPos) el.dataset.currentChecked = String(on);
+          });
+        });
+        var paperRadio = radios.filter(function (el) { return el.checked && el.dataset.optionName === data.names[paperPos]; })[0];
+        if (!fire) fire = paperRadio;
+        if (!fire) return;
+        fire.dataset.variantId = String(target.id);
+        fire.dispatchEvent(new Event('change', { bubbles: true }));
+      } catch (e) {}
+    }
+    function whenReady() {
+      if (window.customElements && customElements.whenDefined) {
+        customElements.whenDefined('variant-picker').then(function () { requestAnimationFrame(openOnDefaultPaper); });
+      } else {
+        openOnDefaultPaper();
+      }
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', whenReady);
+    } else {
+      whenReady();
+    }
   })();
 </script>
 {%- endif -%}

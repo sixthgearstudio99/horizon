@@ -46,7 +46,7 @@
       # The same count as the product grid: framed prints (tag "framed") aren't counted, except in a
       # collection meant for them (snippets/sgs-shows-framed.liquid, e.g. framed-prints)
       capture hero_framed_count
-        render 'sgs-framed-count', resource: collection
+        render 'sgs-framed-count', resource: collection, grid: true
       endcapture
       assign hero_count = collection.products_count | minus: hero_framed_count | at_least: 0
       if hero_count == 1

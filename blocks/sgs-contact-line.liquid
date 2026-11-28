@@ -1,0 +1,58 @@
+{%- liquid
+  # SixthGear: "Questions? Email hello@…" as a mailto link, with an optional reply time. Set in
+  # Theme settings > SixthGear: product page trust; an empty email hides it.
+  assign email = settings.sgs_contact_email | strip
+  assign label = settings.sgs_contact_label | strip
+  assign reply = settings.sgs_contact_reply_time | strip
+-%}
+
+{%- if email != blank -%}
+  <p class="sgs-contact" {{ block.shopify_attributes }}>
+    {%- if label != blank -%}{{ label | escape }} {% endif -%}
+    <a href="mailto:{{ email | escape }}">{{ email | escape }}</a>
+    {%- if reply != blank -%}<span class="sgs-contact__reply">{{ reply | escape }}</span>{%- endif -%}
+  </p>
+{%- elsif request.design_mode -%}
+  <p class="sgs-contact" {{ block.shopify_attributes }}>Contact line: add an email in Theme settings > SixthGear: product page trust.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-contact {
+    width: 100%;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--sgs-text-2, #9a9a9a);
+    overflow-wrap: anywhere;
+  }
+
+  html body .sgs-contact a {
+    color: var(--sgs-text, #f2efea);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sgs-contact__reply {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contact line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text, email and reply time in Theme settings > SixthGear: product page trust."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact line"
+    }
+  ]
+}
+{% endschema %}

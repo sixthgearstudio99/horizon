@@ -1,0 +1,144 @@
+{%- liquid
+  # SixthGear: one real customer review in a compact card: photo, stars, quote, name and a link that
+  # scrolls to the reviews further down. Set in Theme settings > SixthGear: product page trust.
+  # Hidden until both a photo and a quote are set.
+  assign image = settings.sgs_fr_image
+  assign quote = settings.sgs_fr_quote | strip
+  assign name = settings.sgs_fr_name | strip
+  assign rating = settings.sgs_fr_rating | default: 5 | at_least: 1 | at_most: 5
+  assign link_label = settings.sgs_fr_link_label | strip
+  assign show = settings.sgs_fr_enabled
+  if image == blank or quote == blank
+    assign show = false
+  endif
+-%}
+
+{%- if show -%}
+  <figure class="sgs-frev" {{ block.shopify_attributes }}>
+    {{ image | image_url: width: 160, height: 160, crop: 'center' | image_tag: class: 'sgs-frev__img', width: 64, height: 64, loading: 'lazy', alt: image.alt | default: '' }}
+    <div class="sgs-frev__body">
+      <span class="sgs-frev__stars" role="img" aria-label="Rated {{ rating }} out of 5">
+        {%- for i in (1..5) -%}
+          <svg aria-hidden="true" focusable="false" width="13" height="13" viewBox="0 0 16 16"{% if i > rating %} class="sgs-frev__star--off"{% endif %}><path d="M8 1.2l2.05 4.3 4.7.6-3.45 3.25.88 4.65L8 11.75 3.82 14l.88-4.65L1.25 6.1l4.7-.6z" fill="currentColor"/></svg>
+        {%- endfor -%}
+      </span>
+      <blockquote class="sgs-frev__quote">“{{ quote | escape }}”</blockquote>
+      <figcaption class="sgs-frev__foot">
+        {%- if name != blank -%}<span class="sgs-frev__name">{{ name | escape }}</span>{%- endif -%}
+        {%- if link_label != blank -%}<a class="sgs-frev__link" href="#reviews" data-sgs-revline>{{ link_label | escape }}</a>{%- endif -%}
+      </figcaption>
+    </div>
+  </figure>
+  {%- if link_label != blank -%}
+    <script>
+      (function () {
+        // Smooth scroll to the reviews (instant with reduced motion); the link still works without this.
+        // Shared with the review line block, so it binds once.
+        if (window.sgsRevlineBound) return;
+        window.sgsRevlineBound = true;
+        document.addEventListener('click', function (event) {
+          var link = event.target.closest && event.target.closest('a[data-sgs-revline]');
+          if (!link) return;
+          var target = document.getElementById(link.getAttribute('href').slice(1));
+          if (!target) return;
+          event.preventDefault();
+          var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          if (history.replaceState) history.replaceState(null, '', link.getAttribute('href'));
+        });
+      })();
+    </script>
+  {%- endif -%}
+{%- elsif request.design_mode -%}
+  <p class="sgs-frev sgs-frev--editor" {{ block.shopify_attributes }}>Featured review: add a photo and a quote in Theme settings > SixthGear: product page trust.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-frev {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+    width: 100%;
+    margin: 0;
+    padding: 14px;
+    border: 1px solid var(--sgs-line, #2a2a2a);
+    border-radius: 12px;
+    background: var(--sgs-card-bg, #1a1a1a);
+  }
+
+  .sgs-frev__img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    background: var(--sgs-line, #2a2a2a);
+  }
+
+  .sgs-frev__body {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .sgs-frev__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--sgs-text, #f2efea);
+  }
+
+  .sgs-frev__star--off {
+    opacity: 0.25;
+  }
+
+  .sgs-frev__quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 14px;
+    font-style: normal;
+    line-height: 1.45;
+    color: var(--sgs-text, #f2efea);
+  }
+
+  .sgs-frev__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+
+  html body .sgs-frev__link {
+    color: var(--sgs-text, #f2efea);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .sgs-frev--editor {
+    display: block;
+    font-size: 12px;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Featured review",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Photo, quote, name and on/off in Theme settings > SixthGear: product page trust."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured review"
+    }
+  ]
+}
+{% endschema %}

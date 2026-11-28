@@ -1,0 +1,39 @@
+{%- liquid
+  # SixthGear: one small line, e.g. "Designed in Bristol by a car enthusiast · Printed in the UK".
+  # Text in Theme settings > SixthGear: product page trust; empty hides it.
+  assign text = settings.sgs_maker_line | strip
+-%}
+
+{%- if text != blank -%}
+  <p class="sgs-maker" {{ block.shopify_attributes }}>{{ text | escape }}</p>
+{%- elsif request.design_mode -%}
+  <p class="sgs-maker" {{ block.shopify_attributes }}>Maker line: add text in Theme settings > SixthGear: product page trust.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-maker {
+    width: 100%;
+    margin: -4px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Maker line",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Text in Theme settings > SixthGear: product page trust."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Maker line"
+    }
+  ]
+}
+{% endschema %}

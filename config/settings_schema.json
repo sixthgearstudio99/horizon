@@ -2693,6 +2693,152 @@
     ]
   },
   {
+    "name": "SixthGear: product page trust",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Payment row (under the trust row)"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_pay_enabled",
+        "label": "Show payment row",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "sgs_pay_types",
+        "label": "Payment icons",
+        "default": "visa, master, apple_pay, paypal, klarna, shopify_pay",
+        "info": "Shopify payment type names, in order, separated by commas. Only methods enabled in Settings > Payments are shown."
+      },
+      {
+        "type": "text",
+        "id": "sgs_pay_text",
+        "label": "Line under the icons",
+        "default": "Secure checkout · Pay in 3 with Klarna or PayPal",
+        "info": "Leave empty to show the icons only."
+      },
+      {
+        "type": "text",
+        "id": "sgs_pay_small_print",
+        "label": "Small print (optional)",
+        "default": "",
+        "info": "For any wording Klarna or PayPal require when you mention paying in instalments."
+      },
+      {
+        "type": "header",
+        "content": "Featured review card"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_fr_enabled",
+        "label": "Show featured review",
+        "default": true,
+        "info": "Hidden until both a photo and a quote are set."
+      },
+      {
+        "type": "image_picker",
+        "id": "sgs_fr_image",
+        "label": "Customer photo"
+      },
+      {
+        "type": "textarea",
+        "id": "sgs_fr_quote",
+        "label": "Quote",
+        "default": "",
+        "info": "A real customer's words, as they wrote them."
+      },
+      {
+        "type": "text",
+        "id": "sgs_fr_name",
+        "label": "Name",
+        "default": "",
+        "info": "For example: Richard B., verified buyer"
+      },
+      {
+        "type": "range",
+        "id": "sgs_fr_rating",
+        "label": "Star rating they gave",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "default": 5
+      },
+      {
+        "type": "text",
+        "id": "sgs_fr_link_label",
+        "label": "Link text",
+        "default": "Read all reviews ↓",
+        "info": "Scrolls to the reviews further down the page. Leave empty to hide the link."
+      },
+      {
+        "type": "header",
+        "content": "Maker line (under the featured review)"
+      },
+      {
+        "type": "text",
+        "id": "sgs_maker_line",
+        "label": "Maker line",
+        "default": "Designed in Bristol by a car enthusiast · Printed in the UK",
+        "info": "Leave empty to hide."
+      },
+      {
+        "type": "header",
+        "content": "Framed prints: frame details (under What you get)"
+      },
+      {
+        "type": "checkbox",
+        "id": "sgs_frame_feat_enabled",
+        "label": "Show frame details on framed prints",
+        "default": true,
+        "info": "Framed prints are products tagged framed or with Framed in the title, as in the collection grids."
+      },
+      {
+        "type": "text",
+        "id": "sgs_frame_feat_1",
+        "label": "Detail 1",
+        "default": "Solid wood frame"
+      },
+      {
+        "type": "text",
+        "id": "sgs_frame_feat_2",
+        "label": "Detail 2",
+        "default": "Shatter-resistant Perspex front"
+      },
+      {
+        "type": "text",
+        "id": "sgs_frame_feat_3",
+        "label": "Detail 3",
+        "default": "Hanging hardware included"
+      },
+      {
+        "type": "header",
+        "content": "Contact line (after the product details)"
+      },
+      {
+        "type": "text",
+        "id": "sgs_contact_label",
+        "label": "Text before the email",
+        "default": "Questions? Email",
+        "info": "Leave the email empty to hide the line."
+      },
+      {
+        "type": "text",
+        "id": "sgs_contact_email",
+        "label": "Email address",
+        "default": "hello@sixthgearstudios.co.uk"
+      },
+      {
+        "type": "text",
+        "id": "sgs_contact_reply_time",
+        "label": "Reply time (optional)",
+        "default": "",
+        "info": "For example: We usually reply within a day. Only add a time you can keep to."
+      }
+    ]
+  },
+  {
     "name": "SixthGear: Buy 2 offer",
     "settings": [
       {

@@ -174,7 +174,24 @@
   Two by two on phones, one row on wider screens.
 {%- endcomment -%}
 {%- capture tick -%}<svg class="sgs-trustrow__icon" aria-hidden="true" focusable="false" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg>{%- endcapture -%}
-<div class="sgs-trustrow" id="{{ uid }}" {{ block.shopify_attributes }}>
+{%- liquid
+  # Line 4 has its own wording on custom posters (personalised, so no change-of-mind returns)
+  assign trust_4 = bs.trust_4
+  if is_custom
+    assign trust_4 = bs.trust_4_custom
+  endif
+  assign trust_lines = 0
+  for i in (1..3)
+    assign trust_key = 'trust_' | append: i
+    if bs[trust_key] != blank
+      assign trust_lines = trust_lines | plus: 1
+    endif
+  endfor
+  if trust_4 != blank
+    assign trust_lines = trust_lines | plus: 1
+  endif
+-%}
+<div class="sgs-trustrow{% if trust_lines == 4 %} sgs-trustrow--four{% endif %}" id="{{ uid }}" {{ block.shopify_attributes }}>
   <ul class="sgs-trustrow__list" role="list">
     {%- for i in (1..3) -%}
       {%- assign trust_key = 'trust_' | append: i -%}
@@ -182,6 +199,9 @@
         <li class="sgs-trustrow__item">{{ tick }}<span>{{ bs[trust_key] | escape }}</span></li>
       {%- endif -%}
     {%- endfor -%}
+    {%- if trust_4 != blank -%}
+      <li class="sgs-trustrow__item">{{ tick }}<span>{{ trust_4 | escape }}</span></li>
+    {%- endif -%}
     {%- unless bs.details_hide_estimate -%}
       <li class="sgs-trustrow__item sgs-trustrow__item--estimate">{{ tick }}<span class="sgs-dinfo__est">{{ estimate_html }}</span></li>
     {%- endunless -%}
@@ -434,6 +454,23 @@
     }
   }
 
+  /* Four short lines: 2 x 2 on phones with the delivery estimate across the bottom; from 750px three
+     across, then line 4 and the estimate */
+  .sgs-trustrow--four .sgs-trustrow__item--estimate {
+    grid-column: 1 / -1;
+  }
+
+  @media screen and (min-width: 750px) {
+    .sgs-trustrow--four .sgs-trustrow__list {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .sgs-trustrow--four .sgs-trustrow__item--estimate {
+      grid-column: span 2;
+    }
+  }
+
   .sgs-trustrow__item {
     display: flex;
     align-items: flex-start;
@@ -649,6 +686,20 @@
       "id": "trust_3",
       "label": "Line 3",
       "default": "Free replacement if damaged"
+    },
+    {
+      "type": "text",
+      "id": "trust_4",
+      "label": "Line 4",
+      "default": "14-day returns · damaged prints replaced free",
+      "info": "Leave empty to show three lines."
+    },
+    {
+      "type": "text",
+      "id": "trust_4_custom",
+      "label": "Line 4 on custom posters",
+      "default": "Damaged prints replaced free",
+      "info": "Custom posters are personalised, so they can't be returned for a change of mind (see your refund policy)."
     },
     {
       "type": "paragraph",

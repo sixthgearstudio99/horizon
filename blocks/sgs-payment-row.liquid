@@ -1,0 +1,115 @@
+{%- liquid
+  # SixthGear: small payment icons and one line under the trust row. Set in Theme settings >
+  # SixthGear: product page trust. An icon shows only when that method is enabled in the store.
+  assign wanted = settings.sgs_pay_types | downcase | remove: ' ' | split: ','
+  assign text = settings.sgs_pay_text | strip
+  assign small_print = settings.sgs_pay_small_print | strip
+  assign icon_count = 0
+  for type in wanted
+    if shop.enabled_payment_types contains type
+      assign icon_count = icon_count | plus: 1
+    endif
+  endfor
+  assign show = settings.sgs_pay_enabled
+  if icon_count == 0 and text == blank
+    assign show = false
+  endif
+-%}
+
+{%- if show -%}
+  <div class="sgs-pay" {{ block.shopify_attributes }}>
+    {%- if icon_count > 0 -%}
+      <ul class="sgs-pay__icons" role="list" aria-label="Payment methods">
+        {%- for type in wanted -%}
+          {%- if shop.enabled_payment_types contains type -%}
+            <li>{{ type | payment_type_svg_tag: class: 'sgs-pay__icon' }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if text != blank -%}
+      <p class="sgs-pay__text">
+        <svg class="sgs-pay__lock" aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="10" height="7.5" rx="1"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2"/></svg>
+        <span>{{ text | escape }}</span>
+      </p>
+    {%- endif -%}
+    {%- if small_print != blank -%}
+      <p class="sgs-pay__small">{{ small_print | escape }}</p>
+    {%- endif -%}
+  </div>
+{%- elsif request.design_mode -%}
+  <p class="sgs-pay sgs-pay--editor" {{ block.shopify_attributes }}>Payment row: switched off in Theme settings > SixthGear: product page trust.</p>
+{%- endif -%}
+
+{% stylesheet %}
+  .sgs-pay {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .sgs-pay__icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sgs-pay__icons li {
+    display: flex;
+  }
+
+  .sgs-pay__icon {
+    display: block;
+    width: 34px;
+    height: 22px;
+  }
+
+  .sgs-pay__text,
+  .sgs-pay__small {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+
+  .sgs-pay__text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sgs-pay__lock {
+    flex-shrink: 0;
+  }
+
+  .sgs-pay__small {
+    font-size: 11px;
+  }
+
+  .sgs-pay--editor {
+    font-size: 12px;
+    color: var(--sgs-text-2, #9a9a9a);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Payment row",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Icons, line and on/off in Theme settings > SixthGear: product page trust."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Payment row"
+    }
+  ]
+}
+{% endschema %}

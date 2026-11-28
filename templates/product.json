@@ -338,7 +338,9 @@
                 "details_hide_estimate": false,
                 "trust_1": "Printed in the UK",
                 "trust_2": "Free UK delivery",
-                "trust_3": "Free replacement if damaged"
+                "trust_3": "Free replacement if damaged",
+                "trust_4": "14-day returns · damaged prints replaced free",
+                "trust_4_custom": "Damaged prints replaced free"
               },
               "blocks": {}
             },
@@ -622,6 +624,31 @@
               "type": "sgs-buy2-offer",
               "settings": {},
               "blocks": {}
+            },
+            "sgs_payment_row": {
+              "type": "sgs-payment-row",
+              "settings": {},
+              "blocks": {}
+            },
+            "sgs_featured_review": {
+              "type": "sgs-featured-review",
+              "settings": {},
+              "blocks": {}
+            },
+            "sgs_maker_line": {
+              "type": "sgs-maker-line",
+              "settings": {},
+              "blocks": {}
+            },
+            "sgs_frame_details": {
+              "type": "sgs-framed-features",
+              "settings": {},
+              "blocks": {}
+            },
+            "sgs_contact_line": {
+              "type": "sgs-contact-line",
+              "settings": {},
+              "blocks": {}
             }
           },
           "block_order": [
@@ -639,8 +666,12 @@
             "sgs_buy2",
             "buy_buttons_eYQEYi",
             "sgs_delivery_line",
+            "sgs_payment_row",
+            "sgs_featured_review",
+            "sgs_maker_line",
             "sgs_gift_line",
             "sgs_what_you_get",
+            "sgs_frame_details",
             "sgs_b2g1",
             "sgs_trustpilot",
             "sgs_ptrust",
@@ -649,6 +680,7 @@
             "sgs_specs",
             "sgs_info",
             "sgs_pdp_faq",
+            "sgs_contact_line",
             "sgs_mobile_slot"
           ]
         }
